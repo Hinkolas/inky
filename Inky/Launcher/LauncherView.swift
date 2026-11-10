@@ -289,7 +289,12 @@ private struct SearchBar: View {
                     missingTick: model.missingArgumentTick
                 )
                 .focused($focus, equals: .argument(index))
-                .transition(motion.popping(.scale(scale: 0.9, anchor: .leading).combined(with: .opacity)))
+                // It only fades in, and pops its own outline: see ArgumentField.
+                .transition(.asymmetric(
+                    insertion: motion.transition(.opacity),
+                    removal: motion.transition(.scale(scale: 0.9, anchor: .leading).combined(with: .opacity))
+                        .animation(motion.exit)
+                ))
             }
 
             if !arguments.isEmpty {
@@ -352,6 +357,7 @@ private struct ArgumentField: View {
 
     @Environment(\.motion) private var motion
     @State private var shakes: CGFloat = 0
+    @State private var hasArrived = false
 
     private static let fontSize: CGFloat = 15
 
@@ -363,15 +369,29 @@ private struct ArgumentField: View {
         TextField(placeholder, text: $text)
             .textFieldStyle(.plain)
             .font(.system(size: Self.fontSize))
+            // The editor AppKit puts over a field is a point taller than the
+            // field SwiftUI made and stands out over its top edge, so text
+            // being edited sits a point higher. This puts it back.
+            .offset(y: isFocused ? 1 : 0)
             .frame(width: min(200, width + 6))
             .padding(.horizontal, 12)
             .frame(height: 34)
-            .background(Theme.fieldFill, in: Capsule())
-            .overlay {
-                Capsule().strokeBorder(
-                    isFocused ? AnyShapeStyle(Theme.accent) : AnyShapeStyle(Theme.fieldStroke),
-                    lineWidth: isFocused ? 1.5 : 1
-                )
+            .background {
+                // Only the outline pops in. A field that takes the keyboard
+                // while it is being scaled keeps its text where it was at
+                // that moment, a point or two off, so the field stays put.
+                Capsule()
+                    .fill(Theme.fieldFill)
+                    .overlay {
+                        Capsule().strokeBorder(
+                            isFocused ? AnyShapeStyle(Theme.accent) : AnyShapeStyle(Theme.fieldStroke),
+                            lineWidth: isFocused ? 1.5 : 1
+                        )
+                    }
+                    .scaleEffect(hasArrived || motion.level != .full ? 1 : 0.9, anchor: .leading)
+            }
+            .onAppear {
+                withAnimation(motion.quick) { hasArrived = true }
             }
             .help(name)
             .modifier(Shake(shakes: shakes))
