@@ -357,10 +357,13 @@ private struct ArgumentField: View {
 
     var body: some View {
         let placeholder = hint ?? name
+        // As wide as what it says. Typing never makes it narrower than it
+        // was empty, so it does not shrink under the first letter.
+        let width = max(textWidth(placeholder, size: Self.fontSize), textWidth(text, size: Self.fontSize))
         TextField(placeholder, text: $text)
             .textFieldStyle(.plain)
             .font(.system(size: Self.fontSize))
-            .frame(width: min(200, max(64, textWidth(text.isEmpty ? placeholder : text, size: Self.fontSize) + 6)))
+            .frame(width: min(200, width + 6))
             .padding(.horizontal, 12)
             .frame(height: 34)
             .background(Theme.fieldFill, in: Capsule())
