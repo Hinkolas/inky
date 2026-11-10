@@ -648,7 +648,7 @@ private struct HintBar: View {
         let closes = model.query.isEmpty
 
         HStack(spacing: 16) {
-            hint(["↑", "↓"]) { label("Move") }
+            hint(["↑"], ["↓"]) { label("Move") }
             hint(["⌘", "K"]) { label("Actions") }
             hint(["esc"]) {
                 // Both are always there and one is seen. The bar keeps its
@@ -672,9 +672,13 @@ private struct HintBar: View {
         .glassSurface(cornerRadius: nil)
     }
 
-    private func hint(_ keys: [String], @ViewBuilder title: () -> some View) -> some View {
+    /// One cap per chord: keys pressed together share a cap, keys that are
+    /// alternatives each get their own.
+    private func hint(_ chords: [String]..., @ViewBuilder title: () -> some View) -> some View {
         HStack(spacing: 6) {
-            Keycap(keys)
+            HStack(spacing: 3) {
+                ForEach(chords, id: \.self) { Keycap($0) }
+            }
             title()
         }
     }

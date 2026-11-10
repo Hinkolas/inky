@@ -134,16 +134,84 @@ struct Keycap: View {
 
     var body: some View {
         if !keys.isEmpty {
-            Text(keys.joined())
-                .font(.system(size: 11, weight: .semibold))
-                .foregroundStyle(tone == .onAccent ? AnyShapeStyle(Theme.onAccent) : AnyShapeStyle(.secondary))
-                .padding(.horizontal, 5)
-                .frame(minWidth: 22, minHeight: 20)
-                .background(
-                    tone == .onAccent ? AnyShapeStyle(.white.opacity(0.22)) : AnyShapeStyle(Theme.subtleFill),
-                    in: RoundedRectangle(cornerRadius: 5.5, style: .continuous)
-                )
-                .fixedSize()
+            let glyphs = keys.map(KeyGlyph.init)
+            HStack(spacing: 2) {
+                ForEach(Array(glyphs.enumerated()), id: \.offset) { _, glyph in
+                    // Wide enough that a narrow key, such as a comma or an
+                    // I, keeps its distance from its neighbors.
+                    glyph.frame(minWidth: 9)
+                }
+            }
+            .foregroundStyle(tone == .onAccent ? AnyShapeStyle(Theme.onAccent) : AnyShapeStyle(.secondary))
+            .padding(.horizontal, 5.5)
+            .frame(minWidth: 20, minHeight: 20)
+            .background(
+                tone == .onAccent ? AnyShapeStyle(.white.opacity(0.22)) : AnyShapeStyle(Theme.subtleFill),
+                in: RoundedRectangle(cornerRadius: 5.5, style: .continuous)
+            )
+            .fixedSize()
+            .accessibilityElement(children: .ignore)
+            .accessibilityLabel(glyphs.map(\.spokenName).joined(separator: " "))
+        }
+    }
+}
+
+/// One key of a chord. Modifiers and the keys that have no letter are drawn
+/// as SF Symbols: in a line of text those glyphs come in different sizes and
+/// sit at different heights.
+private struct KeyGlyph: View {
+    private enum Content {
+        case symbol(String)
+        case text(String)
+    }
+
+    private let content: Content
+    let spokenName: String
+
+    /// `key` is a glyph from `KeyShortcut.symbols` or `KeyCombo.symbols`.
+    init(_ key: String) {
+        let (content, spokenName): (Content, String) = switch key {
+        case "⌘": (.symbol("command"), "Command")
+        case "⇧": (.symbol("shift"), "Shift")
+        case "⌥": (.symbol("option"), "Option")
+        case "⌃": (.symbol("control"), "Control")
+        case "↵": (.symbol("return"), "Return")
+        case "⌫": (.symbol("delete.left"), "Delete")
+        case "⌦": (.symbol("delete.right"), "Forward Delete")
+        case "⇥": (.symbol("arrow.right.to.line"), "Tab")
+        case "↑": (.symbol("arrow.up"), "Up Arrow")
+        case "↓": (.symbol("arrow.down"), "Down Arrow")
+        case "←": (.symbol("arrow.left"), "Left Arrow")
+        case "→": (.symbol("arrow.right"), "Right Arrow")
+        case "␣", "Space": (.text("space"), "Space")
+        case "⎋", "esc": (.text("esc"), "Escape")
+        default: (.text(key), key)
+        }
+        self.content = content
+        self.spokenName = spokenName
+    }
+
+    private static let size: CGFloat = 11
+    /// Marks that are thin and small next to a capital.
+    private static let smallMarks: Set<Character> = [",", ".", ";", ":", "'", "`", "-"]
+    /// Those of them that sit on the baseline, far below the middle of a cap.
+    private static let lowMarks: Set<Character> = [",", ".", ";"]
+
+    var body: some View {
+        switch content {
+        case let .symbol(name):
+            Image(systemName: name)
+                .font(.system(size: Self.size * 0.92, weight: .semibold))
+        case let .text(text):
+            if text.count == 1, let mark = text.first, Self.smallMarks.contains(mark) {
+                Text(text)
+                    .font(.system(size: Self.size * 1.25, weight: .bold))
+                    .baselineOffset(Self.lowMarks.contains(mark) ? Self.size * 0.3 : 0)
+            } else {
+                // A word, such as esc, is a little smaller than a letter.
+                Text(text)
+                    .font(.system(size: text.count > 1 ? Self.size * 0.95 : Self.size, weight: .semibold))
+            }
         }
     }
 }
