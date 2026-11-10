@@ -447,16 +447,23 @@ private struct ResultsList: View {
                 }
             }
             .scrollIndicators(.never)
-            .onChange(of: model.selectedID) { _, id in
+            .onChange(of: model.selectedID) { previous, id in
                 guard let id else { return }
-                if id == model.firstItemID {
+                let ids = model.itemIDs
+                guard let index = ids.firstIndex(of: id) else { return }
+
+                if index == 0 {
                     // Bring the section title back into view too.
                     proxy.scrollTo(Self.top, anchor: .top)
-                } else if id == model.lastItemID {
+                } else if index == ids.count - 1 {
                     // And the footer.
                     proxy.scrollTo(Self.end, anchor: .bottom)
                 } else {
-                    proxy.scrollTo(id)
+                    // Scroll for the row after the selected one, in the
+                    // direction of travel. The selection then never touches
+                    // the edge of the card, whose corners would cut into it.
+                    let wasBelow = previous.flatMap(ids.firstIndex(of:)).map { $0 > index } ?? false
+                    proxy.scrollTo(ids[wasBelow ? index - 1 : index + 1])
                 }
             }
         }

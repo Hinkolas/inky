@@ -77,10 +77,10 @@ final class LauncherModel {
         return nil
     }
 
-    /// The first selectable item, which the list scrolls fully to the top for.
+    /// The first selectable item.
     var firstItemID: String? { sections.first?.items.first?.id }
-    /// The last one, which it scrolls fully to the end for.
-    var lastItemID: String? { sections.last?.items.last?.id }
+    /// Every selectable item, in the order the arrow keys go through them.
+    var itemIDs: [String] { sections.flatMap { $0.items.map(\.id) } }
 
     // MARK: - Lifecycle
 
@@ -178,7 +178,7 @@ final class LauncherModel {
     }
 
     private func moveSelection(by offset: Int) {
-        let ids = sections.flatMap { $0.items.map(\.id) }
+        let ids = itemIDs
         guard !ids.isEmpty else { return }
         let current = selectedID.flatMap(ids.firstIndex(of:)) ?? 0
         select(ids[(current + offset + ids.count) % ids.count])
