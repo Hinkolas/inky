@@ -11,7 +11,8 @@ build: ## Debug build
 release: ## Optimized build
 	$(XCODE) -configuration Release build
 
-run: build ## Build and launch
+run: build ## Build and launch, replacing a running Inky
+	-pkill -x Inky && sleep 0.5
 	open $(BUILD)/Build/Products/Debug/Inky.app
 
 test: ## Run the InkyCore tests
