@@ -134,7 +134,12 @@ final class LauncherModel {
         let immediate = engine.results(for: query)
         // Last, below whatever was found or is still to come.
         let fallbacks = engine.fallbacks(for: query).map { [$0] } ?? []
-        apply(immediate + fallbacks, resetSelection: resetSelection)
+        // Results can turn up for what is already typed, as when the exchange
+        // rates arrive. A fallback that was selected only because there was
+        // nothing else gives way to them, as it does to slower sources below.
+        let hadOnlyFallbacks = !immediate.isEmpty && sections.map(\.id) == fallbacks.map(\.id)
+            && selectedID == fallbacks.first?.items.first?.id
+        apply(immediate + fallbacks, resetSelection: resetSelection || hadOnlyFallbacks)
 
         guard !query.trimmingCharacters(in: .whitespaces).isEmpty else { return }
         deferredSearch = Task { [weak self] in

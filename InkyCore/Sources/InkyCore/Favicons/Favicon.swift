@@ -27,7 +27,7 @@ public enum FaviconSource: String, Sendable, CaseIterable, Identifiable {
 
 public enum Favicon {
     /// What a source answered: the bytes and the HTTP status.
-    public typealias Fetch = @Sendable (URL) async throws -> (data: Data, status: Int)
+    public typealias Fetch = Download.Fetch
 
     /// The public website a link goes to. Nil for a folder, an app link, a
     /// link whose host is a placeholder, and a host on the user's own network,
@@ -80,18 +80,7 @@ public enum Favicon {
     ]
 
     /// Asks the network, without cookies and without a cache of its own.
-    public static let download: Fetch = { url in
-        let (data, response) = try await session.data(from: url)
-        return (data, (response as? HTTPURLResponse)?.statusCode ?? 0)
-    }
-
-    private static let session: URLSession = {
-        let configuration = URLSessionConfiguration.ephemeral
-        configuration.timeoutIntervalForRequest = 15
-        configuration.httpCookieStorage = nil
-        configuration.urlCache = nil
-        return URLSession(configuration: configuration)
-    }()
+    public static let download: Fetch = Download.fetch
 
     static func isImage(_ data: Data) -> Bool {
         guard let source = CGImageSourceCreateWithData(data as CFData, nil) else { return false }

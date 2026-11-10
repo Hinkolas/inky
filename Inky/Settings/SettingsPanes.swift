@@ -230,11 +230,11 @@ struct ProviderPane: View {
                     }
                 }
             case "calculator":
-                Section("Examples") {
-                    ForEach(["128 * 3 + 4", "200 * 15%", "sqrt(2) ^ 10", "2pi"], id: \.self) { example in
-                        Text(example).font(.system(.body, design: .monospaced))
-                    }
-                }
+                Examples([
+                    "128 * 3 + 4", "20% off 80", "sqrt(2) ^ 10", "5 ft 10 in in cm", "72 F to C",
+                    "100 usd in eur", "255 in hex",
+                ])
+                ExchangeRateSettings(preferences: preferences, store: context.exchangeRates)
             case "files":
                 FileSearchSettings(context: context)
             case "quicklinks":
@@ -242,6 +242,73 @@ struct ProviderPane: View {
                 FallbackSettings(store: context.quicklinks)
             default:
                 EmptyView()
+            }
+        }
+    }
+}
+
+/// A few things to type, to show what a provider understands.
+private struct Examples: View {
+    let examples: [String]
+
+    init(_ examples: [String]) {
+        self.examples = examples
+    }
+
+    var body: some View {
+        Section("Examples") {
+            ForEach(examples, id: \.self) { example in
+                Text(example).font(.system(.body, design: .monospaced))
+            }
+        }
+    }
+}
+
+/// Where exchange rates come from, and a way to fetch them now.
+private struct ExchangeRateSettings: View {
+    @Bindable var preferences: Preferences
+    let store: ExchangeRateStore
+
+    /// The day of the rates is one in Greenwich, wherever it is read.
+    private static let dayStyle: Date.FormatStyle = {
+        var style = Date.FormatStyle(date: .long, time: .omitted)
+        style.timeZone = .gmt
+        return style
+    }()
+
+    var body: some View {
+        Section {
+            Picker("Exchange rates", selection: $preferences.exchangeRateSource) {
+                ForEach(ExchangeRateSource.allCases) { source in
+                    Text(source.title).tag(source)
+                }
+            }
+            if preferences.exchangeRateSource != .off {
+                LabeledContent("Rates of") {
+                    HStack(spacing: 10) {
+                        if store.isUpdating {
+                            ProgressView()
+                                .controlSize(.small)
+                        }
+                        Text(store.rates?.day.formatted(Self.dayStyle) ?? "None yet")
+                        Button("Update Now") { store.refresh() }
+                            .disabled(store.isUpdating)
+                    }
+                }
+            }
+        } footer: {
+            VStack(alignment: .leading, spacing: 6) {
+                switch preferences.exchangeRateSource {
+                case .ecb:
+                    Text("Inky downloads the reference rates of the European Central Bank: one file with about thirty currencies, a few times a day while you use the calculator. Nothing about you or what you type is sent. The bank sets its rates on working days.")
+                case .off:
+                    Text("Inky makes no requests for rates, and does not convert currencies.")
+                }
+                if preferences.exchangeRateSource != .off, store.failed, !store.isUpdating {
+                    Text(store.rates == nil
+                        ? "The rates could not be fetched. Inky tries again in a few minutes."
+                        : "Newer rates could not be fetched. The ones above stay in use.")
+                }
             }
         }
     }

@@ -6,6 +6,7 @@ final class AppContext {
     let preferences = Preferences.shared
     let quicklinks: QuicklinkStore
     let favicons: FaviconStore
+    let exchangeRates: ExchangeRateStore
     let engine: SearchEngine
     let launcher: LauncherController
     let fileProvider = FileProvider()
@@ -31,6 +32,14 @@ final class AppContext {
             favicons.source = preferences.faviconSource
         }
 
+        exchangeRates = ExchangeRateStore(
+            directory: caches.appendingPathComponent("ExchangeRates", isDirectory: true),
+            source: preferences.exchangeRateSource
+        )
+        preferences.onExchangeRateSourceChange = { [preferences, exchangeRates] in
+            exchangeRates.source = preferences.exchangeRateSource
+        }
+
         let commands = InkyCommandProvider()
         let quicklinkProvider = QuicklinkProvider(store: quicklinks)
         fileProvider.maxResults = preferences.fileSearchLimit
@@ -42,7 +51,7 @@ final class AppContext {
                 commands,
                 SystemProvider(),
                 ApplicationProvider(),
-                CalculatorProvider(),
+                CalculatorProvider(exchangeRates: exchangeRates),
                 fileProvider,
             ],
             usage: UsageStore(fileURL: directory.appendingPathComponent("usage.json"))

@@ -32,7 +32,8 @@ public protocol Provider: AnyObject {
     var id: String { get }
     var info: ProviderInfo { get }
 
-    /// Set by the engine. Call it when `candidates` would return something new.
+    /// Set by the engine. Call it when `candidates` would return something
+    /// new, or when results that may be on screen are no longer right.
     var onChange: (@MainActor () -> Void)? { get set }
 
     /// If set, the engine reloads `candidates` when the launcher opens and the

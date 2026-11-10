@@ -40,6 +40,7 @@ final class Preferences {
     @ObservationIgnored var onMenuBarChange: (() -> Void)?
     @ObservationIgnored var onAppearanceChange: (() -> Void)?
     @ObservationIgnored var onFaviconSourceChange: (() -> Void)?
+    @ObservationIgnored var onExchangeRateSourceChange: (() -> Void)?
 
     var hotkey: KeyCombo {
         didSet {
@@ -83,6 +84,14 @@ final class Preferences {
         }
     }
 
+    /// Where exchange rates come from, if anywhere.
+    var exchangeRateSource: ExchangeRateSource {
+        didSet {
+            defaults.set(exchangeRateSource.rawValue, forKey: Key.exchangeRateSource)
+            onExchangeRateSourceChange?()
+        }
+    }
+
     var fileSearchLimit: Int {
         didSet { defaults.set(fileSearchLimit, forKey: Key.fileSearchLimit) }
     }
@@ -104,6 +113,7 @@ final class Preferences {
         appearance = defaults.string(forKey: Key.appearance).flatMap(AppearanceMode.init) ?? .system
         animations = defaults.bool(forKey: Key.animations)
         faviconSource = defaults.string(forKey: Key.faviconSource).flatMap(FaviconSource.init) ?? .duckDuckGo
+        exchangeRateSource = defaults.string(forKey: Key.exchangeRateSource).flatMap(ExchangeRateSource.init) ?? .ecb
         fileSearchLimit = defaults.integer(forKey: Key.fileSearchLimit)
         disabledProviders = Set(defaults.stringArray(forKey: Key.disabledProviders) ?? [])
     }
@@ -140,6 +150,7 @@ final class Preferences {
         static let appearance = "appearance"
         static let animations = "animations"
         static let faviconSource = "faviconSource"
+        static let exchangeRateSource = "exchangeRateSource"
         static let fileSearchLimit = "fileSearchLimit"
         static let disabledProviders = "disabledProviders"
         static let hasLaunchedBefore = "hasLaunchedBefore"
