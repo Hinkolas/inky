@@ -17,6 +17,18 @@ public struct Quicklink: Codable, Identifiable, Sendable, Hashable {
     }
 
     public var template: LinkTemplate { LinkTemplate(link) }
+
+    public enum Kind: Sendable, Hashable, CaseIterable {
+        case website, file, appLink
+    }
+
+    /// What the link points at, judged by how it starts.
+    public var kind: Kind {
+        let link = link.trimmingCharacters(in: .whitespaces)
+        if link.hasPrefix("/") || link.hasPrefix("~") { return .file }
+        guard let scheme = link.firstMatch(of: /^([A-Za-z][A-Za-z0-9+.-]*):/)?.1 else { return .website }
+        return ["http", "https"].contains(scheme.lowercased()) ? .website : .appLink
+    }
 }
 
 /// The user's quicklinks, kept as a JSON file that is easy to read, edit and sync.

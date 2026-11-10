@@ -47,7 +47,7 @@ public final class QuicklinkProvider: Provider {
     }
 
     /// Folders show their own icon; everything else gets the link tile.
-    private static func icon(for template: LinkTemplate) -> Icon {
+    public static func icon(for template: LinkTemplate) -> Icon {
         if template.isFilePath, template.segments.count == 1 {
             let path = (template.source.trimmingCharacters(in: .whitespaces) as NSString).expandingTildeInPath
             if FileManager.default.fileExists(atPath: path) {
@@ -58,7 +58,7 @@ public final class QuicklinkProvider: Provider {
     }
 
     /// The site or folder a link goes to, without the noise.
-    static func summary(of link: String) -> String {
+    public static func summary(of link: String) -> String {
         var text = link.trimmingCharacters(in: .whitespaces)
         if text.hasPrefix("/") || text.hasPrefix("~") { return text }
         if let scheme = text.range(of: "://") {

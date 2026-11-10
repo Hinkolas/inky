@@ -16,7 +16,8 @@ public struct KeyShortcut: Sendable, Hashable {
         public static let control = Modifiers(rawValue: 1 << 3)
     }
 
-    /// A lowercase character, or a named key such as "return" or "delete".
+    /// A lowercase character, or a named key: "return", "delete", "space",
+    /// "tab", "escape", "up" or "down".
     public var key: String
     public var modifiers: Modifiers
 
@@ -36,6 +37,10 @@ public struct KeyShortcut: Sendable, Hashable {
         case "return": symbols.append("↵")
         case "delete": symbols.append("⌫")
         case "space": symbols.append("␣")
+        case "tab": symbols.append("⇥")
+        case "escape": symbols.append("esc")
+        case "up": symbols.append("↑")
+        case "down": symbols.append("↓")
         default: symbols.append(key.uppercased())
         }
         return symbols

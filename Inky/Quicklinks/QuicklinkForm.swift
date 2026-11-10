@@ -32,9 +32,56 @@ final class QuicklinkDraft: Identifiable {
             openWith: openWith
         )
     }
+
+    static let linkExample = "https://example.com/search?q={argument name=\"Query\"}"
+
+    static let placeholders: [(title: String, text: String)] = [
+        ("Argument", "{argument name=\"Query\"}"),
+        ("Clipboard Text", "{clipboard}"),
+        ("Selected Text", "{selection}"),
+        ("Date", "{date}"),
+        ("UUID", "{uuid}"),
+    ]
+
+    /// A URL of the same kind as the link, to ask the system what opens it.
+    private var sampleURL: URL? {
+        let trimmed = link.trimmingCharacters(in: .whitespaces)
+        if trimmed.hasPrefix("/") || trimmed.hasPrefix("~") {
+            return URL(fileURLWithPath: (trimmed as NSString).expandingTildeInPath)
+        } else if let scheme = trimmed.firstMatch(of: /^([A-Za-z][A-Za-z0-9+.-]*):/)?.1 {
+            return URL(string: "\(scheme)://example.com")
+        }
+        return URL(string: "https://example.com")
+    }
+
+    /// The apps that can open this kind of link.
+    var applications: [(bundleID: String, name: String)] {
+        var apps = (sampleURL.map(NSWorkspace.shared.urlsForApplications(toOpen:)) ?? []).compactMap { url -> (bundleID: String, name: String)? in
+            guard let bundleID = Bundle(url: url)?.bundleIdentifier else { return nil }
+            return (bundleID, FileManager.default.displayName(atPath: url.path))
+        }
+        // Keep showing a saved choice even if it no longer claims the link type.
+        if let openWith, !apps.contains(where: { $0.bundleID == openWith }) {
+            apps.append((openWith, Self.applicationName(openWith)))
+        }
+        return apps
+    }
+
+    /// The app the link opens in: the chosen one, or the system's default.
+    var openingApplication: URL? {
+        if let openWith {
+            return NSWorkspace.shared.urlForApplication(withBundleIdentifier: openWith)
+        }
+        return sampleURL.flatMap(NSWorkspace.shared.urlForApplication(toOpen:))
+    }
+
+    static func applicationName(_ bundleID: String) -> String {
+        NSWorkspace.shared.urlForApplication(withBundleIdentifier: bundleID)
+            .map { FileManager.default.displayName(atPath: $0.path) } ?? bundleID
+    }
 }
 
-/// The fields of a quicklink. Used in the launcher and in settings.
+/// The fields of a quicklink, as a standard form. Used in settings.
 struct QuicklinkForm: View {
     @Bindable var draft: QuicklinkDraft
     @FocusState private var focus: Field?
@@ -54,7 +101,7 @@ struct QuicklinkForm: View {
             GridRow {
                 label("Link")
                 VStack(alignment: .leading, spacing: 8) {
-                    TextField("Link", text: $draft.link, prompt: Text(verbatim: Self.linkExample), axis: .vertical)
+                    TextField("Link", text: $draft.link, prompt: Text(verbatim: QuicklinkDraft.linkExample), axis: .vertical)
                         .lineLimit(3...6)
                         .font(.system(size: 13, design: .monospaced))
                         .focused($focus, equals: .link)
@@ -66,7 +113,7 @@ struct QuicklinkForm: View {
                             .fixedSize(horizontal: false, vertical: true)
                         Spacer(minLength: 8)
                         Menu("Insert") {
-                            ForEach(Self.placeholders, id: \.title) { placeholder in
+                            ForEach(QuicklinkDraft.placeholders, id: \.title) { placeholder in
                                 Button(placeholder.title) { draft.link += placeholder.text }
                             }
                         }
@@ -79,7 +126,7 @@ struct QuicklinkForm: View {
                 label("Open With")
                 Picker("Open With", selection: $draft.openWith) {
                     Text("Default App").tag(String?.none)
-                    let apps = Self.applications(for: draft.link, including: draft.openWith)
+                    let apps = draft.applications
                     if !apps.isEmpty {
                         Divider()
                         ForEach(apps, id: \.bundleID) { app in
@@ -99,41 +146,6 @@ struct QuicklinkForm: View {
             .font(.system(size: 13, weight: .medium))
             .foregroundStyle(.secondary)
             .gridColumnAlignment(.trailing)
-    }
-
-    private static let linkExample = "https://example.com/search?q={argument name=\"Query\"}"
-
-    private static let placeholders: [(title: String, text: String)] = [
-        ("Argument", "{argument name=\"Query\"}"),
-        ("Clipboard Text", "{clipboard}"),
-        ("Selected Text", "{selection}"),
-        ("Date", "{date}"),
-        ("UUID", "{uuid}"),
-    ]
-
-    /// The apps that can open this kind of link.
-    private static func applications(for link: String, including selected: String?) -> [(bundleID: String, name: String)] {
-        let trimmed = link.trimmingCharacters(in: .whitespaces)
-        var sample: URL?
-        if trimmed.hasPrefix("/") || trimmed.hasPrefix("~") {
-            sample = URL(fileURLWithPath: (trimmed as NSString).expandingTildeInPath)
-        } else if let scheme = trimmed.firstMatch(of: /^([A-Za-z][A-Za-z0-9+.-]*):/)?.1 {
-            sample = URL(string: "\(scheme)://example.com")
-        } else {
-            sample = URL(string: "https://example.com")
-        }
-
-        var apps = (sample.map(NSWorkspace.shared.urlsForApplications(toOpen:)) ?? []).compactMap { url -> (bundleID: String, name: String)? in
-            guard let bundleID = Bundle(url: url)?.bundleIdentifier else { return nil }
-            return (bundleID, FileManager.default.displayName(atPath: url.path))
-        }
-        // Keep showing a saved choice even if it no longer claims the link type.
-        if let selected, !apps.contains(where: { $0.bundleID == selected }) {
-            let name = NSWorkspace.shared.urlForApplication(withBundleIdentifier: selected)
-                .map { FileManager.default.displayName(atPath: $0.path) } ?? selected
-            apps.append((selected, name))
-        }
-        return apps
     }
 }
 

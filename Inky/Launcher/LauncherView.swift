@@ -1,60 +1,83 @@
 import InkyCore
 import SwiftUI
 
+/// Everything the launcher shows, laid out from the top of a transparent canvas.
 struct LauncherView: View {
     let model: LauncherModel
 
     var body: some View {
-        VStack(spacing: 0) {
-            switch model.route {
-            case .quicklinkEditor(let draft):
-                RouteHeader(title: draft.isNew ? "Create Quicklink" : "Edit Quicklink") {
-                    model.popRoute()
+        ZStack(alignment: .top) {
+            // Where the canvas is see-through, clicks go to whatever is behind
+            // the panel. What does arrive here landed on a shadow.
+            Color.clear
+                .contentShape(Rectangle())
+                .onTapGesture { model.dismiss() }
+
+            VStack(spacing: LauncherMetrics.gap) {
+                switch model.route {
+                case nil:
+                    SearchScreen(model: model)
+                case .quicklinks(let browser):
+                    QuicklinkBrowserScreen(model: model, browser: browser)
+                case .quicklinkEditor(let draft):
+                    QuicklinkEditorScreen(model: model, draft: draft)
                 }
-                Divider()
-                ScrollView {
-                    QuicklinkForm(draft: draft)
-                        .padding(.horizontal, 60)
-                        .padding(.vertical, 28)
+
+                if let toast = model.toast {
+                    Toast(message: toast)
+                } else if model.route == nil, model.showsResults {
+                    HintBar(model: model)
                 }
-            case nil:
-                SearchBar(model: model)
-                Divider()
-                ResultList(model: model)
             }
-            Divider()
-            FooterBar(model: model)
-        }
-        .overlay(alignment: .bottomTrailing) {
-            if model.isActionMenuOpen {
-                ActionMenu(model: model)
+            // The gaps between the floating parts belong to the launcher.
+            .background {
+                Color.clear
+                    .contentShape(Rectangle())
+                    .onTapGesture {}
             }
+            .padding(.top, LauncherMetrics.margin.top + (model.route == nil ? LauncherMetrics.searchDrop : 0))
         }
-        .overlay {
-            RoundedRectangle(cornerRadius: LauncherMetrics.cornerRadius, style: .continuous)
-                .strokeBorder(.primary.opacity(0.12))
-                .allowsHitTesting(false)
-        }
-        .frame(width: LauncherMetrics.size.width, height: LauncherMetrics.size.height)
+        .frame(width: LauncherMetrics.canvas.width, height: LauncherMetrics.canvas.height)
     }
 }
 
-// MARK: - Search bar
+// MARK: - Search
+
+private struct SearchScreen: View {
+    let model: LauncherModel
+
+    var body: some View {
+        VStack(spacing: LauncherMetrics.gap) {
+            SearchBar(model: model)
+            if model.showsResults {
+                ResultsCard(model: model)
+            }
+        }
+        .frame(width: LauncherMetrics.searchWidth)
+        .overlay(alignment: .topTrailing) {
+            if model.isActionMenuOpen {
+                ActionMenu(model: model)
+                    .offset(y: LauncherMetrics.barHeight + 6)
+            }
+        }
+    }
+}
 
 private struct SearchBar: View {
     let model: LauncherModel
     @FocusState private var focus: LauncherModel.FocusTarget?
 
-    private static let placeholder = "Search apps, commands and files…"
-    private static let fontSize: CGFloat = 20
+    private static let placeholder = "Search apps, commands and files"
+    private static let fontSize: CGFloat = 17
 
     var body: some View {
         let arguments = model.selectedItem?.arguments ?? []
 
         HStack(spacing: 10) {
             Image(systemName: "magnifyingglass")
-                .font(.system(size: 17, weight: .medium))
-                .foregroundStyle(.secondary)
+                .font(.system(size: 15, weight: .semibold))
+                .foregroundStyle(.primary.opacity(0.75))
+                .frame(width: 20)
 
             TextField(Self.placeholder, text: Binding(get: { model.query }, set: model.setQuery))
                 .textFieldStyle(.plain)
@@ -79,9 +102,30 @@ private struct SearchBar: View {
             if !arguments.isEmpty {
                 Spacer(minLength: 0)
             }
+
+            if !model.query.isEmpty {
+                Button {
+                    model.setQuery("")
+                    model.focus(.search)
+                } label: {
+                    Image(systemName: "xmark")
+                        .font(.system(size: 9, weight: .heavy))
+                        .foregroundStyle(.primary.opacity(0.7))
+                        .frame(width: 22, height: 22)
+                        .background(Theme.subtleFill, in: Circle())
+                }
+                .buttonStyle(PressableButtonStyle())
+                .help("Clear (esc)")
+            }
+
+            CircleButton(symbol: "ellipsis", help: "Actions (⌘K)") {
+                model.toggleActionMenu()
+            }
         }
-        .padding(.horizontal, 18)
-        .frame(height: LauncherMetrics.searchBarHeight)
+        .padding(.leading, 17)
+        .padding(.trailing, 8)
+        .frame(height: LauncherMetrics.barHeight)
+        .glassSurface(cornerRadius: nil)
         .onChange(of: model.focusTick, initial: true) {
             focus = model.focusTarget
         }
@@ -92,7 +136,7 @@ private struct SearchBar: View {
 
     private var queryWidth: CGFloat {
         let text = model.query.isEmpty ? Self.placeholder : model.query
-        return min(380, textWidth(text, size: Self.fontSize) + 6)
+        return min(340, textWidth(text, size: Self.fontSize) + 6)
     }
 }
 
@@ -109,13 +153,15 @@ private struct ArgumentField: View {
         TextField(placeholder, text: $text)
             .textFieldStyle(.plain)
             .font(.system(size: Self.fontSize))
-            .frame(width: min(220, max(64, textWidth(text.isEmpty ? placeholder : text, size: Self.fontSize) + 6)))
-            .padding(.horizontal, 8)
-            .frame(height: 28)
-            .background(.primary.opacity(0.06), in: RoundedRectangle(cornerRadius: 7, style: .continuous))
+            .frame(width: min(200, max(64, textWidth(text.isEmpty ? placeholder : text, size: Self.fontSize) + 6)))
+            .padding(.horizontal, 11)
+            .frame(height: 30)
+            .background(Theme.fieldFill, in: Capsule())
             .overlay {
-                RoundedRectangle(cornerRadius: 7, style: .continuous)
-                    .strokeBorder(isFocused ? AnyShapeStyle(.tint) : AnyShapeStyle(.primary.opacity(0.18)))
+                Capsule().strokeBorder(
+                    isFocused ? AnyShapeStyle(Theme.accent) : AnyShapeStyle(Theme.fieldStroke),
+                    lineWidth: isFocused ? 1.5 : 1
+                )
             }
             .help(name)
     }
@@ -125,216 +171,236 @@ private func textWidth(_ text: String, size: CGFloat) -> CGFloat {
     ceil((text as NSString).size(withAttributes: [.font: NSFont.systemFont(ofSize: size)]).width)
 }
 
-private struct RouteHeader: View {
-    let title: String
-    let onBack: () -> Void
-
-    var body: some View {
-        HStack(spacing: 10) {
-            Button(action: onBack) {
-                Image(systemName: "chevron.left")
-                    .font(.system(size: 13, weight: .semibold))
-                    .frame(width: 26, height: 26)
-                    .background(.primary.opacity(0.08), in: RoundedRectangle(cornerRadius: 7, style: .continuous))
-            }
-            .buttonStyle(.plain)
-            .help("Back (esc)")
-
-            Text(title)
-                .font(.system(size: 17, weight: .medium))
-            Spacer()
-        }
-        .padding(.horizontal, 16)
-        .frame(height: LauncherMetrics.searchBarHeight)
-    }
-}
-
 // MARK: - Results
 
-private struct ResultList: View {
+private struct ResultsCard: View {
     let model: LauncherModel
 
+    private static let rowSlot = LauncherMetrics.rowHeight + 1
+    private static let bottomInset: CGFloat = 8
+    private static let top = "inky.list.top"
+
     var body: some View {
-        if model.sections.isEmpty {
-            VStack(spacing: 6) {
-                Image(systemName: "magnifyingglass")
-                    .font(.system(size: 26, weight: .light))
+        Group {
+            if model.sections.isEmpty {
                 Text("No results")
                     .font(.system(size: 14, weight: .medium))
+                    .foregroundStyle(.secondary)
+                    .frame(maxWidth: .infinity)
+                    .frame(height: 60)
+            } else {
+                list
+                    .frame(height: min(LauncherMetrics.listMaxHeight, contentHeight))
+                    .clipShape(SurfaceShape(cornerRadius: LauncherMetrics.cardRadius))
             }
-            .foregroundStyle(.secondary)
-            .frame(maxWidth: .infinity, maxHeight: .infinity)
-        } else {
-            ScrollViewReader { proxy in
-                ScrollView {
-                    LazyVStack(alignment: .leading, spacing: 0) {
-                        Color.clear.frame(height: 6).id(Self.top)
-                        ForEach(model.sections) { section in
-                            Text(section.title)
-                                .font(.system(size: 11.5, weight: .semibold))
-                                .foregroundStyle(.secondary)
-                                .padding(.horizontal, 18)
-                                .padding(.top, 8)
-                                .padding(.bottom, 5)
+        }
+        .glassSurface(cornerRadius: LauncherMetrics.cardRadius)
+    }
 
-                            ForEach(section.items) { item in
-                                ResultRow(item: item, isSelected: item.id == model.selectedID)
-                                    .id(item.id)
-                                    .onTapGesture(count: 2) {
-                                        model.select(item.id)
-                                        model.runPrimaryAction()
-                                    }
-                                    .simultaneousGesture(TapGesture().onEnded {
-                                        model.select(item.id)
-                                    })
-                            }
+    /// Known from the data, so the card can be exactly as tall as its rows.
+    private var contentHeight: CGFloat {
+        model.sections.reduce(Self.bottomInset) { height, section in
+            height + LauncherMetrics.sectionHeaderHeight + CGFloat(section.items.count) * Self.rowSlot
+        }
+    }
+
+    private var list: some View {
+        ScrollViewReader { proxy in
+            ScrollView {
+                LazyVStack(alignment: .leading, spacing: 0) {
+                    Color.clear.frame(height: 0).id(Self.top)
+                    ForEach(model.sections) { section in
+                        PanelLabel(section.title)
+                            .padding(.horizontal, 18)
+                            .padding(.top, 5)
+                            .frame(height: LauncherMetrics.sectionHeaderHeight)
+
+                        ForEach(section.items) { item in
+                            let isSelected = item.id == model.selectedID
+                            ResultRow(item: item, isSelected: isSelected, primaryAction: isSelected ? item.actions.first?.title : nil)
+                                .frame(height: Self.rowSlot)
+                                .id(item.id)
+                                .onTapGesture(count: 2) {
+                                    model.select(item.id)
+                                    model.runPrimaryAction()
+                                }
+                                .simultaneousGesture(TapGesture().onEnded {
+                                    model.select(item.id)
+                                })
                         }
-                        Color.clear.frame(height: 6)
                     }
+                    Color.clear.frame(height: Self.bottomInset)
                 }
-                .scrollIndicators(.never)
-                .onChange(of: model.selectedID) { _, id in
-                    guard let id else { return }
-                    if id == model.firstItemID {
-                        // Bring the section title back into view too.
-                        proxy.scrollTo(Self.top, anchor: .top)
-                    } else {
-                        proxy.scrollTo(id)
-                    }
+            }
+            .scrollIndicators(.never)
+            .onChange(of: model.selectedID) { _, id in
+                guard let id else { return }
+                if id == model.firstItemID {
+                    // Bring the section title back into view too.
+                    proxy.scrollTo(Self.top, anchor: .top)
+                } else {
+                    proxy.scrollTo(id)
                 }
             }
         }
     }
-
-    private static let top = "inky.list.top"
 }
 
 private struct ResultRow: View {
     let item: ResultItem
     let isSelected: Bool
+    /// Shown with its keys in place of the kind, on the selected row.
+    let primaryAction: String?
 
     var body: some View {
-        HStack(spacing: 10) {
+        let dimmed = isSelected ? AnyShapeStyle(Theme.onAccent.opacity(0.82)) : AnyShapeStyle(.secondary)
+
+        HStack(spacing: 12) {
             IconView(icon: item.icon, size: 24)
+                .overlay {
+                    if isSelected, case .symbol = item.icon {
+                        RoundedRectangle(cornerRadius: 24 * 0.26, style: .continuous).strokeBorder(.white.opacity(0.55))
+                    }
+                }
             Text(item.title)
-                .font(.system(size: 14, weight: .medium))
+                .font(.system(size: 15, weight: isSelected ? .semibold : .medium))
                 .lineLimit(1)
                 .layoutPriority(1)
             if let subtitle = item.subtitle {
                 Text(subtitle)
-                    .font(.system(size: 13))
-                    .foregroundStyle(.secondary)
+                    .font(.system(size: 13.5))
+                    .foregroundStyle(dimmed)
                     .lineLimit(1)
                     .truncationMode(.middle)
             }
             Spacer(minLength: 12)
-            Text(item.kind)
-                .font(.system(size: 13))
-                .foregroundStyle(.secondary)
-                .lineLimit(1)
+            if let primaryAction {
+                HStack(spacing: 6) {
+                    Text(primaryAction)
+                        .font(.system(size: 13.5, weight: .semibold))
+                        .lineLimit(1)
+                        .padding(.trailing, 2)
+                    Keycap(["↵"], tone: .onAccent)
+                    Keycap(["⌘", "K"], tone: .onAccent)
+                }
                 .layoutPriority(1)
+            } else {
+                Text(item.kind)
+                    .font(.system(size: 13.5))
+                    .foregroundStyle(dimmed)
+                    .lineLimit(1)
+                    .layoutPriority(1)
+            }
         }
-        .padding(.horizontal, 10)
+        .foregroundStyle(isSelected ? AnyShapeStyle(Theme.onAccent) : AnyShapeStyle(.primary))
+        .padding(.leading, 10)
+        .padding(.trailing, isSelected ? 8 : 10)
         .frame(height: LauncherMetrics.rowHeight)
         .background(
-            isSelected ? AnyShapeStyle(.primary.opacity(0.1)) : AnyShapeStyle(.clear),
-            in: RoundedRectangle(cornerRadius: 9, style: .continuous)
+            isSelected ? AnyShapeStyle(Theme.accent) : AnyShapeStyle(.clear),
+            in: RoundedRectangle(cornerRadius: LauncherMetrics.rowRadius, style: .continuous)
         )
         .padding(.horizontal, 8)
         .contentShape(Rectangle())
     }
 }
 
-// MARK: - Footer and actions
+// MARK: - Below the card
 
-private struct FooterBar: View {
+/// The keys that matter right now, on their own small surface so they stay
+/// readable over any wallpaper.
+private struct HintBar: View {
     let model: LauncherModel
 
     var body: some View {
-        HStack(spacing: 10) {
-            if let toast = model.toast {
-                Label(toast, systemImage: "info.circle.fill")
-                    .lineLimit(1)
-            } else {
-                Label("Inky", systemImage: "drop.fill")
-            }
-            Spacer()
-
-            if case .quicklinkEditor = model.route {
-                FooterButton(title: "Save Quicklink", keys: ["⌘", "↵"]) { model.saveQuicklink() }
-            } else if let item = model.selectedItem, let primary = item.actions.first {
-                FooterButton(title: primary.title, keys: ["↵"]) { model.runPrimaryAction() }
-                Divider().frame(height: 14)
-                FooterButton(title: "Actions", keys: ["⌘", "K"]) { model.toggleActionMenu() }
-            }
+        HStack(spacing: 16) {
+            hint(["↑", "↓"], "Move")
+            hint(["⌘", "K"], "Actions")
+            hint(["esc"], model.query.isEmpty ? "Close" : "Clear")
         }
-        .font(.system(size: 12, weight: .medium))
-        .foregroundStyle(.secondary)
-        .padding(.horizontal, 14)
-        .frame(height: LauncherMetrics.footerHeight)
-        .background(.primary.opacity(0.03))
+        .padding(.horizontal, 12)
+        .frame(height: 32)
+        .glassSurface(cornerRadius: nil)
+    }
+
+    private func hint(_ keys: [String], _ title: String) -> some View {
+        HStack(spacing: 6) {
+            Keycap(keys)
+            Text(title)
+                .font(.system(size: 12.5, weight: .medium))
+                .foregroundStyle(.secondary)
+        }
     }
 }
 
-private struct FooterButton: View {
-    let title: String
-    let keys: [String]
-    let action: () -> Void
+private struct Toast: View {
+    let message: String
 
     var body: some View {
-        Button(action: action) {
-            HStack(spacing: 6) {
-                Text(title).foregroundStyle(.primary)
-                Keycaps(keys)
-            }
-            .contentShape(Rectangle())
-        }
-        .buttonStyle(.plain)
+        Label(message, systemImage: "info.circle.fill")
+            .font(.system(size: 12.5, weight: .medium))
+            .lineLimit(1)
+            .padding(.horizontal, 13)
+            .frame(height: 32)
+            .glassSurface(cornerRadius: nil)
     }
 }
+
+// MARK: - Actions menu
 
 private struct ActionMenu: View {
     let model: LauncherModel
 
+    /// Each section with the position of its first action in the whole menu.
+    private var numbered: [(section: LauncherModel.MenuSection, start: Int)] {
+        var start = 0
+        return model.menuSections.map { section in
+            defer { start += section.actions.count }
+            return (section, start)
+        }
+    }
+
     var body: some View {
-        if let item = model.selectedItem {
-            VStack(alignment: .leading, spacing: 2) {
-                Text(item.title)
-                    .font(.system(size: 11.5, weight: .semibold))
-                    .foregroundStyle(.secondary)
+        VStack(alignment: .leading, spacing: 2) {
+            ForEach(numbered, id: \.section.id) { entry in
+                if entry.start > 0 {
+                    PanelDivider().padding(.vertical, 4).padding(.horizontal, 8)
+                }
+                PanelLabel(entry.section.title)
                     .lineLimit(1)
-                    .padding(.horizontal, 8)
+                    .padding(.horizontal, 9)
                     .padding(.vertical, 4)
 
-                ForEach(Array(item.actions.enumerated()), id: \.offset) { index, action in
-                    HStack(spacing: 8) {
-                        Image(systemName: action.symbol)
-                            .frame(width: 18)
-                        Text(action.title)
-                        Spacer(minLength: 16)
-                        Keycaps(model.shortcutSymbols(for: action, at: index))
+                ForEach(Array(entry.section.actions.enumerated()), id: \.offset) { index, action in
+                    let isSelected = entry.start + index == model.actionMenuIndex
+                    Button {
+                        model.runMenuAction(action)
+                    } label: {
+                        HStack(spacing: 9) {
+                            Image(systemName: action.symbol)
+                                .font(.system(size: 12.5, weight: .medium))
+                                .frame(width: 18)
+                            Text(action.title)
+                                .font(.system(size: 13.5, weight: .medium))
+                                .lineLimit(1)
+                            Spacer(minLength: 16)
+                            Keycap(action.shortcut?.symbols ?? [], tone: isSelected ? .onAccent : .plain)
+                        }
+                        .foregroundStyle(isSelected ? AnyShapeStyle(Theme.onAccent) : AnyShapeStyle(.primary))
+                        .padding(.leading, 9)
+                        .padding(.trailing, 7)
+                        .frame(height: 32)
+                        .background(
+                            isSelected ? AnyShapeStyle(Theme.accent) : AnyShapeStyle(.clear),
+                            in: RoundedRectangle(cornerRadius: 9, style: .continuous)
+                        )
                     }
-                    .font(.system(size: 13))
-                    .padding(.horizontal, 8)
-                    .frame(height: 30)
-                    .background(
-                        index == model.actionMenuIndex ? AnyShapeStyle(.primary.opacity(0.1)) : AnyShapeStyle(.clear),
-                        in: RoundedRectangle(cornerRadius: 7, style: .continuous)
-                    )
-                    .contentShape(Rectangle())
-                    .onTapGesture { model.perform(action, on: item) }
+                    .buttonStyle(PressableButtonStyle())
                 }
             }
-            .padding(6)
-            .frame(width: 300)
-            .background(.regularMaterial, in: RoundedRectangle(cornerRadius: 12, style: .continuous))
-            .overlay {
-                RoundedRectangle(cornerRadius: 12, style: .continuous)
-                    .strokeBorder(.primary.opacity(0.14))
-            }
-            .shadow(color: .black.opacity(0.25), radius: 16, y: 6)
-            .padding(.trailing, 8)
-            .padding(.bottom, LauncherMetrics.footerHeight + 6)
         }
+        .padding(7)
+        .frame(width: 290)
+        .glassSurface(cornerRadius: 16)
     }
 }

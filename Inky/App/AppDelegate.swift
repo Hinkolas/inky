@@ -12,6 +12,20 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         self.context = context
         let preferences = context.preferences
 
+        NSApp.appearance = preferences.appearance.appearance
+        preferences.onAppearanceChange = {
+            NSApp.appearance = preferences.appearance.appearance
+        }
+
+        #if DEBUG
+        // A quiet run must not be noticed: it shares the Mac, and the hotkey,
+        // with whoever is using it, and possibly with their own Inky.
+        if DebugLaunch.isQuiet {
+            DebugLaunch.apply(to: context)
+            return
+        }
+        #endif
+
         statusItem.onOpen = { [weak context] in context?.launcher.show() }
         statusItem.onSettings = { [weak context] in context?.showSettings() }
         statusItem.setVisible(preferences.showMenuBarIcon)
@@ -64,24 +78,44 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
 #if DEBUG
 /// Launch arguments that put the app into a known state for development:
 /// `--show`, `--pin`, `--quiet`, `--query <text>`, `--keys "tab a cmd+k hide show"`,
-/// `--settings [pane]`, `--new-quicklink`.
+/// `--settings [pane]`, `--new-quicklink`, `--quicklinks`,
+/// `--appearance light|dark`, `--backdrop light|dark`, `--data <folder>`.
 enum DebugLaunch {
-    static func apply(to context: AppContext) {
-        let arguments = ProcessInfo.processInfo.arguments
-        func value(after flag: String) -> String? {
-            guard let index = arguments.firstIndex(of: flag), index + 1 < arguments.count,
-                  !arguments[index + 1].hasPrefix("--")
-            else { return nil }
-            return arguments[index + 1]
-        }
+    private static let arguments = ProcessInfo.processInfo.arguments
 
-        let quiet = arguments.contains("--quiet")
+    static var isQuiet: Bool { arguments.contains("--quiet") }
+
+    /// A folder to keep quicklinks and usage in instead of the user's own,
+    /// so a run can save and delete freely.
+    static var dataDirectory: URL? {
+        guard let path = value(after: "--data") else { return nil }
+        let directory = URL(fileURLWithPath: path, isDirectory: true)
+        try? FileManager.default.createDirectory(at: directory, withIntermediateDirectories: true)
+        return directory
+    }
+
+    private static func value(after flag: String) -> String? {
+        guard let index = arguments.firstIndex(of: flag), index + 1 < arguments.count,
+              !arguments[index + 1].hasPrefix("--")
+        else { return nil }
+        return arguments[index + 1]
+    }
+
+    static func apply(to context: AppContext) {
+        let quiet = isQuiet
         context.launcher.isPinned = arguments.contains("--pin")
         context.launcher.debugQuiet = quiet
+        // Overrides the setting for this run only.
+        if let appearance = value(after: "--appearance").flatMap(AppearanceMode.init) {
+            NSApp.appearance = appearance.appearance
+        }
+        if quiet, let backdrop = value(after: "--backdrop") {
+            context.launcher.debugShowBackdrop(dark: backdrop == "dark")
+        }
         if arguments.contains("--settings") {
             context.showSettings(pane: value(after: "--settings"), activating: !quiet)
         }
-        guard arguments.contains("--show") || arguments.contains("--query") || arguments.contains("--new-quicklink") else {
+        guard !Set(arguments).isDisjoint(with: ["--show", "--query", "--new-quicklink", "--quicklinks"]) else {
             return
         }
         Task {
@@ -89,6 +123,9 @@ enum DebugLaunch {
             context.launcher.show()
             if let query = value(after: "--query") {
                 context.launcher.model.setQuery(query)
+            }
+            if arguments.contains("--quicklinks") {
+                context.launcher.model.showQuicklinks()
             }
             if arguments.contains("--new-quicklink") {
                 context.launcher.model.editQuicklink(nil)

@@ -4,8 +4,13 @@ import SwiftUI
 
 /// Draws an `Icon`: a Finder icon, or a symbol on a tinted tile.
 struct IconView: View {
+    enum Shape {
+        case tile, circle
+    }
+
     let icon: Icon
     var size: CGFloat = 24
+    var shape: Shape = .tile
 
     var body: some View {
         switch icon {
@@ -15,8 +20,8 @@ struct IconView: View {
                 .interpolation(.high)
                 .frame(width: size, height: size)
         case .symbol(let name, let tint):
-            RoundedRectangle(cornerRadius: size * 0.26, style: .continuous)
-                .fill(tint.color.gradient)
+            RoundedRectangle(cornerRadius: shape == .circle ? size / 2 : size * 0.26, style: .continuous)
+                .fill(tint.color)
                 .frame(width: size, height: size)
                 .overlay {
                     Image(systemName: name)
@@ -57,24 +62,149 @@ extension Tint {
     }
 }
 
-/// A row of keyboard keys, such as ⌘ K.
-struct Keycaps: View {
-    let keys: [String]
+/// A keyboard key or chord, such as ⌘K, drawn as one cap.
+struct Keycap: View {
+    enum Tone {
+        /// On a surface.
+        case plain
+        /// On the accent color, such as inside a selected row.
+        case onAccent
+    }
 
-    init(_ keys: [String]) {
+    let keys: [String]
+    var tone: Tone = .plain
+
+    init(_ keys: [String], tone: Tone = .plain) {
         self.keys = keys
+        self.tone = tone
     }
 
     var body: some View {
-        HStack(spacing: 3) {
-            ForEach(Array(keys.enumerated()), id: \.offset) { _, key in
-                Text(key)
-                    .font(.system(size: 11, weight: .medium))
-                    .foregroundStyle(.secondary)
-                    .padding(.horizontal, 5)
-                    .frame(minWidth: 20, minHeight: 20)
-                    .background(.primary.opacity(0.1), in: RoundedRectangle(cornerRadius: 5, style: .continuous))
-            }
+        if !keys.isEmpty {
+            Text(keys.joined())
+                .font(.system(size: 11, weight: .semibold))
+                .foregroundStyle(tone == .onAccent ? AnyShapeStyle(Theme.onAccent) : AnyShapeStyle(.secondary))
+                .padding(.horizontal, 5)
+                .frame(minWidth: 22, minHeight: 20)
+                .background(
+                    tone == .onAccent ? AnyShapeStyle(.white.opacity(0.22)) : AnyShapeStyle(Theme.subtleFill),
+                    in: RoundedRectangle(cornerRadius: 5.5, style: .continuous)
+                )
+                .fixedSize()
         }
+    }
+}
+
+/// Dims its label while pressed. For buttons that draw their own background.
+struct PressableButtonStyle: ButtonStyle {
+    func makeBody(configuration: Configuration) -> some View {
+        configuration.label
+            .opacity(configuration.isPressed ? 0.7 : 1)
+            .contentShape(Rectangle())
+    }
+}
+
+/// A round button that sits on a surface, such as the one for more actions.
+struct CircleButton: View {
+    let symbol: String
+    var size: CGFloat = 32
+    let help: String
+    let action: () -> Void
+
+    var body: some View {
+        Button(action: action) {
+            Image(systemName: symbol)
+                .font(.system(size: size * 0.4, weight: .bold))
+                .foregroundStyle(.primary.opacity(0.8))
+                .frame(width: size, height: size)
+                .background(Theme.controlFill, in: Circle())
+                .overlay { Circle().strokeBorder(Theme.controlStroke) }
+                .shadow(color: Theme.controlShadow, radius: 3, y: 1)
+        }
+        .buttonStyle(PressableButtonStyle())
+        .help(help)
+    }
+}
+
+/// A capsule button on a surface. `isProminent` fills it with the accent color.
+struct CapsuleButton: View {
+    let title: String
+    var keys: [String] = []
+    var isProminent = false
+    let action: () -> Void
+
+    var body: some View {
+        Button(action: action) {
+            HStack(spacing: 7) {
+                Text(title)
+                    .font(.system(size: 13.5, weight: .semibold))
+                    .foregroundStyle(isProminent ? AnyShapeStyle(Theme.onAccent) : AnyShapeStyle(.primary))
+                Keycap(keys, tone: isProminent ? .onAccent : .plain)
+            }
+            .padding(.leading, 14)
+            .padding(.trailing, keys.isEmpty ? 14 : 8)
+            .frame(height: 32)
+            .background(isProminent ? AnyShapeStyle(Theme.accent) : AnyShapeStyle(Theme.controlFill), in: Capsule())
+            .overlay {
+                if !isProminent { Capsule().strokeBorder(Theme.controlStroke) }
+            }
+            .shadow(color: isProminent ? Theme.accent.opacity(0.35) : Theme.controlShadow, radius: 3, y: 1)
+        }
+        .buttonStyle(PressableButtonStyle())
+    }
+}
+
+/// A small capsule that inserts or picks something.
+struct Chip: View {
+    let title: String
+    let action: () -> Void
+
+    var body: some View {
+        Button(action: action) {
+            Text(title)
+                .font(.system(size: 12.5, weight: .medium))
+                .padding(.horizontal, 10)
+                .frame(height: 26)
+                .background(Theme.subtleFill, in: Capsule())
+        }
+        .buttonStyle(PressableButtonStyle())
+    }
+}
+
+/// Lays views out in rows, wrapping to the next row when one is full.
+struct FlowLayout: Layout {
+    var spacing: CGFloat = 6
+
+    func sizeThatFits(proposal: ProposedViewSize, subviews: Subviews, cache: inout ()) -> CGSize {
+        let rows = arrange(subviews, width: proposal.width ?? .infinity)
+        return CGSize(width: proposal.width ?? rows.width, height: rows.height)
+    }
+
+    func placeSubviews(in bounds: CGRect, proposal: ProposedViewSize, subviews: Subviews, cache: inout ()) {
+        let rows = arrange(subviews, width: bounds.width)
+        for (subview, origin) in zip(subviews, rows.origins) {
+            subview.place(at: CGPoint(x: bounds.minX + origin.x, y: bounds.minY + origin.y), proposal: .unspecified)
+        }
+    }
+
+    private func arrange(_ subviews: Subviews, width: CGFloat) -> (origins: [CGPoint], width: CGFloat, height: CGFloat) {
+        var origins: [CGPoint] = []
+        var x: CGFloat = 0
+        var y: CGFloat = 0
+        var rowHeight: CGFloat = 0
+        var widest: CGFloat = 0
+        for subview in subviews {
+            let size = subview.sizeThatFits(.unspecified)
+            if x > 0, x + size.width > width {
+                x = 0
+                y += rowHeight + spacing
+                rowHeight = 0
+            }
+            origins.append(CGPoint(x: x, y: y))
+            x += size.width + spacing
+            rowHeight = max(rowHeight, size.height)
+            widest = max(widest, x - spacing)
+        }
+        return (origins, widest, y + rowHeight)
     }
 }

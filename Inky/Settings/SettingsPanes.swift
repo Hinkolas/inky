@@ -47,6 +47,11 @@ struct GeneralPane: View {
                     }
                 ))
                 Toggle("Show Inky in the menu bar", isOn: $preferences.showMenuBarIcon)
+                Picker("Appearance", selection: $preferences.appearance) {
+                    ForEach(AppearanceMode.allCases) { mode in
+                        Text(mode.title).tag(mode)
+                    }
+                }
             } footer: {
                 if let loginError {
                     Text(loginError).foregroundStyle(.red)
@@ -75,7 +80,7 @@ struct HotkeyRecorder: View {
                 if isRecording {
                     Text("Press a shortcut…").foregroundStyle(.secondary)
                 } else {
-                    Keycaps(combo.symbols)
+                    Keycap(combo.symbols)
                 }
             }
             .frame(minWidth: 120, minHeight: 22)

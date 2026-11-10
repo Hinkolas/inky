@@ -1,6 +1,33 @@
-import Foundation
+import AppKit
 import Observation
 import ServiceManagement
+
+/// Whether Inky is drawn light or dark.
+enum AppearanceMode: String, CaseIterable, Identifiable {
+    /// Follow the Mac.
+    case system
+    case light
+    case dark
+
+    var id: Self { self }
+
+    var title: String {
+        switch self {
+        case .system: "System"
+        case .light: "Light"
+        case .dark: "Dark"
+        }
+    }
+
+    /// Nil leaves the choice to the system.
+    var appearance: NSAppearance? {
+        switch self {
+        case .system: nil
+        case .light: NSAppearance(named: .aqua)
+        case .dark: NSAppearance(named: .darkAqua)
+        }
+    }
+}
 
 /// User settings, stored in UserDefaults.
 @Observable
@@ -10,6 +37,7 @@ final class Preferences {
     @ObservationIgnored private let defaults = UserDefaults.standard
     @ObservationIgnored var onHotkeyChange: (() -> Void)?
     @ObservationIgnored var onMenuBarChange: (() -> Void)?
+    @ObservationIgnored var onAppearanceChange: (() -> Void)?
 
     var hotkey: KeyCombo {
         didSet {
@@ -33,6 +61,13 @@ final class Preferences {
         }
     }
 
+    var appearance: AppearanceMode {
+        didSet {
+            defaults.set(appearance.rawValue, forKey: Key.appearance)
+            onAppearanceChange?()
+        }
+    }
+
     var fileSearchLimit: Int {
         didSet { defaults.set(fileSearchLimit, forKey: Key.fileSearchLimit) }
     }
@@ -51,6 +86,7 @@ final class Preferences {
         hotkey = defaults.data(forKey: Key.hotkey)
             .flatMap { try? JSONDecoder().decode(KeyCombo.self, from: $0) } ?? .defaultLauncher
         showMenuBarIcon = defaults.bool(forKey: Key.showMenuBarIcon)
+        appearance = defaults.string(forKey: Key.appearance).flatMap(AppearanceMode.init) ?? .system
         fileSearchLimit = defaults.integer(forKey: Key.fileSearchLimit)
         disabledProviders = Set(defaults.stringArray(forKey: Key.disabledProviders) ?? [])
     }
@@ -84,6 +120,7 @@ final class Preferences {
     private enum Key {
         static let hotkey = "hotkey"
         static let showMenuBarIcon = "showMenuBarIcon"
+        static let appearance = "appearance"
         static let fileSearchLimit = "fileSearchLimit"
         static let disabledProviders = "disabledProviders"
         static let hasLaunchedBefore = "hasLaunchedBefore"

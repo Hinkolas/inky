@@ -87,7 +87,19 @@ private final class StubProvider: Provider {
         let provider = StubProvider(id: "calc", titles: [])
         provider.instant = ["1+1": "2"]
         let engine = await makeEngine(provider, StubProvider(id: "apps", titles: ["1+1 Notes"]))
-        #expect(engine.results(for: "1+1").map(\.title) == ["Calc", "Results"])
+        #expect(engine.results(for: "1+1").map(\.title) == ["Calc", "Top hit"])
+    }
+
+    @Test func groupsMatchesBelowTheTopHitByProvider() async {
+        let engine = await makeEngine(
+            StubProvider(id: "links", titles: ["Safari Docs", "Disk Safety Guide"]),
+            StubProvider(id: "apps", titles: ["Safari", "Safe Mode"])
+        )
+        let sections = engine.results(for: "saf")
+        #expect(sections.map(\.title) == ["Top hit", "Apps", "Links"])
+        #expect(sections[0].items.map(\.title) == ["Safari"])
+        #expect(sections[1].items.map(\.title) == ["Safe Mode"])
+        #expect(sections[2].items.map(\.title) == ["Safari Docs", "Disk Safety Guide"])
     }
 
     @Test func findsNamesTypedWithASpace() async {
@@ -168,6 +180,15 @@ private final class StubProvider: Provider {
         #expect(!first.quicklinks.isEmpty)
         first.quicklinks.map(\.id).forEach(first.delete)
         #expect(QuicklinkStore(fileURL: url).quicklinks.isEmpty)
+    }
+
+    @Test func tellsLinkKindsApart() {
+        #expect(Quicklink(name: "", link: "https://example.com").kind == .website)
+        #expect(Quicklink(name: "", link: "example.com/page").kind == .website)
+        #expect(Quicklink(name: "", link: " ~/Downloads").kind == .file)
+        #expect(Quicklink(name: "", link: "/Applications").kind == .file)
+        #expect(Quicklink(name: "", link: "obsidian://open").kind == .appLink)
+        #expect(Quicklink(name: "", link: "mailto:{argument}").kind == .appLink)
     }
 
     @Test func summarizesLinks() {

@@ -12,7 +12,11 @@ final class AppContext {
     private var settingsWindow: SettingsWindowController?
 
     init() {
+        #if DEBUG
+        let directory = DebugLaunch.dataDirectory ?? AppSupport.directory
+        #else
         let directory = AppSupport.directory
+        #endif
         quicklinks = QuicklinkStore(fileURL: directory.appendingPathComponent("quicklinks.json"))
 
         let commands = InkyCommandProvider()
@@ -38,6 +42,7 @@ final class AppContext {
 
         commands.openSettings = { [unowned self] in showSettings() }
         commands.createQuicklink = { [unowned self] in launcher.model.editQuicklink(nil) }
+        commands.manageQuicklinks = { [unowned self] in launcher.model.showQuicklinks() }
         quicklinkProvider.onEdit = { [unowned self] quicklink in launcher.model.editQuicklink(quicklink) }
     }
 
@@ -62,6 +67,7 @@ final class InkyCommandProvider: Provider {
 
     var openSettings: () -> Void = {}
     var createQuicklink: () -> Void = {}
+    var manageQuicklinks: () -> Void = {}
 
     func candidates() async -> [ResultItem] {
         [
@@ -74,6 +80,18 @@ final class InkyCommandProvider: Provider {
                 actions: [
                     Action("Create Quicklink", symbol: "link.badge.plus", behavior: .keepOpen) { [weak self] _ in
                         self?.createQuicklink()
+                    },
+                ]
+            ),
+            ResultItem(
+                id: "inky:manage-quicklinks",
+                title: "Manage Quicklinks",
+                icon: .symbol("link", tint: .purple),
+                kind: "Command",
+                keywords: ["Edit Quicklinks", "Browse Quicklinks", "All Quicklinks"],
+                actions: [
+                    Action("Open", symbol: "link", behavior: .keepOpen) { [weak self] _ in
+                        self?.manageQuicklinks()
                     },
                 ]
             ),

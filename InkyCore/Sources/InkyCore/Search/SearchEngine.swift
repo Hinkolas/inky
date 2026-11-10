@@ -93,11 +93,11 @@ public final class SearchEngine {
             ? FuzzyMatcher.Pattern(query.replacingOccurrences(of: " ", with: ""))
             : nil
 
-        var ranked: [(item: ResultItem, score: Double)] = []
+        var ranked: [(item: ResultItem, group: String, score: Double)] = []
         for provider in enabledProviders {
             for entry in index[provider.id] ?? [] {
                 guard let match = match(entry, pattern, compact), match >= minimumScore else { continue }
-                ranked.append((entry.item, match + usage.boost(for: entry.item.id, query: query)))
+                ranked.append((entry.item, provider.info.title, match + usage.boost(for: entry.item.id, query: query)))
             }
         }
         ranked.sort {
@@ -105,11 +105,23 @@ public final class SearchEngine {
                 ? $0.score > $1.score
                 : $0.item.title.localizedStandardCompare($1.item.title) == .orderedAscending
         }
-        if !ranked.isEmpty {
-            sections.append(ResultSection(title: "Results", items: ranked.prefix(maxResults).map(\.item)))
+
+        // The best match stands alone. The rest follow under the provider they
+        // came from, and the provider holding the next best match goes first.
+        var groups: [ResultSection] = []
+        for (offset, entry) in ranked.prefix(maxResults).enumerated() {
+            if offset == 0 {
+                groups.append(ResultSection(title: Self.topHitTitle, items: [entry.item]))
+            } else if let existing = groups.firstIndex(where: { $0.title == entry.group }) {
+                groups[existing].items.append(entry.item)
+            } else {
+                groups.append(ResultSection(title: entry.group, items: [entry.item]))
+            }
         }
-        return sections
+        return sections + groups
     }
+
+    public static let topHitTitle = "Top hit"
 
     /// Results that take time, to be appended below `results(for:)`.
     public func deferredResults(for query: String) async -> [ResultSection] {
