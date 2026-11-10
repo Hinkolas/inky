@@ -1,4 +1,6 @@
 import AppKit
+import OSLog
+import UniformTypeIdentifiers
 
 public struct KeyShortcut: Sendable, Hashable {
     public struct Modifiers: OptionSet, Sendable, Hashable {
@@ -114,9 +116,7 @@ public struct Action: Identifiable, Sendable {
 public extension Action {
     static func open(path: String, title: String = "Open") -> Action {
         Action(title, symbol: "arrow.up.forward.app") { _ in
-            guard NSWorkspace.shared.open(URL(fileURLWithPath: path)) else {
-                throw InkyError("Could not open \((path as NSString).lastPathComponent)")
-            }
+            try Opener.open(path: path)
         }
     }
 
@@ -129,6 +129,34 @@ public extension Action {
     static func copy(_ text: String, title: String, shortcut: KeyShortcut? = nil) -> Action {
         Action(title, symbol: "doc.on.doc", shortcut: shortcut) { _ in
             Pasteboard.copy(text)
+        }
+    }
+}
+
+public enum Opener {
+    private static let log = Logger(subsystem: "io.github.hinkolas.inky", category: "open")
+
+    /// Opens a file or folder, or launches an application.
+    @MainActor
+    public static func open(path: String) throws {
+        let url = URL(fileURLWithPath: path)
+        let name = url.lastPathComponent
+        guard FileManager.default.fileExists(atPath: path) else {
+            throw InkyError("“\(name)” no longer exists")
+        }
+
+        // Applications must be launched, not opened. Opening one like a
+        // document makes macOS record the open on the bundle itself, which it
+        // then blocks and reports as Inky trying to modify the app.
+        let type = try? url.resourceValues(forKeys: [.contentTypeKey]).contentType
+        if type?.conforms(to: .applicationBundle) ?? (url.pathExtension == "app") {
+            NSWorkspace.shared.openApplication(at: url, configuration: NSWorkspace.OpenConfiguration()) { _, error in
+                if let error {
+                    log.error("Could not launch \(name, privacy: .public): \(error.localizedDescription, privacy: .public)")
+                }
+            }
+        } else if !NSWorkspace.shared.open(url) {
+            throw InkyError("Could not open “\(name)”")
         }
     }
 }

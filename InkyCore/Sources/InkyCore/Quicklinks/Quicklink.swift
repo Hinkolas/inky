@@ -113,6 +113,8 @@ public enum QuicklinkOpener {
                 throw InkyError("The app chosen for “\(quicklink.name)” is not installed")
             }
             NSWorkspace.shared.open([url], withApplicationAt: app, configuration: NSWorkspace.OpenConfiguration())
+        } else if url.isFileURL {
+            try Opener.open(path: url.path)
         } else if !NSWorkspace.shared.open(url) {
             throw InkyError("Could not open \(url.absoluteString)")
         }
