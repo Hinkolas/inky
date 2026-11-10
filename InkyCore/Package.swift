@@ -8,7 +8,7 @@ let package = Package(
         .library(name: "InkyCore", targets: ["InkyCore"]),
     ],
     targets: [
-        .target(name: "InkyCore"),
+        .target(name: "InkyCore", resources: [.process("Resources")]),
         .testTarget(name: "InkyCoreTests", dependencies: ["InkyCore"]),
     ]
 )

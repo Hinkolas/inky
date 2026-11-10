@@ -1,0 +1,6452 @@
+Shanghai	CN	Asia/Shanghai
+Chongqing	CN	Asia/Shanghai
+Chengdu	CN	Asia/Shanghai
+Beijing	CN	Asia/Shanghai
+Guangzhou	CN	Asia/Shanghai
+Shenzhen	CN	Asia/Shanghai
+Kinshasa	CD	Africa/Kinshasa
+Istanbul	TR	Europe/Istanbul
+Lagos	NG	Africa/Lagos
+Ho Chi Minh City	VN	Asia/Ho_Chi_Minh
+Tianjin	CN	Asia/Shanghai
+Wuhan	CN	Asia/Shanghai
+Lahore	PK	Asia/Karachi
+Xi’an	CN	Asia/Shanghai
+Mumbai	IN	Asia/Kolkata
+São Paulo	BR	America/Sao_Paulo
+Mexico City	MX	America/Mexico_City
+Hangzhou	CN	Asia/Shanghai
+Karachi	PK	Asia/Karachi
+Delhi	IN	Asia/Kolkata
+Moscow	RU	Europe/Moscow
+Dhaka	BD	Asia/Dhaka
+Seoul	KR	Asia/Seoul
+Harbin	CN	Asia/Shanghai
+Tokyo	JP	Asia/Tokyo
+Dongguan	CN	Asia/Shanghai
+Cairo	EG	Africa/Cairo
+Hefei	CN	Asia/Shanghai
+Johannesburg	ZA	Africa/Johannesburg
+Weifang	CN	Asia/Shanghai
+Nanjing	CN	Asia/Shanghai
+Shenyang	CN	Asia/Shanghai
+Foshan	CN	Asia/Shanghai
+London	GB	Europe/London
+New York City	US	America/New_York
+Jakarta	ID	Asia/Jakarta
+Bengaluru	IN	Asia/Kolkata
+Jinan	CN	Asia/Shanghai
+Hanoi	VN	Asia/Bangkok
+Taipei	TW	Asia/Taipei
+Lima	PE	America/Lima
+Bogotá	CO	America/Bogota
+Dalian	CN	Asia/Shanghai
+Hong Kong	HK	Asia/Hong_Kong
+Baghdad	IQ	Asia/Baghdad
+Wuzhong	CN	Asia/Shanghai
+Qingdao	CN	Asia/Shanghai
+Tehran	IR	Asia/Tehran
+Yantai	CN	Asia/Shanghai
+Hyderabad	IN	Asia/Kolkata
+Rio de Janeiro	BR	America/Sao_Paulo
+Suzhou	CN	Asia/Shanghai
+Puxi	CN	Asia/Shanghai
+Zhengzhou	CN	Asia/Shanghai
+Ahmedabad	IN	Asia/Kolkata
+Abidjan	CI	Africa/Abidjan
+Nanning	CN	Asia/Shanghai
+Kunming	CN	Asia/Shanghai
+Shijiazhuang	CN	Asia/Shanghai
+Changchun	CN	Asia/Shanghai
+Pudong	CN	Asia/Shanghai
+Sydney	AU	Australia/Sydney
+Singapore	SG	Asia/Singapore
+Melbourne	AU	Australia/Melbourne
+Dar es Salaam	TZ	Africa/Dar_es_Salaam
+Saint Petersburg	RU	Europe/Moscow
+Taiyuan	CN	Asia/Shanghai
+Alexandria	EG	Africa/Cairo
+Bangkok	TH	Asia/Bangkok
+Kano	NG	Africa/Lagos
+Santiago	CL	America/Santiago
+Cape Town	ZA	Africa/Johannesburg
+Peshawar	PK	Asia/Karachi
+Zibo	CN	Asia/Shanghai
+Jeddah	SA	Asia/Riyadh
+Chennai	IN	Asia/Kolkata
+Kolkata	IN	Asia/Kolkata
+Xiamen	CN	Asia/Shanghai
+Surat	IN	Asia/Kolkata
+Yangzhou	CN	Asia/Shanghai
+Huai'an	CN	Asia/Shanghai
+Guiyang	CN	Asia/Shanghai
+Yangon	MM	Asia/Yangon
+Bao'an	CN	Asia/Shanghai
+Kabul	AF	Asia/Kabul
+Nairobi	KE	Africa/Nairobi
+Wuxi	CN	Asia/Shanghai
+Giza	EG	Africa/Cairo
+Lanzhou	CN	Asia/Shanghai
+Bamako	ML	Africa/Bamako
+Riyadh	SA	Asia/Riyadh
+Fuzhou	CN	Asia/Shanghai
+Ürümqi	CN	Asia/Urumqi	UEruemqi
+New Taipei City	TW	Asia/Taipei
+New Territories	HK	Asia/Hong_Kong
+Chattogram	BD	Asia/Dhaka
+Addis Ababa	ET	Africa/Addis_Ababa
+Zaozhuang	CN	Asia/Shanghai
+Zhongshan	CN	Asia/Shanghai
+Shantou	CN	Asia/Shanghai
+Los Angeles	US	America/Los_Angeles
+Faisalabad	PK	Asia/Karachi
+Dubai	AE	Asia/Dubai
+Yokohama	JP	Asia/Tokyo
+Ningbo	CN	Asia/Shanghai
+Nanhai	CN	Asia/Shanghai
+Casablanca	MA	Africa/Casablanca
+Ibadan	NG	Africa/Lagos
+Puyang	CN	Asia/Shanghai
+Ankara	TR	Europe/Istanbul
+Shiyan	CN	Asia/Shanghai
+Hohhot	CN	Asia/Shanghai
+Berlin	DE	Europe/Berlin
+Tangshan	CN	Asia/Shanghai
+Rawalpindi	PK	Asia/Karachi
+Lüliang	CN	Asia/Shanghai	Lueliang
+Durban	ZA	Africa/Johannesburg
+Anshan	CN	Asia/Shanghai
+Changzhou	CN	Asia/Shanghai
+Busan	KR	Asia/Seoul
+Madrid	ES	Europe/Madrid
+Pyongyang	KP	Asia/Pyongyang
+Pune	IN	Asia/Kolkata
+Datong	CN	Asia/Shanghai
+Bursa	TR	Europe/Istanbul
+Changsha	CN	Asia/Shanghai
+Quezon City	PH	Asia/Manila
+Jaipur	IN	Asia/Kolkata
+Huainan	CN	Asia/Shanghai
+Surabaya	ID	Asia/Jakarta
+Incheon	KR	Asia/Seoul
+Haikou	CN	Asia/Shanghai
+Caracas	VE	America/Caracas
+Kyiv	UA	Europe/Kyiv
+İzmir	TR	Europe/Istanbul
+Huizhou	CN	Asia/Shanghai
+Buenos Aires	AR	America/Argentina/Buenos_Aires
+Yinchuan	CN	Asia/Shanghai
+Taichung	TW	Asia/Taipei
+Kanpur	IN	Asia/Kolkata
+Toronto	CA	America/Toronto
+Quito	EC	America/Guayaquil
+Brisbane	AU	Australia/Brisbane
+Luanda	AO	Africa/Luanda
+Baotou	CN	Asia/Shanghai
+Osaka	JP	Asia/Tokyo
+Linyi	CN	Asia/Shanghai
+Baoding	CN	Asia/Shanghai
+Kaohsiung	TW	Asia/Taipei
+Brooklyn	US	America/New_York
+Guayaquil	EC	America/Guayaquil
+Belo Horizonte	BR	America/Sao_Paulo
+Minhang	CN	Asia/Shanghai
+Bazhong	CN	Asia/Shanghai
+Salvador	BR	America/Bahia
+Abuja	NG	Africa/Lagos
+Gazipur	BD	Asia/Dhaka
+Chicago	US	America/Chicago
+Wenzhou	CN	Asia/Shanghai
+Bekasi	ID	Asia/Jakarta
+Dakar	SN	Africa/Dakar
+Haiphong	VN	Asia/Bangkok
+Yunfu	CN	Asia/Shanghai
+Navi Mumbai	IN	Asia/Kolkata
+Mogadishu	SO	Africa/Mogadishu
+Kumasi	GH	Africa/Accra
+Bandung	ID	Asia/Jakarta
+Gujranwala	PK	Asia/Karachi
+Medan	ID	Asia/Jakarta
+Lucknow	IN	Asia/Kolkata
+Xining	CN	Asia/Shanghai
+Ouagadougou	BF	Africa/Ouagadougou
+Nagpur	IN	Asia/Kolkata
+Fortaleza	BR	America/Fortaleza
+Cali	CO	America/Bogota
+Perth	AU	Australia/Perth
+Daegu	KR	Asia/Seoul
+Algiers	DZ	Africa/Algiers
+Nanchang	CN	Asia/Shanghai
+Baku	AZ	Asia/Baku
+Nagoya	JP	Asia/Tokyo
+Rome	IT	Europe/Rome
+Queens	US	America/New_York
+Houston	US	America/Chicago
+Mashhad	IR	Asia/Tehran
+Shaoxing	CN	Asia/Shanghai
+Nantong	CN	Asia/Shanghai
+Baoshan	CN	Asia/Shanghai
+Kowloon	HK	Asia/Hong_Kong
+Gaziantep	TR	Europe/Istanbul
+Lubumbashi	CD	Africa/Lubumbashi
+Manaus	BR	America/Manaus
+Lusaka	ZM	Africa/Lusaka
+Brasília	BR	America/Sao_Paulo
+Zhuhai	CN	Asia/Shanghai
+Santo Domingo	DO	America/Santo_Domingo
+Lomé	TG	Africa/Lome
+Multan	PK	Asia/Karachi
+Havana	CU	America/Havana
+Depok	ID	Asia/Jakarta
+Ordos	CN	Asia/Shanghai
+Paris	FR	Europe/Paris
+Coimbatore	IN	Asia/Kolkata
+Qingyang	CN	Asia/Shanghai
+Port Harcourt	NG	Africa/Lagos
+Pretoria	ZA	Africa/Johannesburg
+Córdoba	AR	America/Argentina/Cordoba
+Mbuji-Mayi	CD	Africa/Lubumbashi
+Aleppo	SY	Asia/Damascus
+Kunshan	CN	Asia/Shanghai
+Al Mawşil al Jadīdah	IQ	Asia/Baghdad
+Zunyi	CN	Asia/Shanghai
+La Paz	BO	America/La_Paz
+Lianyungang	CN	Asia/Shanghai
+Medellín	CO	America/Bogota
+Puning	CN	Asia/Shanghai
+Indore	IN	Asia/Kolkata
+Brazzaville	CG	Africa/Brazzaville
+Tashkent	UZ	Asia/Tashkent
+Ganzhou	CN	Asia/Shanghai
+Almaty	KZ	Asia/Almaty
+Khartoum	SD	Africa/Khartoum
+Hamburg	DE	Europe/Berlin
+Sapporo	JP	Asia/Tokyo
+Songjiang	CN	Asia/Shanghai
+Accra	GH	Africa/Accra
+Curitiba	BR	America/Sao_Paulo
+Sanaa	YE	Asia/Aden
+Conakry	GN	Africa/Conakry
+Tangerang	ID	Asia/Jakarta
+Tijuana	MX	America/Tijuana
+Beirut	LB	Asia/Beirut
+Jieyang	CN	Asia/Shanghai
+Jilin	CN	Asia/Shanghai
+Jiading	CN	Asia/Shanghai
+Bucharest	RO	Europe/Bucharest
+Camayenne	GN	Africa/Conakry
+Kakamega	KE	Africa/Nairobi
+Shangqiu	CN	Asia/Shanghai
+Nanchong	CN	Asia/Shanghai
+Tainan	TW	Asia/Taipei
+Kaduna	NG	Africa/Lagos
+Omdurman	SD	Africa/Khartoum
+Davao	PH	Asia/Manila
+Thāne	IN	Asia/Kolkata
+Iztapalapa	MX	America/Mexico_City
+Diyarbakır	TR	Europe/Istanbul	Diyarbakir
+Santa Cruz de la Sierra	BO	America/La_Paz
+Vadodara	IN	Asia/Kolkata
+Adana	TR	Europe/Istanbul
+Nanyang	CN	Asia/Shanghai
+Abu Dhabi	AE	Asia/Dubai
+Palembang	ID	Asia/Jakarta
+Sharjah	AE	Asia/Dubai
+Bhopal	IN	Asia/Kolkata
+Jiangmen	CN	Asia/Shanghai
+Benin City	NG	Africa/Lagos
+Jiangyin	CN	Asia/Shanghai
+Fuyang	CN	Asia/Shanghai
+Montréal	CA	America/Toronto
+Bayan Nur	CN	Asia/Shanghai
+Chengtangcun	CN	Asia/Shanghai
+Maracaibo	VE	America/Caracas
+Chaozhou	CN	Asia/Shanghai
+Minsk	BY	Europe/Minsk
+Budapest	HU	Europe/Budapest
+Qingyuan	CN	Asia/Shanghai
+Tai’an	CN	Asia/Shanghai
+Rasapūdipalem	IN	Asia/Kolkata
+Pimpri-Chinchwad	IN	Asia/Kolkata
+Caloocan	PH	Asia/Manila
+Warsaw	PL	Europe/Warsaw
+Soweto	ZA	Africa/Johannesburg
+Semarang	ID	Asia/Jakarta
+Puebla	MX	America/Mexico_City
+Vienna	AT	Europe/Vienna
+Barcelona	ES	Europe/Madrid
+Patna	IN	Asia/Kolkata
+Mosul	IQ	Asia/Baghdad
+Kallakurichi	IN	Asia/Kolkata
+Kampala	UG	Africa/Kampala
+Changshu	CN	Asia/Shanghai
+Rabat	MA	Africa/Casablanca
+Recife	BR	America/Recife
+Phoenix	US	America/Phoenix
+Ecatepec de Morelos	MX	America/Mexico_City
+Lu’an	CN	Asia/Shanghai
+Valencia	VE	America/Caracas
+Ludhiana	IN	Asia/Kolkata
+Yancheng	CN	Asia/Shanghai
+Novosibirsk	RU	Asia/Novosibirsk
+Erbil	IQ	Asia/Baghdad
+Fukuoka	JP	Asia/Tokyo
+Taizhou	CN	Asia/Shanghai
+Daqing	CN	Asia/Shanghai
+Kisangani	CD	Africa/Lubumbashi
+Manila	PH	Asia/Manila
+Wuhu	CN	Asia/Shanghai
+Santiago de Querétaro	MX	America/Mexico_City
+Dazhou	CN	Asia/Shanghai
+León de los Aldama	MX	America/Mexico_City
+Makkah	SA	Asia/Riyadh
+Philadelphia	US	America/New_York
+Phnom Penh	KH	Asia/Phnom_Penh
+Guilin	CN	Asia/Shanghai
+Damascus	SY	Asia/Damascus
+Quetta	PK	Asia/Karachi
+Zhaoqing	CN	Asia/Shanghai
+Onitsha	NG	Africa/Lagos
+Mianyang	CN	Asia/Shanghai
+Auckland	NZ	Pacific/Auckland
+Isfahan	IR	Asia/Tehran
+Wanzhou	CN	Asia/Shanghai
+Astana	KZ	Asia/Almaty
+Harare	ZW	Africa/Harare
+Monrovia	LR	Africa/Monrovia
+Putian	CN	Asia/Shanghai
+Kawasaki	JP	Asia/Tokyo
+Goiânia	BR	America/Sao_Paulo
+San Antonio	US	America/Chicago
+Kobe	JP	Asia/Tokyo
+Jinzhou	CN	Asia/Shanghai
+Stockholm	SE	Europe/Stockholm
+Ciudad Juárez	MX	America/Ciudad_Juarez
+Cần Thơ	VN	Asia/Ho_Chi_Minh
+Munich	DE	Europe/Berlin
+Khulna	BD	Asia/Dhaka
+Belém	BR	America/Belem
+Yekaterinburg	RU	Asia/Yekaterinburg
+Porto Alegre	BR	America/Sao_Paulo
+Manhattan	US	America/New_York
+Nashik	IN	Asia/Kolkata
+Asunción	PY	America/Asuncion
+Yiwu	CN	Asia/Shanghai
+Zapopan	MX	America/Mexico_City
+Makassar	ID	Asia/Makassar
+Adelaide	AU	Australia/Adelaide
+Quanzhou	CN	Asia/Shanghai
+Madurai	IN	Asia/Kolkata
+Jinhua	CN	Asia/Shanghai
+Kyoto	JP	Asia/Tokyo
+Cixi	CN	Asia/Shanghai
+Changde	CN	Asia/Shanghai
+Kuala Lumpur	MY	Asia/Kuala_Lumpur
+Kayseri	TR	Europe/Istanbul
+Kaifeng	CN	Asia/Shanghai
+Karaj	IR	Asia/Tehran
+Kathmandu	NP	Asia/Kathmandu
+Daejeon	KR	Asia/Seoul
+Baoji	CN	Asia/Shanghai
+Suqian	CN	Asia/Shanghai
+Liuzhou	CN	Asia/Shanghai
+Tirunelveli	IN	Asia/Kolkata
+Konya	TR	Europe/Istanbul
+Zhangjiagang	CN	Asia/Shanghai
+Agra	IN	Asia/Kolkata
+South Tangerang	ID	Asia/Jakarta
+Tabriz	IR	Asia/Tehran
+Kharkiv	UA	Europe/Kyiv
+Xinyang	CN	Asia/Shanghai
+Jinjiang	CN	Asia/Shanghai
+Faridabad	IN	Asia/Kolkata
+Bozhou	CN	Asia/Shanghai
+Qujing	CN	Asia/Shanghai
+San Diego	US	America/Los_Angeles
+Gwangju	KR	Asia/Seoul
+Zhanjiang	CN	Asia/Shanghai
+Fushun	CN	Asia/Shanghai
+Rājkot	IN	Asia/Kolkata
+Luoyang	CN	Asia/Shanghai
+Guadalajara	MX	America/Mexico_City
+The Bronx	US	America/New_York
+Guankou	CN	Asia/Shanghai
+Huế	VN	Asia/Bangkok
+Milan	IT	Europe/Rome
+Najafgarh	IN	Asia/Kolkata
+Lianjiang	CN	Asia/Shanghai
+N'Djamena	TD	Africa/Ndjamena
+Handan	CN	Asia/Shanghai
+Bannu	PK	Asia/Karachi
+Yichang	CN	Asia/Shanghai
+Antananarivo	MG	Indian/Antananarivo
+Heze	CN	Asia/Shanghai
+Guarulhos	BR	America/Sao_Paulo
+Abobo	CI	Africa/Abidjan
+Jamshedpur	IN	Asia/Kolkata
+Douala	CM	Africa/Douala
+Antalya	TR	Europe/Istanbul
+Basrah	IQ	Asia/Baghdad
+Dallas	US	America/Chicago
+Saitama	JP	Asia/Tokyo
+Niamey	NE	Africa/Niamey
+Liupanshui	CN	Asia/Shanghai
+Taguig	PH	Asia/Manila
+Maoming	CN	Asia/Shanghai
+Calgary	CA	America/Edmonton
+Tripoli	LY	Africa/Tripoli
+Madinah	SA	Asia/Riyadh
+Yaoundé	CM	Africa/Douala
+Batam	ID	Asia/Jakarta
+Qinzhou	CN	Asia/Shanghai
+Luohe	CN	Asia/Shanghai
+Xiangyang	CN	Asia/Shanghai
+Yangjiang	CN	Asia/Shanghai
+Yixing	CN	Asia/Shanghai
+Pimpri	IN	Asia/Kolkata
+Da Nang	VN	Asia/Ho_Chi_Minh
+Amman	JO	Asia/Amman
+Budta	PH	Asia/Manila
+Belgrade	RS	Europe/Belgrade
+Biên Hòa	VN	Asia/Ho_Chi_Minh
+Kananga	CD	Africa/Lubumbashi
+Qingpu	CN	Asia/Shanghai
+Montevideo	UY	America/Montevideo
+Xuchang	CN	Asia/Shanghai
+Kalyān	IN	Asia/Kolkata
+Zigong	CN	Asia/Shanghai
+Nizhniy Novgorod	RU	Europe/Moscow
+Jepara	ID	Asia/Jakarta
+Maputo	MZ	Africa/Maputo
+Xuzhou	CN	Asia/Shanghai
+Dammam	SA	Asia/Riyadh
+Ra’s Bayrūt	LB	Asia/Beirut
+Neijiang	CN	Asia/Shanghai
+Shiraz	IR	Asia/Tehran
+Heshan	CN	Asia/Shanghai
+Dombivali	IN	Asia/Kolkata
+Kazan	RU	Europe/Moscow
+Jining	CN	Asia/Shanghai
+Barquisimeto	VE	America/Caracas
+Shubrā al Khaymah	EG	Africa/Cairo
+Putuo	CN	Asia/Shanghai
+Port-au-Prince	HT	America/Port-au-Prince
+Suwon	KR	Asia/Seoul
+Liaocheng	CN	Asia/Shanghai
+Jinzhong	CN	Asia/Shanghai
+Callao	PE	America/Lima
+Meerut	IN	Asia/Kolkata
+Virār	IN	Asia/Kolkata
+Nowrangapur	IN	Asia/Kolkata
+Karbala	IQ	Asia/Baghdad
+Changzhi	CN	Asia/Shanghai
+Tianshui	CN	Asia/Shanghai
+Sadr City	IQ	Asia/Baghdad
+Yangpu	CN	Asia/Shanghai
+Mombasa	KE	Africa/Nairobi
+Mandalay	MM	Asia/Yangon
+Srinagar	IN	Asia/Kolkata
+Barranquilla	CO	America/Bogota
+Chelyabinsk	RU	Asia/Yekaterinburg
+Mérida	MX	America/Merida
+Hiroshima	JP	Asia/Tokyo
+Santiago de los Caballeros	DO	America/Santo_Domingo
+Shymkent	KZ	Asia/Almaty
+Weinan	CN	Asia/Shanghai
+Ghāziābād	IN	Asia/Kolkata
+Matola	MZ	Africa/Maputo
+Dhanbad	IN	Asia/Kolkata
+Arequipa	PE	America/Lima
+Hong Kong Island	HK	Asia/Hong_Kong
+Fes	MA	Africa/Casablanca
+Gustavo Adolfo Madero	MX	America/Mexico_City
+Nouakchott	MR	Africa/Nouakchott
+Jiaxing	CN	Asia/Shanghai
+Aurangabad	IN	Asia/Kolkata
+Zhongwei	CN	Asia/Shanghai
+Omsk	RU	Asia/Omsk
+Pikine	SN	Africa/Dakar
+Pekanbaru	ID	Asia/Jakarta
+Panjin	CN	Asia/Shanghai
+Prague	CZ	Europe/Prague
+Varanasi	IN	Asia/Kolkata
+Jiujiang	CN	Asia/Shanghai
+Samara	RU	Europe/Samara
+Aba	NG	Africa/Lagos
+Amritsar	IN	Asia/Kolkata
+Birmingham	GB	Europe/London
+Copenhagen	DK	Europe/Copenhagen
+Sofia	BG	Europe/Sofia
+Anyang	CN	Asia/Shanghai
+Yerevan	AM	Asia/Yerevan
+Luohu District	CN	Asia/Shanghai
+Vijayawada	IN	Asia/Kolkata
+Fengxiang	CN	Asia/Shanghai
+Bijie	CN	Asia/Shanghai
+Monterrey	MX	America/Monterrey
+Kigali	RW	Africa/Kigali
+Rostov-on-Don	RU	Europe/Moscow
+Zhuzhou	CN	Asia/Shanghai
+Rui’an	CN	Asia/Shanghai
+Malingao	PH	Asia/Manila
+Touba	SN	Africa/Dakar
+Ufa	RU	Asia/Yekaterinburg
+Ranchi	IN	Asia/Kolkata
+Zoucheng	CN	Asia/Shanghai
+Shangrao	CN	Asia/Shanghai
+Lilongwe	MW	Africa/Blantyre
+Huaibei	CN	Asia/Shanghai
+Maiduguri	NG	Africa/Lagos
+Xuhui	CN	Asia/Shanghai
+Meishan	CN	Asia/Shanghai
+Mwanza	TZ	Africa/Dar_es_Salaam
+Wuchang	CN	Asia/Shanghai
+Ulsan	KR	Asia/Seoul
+Sendai	JP	Asia/Tokyo
+Krasnoyarsk	RU	Asia/Krasnoyarsk
+Bandar Lampung	ID	Asia/Jakarta
+Guigang	CN	Asia/Shanghai
+Oslo	NO	Europe/Oslo
+Jabalpur	IN	Asia/Kolkata
+Ilorin	NG	Africa/Lagos
+Aden	YE	Asia/Aden
+Bogor	ID	Asia/Jakarta
+Ciudad Nezahualcoyotl	MX	America/Mexico_City
+Hengyang	CN	Asia/Shanghai
+Prayagraj	IN	Asia/Kolkata
+Trujillo	PE	America/Lima
+Visakhapatnam	IN	Asia/Kolkata
+Goyang-si	KR	Asia/Seoul
+Yulin	CN	Asia/Shanghai
+Jodhpur	IN	Asia/Kolkata
+Gwalior	IN	Asia/Kolkata
+Jingzhou	CN	Asia/Shanghai
+Gqeberha	ZA	Africa/Johannesburg
+Tbilisi	GE	Asia/Tbilisi
+Voronezh	RU	Europe/Moscow
+Xinxiang	CN	Asia/Shanghai
+Yichun	CN	Asia/Shanghai
+Jos	NG	Africa/Lagos
+Sokoto	NG	Africa/Lagos
+Tangier	MA	Africa/Casablanca
+Teni	IN	Asia/Kolkata
+Xianyang	CN	Asia/Shanghai
+Mexicali	MX	America/Tijuana
+Pointe-Noire	CG	Africa/Brazzaville
+Maceió	BR	America/Maceio
+Campinas	BR	America/Sao_Paulo
+Sanya	CN	Asia/Shanghai
+Rangpur	BD	Asia/Dhaka
+Kirkuk	IQ	Asia/Baghdad
+Ashgabat	TM	Asia/Ashgabat
+Shaoguan	CN	Asia/Shanghai
+Howrah	IN	Asia/Kolkata
+Raipur	IN	Asia/Kolkata
+Changwon	KR	Asia/Seoul
+Longyan	CN	Asia/Shanghai
+Köln	DE	Europe/Berlin	Koeln
+Dublin	IE	Europe/Dublin
+Tiruchirappalli	IN	Asia/Kolkata
+Yongzhou	CN	Asia/Shanghai
+Brussels	BE	Europe/Brussels
+Zamboanga	PH	Asia/Manila
+Ottawa	CA	America/Toronto
+Huzhou	CN	Asia/Shanghai
+Xinyi	CN	Asia/Shanghai
+Volgograd	RU	Europe/Volgograd
+Khartoum North	SD	Africa/Khartoum
+Edmonton	CA	America/Edmonton
+Odesa	UA	Europe/Kyiv
+Wuwei	CN	Asia/Shanghai
+Jacksonville	US	America/New_York
+Fort Worth	US	America/Chicago
+Yishui	CN	Asia/Shanghai
+Hanzhong	CN	Asia/Shanghai
+Hezhou	CN	Asia/Shanghai
+Pest	HU	Europe/Budapest
+Kota	IN	Asia/Kolkata
+Shivaji Nagar	IN	Asia/Kolkata
+Zhu Cheng City	CN	Asia/Shanghai
+Dongying	CN	Asia/Shanghai
+Luzhou	CN	Asia/Shanghai
+San Jose	US	America/Los_Angeles
+Sholapur	IN	Asia/Kolkata
+Marrakesh	MA	Africa/Casablanca
+Guatemala City	GT	America/Guatemala
+Meizhou	CN	Asia/Shanghai
+Yueyang	CN	Asia/Shanghai
+Laiwu	CN	Asia/Shanghai
+Esenyurt	TR	Europe/Istanbul
+Perm	RU	Asia/Yekaterinburg
+Zaria	NG	Africa/Lagos
+Kennedy	CO	America/Bogota
+Chiba	JP	Asia/Tokyo
+Pingdingshan	CN	Asia/Shanghai
+Ciudad Guayana	VE	America/Caracas
+Sargodha	PK	Asia/Karachi
+Austin	US	America/Chicago
+Managua	NI	America/Managua
+Bengbu	CN	Asia/Shanghai
+Salé	MA	Africa/Casablanca
+Jerusalem	IL	Asia/Jerusalem
+Chandigarh	IN	Asia/Kolkata
+Dnipro	UA	Europe/Kyiv
+Feicheng	CN	Asia/Shanghai
+Cebu City	PH	Asia/Manila
+Sanhe	CN	Asia/Shanghai
+Guli	CN	Asia/Shanghai
+Tiruppur	IN	Asia/Kolkata
+Guwahati	IN	Asia/Kolkata
+Xiangtan	CN	Asia/Shanghai
+Linfen	CN	Asia/Shanghai
+Victoria	HK	Asia/Hong_Kong
+Zhenjiang	CN	Asia/Shanghai
+Enugu	NG	Africa/Lagos
+Rosario	AR	America/Argentina/Cordoba
+Sulţānah	SA	Asia/Riyadh
+Huludao	CN	Asia/Shanghai
+Hubballi	IN	Asia/Kolkata
+Padang	ID	Asia/Jakarta
+Kitakyushu	JP	Asia/Tokyo
+Taiz	YE	Asia/Aden
+Setagaya	JP	Asia/Tokyo
+Kingston	JM	America/Jamaica
+Jing’an	CN	Asia/Shanghai
+Chihuahua	MX	America/Chihuahua
+Nay Pyi Taw	MM	Asia/Yangon
+Eskişehir	TR	Europe/Istanbul
+Mysuru	IN	Asia/Kolkata
+Chengde	CN	Asia/Shanghai
+Salem	IN	Asia/Kolkata
+São Luís	BR	America/Fortaleza
+Seongnam-si	KR	Asia/Seoul
+Cartagena	CO	America/Bogota
+Antipolo	PH	Asia/Manila
+Columbus	US	America/New_York
+Sialkot	PK	Asia/Karachi
+Charlotte	US	America/New_York
+Laibin	CN	Asia/Shanghai
+Warri	NG	Africa/Lagos
+Naples	IT	Europe/Rome
+Xiaogan	CN	Asia/Shanghai
+Wuchuan	CN	Asia/Shanghai
+Campo Grande	BR	America/Campo_Grande
+Ziyang	CN	Asia/Shanghai
+Bobo-Dioulasso	BF	Africa/Ouagadougou
+Bahawalpur	PK	Asia/Karachi
+Quzhou	CN	Asia/Shanghai
+Blantyre	MW	Africa/Blantyre
+Donetsk	UA	Europe/Kyiv
+Abū Ghurayb	IQ	Asia/Baghdad
+Bishkek	KG	Asia/Bishkek
+Qom	IR	Asia/Tehran
+Krasnodar	RU	Europe/Moscow
+Natal	BR	America/Fortaleza
+Pingxiang	CN	Asia/Shanghai
+Malang	ID	Asia/Jakarta
+Cancún	MX	America/Cancun
+Indianapolis	US	America/Indiana/Indianapolis
+Gurugram	IN	Asia/Kolkata
+Bhubaneswar	IN	Asia/Kolkata
+Zhoushan	CN	Asia/Shanghai
+Qiqihar	CN	Asia/Shanghai
+Mulenvos	AO	Africa/Luanda
+Sulaymaniyah	IQ	Asia/Baghdad
+Marseille	FR	Europe/Paris
+Bhiwandi	IN	Asia/Kolkata
+Soshanguve	ZA	Africa/Johannesburg
+Laiyang	CN	Asia/Shanghai
+Daye	CN	Asia/Shanghai
+Teresina	BR	America/Fortaleza
+Ankang	CN	Asia/Shanghai
+Jalandhar	IN	Asia/Kolkata
+Rotterdam	NL	Europe/Amsterdam
+Langfang	CN	Asia/Shanghai
+Lhasa	CN	Asia/Shanghai
+Duque de Caxias	BR	America/Sao_Paulo
+Viana	AO	Africa/Luanda
+Jiaozuo	CN	Asia/Shanghai
+Samarinda	ID	Asia/Makassar
+Benxi	CN	Asia/Shanghai
+Rohini	IN	Asia/Kolkata
+Wanxian	CN	Asia/Shanghai
+Guang’an	CN	Asia/Shanghai
+Johor Bahru	MY	Asia/Kuala_Lumpur
+Arifwala	PK	Asia/Karachi
+Pasig City	PH	Asia/Manila
+Cheongju-si	KR	Asia/Seoul
+Kanayannur	IN	Asia/Kolkata
+Tegucigalpa	HN	America/Tegucigalpa
+Bucheon-si	KR	Asia/Seoul
+Thanh Hóa	VN	Asia/Bangkok
+Turin	IT	Europe/Rome
+Al Ain City	AE	Asia/Dubai
+Libreville	GA	Africa/Libreville
+Saratov	RU	Europe/Saratov
+Ulan Bator	MN	Asia/Ulaanbaatar
+Weihai	CN	Asia/Shanghai
+Takeo	KH	Asia/Phnom_Penh
+Nova Iguaçu	BR	America/Sao_Paulo
+Cochabamba	BO	America/La_Paz
+Ahvaz	IR	Asia/Tehran
+Vientiane	LA	Asia/Vientiane
+São Bernardo do Campo	BR	America/Sao_Paulo
+Zhabei	CN	Asia/Shanghai
+Shangyu	CN	Asia/Shanghai
+Xinyu	CN	Asia/Shanghai
+Pietermaritzburg	ZA	Africa/Johannesburg
+Yibin	CN	Asia/Shanghai
+Naucalpan de Juárez	MX	America/Mexico_City
+Kampung Baru Subang	MY	Asia/Kuala_Lumpur
+Bouaké	CI	Africa/Abidjan
+Taicang	CN	Asia/Shanghai
+San Francisco	US	America/Los_Angeles
+Sakai	JP	Asia/Tokyo
+Jiaojiang	CN	Asia/Shanghai
+Jinshan	CN	Asia/Shanghai
+Chenzhou	CN	Asia/Shanghai
+João Pessoa	BR	America/Fortaleza
+Bukavu	CD	Africa/Lubumbashi
+Kraków	PL	Europe/Warsaw
+Dandong	CN	Asia/Shanghai
+Bangui	CF	Africa/Bangui
+Hermosillo	MX	America/Hermosillo
+Bhayandar	IN	Asia/Kolkata
+Culiacán	MX	America/Mazatlan
+Petaling Jaya	MY	Asia/Kuala_Lumpur
+Anqing	CN	Asia/Shanghai
+Oran	DZ	Africa/Algiers
+Freetown	SL	Africa/Freetown
+San Pedro Sula	HN	America/Tegucigalpa
+Narela	IN	Asia/Kolkata
+Xingtai	CN	Asia/Shanghai
+Niigata	JP	Asia/Tokyo
+Muscat	OM	Asia/Muscat
+Zarqa	JO	Asia/Amman
+Çankaya	TR	Europe/Istanbul
+Küçükçekmece	TR	Europe/Istanbul	Kuecuekcekmece
+Hamamatsu	JP	Asia/Tokyo
+Kolwezi	CD	Africa/Lubumbashi
+Vinh	VN	Asia/Bangkok
+Thiruvananthapuram	IN	Asia/Kolkata
+Zhaotong	CN	Asia/Shanghai
+Hondlon	CN	Asia/Shanghai
+Panzhihua	CN	Asia/Shanghai
+Chuzhou	CN	Asia/Shanghai
+Seattle	US	America/Los_Angeles
+Port Said	EG	Africa/Cairo
+Cúcuta	CO	America/Bogota
+Homs	SY	Asia/Damascus
+Xuancheng	CN	Asia/Shanghai
+Ibb	YE	Asia/Aden
+Tasikmalaya	ID	Asia/Jakarta
+Nampula	MZ	Africa/Maputo
+Bujumbura	BI	Africa/Bujumbura
+Tyumen	RU	Asia/Yekaterinburg
+Erzurum	TR	Europe/Istanbul
+Anshun	CN	Asia/Shanghai
+Dodoma	TZ	Africa/Dar_es_Salaam
+Rajshahi	BD	Asia/Dhaka
+Dera Ismail Khan	PK	Asia/Karachi
+Sorocaba	BR	America/Sao_Paulo
+Wuzhou	CN	Asia/Shanghai
+Ipoh	MY	Asia/Kuala_Lumpur
+Qinhuangdao	CN	Asia/Shanghai
+Benghazi	LY	Africa/Tripoli
+Uberlândia	BR	America/Sao_Paulo
+Alīgarh	IN	Asia/Kolkata
+Shaoyang	CN	Asia/Shanghai
+Malatya	TR	Europe/Istanbul
+Winnipeg	CA	America/Winnipeg
+Ōta	JP	Asia/Tokyo
+Andijon	UZ	Asia/Tashkent
+Bareilly	IN	Asia/Kolkata
+Buraydah	SA	Asia/Riyadh
+Hegang	CN	Asia/Shanghai
+Morelia	MX	America/Mexico_City
+Riga	LV	Europe/Riga
+Zhuanghe	CN	Asia/Shanghai
+Amsterdam	NL	Europe/Amsterdam
+Cagayan de Oro	PH	Asia/Manila
+Ma’anshan	CN	Asia/Shanghai
+Shah Alam	MY	Asia/Kuala_Lumpur
+Bağcılar	TR	Europe/Istanbul	Bagcilar
+Shizuishan	CN	Asia/Shanghai
+Kumamoto	JP	Asia/Tokyo
+Oyo	NG	Africa/Lagos
+Serang	ID	Asia/Jakarta
+Torreón	MX	America/Monterrey
+Deyang	CN	Asia/Shanghai
+Abeokuta	NG	Africa/Lagos
+Al Ḩudaydah	YE	Asia/Aden
+Yangquan	CN	Asia/Shanghai
+Akure	NG	Africa/Lagos
+Denver	US	America/Denver
+Osasco	BR	America/Sao_Paulo
+Kikolo	AO	Africa/Luanda
+Maianga	AO	Africa/Luanda
+São José dos Campos	BR	America/Sao_Paulo
+Álvaro Obregón	MX	America/Mexico_City
+Aihara	JP	Asia/Tokyo
+Evaton	ZA	Africa/Johannesburg
+Valenzuela	PH	Asia/Manila
+Muzaffarābād	PK	Asia/Karachi
+Okayama	JP	Asia/Tokyo
+San Luis Potosí	MX	America/Monterrey
+Aguascalientes	MX	America/Mexico_City
+General Santos	PH	Asia/Manila
+Zhumadian	CN	Asia/Shanghai
+Morādābād	IN	Asia/Kolkata
+Sagamihara	JP	Asia/Tokyo
+Qingshan	CN	Asia/Shanghai
+Mississauga	CA	America/Toronto
+Lviv	UA	Europe/Kyiv
+Namangan	UZ	Asia/Tashkent
+Zaporizhzhya	UA	Europe/Kyiv
+Zanzibar	TZ	Africa/Dar_es_Salaam
+Saltillo	MX	America/Monterrey
+Latakia	SY	Asia/Damascus
+Subang Jaya	MY	Asia/Kuala_Lumpur
+Warangal	IN	Asia/Kolkata
+Paranaque City	PH	Asia/Manila
+Tolyatti	RU	Europe/Samara
+Santo Domingo Oeste	DO	America/Santo_Domingo
+Battagram	PK	Asia/Karachi
+Dhārāvi	IN	Asia/Kolkata
+Santo Domingo Este	DO	America/Santo_Domingo
+Suez	EG	Africa/Cairo
+Ribeirão Preto	BR	America/Sao_Paulo
+Agadir	MA	Africa/Casablanca
+Edogawe	JP	Asia/Tokyo
+Sarajevo	BA	Europe/Sarajevo
+Balikpapan	ID	Asia/Makassar
+Adachi	JP	Asia/Tokyo
+Changning	CN	Asia/Shanghai
+Bauchi	NG	Africa/Lagos
+Shizuoka	JP	Asia/Tokyo
+Tunis	TN	Africa/Tunis
+Zhangjiakou	CN	Asia/Shanghai
+Washington	US	America/New_York
+Nashville	US	America/Chicago
+Fuxin	CN	Asia/Shanghai
+Ta’if	SA	Asia/Riyadh
+Huangshi	CN	Asia/Shanghai
+Liaoyang	CN	Asia/Shanghai
+Hlaingthaya	MM	Asia/Yangon
+Beira	MZ	Africa/Maputo
+Hongkou	CN	Asia/Shanghai
+Zaragoza	ES	Europe/Madrid
+Sevilla	ES	Europe/Madrid
+Baise	CN	Asia/Shanghai
+Pontianak	ID	Asia/Pontianak
+Situbondo	ID	Asia/Jakarta
+Agege	NG	Africa/Lagos
+Binzhou	CN	Asia/Shanghai
+Oklahoma City	US	America/Chicago
+Yuncheng	CN	Asia/Shanghai
+Dezhou	CN	Asia/Shanghai
+Dushanbe	TJ	Asia/Dushanbe
+Cotonou	BJ	Africa/Porto-Novo
+El Paso	US	America/Denver
+Gorakhpur	IN	Asia/Kolkata
+Guadalupe	MX	America/Monterrey
+Wrocław	PL	Europe/Warsaw	Wroclaw
+Denpasar	ID	Asia/Makassar
+Guntur	IN	Asia/Kolkata
+Katsina	NG	Africa/Lagos
+Sanmenxia	CN	Asia/Shanghai
+E’zhou	CN	Asia/Shanghai
+Madīnat an Naşr	EG	Africa/Cairo
+Camama	AO	Africa/Luanda
+Tabuk	SA	Asia/Riyadh
+Kitwe	ZM	Africa/Lusaka
+Bulawayo	ZW	Africa/Harare
+Mudanjiang	CN	Asia/Shanghai
+Aracaju	BR	America/Maceio
+Joinville	BR	America/Sao_Paulo
+Athens	GR	Europe/Athens
+Zagreb	HR	Europe/Zagreb
+Leshan	CN	Asia/Shanghai
+Santo André	BR	America/Sao_Paulo
+Vancouver	CA	America/Vancouver
+Rizhao	CN	Asia/Shanghai
+Helsinki	FI	Europe/Helsinki
+Cheonan	KR	Asia/Seoul
+Acapulco de Juárez	MX	America/Mexico_City
+Dongcun	CN	Asia/Shanghai
+Banjarmasin	ID	Asia/Makassar
+Puducherry	IN	Asia/Kolkata
+Suining	CN	Asia/Shanghai
+Brampton	CA	America/Toronto
+Huangpu	CN	Asia/Shanghai
+Golfe	AO	Africa/Luanda
+Soacha	CO	America/Bogota
+Boston	US	America/New_York
+Tlalnepantla	MX	America/Mexico_City
+Jājmau	IN	Asia/Kolkata
+Portland	US	America/Los_Angeles
+Calumbo	AO	Africa/Luanda
+Tlaquepaque	MX	America/Mexico_City
+Frankfurt am Main	DE	Europe/Berlin
+Macau	MO	Asia/Macau
+Palermo	IT	Europe/Rome
+Izhevsk	RU	Europe/Samara
+Colombo	LK	Asia/Colombo
+Maturín	VE	America/Caracas
+Amravati	IN	Asia/Kolkata
+Lingyuan	CN	Asia/Shanghai
+Detroit	US	America/Detroit
+Mingguang	CN	Asia/Shanghai
+Osogbo	NG	Africa/Lagos
+Honchō	JP	Asia/Tokyo
+Bikaner	IN	Asia/Kolkata
+Jaboatão dos Guararapes	BR	America/Recife
+Hoji ya Henda	AO	Africa/Luanda
+Las Vegas	US	America/Los_Angeles
+New South Memphis	US	America/Chicago
+Hwaseong-si	KR	Asia/Seoul
+Gold Coast	AU	Australia/Brisbane
+Łódź	PL	Europe/Warsaw	Lodz
+Jeonju	KR	Asia/Seoul
+Chongming	CN	Asia/Shanghai
+Al Aḩmadī	KW	Asia/Kuwait
+Cuenca	EC	America/Guayaquil
+Chisinau	MD	Europe/Chisinau
+Likasi	CD	Africa/Lubumbashi
+Jambi City	ID	Asia/Jakarta
+Hebi	CN	Asia/Shanghai
+Comilla	BD	Asia/Dhaka
+Tshikapa	CD	Africa/Lubumbashi
+Chunian	PK	Asia/Karachi
+Kochi	IN	Asia/Kolkata
+Memphis	US	America/Chicago
+Jingmen	CN	Asia/Shanghai
+Barnaul	RU	Asia/Barnaul
+Piura	PE	America/Lima
+Siping	CN	Asia/Shanghai
+Bhilai	IN	Asia/Kolkata
+Ndola	ZM	Africa/Lusaka
+Contagem	BR	America/Sao_Paulo
+Ulyanovsk	RU	Europe/Ulyanovsk
+Djibouti	DJ	Africa/Djibouti
+Glasgow	GB	Europe/London
+Panshan	CN	Asia/Shanghai
+Louisville	US	America/Kentucky/Louisville
+Irkutsk	RU	Asia/Irkutsk
+Ansan-si	KR	Asia/Seoul
+Al Mansurah	EG	Africa/Cairo
+Kermanshah	IR	Asia/Tehran
+Jiaozhou	CN	Asia/Shanghai
+Düsseldorf	DE	Europe/Berlin	Duesseldorf
+Suizhou	CN	Asia/Shanghai
+Villa Nueva	GT	America/Guatemala
+Khabarovsk	RU	Asia/Vladivostok
+Cuiabá	BR	America/Cuiaba
+Arusha	TZ	Africa/Dar_es_Salaam
+Feira de Santana	BR	America/Bahia
+Las Piñas	PH	Asia/Manila
+Chizhou	CN	Asia/Shanghai
+Coyoacán	MX	America/Mexico_City
+Stuttgart	DE	Europe/Berlin
+Ya'an	CN	Asia/Shanghai
+Cuttack	IN	Asia/Kolkata
+Borivli	IN	Asia/Kolkata
+Chiclayo	PE	America/Lima
+Yaroslavl	RU	Europe/Moscow
+Gothenburg	SE	Europe/Stockholm
+Kawaguchi	JP	Asia/Tokyo
+Bukit Rahman Putra	MY	Asia/Kuala_Lumpur
+Jhang Sadr	PK	Asia/Karachi
+Ha'il	SA	Asia/Riyadh
+Bhavnagar	IN	Asia/Kolkata
+Benoni	ZA	Africa/Johannesburg
+Vladivostok	RU	Asia/Vladivostok
+Tuxtla	MX	America/Merida
+Kryvyy Rih	UA	Europe/Kyiv
+Sanming	CN	Asia/Shanghai
+Islamabad	PK	Asia/Karachi
+Sāngli	IN	Asia/Kolkata
+Jamnagar	IN	Asia/Kolkata
+Lubango	AO	Africa/Luanda
+Pokhara	NP	Asia/Kathmandu
+Shuangyashan	CN	Asia/Shanghai
+Borama	SO	Africa/Mogadishu
+Pallabi	BD	Asia/Dhaka
+Luancheng	CN	Asia/Shanghai
+Makhachkala	RU	Europe/Moscow
+Anyang-si	KR	Asia/Seoul
+Huambo	AO	Africa/Luanda
+Samarkand	UZ	Asia/Samarkand
+Mengzi	CN	Asia/Shanghai
+Kagoshima	JP	Asia/Tokyo
+Mukalla	YE	Asia/Aden
+Rasht	IR	Asia/Tehran
+Mar del Plata	AR	America/Argentina/Buenos_Aires
+Essen	DE	Europe/Berlin
+Al Maḩallah al Kubrá	EG	Africa/Cairo
+Málaga	ES	Europe/Madrid
+Shekhupura	PK	Asia/Karachi
+Yingkou	CN	Asia/Shanghai
+Zhangzhou	CN	Asia/Shanghai
+Reynosa	MX	America/Matamoros
+Thuận An	VN	Asia/Ho_Chi_Minh
+Dortmund	DE	Europe/Berlin
+Suginami	JP	Asia/Tokyo
+Baltimore	US	America/New_York
+Itabashi	JP	Asia/Tokyo
+New Kingston	JM	America/Jamaica
+Pelentong	MY	Asia/Kuala_Lumpur
+Cimahi	ID	Asia/Jakarta
+Londrina	BR	America/Sao_Paulo
+Bucaramanga	CO	America/Bogota
+Genoa	IT	Europe/Rome
+Hachiōji	JP	Asia/Tokyo
+Malacca	MY	Asia/Kuala_Lumpur
+Nha Trang	VN	Asia/Ho_Chi_Minh
+Kerman	IR	Asia/Tehran
+Orūmīyeh	IR	Asia/Tehran
+Bahçelievler	TR	Europe/Istanbul
+Tanta	EG	Africa/Cairo
+Jammu	IN	Asia/Kolkata
+Iskandar Puteri	MY	Asia/Kuala_Lumpur
+Calamba	PH	Asia/Manila
+Tlalpan	MX	America/Mexico_City
+Herāt	AF	Asia/Kabul
+Dongsheng	CN	Asia/Shanghai
+Gujrat	PK	Asia/Karachi
+Tomsk	RU	Asia/Tomsk
+Ümraniye	TR	Europe/Istanbul	UEmraniye
+Shihezi	CN	Asia/Urumqi
+South Boston	US	America/New_York
+Nakuru	KE	Africa/Nairobi
+Hamilton	CA	America/Toronto
+Irbid	JO	Asia/Amman
+Manchester	GB	Europe/London
+Kota Bharu	MY	Asia/Kuala_Lumpur
+Surrey	CA	America/Vancouver
+Meknes	MA	Africa/Casablanca
+Puente Alto	CL	America/Santiago
+Nyala	SD	Africa/Khartoum
+Xinmin	CN	Asia/Shanghai
+Dresden	DE	Europe/Berlin
+Orenburg	RU	Asia/Yekaterinburg
+Albuquerque	US	America/Denver
+Bokāro	IN	Asia/Kolkata
+Asmara	ER	Africa/Asmara
+Sukkur	PK	Asia/Karachi
+Milwaukee	US	America/Chicago
+Chợ Lớn	VN	Asia/Ho_Chi_Minh
+Wenchang	CN	Asia/Shanghai
+Gombe	NG	Africa/Lagos
+Ile-Ife	NG	Africa/Lagos
+Hamhŭng	KP	Asia/Pyongyang
+Kemerovo	RU	Asia/Novokuznetsk
+Nasiriyah	IQ	Asia/Baghdad
+Bloemfontein	ZA	Africa/Johannesburg
+Sheffield	GB	Europe/London
+Santiago de Cuba	CU	America/Havana
+Cuautitlán Izcalli	MX	America/Mexico_City
+Benguela	AO	Africa/Luanda
+Chuxiong	CN	Asia/Shanghai
+Balbala	DJ	Africa/Djibouti
+Huaihua	CN	Asia/Shanghai
+Sishui	CN	Asia/Shanghai
+Muntinlupa	PH	Asia/Manila
+Bình Thạnh	VN	Asia/Ho_Chi_Minh
+Zahedan	IR	Asia/Tehran
+Banqiao	TW	Asia/Taipei
+Nanded	IN	Asia/Kolkata
+Kozhikode	IN	Asia/Kolkata
+Ulanqab	CN	Asia/Shanghai
+Ajegunle	NG	Africa/Lagos
+Cabinda	AO	Africa/Luanda
+Pristina	XK	Europe/Belgrade
+Ogbia	NG	Africa/Lagos
+Jiamusi	CN	Asia/Shanghai
+Korla	CN	Asia/Urumqi
+Kolhāpur	IN	Asia/Kolkata
+Porto Velho	BR	America/Porto_Velho
+San Miguel de Tucumán	AR	America/Argentina/Tucuman
+Kuantan	MY	Asia/Kuala_Lumpur
+Sevastopol	UA	Europe/Simferopol
+Nellore	IN	Asia/Kolkata
+Mirpur Model Thana	BD	Asia/Dhaka
+Bremen	DE	Europe/Berlin
+Wanning	CN	Asia/Shanghai
+Owerri	NG	Africa/Lagos
+Kota Kuala Muda	MY	Asia/Kuala_Lumpur
+Sungai Petani	MY	Asia/Kuala_Lumpur
+Xinzhou	CN	Asia/Shanghai
+Kotō	JP	Asia/Tokyo
+Kalaburagi	IN	Asia/Kolkata
+Tucson	US	America/Phoenix
+Selayang Baru Utara	MY	Asia/Kuala_Lumpur
+Vilnius	LT	Europe/Vilnius
+Ajmer	IN	Asia/Kolkata
+Pingdu	CN	Asia/Shanghai
+Fresno	US	America/Los_Angeles
+Mbeya	TZ	Africa/Dar_es_Salaam
+Juiz de Fora	BR	America/Sao_Paulo
+Calabar	NG	Africa/Lagos
+Oujda	MA	Africa/Casablanca
+Novokuznetsk	RU	Asia/Novokuznetsk
+Ryazan’	RU	Europe/Moscow
+Ji’an	CN	Asia/Shanghai
+Sahiwal	PK	Asia/Karachi
+Mersin	TR	Europe/Istanbul
+Nilüfer	TR	Europe/Istanbul	Niluefer
+Leeds	GB	Europe/London
+Poznań	PL	Europe/Warsaw
+Aqsu	CN	Asia/Urumqi
+Ebute Ikorodu	NG	Africa/Lagos
+Ananindeua	BR	America/Belem
+Tanggu	CN	Asia/Shanghai
+Pasir Gudang	MY	Asia/Kuala_Lumpur
+Astrakhan	RU	Europe/Astrakhan
+Okara	PK	Asia/Karachi
+Nansana	UG	Africa/Kampala
+Kimhae	KR	Asia/Seoul
+Ar Raqqah	SY	Asia/Damascus
+Québec	CA	America/Toronto
+Cuauhtémoc	MX	America/Mexico_City
+Shangluo	CN	Asia/Shanghai
+Himeji	JP	Asia/Tokyo
+Ibagué	CO	America/Bogota
+Antwerp	BE	Europe/Brussels
+Assiut	EG	Africa/Cairo
+Hamadān	IR	Asia/Tehran
+Qionghai	CN	Asia/Shanghai
+Aparecida de Goiânia	BR	America/Sao_Paulo
+Cangzhou	CN	Asia/Shanghai
+Mohammadpur	BD	Asia/Dhaka
+Surakarta	ID	Asia/Jakarta
+Yuanping	CN	Asia/Shanghai
+San Salvador	SV	America/El_Salvador
+Beihai	CN	Asia/Shanghai
+Van	TR	Europe/Istanbul
+Sacramento	US	America/Los_Angeles
+Thủ Đức	VN	Asia/Ho_Chi_Minh	Thu GJuc
+Üsküdar	TR	Europe/Istanbul	UEskuedar
+Penza	RU	Europe/Moscow
+Kandahār	AF	Asia/Kabul
+Mazār-e Sharīf	AF	Asia/Kabul
+Hengshui	CN	Asia/Shanghai
+Dehradun	IN	Asia/Kolkata
+Erode	IN	Asia/Kolkata
+Lyon	FR	Europe/Paris
+Salta	AR	America/Argentina/Salta
+Serra	BR	America/Sao_Paulo
+Esenler	TR	Europe/Istanbul
+Daxing’anling	CN	Asia/Shanghai
+Qui Nhon	VN	Asia/Ho_Chi_Minh
+Al Fayyum	EG	Africa/Cairo
+Durgapur	IN	Asia/Kolkata
+Utsunomiya	JP	Asia/Tokyo
+Victoria de Durango	MX	America/Monterrey
+Belford Roxo	BR	America/Sao_Paulo
+Lisbon	PT	Europe/Lisbon
+Rahim Yar Khan	PK	Asia/Karachi
+Ulhasnagar	IN	Asia/Kolkata
+Guangyuan	CN	Asia/Shanghai
+Loni	IN	Asia/Kolkata
+Siliguri	IN	Asia/Kolkata
+Nuremberg	DE	Europe/Berlin
+Niterói	BR	America/Sao_Paulo
+Ujjain	IN	Asia/Kolkata
+Hannover	DE	Europe/Berlin
+Edinburgh	GB	Europe/London
+Macapá	BR	America/Belem
+Xianning	CN	Asia/Shanghai
+Toulouse	FR	Europe/Paris
+Thembisa	ZA	Africa/Johannesburg
+Carrefour	HT	America/Port-au-Prince
+Matsuyama	JP	Asia/Tokyo
+Bilimora	IN	Asia/Kolkata
+Kasur	PK	Asia/Karachi
+Atlanta	US	America/New_York
+Heroica Matamoros	MX	America/Matamoros
+Makati City	PH	Asia/Manila
+Buda	HU	Europe/Budapest
+Mianzhu, Deyang, Sichuan	CN	Asia/Shanghai
+Tonghua	CN	Asia/Shanghai
+Naberezhnyye Chelny	RU	Europe/Moscow
+Lipetsk	RU	Europe/Moscow
+Kikwit	CD	Africa/Kinshasa
+Florianópolis	BR	America/Sao_Paulo
+Banan	CN	Asia/Shanghai
+Newcastle	AU	Australia/Sydney
+Tuen Mun	HK	Asia/Hong_Kong
+Zhangye	CN	Asia/Shanghai
+Kirov	RU	Europe/Kirov
+Kashgar	CN	Asia/Urumqi
+Mukim Pulai	MY	Asia/Kuala_Lumpur
+Najrān	SA	Asia/Riyadh
+Karol Bāgh	IN	Asia/Kolkata
+Zhoukou	CN	Asia/Shanghai
+Leipzig	DE	Europe/Berlin
+Pingliang	CN	Asia/Shanghai
+Kalininskiy	RU	Europe/Moscow
+Duisburg	DE	Europe/Berlin
+Āsansol	IN	Asia/Kolkata
+Arāk	IR	Asia/Tehran
+Maipú	CL	America/Santiago
+Homyel'	BY	Europe/Minsk
+Aktobe	KZ	Asia/Aqtobe
+Kota Kinabalu	MY	Asia/Kuching
+Jalalpur Pirwala	PK	Asia/Karachi
+Kampung Larkin Lama	MY	Asia/Kuala_Lumpur
+Kota Damansara	MY	Asia/Kuala_Lumpur
+Talatona	AO	Africa/Luanda
+Mangaluru	IN	Asia/Kolkata
+Zhucheng	CN	Asia/Shanghai
+Santa Marta	CO	America/Bogota
+Matsudo	JP	Asia/Tokyo
+Hāthazāri	BD	Asia/Dhaka
+Lapu-Lapu City	PH	Asia/Manila
+Karagandy	KZ	Asia/Almaty
+Loudi	CN	Asia/Shanghai
+Liverpool	GB	Europe/London
+Ichikawa	JP	Asia/Tokyo
+Sha Tin	HK	Asia/Hong_Kong
+Dera Ghazi Khan	PK	Asia/Karachi
+Hecun	CN	Asia/Shanghai
+Higashiosaka	JP	Asia/Tokyo
+Pindi Bhattian	PK	Asia/Karachi
+Cheboksary	RU	Europe/Moscow
+Pohang	KR	Asia/Seoul
+Shanwei	CN	Asia/Shanghai
+Montería	CO	America/Bogota
+Ruiru	KE	Africa/Nairobi
+Valledupar	CO	America/Bogota
+Belagavi	IN	Asia/Kolkata
+Ajman	AE	Asia/Dubai
+Jianshui	CN	Asia/Shanghai
+Sancaktepe	TR	Europe/Istanbul
+Port Sudan	SD	Africa/Khartoum
+Toluca	MX	America/Mexico_City
+Ciudad López Mateos	MX	America/Mexico_City
+Al Khuşūş	EG	Africa/Cairo
+Jeju City	KR	Asia/Seoul
+Gdańsk	PL	Europe/Warsaw
+Miami	US	America/New_York
+Omaha	US	America/Chicago
+Nishinomiya	JP	Asia/Tokyo
+Masina	CD	Africa/Kinshasa
+Sahāranpur	IN	Asia/Kolkata
+Vellore	IN	Asia/Kolkata
+Donghe	CN	Asia/Shanghai
+Kurashiki	JP	Asia/Tokyo
+Campos dos Goytacazes	BR	America/Sao_Paulo
+Angeles City	PH	Asia/Manila
+Bhātpāra	IN	Asia/Kolkata
+Jijiga	ET	Africa/Addis_Ababa
+Tula	RU	Europe/Moscow
+Najaf	IQ	Asia/Baghdad
+Raleigh	US	America/New_York
+Imus	PH	Asia/Manila
+Xichang	CN	Asia/Shanghai
+Malegaon	IN	Asia/Kolkata
+Zaoyang	CN	Asia/Shanghai
+São José do Rio Preto	BR	America/Sao_Paulo
+Caxias do Sul	BR	America/Sao_Paulo
+Karabağlar	TR	Europe/Istanbul
+Okene	NG	Africa/Lagos
+Uijeongbu-si	KR	Asia/Seoul
+Bristol	GB	Europe/London
+East London	ZA	Africa/Johannesburg
+Chéngguān Qū	CN	Asia/Shanghai
+Yazd	IR	Asia/Tehran
+Hargeysa	SO	Africa/Mogadishu
+Ōita	JP	Asia/Tokyo
+Jincheng	CN	Asia/Shanghai
+Hongjiang	CN	Asia/Shanghai
+Modīnagar	IN	Asia/Kolkata
+Taoyuan	TW	Asia/Taipei
+Eldoret	KE	Africa/Nairobi
+Kansas City	US	America/Chicago
+Yan’an	CN	Asia/Shanghai
+Kaliningrad	RU	Europe/Kaliningrad
+Skopje	MK	Europe/Skopje
+Kupang	ID	Asia/Makassar
+Vereeniging	ZA	Africa/Johannesburg
+The Hague	NL	Europe/Amsterdam
+Long Beach	US	America/Los_Angeles
+Gaya	IN	Asia/Kolkata
+Iloilo	PH	Asia/Manila
+Shouguang	CN	Asia/Shanghai
+Jingdezhen	CN	Asia/Shanghai
+Murcia	ES	Europe/Madrid
+Mesa	US	America/Phoenix
+Halifax	CA	America/Halifax
+Morogoro	TZ	Africa/Dar_es_Salaam
+Marikina City	PH	Asia/Manila
+Kenitra	MA	Africa/Casablanca
+Seeb	OM	Asia/Muscat
+Cilegon	ID	Asia/Jakarta
+Mykolayiv	UA	Europe/Kyiv
+Fukuyama	JP	Asia/Tokyo
+Staten Island	US	America/New_York
+Nanping	CN	Asia/Shanghai
+Pereira	CO	America/Bogota
+Ciudad Apodaca	MX	America/Monterrey
+São João de Meriti	BR	America/Sao_Paulo
+Ambattur	IN	Asia/Kolkata
+Kanazawa	JP	Asia/Tokyo
+Gonder	ET	Africa/Addis_Ababa
+Mandaluyong City	PH	Asia/Manila
+Mixco	GT	America/Guatemala
+Paju	KR	Asia/Seoul
+Jardim Presidente Dutra	BR	America/Sao_Paulo
+Longshan	CN	Asia/Shanghai
+Ikare	NG	Africa/Lagos
+Nova Vida	AO	Africa/Luanda
+Vũng Tàu	VN	Asia/Ho_Chi_Minh
+Maracay	VE	America/Caracas
+Tamale	GH	Africa/Accra
+Heyuan	CN	Asia/Shanghai
+Dĩ An	VN	Asia/Ho_Chi_Minh
+Kira	UG	Africa/Kampala
+Esna	EG	Africa/Cairo
+Huangshan	CN	Asia/Shanghai
+Ḩamāh	SY	Asia/Damascus
+Jalgaon	IN	Asia/Kolkata
+Kurnool	IN	Asia/Kolkata
+Yola	NG	Africa/Lagos
+Tieling	CN	Asia/Shanghai
+Rạch Giá	VN	Asia/Ho_Chi_Minh
+Amagasaki	JP	Asia/Tokyo
+Manado	ID	Asia/Makassar
+Santo Domingo de los Colorados	EC	America/Guayaquil
+Ţarţūs	SY	Asia/Damascus
+Mek'ele	ET	Africa/Addis_Ababa
+Nazrēt	ET	Africa/Addis_Ababa
+Colorado Springs	US	America/Denver
+Huancayo	PE	America/Lima
+Al Hillah	IQ	Asia/Baghdad
+Mbandaka	CD	Africa/Kinshasa
+Malanje	AO	Africa/Luanda
+Namp’o	KP	Asia/Pyongyang
+Ciudad General Escobedo	MX	America/Monterrey
+Bacolod City	PH	Asia/Manila
+Virginia Beach	US	America/New_York
+Wafangdian	CN	Asia/Shanghai
+Mansilingan	PH	Asia/Manila
+Kahama	TZ	Africa/Dar_es_Salaam
+Hsinchu	TW	Asia/Taipei
+Katsushika	JP	Asia/Tokyo
+Bornova	TR	Europe/Istanbul
+Rāmgundam	IN	Asia/Kolkata
+Batman	TR	Europe/Istanbul
+Yongji	CN	Asia/Shanghai
+Lishui	CN	Asia/Shanghai
+Udaipur	IN	Asia/Kolkata
+Warder	ET	Africa/Addis_Ababa
+Bắc Giang	VN	Asia/Bangkok
+Eslamshahr	IR	Asia/Tehran
+Juba	SS	Africa/Juba
+Muratpaşa	TR	Europe/Istanbul
+Wenshan City	CN	Asia/Shanghai
+Şanlıurfa	TR	Europe/Istanbul	Sanliurfa
+Kursk	RU	Europe/Moscow
+Maheshtala	IN	Asia/Kolkata
+Nam Định	VN	Asia/Bangkok	Nam GJinh
+Constantine	DZ	Africa/Algiers
+Patiāla	IN	Asia/Kolkata
+Boksburg	ZA	Africa/Johannesburg
+Basuo	CN	Asia/Shanghai
+Campina Grande	BR	America/Fortaleza
+Ensenada	MX	America/Tijuana
+Elazığ	TR	Europe/Istanbul	Elazig
+Jundiaí	BR	America/Sao_Paulo
+Xochimilco	MX	America/Mexico_City
+Shyamnagar	IN	Asia/Kolkata
+Dasmariñas	PH	Asia/Manila
+Zhangjiajie	CN	Asia/Shanghai
+Mataram	ID	Asia/Makassar
+Korhogo	CI	Africa/Abidjan
+Piracicaba	BR	America/Sao_Paulo
+Fujisawa	JP	Asia/Tokyo
+Bissau	GW	Africa/Bissau
+Zhongxiang	CN	Asia/Shanghai
+Sandakan	MY	Asia/Kuching
+Mawlamyine	MM	Asia/Yangon
+Laval	CA	America/Toronto
+Palma	ES	Europe/Madrid
+Montes Claros	BR	America/Sao_Paulo
+Sunch’ŏn	KP	Asia/Pyongyang
+Sultangazi	TR	Europe/Istanbul
+Uyo	NG	Africa/Lagos
+Bei’an	CN	Asia/Shanghai
+Davangere	IN	Asia/Kolkata
+Macheng	CN	Asia/Shanghai
+Ado-Ekiti	NG	Africa/Lagos
+Manizales	CO	America/Bogota
+Masan	KR	Asia/Seoul
+Buôn Ma Thuột	VN	Asia/Ho_Chi_Minh
+Stavropol	RU	Europe/Moscow
+Shuozhou	CN	Asia/Shanghai
+Kashiwa	JP	Asia/Tokyo
+Ogbomoso	NG	Africa/Lagos
+Tel Aviv	IL	Asia/Jerusalem
+Buenaventura	CO	America/Bogota
+Welkom	ZA	Africa/Johannesburg
+Sham Shui Po	HK	Asia/Hong_Kong
+Machida	JP	Asia/Tokyo
+Venustiano Carranza	MX	America/Mexico_City
+Zagazig	EG	Africa/Cairo
+Vinnytsya	UA	Europe/Kyiv
+Ismailia	EG	Africa/Cairo
+Ningde	CN	Asia/Shanghai
+Akola	IN	Asia/Kolkata
+Kima Kieza	AO	Africa/Luanda
+Cusco	PE	America/Lima
+Jiuquan	CN	Asia/Shanghai
+Veracruz	MX	America/Mexico_City
+East Jerusalem	PS	Asia/Hebron
+Bryansk	RU	Europe/Moscow
+Maltepe	TR	Europe/Istanbul
+Sumgayit	AZ	Asia/Baku
+Tando Bago	PK	Asia/Karachi
+Kuala Terengganu	MY	Asia/Kuala_Lumpur
+Toyota	JP	Asia/Tokyo
+Matadi	CD	Africa/Kinshasa
+Al Kharj	SA	Asia/Riyadh
+Wong Tai Sin	HK	Asia/Hong_Kong
+Mandaluyong	PH	Asia/Manila
+Minna	NG	Africa/Lagos
+Xalapa de Enríquez	MX	America/Mexico_City
+Rajpur Sonarpur	IN	Asia/Kolkata
+Bratislava	SK	Europe/Bratislava
+Taman Petaling	MY	Asia/Kuala_Lumpur
+Shinagawa	JP	Asia/Tokyo
+Al Ḩasakah	SY	Asia/Damascus
+Luxor	EG	Africa/Cairo
+Awasa	ET	Africa/Addis_Ababa
+Chimoio	MZ	Africa/Maputo
+Tando Allahyar	PK	Asia/Karachi
+Daloa	CI	Africa/Abidjan
+Bogura	BD	Asia/Dhaka
+Barra da Tijuca	BR	America/Sao_Paulo
+Dingxi	CN	Asia/Shanghai
+Bamenda	CM	Africa/Douala
+Tver	RU	Europe/Moscow
+Thái Nguyên	VN	Asia/Bangkok
+Boa Vista	BR	America/Boa_Vista
+Rio Branco	BR	America/Rio_Branco
+Oakland	US	America/Los_Angeles
+Christchurch	NZ	Pacific/Auckland
+Korba	IN	Asia/Kolkata
+Takamatsu	JP	Asia/Tokyo
+Kowloon City	HK	Asia/Hong_Kong
+Santos	BR	America/Sao_Paulo
+Tirana	AL	Europe/Tirane
+Petrolina	BR	America/Recife
+Mauá	BR	America/Sao_Paulo
+San Juan	PR	America/Puerto_Rico
+Alor Setar	MY	Asia/Kuala_Lumpur
+Tongchuan	CN	Asia/Shanghai
+Pasay	PH	Asia/Manila
+Nuevo Laredo	MX	America/Matamoros
+Toyama	JP	Asia/Tokyo
+Tétouan	MA	Africa/Casablanca
+Zürich	CH	Europe/Zurich	Zuerich
+Beylikdüzü	TR	Europe/Istanbul	Beylikduezue
+Việt Trì	VN	Asia/Bangkok
+Azcapotzalco	MX	America/Mexico_City
+Tampa	US	America/New_York
+Bunamwaya	UG	Africa/Kampala
+Magnitogorsk	RU	Asia/Yekaterinburg
+Tulsa	US	America/Chicago
+Jhānsi	IN	Asia/Kolkata
+Tseung Kwan O	HK	Asia/Hong_Kong
+Ciudad Bolívar	VE	America/Caracas
+Kampung Kangkar Teberau	MY	Asia/Kuala_Lumpur
+Koumassi	CI	Africa/Abidjan
+San Nicolás de los Garza	MX	America/Monterrey
+Guyuan	CN	Asia/Shanghai
+Wandsbek	DE	Europe/Berlin
+Minneapolis	US	America/Chicago
+Jayapura	ID	Asia/Jayapura
+Thoothukudi	IN	Asia/Kolkata
+Ardabīl	IR	Asia/Tehran
+Ballari	IN	Asia/Kolkata
+Chaoyang	CN	Asia/Shanghai
+Gaza	PS	Asia/Gaza
+Maringá	BR	America/Sao_Paulo
+Yokosuka	JP	Asia/Tokyo
+Kom Ombo	EG	Africa/Cairo
+Saltivka	UA	Europe/Kyiv
+Nagasaki	JP	Asia/Tokyo
+Gujangbagh	CN	Asia/Urumqi
+Tonalá	MX	America/Mexico_City
+Zhijiang	CN	Asia/Shanghai
+Panama City	PA	America/Panama
+Uvira	CD	Africa/Lubumbashi
+Hirakata	JP	Asia/Tokyo
+Ivanovo	RU	Europe/Moscow
+Cumaná	VE	America/Caracas
+Gumi	KR	Asia/Seoul
+Brno	CZ	Europe/Prague
+Jixi	CN	Asia/Shanghai
+Diadema	BR	America/Sao_Paulo
+Kuching	MY	Asia/Kuching
+Gifu	JP	Asia/Tokyo
+Caruaru	BR	America/Recife
+Tongling	CN	Asia/Shanghai
+Tarlac City	PH	Asia/Manila
+Toyonaka	JP	Asia/Tokyo
+Kassala	SD	Africa/Khartoum
+Miyazaki	JP	Asia/Tokyo
+Lekki	NG	Africa/Lagos
+Antofagasta	CL	America/Santiago
+Wah Cantt	PK	Asia/Karachi
+Bhāgalpur	IN	Asia/Kolkata
+Agartala	IN	Asia/Kolkata
+Bida	NG	Africa/Lagos
+Dayrah	AE	Asia/Dubai
+West Jerusalem	IL	Asia/Jerusalem
+Bunia	CD	Africa/Lubumbashi
+Antakya	TR	Europe/Istanbul
+Quận Mười	VN	Asia/Ho_Chi_Minh
+Sunshine Coast	AU	Australia/Brisbane
+Kisumu	KE	Africa/Nairobi
+Luhansk	UA	Europe/Kyiv
+Bengkulu	ID	Asia/Jakarta
+Barinas	VE	America/Caracas
+Hancheng	CN	Asia/Shanghai
+Vitória da Conquista	BR	America/Bahia
+Wichita	US	America/Chicago
+Al Hoceïma	MA	Africa/Casablanca
+Szczecin	PL	Europe/Warsaw
+Delmas	HT	America/Port-au-Prince
+Liaozhong	CN	Asia/Shanghai
+Vila Velha	BR	America/Sao_Paulo
+Bologna	IT	Europe/Rome
+Sejong	KR	Asia/Seoul
+Cazenga	AO	Africa/Luanda
+Samsun	TR	Europe/Istanbul
+Tallinn	EE	Europe/Tallinn
+Tanga	TZ	Africa/Dar_es_Salaam
+El Obeid	SD	Africa/Khartoum
+Lobito	AO	Africa/Luanda
+Saurimo	AO	Africa/Luanda
+Bauru	BR	America/Sao_Paulo
+Bello	CO	America/Bogota
+Pasto	CO	America/Bogota
+Gaomi	CN	Asia/Shanghai
+Santa Fe	AR	America/Argentina/Cordoba
+San-Pédro	CI	Africa/Abidjan
+Gauriganj	IN	Asia/Kolkata
+Makurdi	NG	Africa/Lagos
+Palu	ID	Asia/Makassar
+Takoradi	GH	Africa/Accra
+Samut Prakan	TH	Asia/Bangkok
+Arlington	US	America/Chicago
+Khamis Mushait	SA	Asia/Riyadh
+Ambato	EC	America/Guayaquil
+Carapicuíba	BR	America/Sao_Paulo
+Ojo de Agua	MX	America/Mexico_City
+Windhoek	NA	Africa/Windhoek
+Abomey-Calavi	BJ	Africa/Porto-Novo
+Bochum	DE	Europe/Berlin
+Suita	JP	Asia/Tokyo
+Benito Juárez	MX	America/Mexico_City
+Sector 3	RO	Europe/Bucharest
+Chak Jhumra	PK	Asia/Karachi
+Kahramanmaraş	TR	Europe/Istanbul
+Chongzuo	CN	Asia/Shanghai
+Grajaú	BR	America/Sao_Paulo
+Okazaki	JP	Asia/Tokyo
+Xico	MX	America/Mexico_City
+Iztacalco	MX	America/Mexico_City
+Kākināda	IN	Asia/Kolkata
+Betim	BR	America/Sao_Paulo
+Las Palmas de Gran Canaria	ES	Atlantic/Canary
+Cotabato	PH	Asia/Manila
+Bawshar	OM	Asia/Muscat
+Latur	IN	Asia/Kolkata
+Tanzhou	CN	Asia/Shanghai
+Wellington	NZ	Pacific/Auckland
+Mazatlán	MX	America/Mazatlan
+Nizhny Tagil	RU	Asia/Yekaterinburg
+Irapuato	MX	America/Mexico_City
+Ichinomiya	JP	Asia/Tokyo
+Aswān	EG	Africa/Cairo
+Savar	BD	Asia/Dhaka
+Iaşi	RO	Europe/Bucharest
+Krugersdorp	ZA	Africa/Johannesburg
+Pānihāti	IN	Asia/Kolkata
+Shibganj	BD	Asia/Dhaka
+Caucaia	BR	America/Fortaleza
+Iquitos	PE	America/Lima
+Toyohashi	JP	Asia/Tokyo
+Hechuan	CN	Asia/Shanghai
+Pétionville	HT	America/Port-au-Prince
+Utrecht	NL	Europe/Amsterdam
+Rajamahendravaram	IN	Asia/Kolkata
+Cariacica	BR	America/Sao_Paulo
+Yogyakarta	ID	Asia/Jakarta
+Dhule	IN	Asia/Kolkata
+Yanzhou	CN	Asia/Shanghai
+Minato	JP	Asia/Tokyo
+Puchong	MY	Asia/Kuala_Lumpur
+Ondo	NG	Africa/Lagos
+Pingyin	CN	Asia/Shanghai
+Rohtak	IN	Asia/Kolkata
+Bhawana	PK	Asia/Karachi
+Rustenburg	ZA	Africa/Johannesburg
+Bakersfield	US	America/Los_Angeles
+Xuanhua	CN	Asia/Shanghai
+Emalahleni	ZA	Africa/Johannesburg
+Bafoussam	CM	Africa/Douala
+Thủ Dầu Một	VN	Asia/Ho_Chi_Minh
+Takasaki	JP	Asia/Tokyo
+Seremban	MY	Asia/Kuala_Lumpur
+Miguel Hidalgo	MX	America/Mexico_City
+Nagano	JP	Asia/Tokyo
+Tawau	MY	Asia/Kuching
+Cardiff	GB	Europe/London
+Dachang	CN	Asia/Shanghai
+Đống Đa	VN	Asia/Bangkok	GJong GJa
+Chitungwiza	ZW	Africa/Harare
+Fenghuang	CN	Asia/Shanghai
+Puerto La Cruz	VE	America/Caracas
+Umuahia	NG	Africa/Lagos
+Uşak	TR	Europe/Istanbul
+Bharatpur	NP	Asia/Kathmandu
+Itaquaquecetuba	BR	America/Sao_Paulo
+Natore	BD	Asia/Dhaka
+6th of October City	EG	Africa/Cairo
+Leicester	GB	Europe/London
+Desna	UA	Europe/Kyiv
+Cascavel	BR	America/Sao_Paulo
+Sector 6	RO	Europe/Bucharest
+Canberra	AU	Australia/Sydney
+Avellaneda	AR	America/Argentina/Buenos_Aires
+Praia Grande	BR	America/Sao_Paulo
+Nara-shi	JP	Asia/Tokyo
+Florence	IT	Europe/Rome
+Ahilyanagar	IN	Asia/Kolkata
+Kollam	IN	Asia/Kolkata
+Huanggang	CN	Asia/Shanghai
+Bradford	GB	Europe/London
+Sukabumi	ID	Asia/Jakarta
+Bilāspur	IN	Asia/Kolkata
+Malabon	PH	Asia/Manila
+Franca	BR	America/Sao_Paulo
+Cleveland	US	America/New_York
+Iseyin	NG	Africa/Lagos
+Etobicoke	CA	America/Toronto
+Gboko	NG	Africa/Lagos
+Yenagoa	NG	Africa/Lagos
+Samba	AO	Africa/Luanda
+Olinda	BR	America/Recife
+Pyeongtaek	KR	Asia/Seoul
+Petare	VE	America/Caracas
+Bến Cát	VN	Asia/Ho_Chi_Minh
+Anqiu	CN	Asia/Shanghai
+Alanya	TR	Europe/Istanbul
+Larkana	PK	Asia/Karachi
+Al Qadarif	SD	Africa/Khartoum
+Hrodna	BY	Europe/Minsk
+Cibinong	ID	Asia/Jakarta
+Nawabshah	PK	Asia/Karachi
+New Orleans	US	America/Chicago
+Keelung	TW	Asia/Taipei
+Malmö	SE	Europe/Stockholm	Malmoe
+Jizhou	CN	Asia/Shanghai
+Manukau City	NZ	Pacific/Auckland
+Maradi	NE	Africa/Niamey
+Burewala	PK	Asia/Karachi
+Ataşehir	TR	Europe/Istanbul
+Blumenau	BR	America/Sao_Paulo
+Nanqiao	CN	Asia/Shanghai
+Mingora	PK	Asia/Karachi
+Santarém	BR	America/Santarem
+Wuppertal	DE	Europe/Berlin
+Ulan-Ude	RU	Asia/Irkutsk
+Huocheng	CN	Asia/Urumqi
+Ijebu Ode	NG	Africa/Lagos
+Maseru	LS	Africa/Maseru
+Bhilwara	IN	Asia/Kolkata
+Aurora	US	America/Denver
+Vitebsk	BY	Europe/Minsk
+Sultanbeyli	TR	Europe/Istanbul
+Taraz	KZ	Asia/Almaty
+Yangsan	KR	Asia/Seoul
+Dniprovskyi	UA	Europe/Kyiv
+San Jose del Monte	PH	Asia/Manila
+Abū al-Kahṣīb	IQ	Asia/Baghdad
+Gwangmyeong	KR	Asia/Seoul
+Zanjan	IR	Asia/Tehran
+Neiva	CO	America/Bogota
+Iwaki	JP	Asia/Tokyo
+Vladimir	RU	Europe/Moscow
+Tete	MZ	Africa/Maputo
+Bacoor	PH	Asia/Manila
+Uberaba	BR	America/Sao_Paulo
+Wakayama	JP	Asia/Tokyo
+Brahmapur	IN	Asia/Kolkata
+Fengshan	TW	Asia/Taipei
+Fatih	TR	Europe/Istanbul
+Misratah	LY	Africa/Tripoli
+Cuíto	AO	Africa/Luanda
+Kyzylorda	KZ	Asia/Qyzylorda
+Sinjhoro	PK	Asia/Karachi
+Kawagoe	JP	Asia/Tokyo
+Takatsuki	JP	Asia/Tokyo
+Muzaffarpur	IN	Asia/Kolkata
+Tapachula de Córdova y Ordóñez	MX	America/Merida
+Lhoka	CN	Asia/Shanghai
+Villahermosa	MX	America/Merida
+Setapak	MY	Asia/Kuala_Lumpur
+Mahilyow	BY	Europe/Minsk
+Bandar Abbas	IR	Asia/Tehran
+Pravyi Bereh	UA	Europe/Kyiv
+Yunusobod	UZ	Asia/Tashkent
+Ras Al Khaimah	AE	Asia/Dubai
+Cabimas	VE	America/Caracas
+Kendari	ID	Asia/Makassar
+Honolulu	US	Pacific/Honolulu
+Anaheim	US	America/Los_Angeles
+Tarsus	TR	Europe/Istanbul
+Bahir Dar	ET	Africa/Addis_Ababa
+Diepsloot	ZA	Africa/Johannesburg
+Pengze	CN	Asia/Shanghai
+Punāsa	IN	Asia/Kolkata
+Xilinhot	CN	Asia/Shanghai
+São José dos Pinhais	BR	America/Sao_Paulo
+Quelimane	MZ	Africa/Maputo
+Arkhangel’sk	RU	Europe/Moscow
+Muzaffarnagar	IN	Asia/Kolkata
+Hulunbuir	CN	Asia/Shanghai
+Dumai	ID	Asia/Jakarta
+Shinjuku	JP	Asia/Tokyo
+Sikasso	ML	Africa/Bamako
+Sanandaj	IR	Asia/Tehran
+Chita	RU	Asia/Chita
+Alicante	ES	Europe/Madrid
+Bimbo	CF	Africa/Bangui
+Kalemyo	MM	Asia/Yangon
+Belfast	GB	Europe/London
+Long Bien	VN	Asia/Bangkok
+Camagüey	CU	America/Havana	Camagueey
+Bilbao	ES	Europe/Madrid
+Ambon	ID	Asia/Jayapura
+Brest	BY	Europe/Minsk
+Ribeirão das Neves	BR	America/Sao_Paulo
+Chifeng	CN	Asia/Shanghai
+Central Coast	AU	Australia/Sydney
+Corrientes	AR	America/Argentina/Cordoba
+Hŭngnam	KP	Asia/Pyongyang
+Avadi	IN	Asia/Kolkata
+Yunlong	CN	Asia/Shanghai
+Koshigaya	JP	Asia/Tokyo
+Coventry	GB	Europe/London
+Belgorod	RU	Europe/Moscow
+Toamasina	MG	Indian/Antananarivo
+Logan City	AU	Australia/Brisbane
+Ōtsu	JP	Asia/Tokyo
+Kosti	SD	Africa/Khartoum
+Qitaihe	CN	Asia/Shanghai
+Doha	QA	Asia/Qatar
+Kadapa	IN	Asia/Kolkata
+Nakano	JP	Asia/Tokyo
+Cirebon	ID	Asia/Jakarta
+Turmero	VE	America/Caracas
+Tokorozawa	JP	Asia/Tokyo
+Cabanatuan City	PH	Asia/Manila
+Pizhou	CN	Asia/Shanghai
+Darnytsya	UA	Europe/Kyiv
+Dire Dawa	ET	Africa/Addis_Ababa
+Annaba	DZ	Africa/Algiers
+Nice	FR	Europe/Paris
+Iligan	PH	Asia/Manila
+Soledad	CO	America/Bogota
+Temara	MA	Africa/Casablanca
+Paulista	BR	America/Recife
+Obalende	NG	Africa/Lagos
+Kukatpally	IN	Asia/Kolkata
+Laixi	CN	Asia/Shanghai
+Dihok	IQ	Asia/Baghdad
+Kaluga	RU	Europe/Moscow
+Bắc Từ Liêm	VN	Asia/Ho_Chi_Minh
+Celaya	MX	America/Mexico_City
+Serekunda	GM	Africa/Banjul
+Kafrul	BD	Asia/Dhaka
+Karşıyaka	TR	Europe/Istanbul	Karsiyaka
+Ḩadā’iq al Qubbah	EG	Africa/Cairo
+Makiyivka	UA	Europe/Kyiv
+West Raleigh	US	America/New_York
+Cuernavaca	MX	America/Mexico_City
+Markham	CA	America/Toronto
+São Vicente	BR	America/Sao_Paulo
+Kaesŏng	KP	Asia/Pyongyang
+Tungi	BD	Asia/Dhaka
+Krasnogvargeisky	RU	Europe/Moscow
+Randburg	ZA	Africa/Johannesburg
+Safi	MA	Africa/Casablanca
+Simferopol	UA	Europe/Simferopol
+Lublin	PL	Europe/Warsaw
+Pelotas	BR	America/Sao_Paulo
+Orlando	US	America/New_York
+Viña del Mar	CL	America/Santiago
+Qazvin	IR	Asia/Tehran
+Asahikawa	JP	Asia/Tokyo
+Kāmārhāti	IN	Asia/Kolkata
+Tepic	MX	America/Mazatlan
+Wŏnju	KR	Asia/Seoul
+Wad Medani	SD	Africa/Khartoum
+Quận Mười Một	VN	Asia/Ho_Chi_Minh
+Nukus	UZ	Asia/Samarkand
+Konak	TR	Europe/Istanbul
+Maebashi	JP	Asia/Tokyo
+Kita	JP	Asia/Tokyo
+Ciudad Victoria	MX	America/Monterrey
+Soledad de Graciano Sánchez	MX	America/Mexico_City
+Bielefeld	DE	Europe/Berlin
+Blida	DZ	Africa/Algiers
+Kwai Chung	HK	Asia/Hong_Kong
+Mandaue City	PH	Asia/Manila
+Ganja	AZ	Asia/Baku
+Khorramshahr	IR	Asia/Tehran
+Bonn	DE	Europe/Berlin
+Mathura	IN	Asia/Kolkata
+Hechi	CN	Asia/Shanghai
+Bydgoszcz	PL	Europe/Warsaw
+Smolensk	RU	Europe/Moscow
+Oral	KZ	Asia/Oral
+Khorramabad	IR	Asia/Tehran
+Soyapango	SV	America/El_Salvador
+Tongshan	CN	Asia/Shanghai
+Guédiawaye	SN	Africa/Dakar
+Plovdiv	BG	Europe/Sofia
+Ciudad Obregón	MX	America/Hermosillo
+Wŏnsan	KP	Asia/Pyongyang
+Brent	GB	Europe/London
+Pavlodar	KZ	Asia/Almaty
+Chānda	IN	Asia/Kolkata
+Canoas	BR	America/Sao_Paulo
+Kōriyama	JP	Asia/Tokyo
+Sochi	RU	Europe/Moscow
+Aksaray	TR	Europe/Istanbul
+Vijayapura	IN	Asia/Kolkata
+Chipata	ZM	Africa/Lusaka
+Chongjin	KP	Asia/Pyongyang
+Yanji	CN	Asia/Shanghai
+Roodepoort	ZA	Africa/Johannesburg
+Pucallpa	PE	America/Lima
+Mogi das Cruzes	BR	America/Sao_Paulo
+Birkenhead	GB	Europe/London
+Nantes	FR	Europe/Paris
+Ilesa	NG	Africa/Lagos
+Pekalongan	ID	Asia/Jakarta
+Bhatara	BD	Asia/Dhaka
+Espoo	FI	Europe/Helsinki
+Kikuyu	KE	Africa/Nairobi
+Kluang	MY	Asia/Kuala_Lumpur
+Lincang	CN	Asia/Shanghai
+Nottingham	GB	Europe/London
+Ramiros	AO	Africa/Luanda
+Al ‘Amārah	IQ	Asia/Baghdad
+Volzhsky	RU	Europe/Volgograd
+Vaughan	CA	America/Toronto
+Xingyi	CN	Asia/Shanghai
+Shivamogga	IN	Asia/Kolkata
+Alwar	IN	Asia/Kolkata
+Uíge	AO	Africa/Luanda
+Taubaté	BR	America/Sao_Paulo
+Ixtapaluca	MX	America/Mexico_City
+Osh	KG	Asia/Bishkek
+Portoviejo	EC	America/Guayaquil
+Villavicencio	CO	America/Bogota
+Man’gyŏngdae-ri	KP	Asia/Pyongyang
+Camaçari	BR	America/Bahia
+San Miguelito	PA	America/Panama
+Shāhjānpur	IN	Asia/Kolkata
+Lexington	US	America/New_York
+Tantou	CN	Asia/Shanghai
+Suzano	BR	America/Sao_Paulo
+Anápolis	BR	America/Sao_Paulo
+Kaech’ŏn	KP	Asia/Pyongyang
+Jūnāgadh	IN	Asia/Kolkata
+Islington	GB	Europe/London
+Hoa Lư	VN	Asia/Bangkok
+Holguín	CU	America/Havana
+Ust-Kamenogorsk	KZ	Asia/Almaty
+Tsuen Wan	HK	Asia/Hong_Kong
+Zinder	NE	Africa/Niamey
+Saransk	RU	Europe/Moscow
+Al Diwaniyah	IQ	Asia/Baghdad
+Varna	BG	Europe/Sofia
+Hafizabad	PK	Asia/Karachi
+Marne La Vallée	FR	Europe/Paris
+Palangkaraya	ID	Asia/Pontianak
+Damanhur	EG	Africa/Cairo
+Chiniot	PK	Asia/Karachi
+Popayán	CO	America/Bogota
+Reading	GB	Europe/London
+Geita	TZ	Africa/Dar_es_Salaam
+Constanţa	RO	Europe/Bucharest
+New Delhi	IN	Asia/Kolkata
+Thessaloníki	GR	Europe/Athens
+Thiès	SN	Africa/Dakar
+Naha	JP	Asia/Tokyo
+Riverside	US	America/Los_Angeles
+Baicheng	CN	Asia/Shanghai
+Chimbote	PE	America/Lima
+Bari	IT	Europe/Rome
+Barueri	BR	America/Sao_Paulo
+Corpus Christi	US	America/Chicago
+Thrissur	IN	Asia/Kolkata
+Cherepovets	RU	Europe/Moscow
+Eloy Alfaro	EC	America/Guayaquil
+Hamburg-Nord	DE	Europe/Berlin
+Al-Kut	IQ	Asia/Baghdad
+Muar	MY	Asia/Kuala_Lumpur
+Şişli	TR	Europe/Istanbul
+Lexington-Fayette	US	America/New_York
+Maroua	CM	Africa/Douala
+Kingston upon Hull	GB	Europe/London
+Preston	GB	Europe/London
+Lianshan	CN	Asia/Shanghai
+Denizli	TR	Europe/Istanbul
+Ikeja	NG	Africa/Lagos
+Al Qāhirah al Jadīdah	EG	Africa/Cairo
+New Cairo	EG	Africa/Cairo
+Vitória	BR	America/Sao_Paulo
+Palmira	CO	America/Bogota
+Vologda	RU	Europe/Moscow
+Iligan City	PH	Asia/Manila
+Catania	IT	Europe/Rome
+Jardim Angela	BR	America/Sao_Paulo
+Nizāmābād	IN	Asia/Kolkata
+Cincinnati	US	America/New_York
+Percut	ID	Asia/Jakarta
+Coatzacoalcos	MX	America/Mexico_City
+Santa Ana	US	America/Los_Angeles
+Sariwŏn-si	KP	Asia/Pyongyang
+Botshabelo	ZA	Africa/Johannesburg
+Butuan	PH	Asia/Manila
+Shahrīār	IR	Asia/Tehran
+Qods	IR	Asia/Tehran
+Gia Lâm	VN	Asia/Bangkok
+Kurgan	RU	Asia/Yekaterinburg
+Tampico	MX	America/Monterrey
+Akowonjo	NG	Africa/Lagos
+Cabuyao	PH	Asia/Manila
+Tabora	TZ	Africa/Dar_es_Salaam
+Kasugai	JP	Asia/Tokyo
+An Nhơn	VN	Asia/Ho_Chi_Minh
+Alimosho	NG	Africa/Lagos
+Ciudad Benito Juárez	MX	America/Monterrey
+Münster	DE	Europe/Berlin	Muenster
+Mannheim	DE	Europe/Berlin
+Karawang	ID	Asia/Jakarta
+Akita	JP	Asia/Tokyo
+Tumkūr	IN	Asia/Kolkata
+Chinju	KR	Asia/Seoul
+Parbhani	IN	Asia/Kolkata
+Hisar	IN	Asia/Kolkata
+Iksan	KR	Asia/Seoul
+Fīrozābād	IN	Asia/Kolkata
+Palmas	BR	America/Araguaina
+Vladikavkaz	RU	Europe/Moscow
+Port-de-Paix	HT	America/Port-au-Prince
+Damietta	EG	Africa/Cairo
+Posadas	AR	America/Argentina/Cordoba
+Parauapebas	BR	America/Belem
+Brakpan	ZA	Africa/Johannesburg
+Stockton	US	America/Los_Angeles
+Juazeiro do Norte	BR	America/Fortaleza
+Yokkaichi	JP	Asia/Tokyo
+Kulti	IN	Asia/Kolkata
+Tláhuac	MX	America/Mexico_City
+Sapele	NG	Africa/Lagos
+Kashan	IR	Asia/Tehran
+Pittsburgh	US	America/New_York
+Armenia	CO	America/Bogota
+Santa Catarina	MX	America/Monterrey
+Sumbawanga	TZ	Africa/Dar_es_Salaam
+Orël	RU	Europe/Moscow
+Akashi	JP	Asia/Tokyo
+Hai Bà Trưng	VN	Asia/Bangkok
+Kurume	JP	Asia/Tokyo
+Graz	AT	Europe/Vienna
+Saint Paul	US	America/Chicago
+Saltivskyi	UA	Europe/Kyiv
+Nghi Sơn	VN	Asia/Bangkok
+Karnāl	IN	Asia/Kolkata
+Changyi	CN	Asia/Shanghai
+Ciudad del Este	PY	America/Asuncion
+Rosetta	EG	Africa/Cairo
+Barddhamān	IN	Asia/Kolkata
+Toshima	JP	Asia/Tokyo
+Kediri	ID	Asia/Jakarta
+Solwezi	ZM	Africa/Lusaka
+Hamburg-Mitte	DE	Europe/Berlin
+Augsburg	DE	Europe/Berlin
+South Dublin	IE	Europe/Dublin
+Valladolid	ES	Europe/Madrid
+Miri	MY	Asia/Kuching
+Mardan	PK	Asia/Karachi
+Surgut	RU	Asia/Yekaterinburg
+Swansea	GB	Europe/London
+San Pablo	PH	Asia/Manila
+Newcastle upon Tyne	GB	Europe/London
+Gundupālaiyam	IN	Asia/Kolkata
+Várzea Grande	BR	America/Cuiaba
+Gatineau	CA	America/Toronto
+Batikent	TR	Europe/Istanbul
+Biñan	PH	Asia/Manila
+Malir Cantonment	PK	Asia/Karachi
+Winejok	SS	Africa/Juba
+Yangshuo	CN	Asia/Shanghai
+Linqu	CN	Asia/Shanghai
+Uruapan	MX	America/Mexico_City
+Pātan	NP	Asia/Kathmandu
+Fergana	UZ	Asia/Tashkent
+Bahía Blanca	AR	America/Argentina/Buenos_Aires
+Santol	PH	Asia/Manila
+Kaolack	SN	Africa/Dakar
+Jember	ID	Asia/Jakarta
+Aomori	JP	Asia/Tokyo
+Bārāsat	IN	Asia/Kolkata
+Mulugu	IN	Asia/Kolkata
+Foz do Iguaçu	BR	America/Sao_Paulo
+Bihār Sharīf	IN	Asia/Kolkata
+Tegal	ID	Asia/Jakarta
+Grozny	RU	Europe/Moscow
+Boma	CD	Africa/Kinshasa
+Bāli	IN	Asia/Kolkata
+Pu'er	CN	Asia/Shanghai
+Rāmpur	IN	Asia/Kolkata
+Darbhanga	IN	Asia/Kolkata
+Panipat	IN	Asia/Kolkata
+Białystok	PL	Europe/Warsaw	Bialystok
+Mwene	CD	Africa/Lubumbashi
+São José	BR	America/Sao_Paulo
+Rufisque	SN	Africa/Dakar
+Murmansk	RU	Europe/Moscow
+Tirupati	IN	Asia/Kolkata
+Southend-on-Sea	GB	Europe/London
+Petrópolis	BR	America/Sao_Paulo
+Guarujá	BR	America/Sao_Paulo
+Itajaí	BR	America/Sao_Paulo
+Lincoln	US	America/Chicago
+Phu Quoc	VN	Asia/Ho_Chi_Minh
+Baiyin	CN	Asia/Shanghai
+Fukushima	JP	Asia/Tokyo
+Bergen	NO	Europe/Oslo
+Greater Noida	IN	Asia/Kolkata
+Noida	IN	Asia/Kolkata
+Tambov	RU	Europe/Moscow
+Vigo	ES	Europe/Madrid
+Aizawl	IN	Asia/Kolkata
+Banjarbaru	ID	Asia/Makassar
+Thanh Xuân	VN	Asia/Bangkok
+Al Hufūf	SA	Asia/Riyadh
+Cholula	MX	America/Mexico_City
+Gandhinagar	IN	Asia/Kolkata
+Semey	KZ	Asia/Almaty
+Cầu Giấy	VN	Asia/Bangkok
+Dindigul	IN	Asia/Kolkata
+Ponta Grossa	BR	America/Sao_Paulo
+Gaozhou	CN	Asia/Shanghai
+Kamoke	PK	Asia/Karachi
+Limeira	BR	America/Sao_Paulo
+Thanjavur	IN	Asia/Kolkata
+Kariega	ZA	Africa/Johannesburg
+Adıyaman	TR	Europe/Istanbul	Adiyaman
+Al Mubarraz	SA	Asia/Riyadh
+Resistencia	AR	America/Argentina/Cordoba
+Atyrau	KZ	Asia/Atyrau
+Morioka	JP	Asia/Tokyo
+Sector 2	RO	Europe/Bucharest
+Xiuying	CN	Asia/Shanghai
+San Cristóbal	VE	America/Caracas
+Cileungsir	ID	Asia/Jakarta
+Karīmnagar	IN	Asia/Kolkata
+Anchorage	US	America/Anchorage
+Dewas	IN	Asia/Kolkata
+Batna	DZ	Africa/Algiers
+Kaunas	LT	Europe/Vilnius
+Sonīpat	IN	Asia/Kolkata
+Machala	EC	America/Guayaquil
+Wiesbaden	DE	Europe/Berlin
+Meads	US	America/New_York
+Kabwe	ZM	Africa/Lusaka
+Sinŭiju	KP	Asia/Pyongyang
+Meguro	JP	Asia/Tokyo
+Sector 4	RO	Europe/Bucharest
+Sumida	JP	Asia/Tokyo
+Ibaraki	JP	Asia/Tokyo
+Bắc Ninh	VN	Asia/Bangkok
+Ichalkaranji	IN	Asia/Kolkata
+Marienthal	DE	Europe/Berlin
+Phú Mỹ	VN	Asia/Ho_Chi_Minh
+Ceilândia	BR	America/Sao_Paulo
+Katowice	PL	Europe/Warsaw
+Adapazarı	TR	Europe/Istanbul	Adapazari
+Cluj-Napoca	RO	Europe/Bucharest
+Gunpo	KR	Asia/Seoul
+Songea	TZ	Africa/Dar_es_Salaam
+Butembo	CD	Africa/Lubumbashi
+Tacna	PE	America/Lima
+Tin Shui Wai	HK	Asia/Hong_Kong
+Long Xuyên	VN	Asia/Ho_Chi_Minh
+Bathinda	IN	Asia/Kolkata
+Henderson	US	America/Los_Angeles
+Jālna	IN	Asia/Kolkata
+Sekondi	GH	Africa/Accra
+São Gonçalo	BR	America/Sao_Paulo
+Kyengera	UG	Africa/Kampala
+Greensboro	US	America/New_York
+Haifa	IL	Asia/Jerusalem
+Århus	DK	Europe/Copenhagen
+Dengzhou	CN	Asia/Shanghai
+Artux	CN	Asia/Urumqi
+Chuncheon	KR	Asia/Seoul
+Alto Barinas	VE	America/Caracas
+Mbour	SN	Africa/Dakar
+Brighton	GB	Europe/London
+Karlsruhe	DE	Europe/Berlin
+Port Moresby	PG	Pacific/Port_Moresby
+Minya	EG	Africa/Cairo
+Plano	US	America/Chicago
+Marabá	BR	America/Belem
+Ichihara	JP	Asia/Tokyo
+Qibao	CN	Asia/Shanghai
+Kirāri Sulemānnagar	IN	Asia/Kolkata
+Cainta	PH	Asia/Manila
+Satna	IN	Asia/Kolkata
+Geelong	AU	Australia/Melbourne
+Chernihiv	UA	Europe/Kyiv
+Xinyuan	CN	Asia/Urumqi
+Chapecó	BR	America/Sao_Paulo
+Ba Vì	VN	Asia/Bangkok
+Valparaíso	CL	America/Santiago
+Ica	PE	America/Lima
+Purnia	IN	Asia/Kolkata
+Newark	US	America/New_York
+Itagüí	CO	America/Bogota	Itaguei
+Villa Nicolás Romero	MX	America/Mexico_City
+Gebze	TR	Europe/Istanbul
+Lichinga	MZ	Africa/Maputo
+Narsingdi	BD	Asia/Dhaka
+Zeytinburnu	TR	Europe/Istanbul
+Ostrava	CZ	Europe/Prague
+Sfax	TN	Africa/Tunis
+Zumpango	MX	America/Mexico_City
+Merkezefendi	TR	Europe/Istanbul
+Madison	US	America/Chicago
+Bukhara	UZ	Asia/Samarkand
+Wollongong	AU	Australia/Sydney
+Volta Redonda	BR	America/Sao_Paulo
+St. Louis	US	America/Chicago
+Poltava	UA	Europe/Kyiv
+Sumaré	BR	America/Sao_Paulo
+Brāhmanbāria	BD	Asia/Dhaka
+Efon-Alaaye	NG	Africa/Lagos
+Binjai	ID	Asia/Jakarta
+Pematangsiantar	ID	Asia/Jakarta
+Petrozavodsk	RU	Europe/Moscow
+Enshi	CN	Asia/Shanghai
+Taganrog	RU	Europe/Moscow
+Santa Teresa del Tuy	VE	America/Caracas
+Quảng Ngãi	VN	Asia/Ho_Chi_Minh
+Qarshi	UZ	Asia/Samarkand
+Tanghe	CN	Asia/Shanghai
+Demra	BD	Asia/Dhaka
+San Francisco Coacalco	MX	America/Mexico_City
+Sincelejo	CO	America/Bogota
+Kasangati	UG	Africa/Kampala
+Khomeynī Shahr	IR	Asia/Tehran
+Kostroma	RU	Europe/Moscow
+Imphal	IN	Asia/Kolkata
+Gagnoa	CI	Africa/Abidjan
+Bedok New Town	SG	Asia/Singapore
+Ulu Bedok	SG	Asia/Singapore
+Owo	NG	Africa/Lagos
+Suncheon	KR	Asia/Seoul
+Fangchenggang	CN	Asia/Shanghai
+Komsomolsk-on-Amur	RU	Asia/Vladivostok
+Abbottabad	PK	Asia/Karachi
+Kaili	CN	Asia/Shanghai
+Hakodate	JP	Asia/Tokyo
+Yamoussoukro	CI	Africa/Abidjan
+Bab Ezzouar	DZ	Africa/Algiers
+Strasbourg	FR	Europe/Paris
+Saugor	IN	Asia/Kolkata
+Neihu	TW	Asia/Taipei
+Tsu	JP	Asia/Tokyo
+Xingning	CN	Asia/Shanghai
+Linxia Chengguanzhen	CN	Asia/Shanghai
+Khmelnytskyi	UA	Europe/Kyiv
+Kushinagar	IN	Asia/Kolkata
+Saddiqabad	PK	Asia/Karachi
+Loja	EC	America/Guayaquil
+Tai Po	HK	Asia/Hong_Kong
+Isfara	TJ	Asia/Dushanbe
+Luena	AO	Africa/Luanda
+Taboão da Serra	BR	America/Sao_Paulo
+Istaravshan	TJ	Asia/Dushanbe
+Turpan	CN	Asia/Urumqi
+Rourkela	IN	Asia/Kolkata
+Yao	JP	Asia/Tokyo
+Banī Suwayf	EG	Africa/Cairo
+Imperatriz	BR	America/Fortaleza
+Nagar Naluākot	BD	Asia/Dhaka
+Guantánamo	CU	America/Havana
+Baguio	PH	Asia/Manila
+Ar Rayyān	QA	Asia/Qatar
+Polokwane	ZA	Africa/Johannesburg
+Ljubljana	SI	Europe/Ljubljana
+Jalālābād	AF	Asia/Kabul
+Deir ez-Zor	SY	Asia/Damascus
+Gijón	ES	Europe/Madrid
+Santa Maria	BR	America/Sao_Paulo
+Parnamirim	BR	America/Fortaleza
+Hafar Al-Batin	SA	Asia/Riyadh
+Kakogawachō-honmachi	JP	Asia/Tokyo
+Sector 5	RO	Europe/Bucharest
+Quận Sáu	VN	Asia/Ho_Chi_Minh
+Capao Redondo	BR	America/Sao_Paulo
+Mỹ Tho	VN	Asia/Ho_Chi_Minh
+Mito	JP	Asia/Tokyo
+Derby	GB	Europe/London
+Petaẖ Tiqva	IL	Asia/Jerusalem
+Dessie	ET	Africa/Addis_Ababa
+Hạ Long	VN	Asia/Bangkok
+Gelsenkirchen	DE	Europe/Berlin
+Longling County	CN	Asia/Shanghai
+Cherkasy	UA	Europe/Kyiv
+Malolos	PH	Asia/Manila
+Southampton	GB	Europe/London
+Kapar	MY	Asia/Kuala_Lumpur
+Çorum	TR	Europe/Istanbul
+Ghulja	CN	Asia/Urumqi
+Eimsbüttel	DE	Europe/Berlin	Eimsbuettel
+Merlo	AR	America/Argentina/Buenos_Aires
+Yeosu	KR	Asia/Seoul
+Durg	IN	Asia/Kolkata
+Fuling	CN	Asia/Shanghai
+Mokpo	KR	Asia/Seoul
+Birgañj	NP	Asia/Kathmandu
+Yoshkar-Ola	RU	Europe/Moscow
+Russeifa	JO	Asia/Amman
+Banda Aceh	ID	Asia/Jakarta
+Shibīn al Kawm	EG	Africa/Cairo
+Mirpur Khas	PK	Asia/Karachi
+Sengkang New Town	SG	Asia/Singapore
+Floridablanca	CO	America/Bogota
+Tokushima	JP	Asia/Tokyo
+Sterlitamak	RU	Asia/Yekaterinburg
+Anantapur	IN	Asia/Kolkata
+Gyeongsan-si	KR	Asia/Seoul
+Sohag	EG	Africa/Cairo
+Nagaoka	JP	Asia/Tokyo
+Sapopemba	BR	America/Sao_Paulo
+Saint-Marc	HT	America/Port-au-Prince
+Governador Valadares	BR	America/Sao_Paulo
+Eixample	ES	Europe/Madrid
+São Carlos	BR	America/Sao_Paulo
+Bagerhat	BD	Asia/Dhaka
+Az-Zuhūr	EG	Africa/Cairo
+Hà Tĩnh	VN	Asia/Bangkok
+Saskatoon	CA	America/Regina
+Chengzhong	CN	Asia/Shanghai
+Djelfa	DZ	Africa/Algiers
+Chula Vista	US	America/Los_Angeles
+Shimonoseki	JP	Asia/Tokyo
+Toledo	US	America/New_York
+Ulanhot	CN	Asia/Shanghai
+Kibaha	TZ	Africa/Dar_es_Salaam
+Hulan Ergi	CN	Asia/Shanghai
+Tampines Estate	SG	Asia/Singapore
+Bordeaux	FR	Europe/Paris
+Aachen	DE	Europe/Berlin
+Gent	BE	Europe/Brussels
+Gravataí	BR	America/Sao_Paulo
+Cité Soleil	HT	America/Port-au-Prince
+Mantampay	PH	Asia/Manila
+Ratlām	IN	Asia/Kolkata
+Nogales	MX	America/Hermosillo
+El Daein	SD	Africa/Khartoum
+Dezful	IR	Asia/Tehran
+Donghai	CN	Asia/Shanghai
+Gunsan	KR	Asia/Seoul
+Mossoró	BR	America/Fortaleza
+Macaé	BR	America/Sao_Paulo
+Rānipet	IN	Asia/Kolkata
+Porto-Novo	BJ	Africa/Porto-Novo
+Chernivtsi	UA	Europe/Kyiv
+Jersey City	US	America/New_York
+Manta	EC	America/Guayaquil
+Reno	US	America/Los_Angeles
+Bégoua	CF	Africa/Bangui
+Riobamba	EC	America/Guayaquil
+Sivas	TR	Europe/Istanbul
+Dourados	BR	America/Campo_Grande
+Rondonópolis	BR	America/Cuiaba
+Wolverhampton	GB	Europe/London
+Huayin	CN	Asia/Shanghai
+Pasarkemis	ID	Asia/Jakarta
+Fanling	HK	Asia/Hong_Kong
+Chiayi City	TW	Asia/Taipei
+Dongtai	CN	Asia/Shanghai
+Fuchū	JP	Asia/Tokyo
+Jurong Town	SG	Asia/Singapore
+Marāgheh	IR	Asia/Tehran
+Quilmes	AR	America/Argentina/Buenos_Aires
+Fukui-shi	JP	Asia/Tokyo
+Lal Bahadur Nagar	IN	Asia/Kolkata
+Mönchengladbach	DE	Europe/Berlin	Moenchengladbach
+Bagong Silang	PH	Asia/Manila
+Zhytomyr	UA	Europe/Kyiv
+Karamay	CN	Asia/Urumqi
+Sacomã	BR	America/Sao_Paulo
+Arrah	IN	Asia/Kolkata
+Tongliao	CN	Asia/Shanghai
+Bariadi	TZ	Africa/Dar_es_Salaam
+Antsirabe	MG	Indian/Antananarivo
+Chandler	US	America/Phoenix
+Yei	SS	Africa/Juba
+Chilanzar	UZ	Asia/Tashkent
+Tampere	FI	Europe/Helsinki
+Mahajanga	MG	Indian/Antananarivo
+Minato City	JP	Asia/Tokyo
+Fort Wayne	US	America/Indiana/Indianapolis
+Plymouth	GB	Europe/London
+Nianbo	CN	Asia/Shanghai
+Baranagar	IN	Asia/Kolkata
+Skardu	PK	Asia/Karachi
+Marawi City	PH	Asia/Manila
+Tampines New Town	SG	Asia/Singapore
+Embu das Artes	BR	America/Sao_Paulo
+Qo‘qon	UZ	Asia/Tashkent
+Jardim Sao Luis	BR	America/Sao_Paulo
+Tacloban	PH	Asia/Manila
+Rishon LeTsiyyon	IL	Asia/Jerusalem
+São José de Ribamar	BR	America/Fortaleza
+Changle	CN	Asia/Shanghai
+Gajuwaka	IN	Asia/Kolkata
+North Shore	NZ	Pacific/Auckland
+Hiratsuka	JP	Asia/Tokyo
+Stoke-on-Trent	GB	Europe/London
+Buffalo	US	America/New_York
+Verona	IT	Europe/Rome
+Ðà Lạt	VN	Asia/Ho_Chi_Minh	Da Lat
+San Salvador de Jujuy	AR	America/Argentina/Jujuy
+Durham	US	America/New_York
+Shiqi	CN	Asia/Shanghai
+Etāwah	IN	Asia/Kolkata
+Gasteiz / Vitoria	ES	Europe/Madrid
+Rugao	CN	Asia/Shanghai
+Gómez Palacio	MX	America/Monterrey
+St. Petersburg	US	America/New_York
+L'Hospitalet de Llobregat	ES	Europe/Madrid
+Gdynia	PL	Europe/Warsaw
+Cilacap	ID	Asia/Jakarta
+Irvine	US	America/Los_Angeles
+Kitchener	CA	America/Toronto
+Suicheng	CN	Asia/Shanghai
+Nada	CN	Asia/Shanghai
+Latina	ES	Europe/Madrid
+Los Mochis	MX	America/Mazatlan
+Bratsk	RU	Asia/Irkutsk
+Pachuca de Soto	MX	America/Mexico_City
+Chingola	ZM	Africa/Lusaka
+Sumy	UA	Europe/Kyiv
+Milton Keynes	GB	Europe/London
+Indaiatuba	BR	America/Sao_Paulo
+Laredo	US	America/Chicago
+Juazeiro	BR	America/Bahia
+Vila Flor	AO	Africa/Luanda
+Germiston	ZA	Africa/Johannesburg
+Ñuñoa	CL	America/Santiago
+Parakou	BJ	Africa/Porto-Novo
+Isiro	CD	Africa/Lubumbashi
+Sari	IR	Asia/Tehran
+Tarakan	ID	Asia/Makassar
+Kenema	SL	Africa/Freetown
+Oaxaca	MX	America/Mexico_City
+Al Madīnah	IQ	Asia/Baghdad
+Mossamedes	AO	Africa/Luanda
+Hobart	AU	Australia/Hobart
+Ikot Ekpene	NG	Africa/Lagos
+Woodlands	SG	Asia/Singapore
+Hanam	KR	Asia/Seoul
+Mueang Nonthaburi	TH	Asia/Bangkok
+Muridke	PK	Asia/Karachi
+Saint-Louis	SN	Africa/Dakar
+Batu Caves	MY	Asia/Kuala_Lumpur
+Novo Hamburgo	BR	America/Sao_Paulo
+Jurong West	SG	Asia/Singapore
+Singkawang	ID	Asia/Pontianak
+Cox’s Bāzār	BD	Asia/Dhaka
+Carabanchel	ES	Europe/Madrid
+Cotia	BR	America/Sao_Paulo
+Marg‘ilon	UZ	Asia/Tashkent
+Ambarnath	IN	Asia/Kolkata
+Godomè	BJ	Africa/Porto-Novo
+Naihāti	IN	Asia/Kolkata
+Braşov	RO	Europe/Bucharest
+Xuân Lộc	VN	Asia/Ho_Chi_Minh
+Richards Bay	ZA	Africa/Johannesburg
+Qina	EG	Africa/Cairo
+Vantaa	FI	Europe/Helsinki
+Porto	PT	Europe/Lisbon
+Kiel	DE	Europe/Berlin
+El Fasher	SD	Africa/Khartoum
+Thiès Nones	SN	Africa/Dakar
+Suihua	CN	Asia/Shanghai
+Los Teques	VE	America/Caracas
+Santiago del Estero	AR	America/Argentina/Cordoba
+Sétif	DZ	Africa/Algiers
+Begusarai	IN	Asia/Kolkata
+Borūjerd	IR	Asia/Tehran
+Qarchak	IR	Asia/Tehran
+Afyonkarahisar	TR	Europe/Istanbul
+İskenderun	TR	Europe/Istanbul
+Santiago de Surco	PE	America/Lima
+Maracanaú	BR	America/Fortaleza
+Thika	KE	Africa/Nairobi
+San Fernando	PH	Asia/Manila
+Menongue	AO	Africa/Luanda
+Ḩayy Khildā	JO	Asia/Amman
+Jacareí	BR	America/Sao_Paulo
+Jimma	ET	Africa/Addis_Ababa
+Timişoara	RO	Europe/Bucharest
+Santa Clara	CU	America/Havana
+Iwo	NG	Africa/Lagos
+A Coruña	ES	Europe/Madrid
+Libertad	PH	Asia/Manila
+Altona	DE	Europe/Berlin
+Colonia del Valle	MX	America/Mexico_City
+Kelar	IQ	Asia/Baghdad
+Niš	RS	Europe/Belgrade
+Singa	SD	Africa/Khartoum
+San Bernardo	CL	America/Santiago
+Sōka	JP	Asia/Tokyo
+Mzuzu	MW	Africa/Blantyre
+Navotas	PH	Asia/Manila
+Tiruvottiyūr	IN	Asia/Kolkata
+Cidade Ademar	BR	America/Sao_Paulo
+Burnaby	CA	America/Vancouver
+Lubbock	US	America/Chicago
+Thị Trấn Đông Triều	VN	Asia/Bangkok	Thi Tran GJong Trieu
+Thuqbah	SA	Asia/Riyadh
+Yamagata	JP	Asia/Tokyo
+Tehuacán	MX	America/Mexico_City
+Guarenas	VE	America/Caracas
+Laferrere	AR	America/Argentina/Buenos_Aires
+Montpellier	FR	Europe/Paris
+Jimeta	NG	Africa/Lagos
+Częstochowa	PL	Europe/Warsaw
+Gāndhīdhām	IN	Asia/Kolkata
+Beibei	CN	Asia/Shanghai
+Insein	MM	Asia/Yangon
+City of Westminster	GB	Europe/London
+Gilbert	US	America/Phoenix
+Chemnitz	DE	Europe/Berlin
+Paraná	AR	America/Argentina/Cordoba
+San Miguel	SV	America/El_Salvador
+Shijie	CN	Asia/Shanghai
+Chitato	AO	Africa/Luanda
+Orsk	RU	Asia/Yekaterinburg
+Vanderbijlpark	ZA	Africa/Johannesburg
+Coro	VE	America/Caracas
+Americana	BR	America/Sao_Paulo
+Hami	CN	Asia/Urumqi
+Gaborone	BW	Africa/Gaborone
+Al ‘Āshir min Ramaḑān	EG	Africa/Cairo
+Mau	IN	Asia/Kolkata
+Puerto Montt	CL	America/Santiago
+Northampton	GB	Europe/London
+Juliaca	PE	America/Lima
+Fuji	JP	Asia/Tokyo
+Gyeongju	KR	Asia/Seoul
+Águas Lindas de Goiás	BR	America/Sao_Paulo
+Sinfra	CI	Africa/Abidjan
+Kaliakair	BD	Asia/Dhaka
+Syktyvkar	RU	Europe/Moscow
+Gorgān	IR	Asia/Tehran
+Nizhnevartovsk	RU	Asia/Yekaterinburg
+Shahkot	PK	Asia/Karachi
+Groningen	NL	Europe/Amsterdam
+Biratnagar	NP	Asia/Kathmandu
+Braunschweig	DE	Europe/Berlin
+Valera	VE	America/Caracas
+Sīkar	IN	Asia/Kolkata
+Bago	MM	Asia/Yangon
+Magdeburg	DE	Europe/Berlin
+Baruta	VE	America/Caracas
+Puente de Vallecas	ES	Europe/Madrid
+Magé	BR	America/Sao_Paulo
+Trabzon	TR	Europe/Istanbul
+Tri-Cities	US	America/Los_Angeles
+Jessore	BD	Asia/Dhaka
+Manisa	TR	Europe/Istanbul
+Arapiraca	BR	America/Maceio
+Rivne	UA	Europe/Kyiv
+Padangsidempuan	ID	Asia/Jakarta
+Probolinggo	ID	Asia/Jakarta
+Sabzevar	IR	Asia/Tehran
+Musaffah	AE	Asia/Dubai
+Brasilandia	BR	America/Sao_Paulo
+Sasebo	JP	Asia/Tokyo
+Angarsk	RU	Asia/Irkutsk
+Mar’ino	RU	Europe/Moscow
+Ramagundam	IN	Asia/Kolkata
+Hāpur	IN	Asia/Kolkata
+Chigasaki	JP	Asia/Tokyo
+Toli-Toli	ID	Asia/Makassar
+Chōfu	JP	Asia/Tokyo
+Berbera	SO	Africa/Mogadishu
+Jiyuan	CN	Asia/Shanghai
+Yamato	JP	Asia/Tokyo
+Man	CI	Africa/Abidjan
+Bahawalnagar	PK	Asia/Karachi
+Novorossiysk	RU	Europe/Moscow
+Tsukuba	JP	Asia/Tokyo
+Arica	CL	America/Santiago
+Peñalolén	CL	America/Santiago
+Rio Verde	BR	America/Sao_Paulo
+Laohekou	CN	Asia/Shanghai
+Hải Dương	VN	Asia/Bangkok
+Winston-Salem	US	America/New_York
+Farrukhābād	IN	Asia/Kolkata
+Matsumoto	JP	Asia/Tokyo
+Alappuzha	IN	Asia/Kolkata
+Itapevi	BR	America/Sao_Paulo
+Katihar	IN	Asia/Kolkata
+Ciudad Ojeda	VE	America/Caracas
+Gucun	CN	Asia/Shanghai
+Glendale	US	America/Phoenix
+Xiulin	CN	Asia/Shanghai
+Navegantes	AO	Africa/Luanda
+Bunkyo	JP	Asia/Tokyo
+Itaboraí	BR	America/Sao_Paulo
+Klang	MY	Asia/Kuala_Lumpur
+Almendares	CU	America/Havana
+Golestān	IR	Asia/Tehran
+Vyhurivshchyna-Troyeshchyna	UA	Europe/Kyiv
+Khimki	RU	Europe/Moscow
+Horlivka	UA	Europe/Kyiv
+Nacala	MZ	Africa/Maputo
+Obolon	UA	Europe/Kyiv
+Xiantao	CN	Asia/Shanghai
+Nalchik	RU	Europe/Moscow
+Hachinohe	JP	Asia/Tokyo
+Sete Lagoas	BR	America/Sao_Paulo
+Osan	KR	Asia/Seoul
+Fuencarral	ES	Europe/Madrid
+Lille	FR	Europe/Paris
+Neyagawa	JP	Asia/Tokyo
+Ormoc	PH	Asia/Manila
+Cabo Frio	BR	America/Sao_Paulo
+Magdalena Contreras	MX	America/Mexico_City
+Nāgarpur	BD	Asia/Dhaka
+Kasulu	TZ	Africa/Dar_es_Salaam
+Ivano-Frankivsk	UA	Europe/Kyiv
+Ngaoundéré	CM	Africa/Douala
+Balıkesir	TR	Europe/Istanbul	Balikesir
+Temuco	CL	America/Santiago
+Norfolk	US	America/New_York
+Krefeld	DE	Europe/Berlin
+Halle (Saale)	DE	Europe/Berlin
+Sri Ganganagar	IN	Asia/Kolkata
+Marília	BR	America/Sao_Paulo
+Amarapura	MM	Asia/Yangon
+Kilamba	AO	Africa/Luanda
+Āmol	IR	Asia/Tehran
+Freiburg	DE	Europe/Berlin
+Athlone	ZA	Africa/Johannesburg
+Batangas	PH	Asia/Manila
+Al Jubayl	SA	Asia/Riyadh
+Tŏkch’ŏn	KP	Asia/Pyongyang
+Oldham	GB	Europe/London
+Pathein	MM	Asia/Yangon
+Hialeah	US	America/New_York
+Kunri	PK	Asia/Karachi
+Sylhet	BD	Asia/Dhaka
+Paarl	ZA	Africa/Johannesburg
+Garland	US	America/Chicago
+Podgorica	ME	Europe/Podgorica
+Scottsdale	US	America/Phoenix
+Hortolândia	BR	America/Sao_Paulo
+Irving	US	America/Chicago
+Centurion	ZA	Africa/Johannesburg
+Qingzhou	CN	Asia/Shanghai
+Pākdasht	IR	Asia/Tehran
+Kajang	MY	Asia/Kuala_Lumpur
+Campo Limpo	BR	America/Sao_Paulo
+Yuci	CN	Asia/Shanghai
+Sant Martí	ES	Europe/Madrid
+Eindhoven	NL	Europe/Amsterdam
+Boise	US	America/Boise
+Rewa	IN	Asia/Kolkata
+Yakutsk	RU	Asia/Yakutsk
+Bole	CN	Asia/Shanghai
+Muzaffargarh	PK	Asia/Karachi
+Chesapeake	US	America/New_York
+Uluberiya	IN	Asia/Kolkata
+Ipatinga	BR	America/Sao_Paulo
+Dali	CN	Asia/Shanghai
+Najafābād	IR	Asia/Tehran
+Thành Phố Bà Rịa	VN	Asia/Ho_Chi_Minh
+Georgetown	GY	America/Guyana
+Xiangxiang	CN	Asia/Shanghai
+Kismayo	SO	Africa/Mogadishu
+North Las Vegas	US	America/Los_Angeles
+Elche	ES	Europe/Madrid
+Presidente Prudente	BR	America/Sao_Paulo
+Sivakasi	IN	Asia/Kolkata
+Kindu	CD	Africa/Lubumbashi
+Digri	PK	Asia/Karachi
+Nizhnekamsk	RU	Europe/Moscow
+Karur	IN	Asia/Kolkata
+Lubuklinggau	ID	Asia/Jakarta
+Craiova	RO	Europe/Bucharest
+Rāichūr	IN	Asia/Kolkata
+Pallāvaram	IN	Asia/Kolkata
+Danlí	HN	America/Tegucigalpa
+Yongkang	TW	Asia/Taipei
+Bo	SL	Africa/Freetown
+Granada	ES	Europe/Madrid
+Ooty	IN	Asia/Kolkata
+Saga	JP	Asia/Tokyo
+Magugpo Poblacion	PH	Asia/Manila
+Dzerzhinsk	RU	Europe/Moscow
+Pemba	MZ	Africa/Maputo
+Geoje	KR	Asia/Seoul
+Teluk Intan	MY	Asia/Kuala_Lumpur
+Singida	TZ	Africa/Dar_es_Salaam
+Kigoma	TZ	Africa/Dar_es_Salaam
+Fremont	US	America/Los_Angeles
+Kampong Baharu Cheras Batu Sebelas	MY	Asia/Kuala_Lumpur
+Viamão	BR	America/Sao_Paulo
+Jiayuguan	CN	Asia/Shanghai
+Abadan	IR	Asia/Tehran
+Taytay	PH	Asia/Manila
+Phổ Yên	VN	Asia/Bangkok
+Neuquén	AR	America/Argentina/Salta
+Divinópolis	BR	America/Sao_Paulo
+Türkmenabat	TM	Asia/Ashgabat	Tuerkmenabat
+Shibuya	JP	Asia/Tokyo
+Sơn Tây	VN	Asia/Bangkok
+Ninh Hòa	VN	Asia/Ho_Chi_Minh
+Pasir Mas	MY	Asia/Kuala_Lumpur
+Purwokerto	ID	Asia/Jakarta
+José C. Paz	AR	America/Argentina/Buenos_Aires
+Marka	SO	Africa/Mogadishu
+Pāli	IN	Asia/Kolkata
+Atani	NG	Africa/Lagos
+Mariupol	UA	Europe/Kyiv
+Ḩalwān	EG	Africa/Cairo
+Bnei Brak	IL	Asia/Jerusalem
+Huanren	CN	Asia/Shanghai
+Changzheng	CN	Asia/Shanghai
+Kasukabe	JP	Asia/Tokyo
+Paris 15 Vaugirard	FR	Europe/Paris
+Windsor	CA	America/Toronto
+Hosūr	IN	Asia/Kolkata
+Spokane	US	America/Los_Angeles
+Longueuil	CA	America/Toronto
+Ordu	TR	Europe/Istanbul
+San Fernando de Apure	VE	America/Caracas
+Croix-des-Bouquets	HT	America/Port-au-Prince
+Lucena	PH	Asia/Manila
+Yishun New Town	SG	Asia/Singapore
+Vizianagaram	IN	Asia/Kolkata
+Ashdod	IL	Asia/Jerusalem
+Jinchang	CN	Asia/Shanghai
+Phan Thiết	VN	Asia/Ho_Chi_Minh
+Şabyā	SA	Asia/Riyadh
+Netanya	IL	Asia/Jerusalem
+Ciudad Lineal	ES	Europe/Madrid
+Meycauayan	PH	Asia/Manila
+Aliayabiagba	NG	Africa/Lagos
+Bexley	GB	Europe/London
+Nassau	BS	America/Nassau
+San Lorenzo	PY	America/Asuncion
+Rennes	FR	Europe/Paris
+Mohammedia	MA	Africa/Casablanca
+Guatire	VE	America/Caracas
+Tanjung Pinang	ID	Asia/Jakarta
+Hougang New Town	SG	Asia/Singapore
+Baton Rouge	US	America/Chicago
+Criciúma	BR	America/Sao_Paulo
+Sosnowiec	PL	Europe/Warsaw
+Diez de Octubre	CU	America/Havana
+Turkistan	KZ	Asia/Almaty
+Klerksdorp	ZA	Africa/Johannesburg
+Upper West Side	US	America/New_York
+Staryy Oskol	RU	Europe/Moscow
+Ageo	JP	Asia/Tokyo
+Gusau	NG	Africa/Lagos
+Neue Neustadt	DE	Europe/Berlin
+Kamyanske	UA	Europe/Kyiv
+Radom	PL	Europe/Warsaw
+Paya Terubong	MY	Asia/Kuala_Lumpur
+Richmond	US	America/New_York
+Chang-hua	TW	Asia/Taipei
+Changhua	TW	Asia/Taipei
+Điện Bàn	VN	Asia/Ho_Chi_Minh	GJien Ban
+Takarazuka	JP	Asia/Tokyo
+Nzérékoré	GN	Africa/Conakry
+Regina	CA	America/Regina
+Cà Mau	VN	Asia/Ho_Chi_Minh
+Shrīrāmpur	IN	Asia/Kolkata
+Fendou	CN	Asia/Shanghai
+Pangkalpinang	ID	Asia/Jakarta
+Quthbullapur	IN	Asia/Kolkata
+Mubi	NG	Africa/Lagos
+Varāmīn	IR	Asia/Tehran
+Sector 1	RO	Europe/Bucharest
+Batu	ID	Asia/Jakarta
+Somerset West	ZA	Africa/Johannesburg
+Luton	GB	Europe/London
+Ternopil	UA	Europe/Kyiv
+Bitung	ID	Asia/Makassar
+Mymensingh	BD	Asia/Dhaka
+Blagoveshchensk	RU	Asia/Yakutsk
+Nadiād	IN	Asia/Kolkata
+Kumba	CM	Africa/Douala
+Košice	SK	Europe/Bratislava
+Kremenchuk	UA	Europe/Kyiv
+Jingling	CN	Asia/Shanghai
+Nāgercoil	IN	Asia/Kolkata
+Sucre	BO	America/La_Paz
+Mutare	ZW	Africa/Harare
+Karāwalnagar	IN	Asia/Kolkata
+Puerto Vallarta	MX	America/Mexico_City
+Minamirinkan	JP	Asia/Tokyo
+Cork	IE	Europe/Dublin
+Atsugi	JP	Asia/Tokyo
+Heihe	CN	Asia/Shanghai
+Mango	IN	Asia/Kolkata
+Sinop	BR	America/Cuiaba
+Paramaribo	SR	America/Paramaribo
+Klungkung	ID	Asia/Makassar
+Narayanganj	BD	Asia/Dhaka
+NIA Valencia	PH	Asia/Manila
+Tongchuanshi	CN	Asia/Shanghai
+Concepción	CL	America/Santiago
+Ramadi	IQ	Asia/Baghdad
+Paradise	US	America/Los_Angeles
+Tacoma	US	America/Los_Angeles
+Mainz	DE	Europe/Berlin
+Velikiy Novgorod	RU	Europe/Moscow
+Sungai Buloh	MY	Asia/Kuala_Lumpur
+Puerto Princesa	PH	Asia/Manila
+Palhoça	BR	America/Sao_Paulo
+Xintai	CN	Asia/Shanghai
+El Tigre	VE	America/Caracas
+Haeju	KP	Asia/Pyongyang
+Formosa	AR	America/Argentina/Cordoba
+Ikire	NG	Africa/Lagos
+Jiexiu	CN	Asia/Shanghai
+La Ceiba	HN	America/Tegucigalpa
+Tilburg	NL	Europe/Amsterdam
+Ba Dinh	VN	Asia/Bangkok
+Murwāra	IN	Asia/Kolkata
+Moshi	TZ	Africa/Dar_es_Salaam
+Kanchipuram	IN	Asia/Kolkata
+Sousse	TN	Africa/Tunis
+Tuluá	CO	America/Bogota
+Soyo	AO	Africa/Luanda
+Sóc Trăng	VN	Asia/Ho_Chi_Minh
+Kankan	GN	Africa/Conakry
+Shakhty	RU	Europe/Moscow
+Mbarara	UG	Africa/Kampala
+Luziânia	BR	America/Sao_Paulo
+Olongapo	PH	Asia/Manila
+Ibarra	EC	America/Guayaquil
+Banja Luka	BA	Europe/Sarajevo
+Rufisque est	SN	Africa/Dakar
+Neyshābūr	IR	Asia/Tehran
+Sāveh	IR	Asia/Tehran
+Wuxue	CN	Asia/Shanghai
+Shevchenkivskyi	UA	Europe/Kyiv
+Chí Linh	VN	Asia/Ho_Chi_Minh
+Campeche	MX	America/Merida
+Quận Ba	VN	Asia/Ho_Chi_Minh
+Singrauli	IN	Asia/Kolkata
+Fuencarral-El Pardo	ES	Europe/Madrid
+Mirzāpur	IN	Asia/Kolkata
+Oviedo	ES	Europe/Madrid
+Bandar Seri Alam	MY	Asia/Kuala_Lumpur
+Sorong	ID	Asia/Jayapura
+Messina	IT	Europe/Rome
+Dehiwala-Mount Lavinia	LK	Asia/Colombo
+Kropyvnytskyi	UA	Europe/Kyiv
+Kharagpur	IN	Asia/Kolkata
+Kabinda	CD	Africa/Lubumbashi
+Jacobabad	PK	Asia/Karachi
+Tunduma	TZ	Africa/Dar_es_Salaam
+Binangonan	PH	Asia/Manila
+Oberhausen	DE	Europe/Berlin
+Chon Buri	TH	Asia/Bangkok
+Santa Luzia	BR	America/Sao_Paulo
+Prokop’yevsk	RU	Asia/Novokuznetsk
+Samambaia	BR	America/Sao_Paulo
+Erfurt	DE	Europe/Berlin
+Esmeraldas	EC	America/Guayaquil
+Terrassa	ES	Europe/Madrid
+Barking	GB	Europe/London
+Wuhai	CN	Asia/Shanghai
+Valparaíso de Goiás	BR	America/Sao_Paulo
+Khuzdar	PK	Asia/Karachi
+Koutiala	ML	Africa/Bamako
+Eluru	IN	Asia/Kolkata
+Rāniganj	IN	Asia/Kolkata
+San Pedro de Macorís	DO	America/Santo_Domingo
+Galaţi	RO	Europe/Bucharest
+Badalona	ES	Europe/Madrid
+Mokotów	PL	Europe/Warsaw
+Taiping	MY	Asia/Kuala_Lumpur
+Yintai	CN	Asia/Shanghai
+Yamuna Nagar	IN	Asia/Kolkata
+Cabo de Santo Agostinho	BR	America/Recife
+Arakawa	JP	Asia/Tokyo
+Jamaica	US	America/New_York
+Buenavista	MX	America/Mexico_City
+Gilgit	PK	Asia/Karachi
+Rybinsk	RU	Europe/Moscow
+Santa Rosa	PH	Asia/Manila
+Sobral	BR	America/Fortaleza
+Trondheim	NO	Europe/Oslo
+Raurkela Industrial Township	IN	Asia/Kolkata
+Porlamar	VE	America/Caracas
+San Bernardino	US	America/Los_Angeles
+Ciudad Acuña	MX	America/Matamoros
+Oulu	FI	Europe/Helsinki
+Bidar	IN	Asia/Kolkata
+Vykhino-Zhulebino	RU	Europe/Moscow
+Lutsk	UA	Europe/Kyiv
+San Cristóbal de las Casas	MX	America/Merida
+Zelenograd	RU	Europe/Moscow
+Archway	GB	Europe/London
+Wangsa Maju	MY	Asia/Kuala_Lumpur
+Salt Lake City	US	America/Denver
+Biysk	RU	Asia/Barnaul
+Novi Sad	RS	Europe/Belgrade
+Jiutepec	MX	America/Mexico_City
+Longgang	CN	Asia/Shanghai
+Monclova	MX	America/Monterrey
+Tân An	VN	Asia/Ho_Chi_Minh
+Ma On Shan	HK	Asia/Hong_Kong
+Commonwealth	PH	Asia/Manila
+Huntsville	US	America/Chicago
+Jabaquara	BR	America/Sao_Paulo
+Ziguinchor	SN	Africa/Dakar
+Passo Fundo	BR	America/Sao_Paulo
+Kŭlob	TJ	Asia/Dushanbe
+Citeureup	ID	Asia/Jakarta
+Centralniy	RU	Europe/Moscow
+Sa Dec	VN	Asia/Ho_Chi_Minh
+Kure	JP	Asia/Tokyo
+Shagamu	NG	Africa/Lagos
+Khouribga	MA	Africa/Casablanca
+Yingtan	CN	Asia/Shanghai
+Des Moines	US	America/Chicago
+Çiğli	TR	Europe/Istanbul
+Marcory	CI	Africa/Abidjan
+Gojra	PK	Asia/Karachi
+Quevedo	EC	America/Guayaquil
+Oakville	CA	America/Toronto
+Pasuruan	ID	Asia/Jakarta
+Naz̧arābād	IR	Asia/Tehran
+Munger	IN	Asia/Kolkata
+Xilin Hot	CN	Asia/Shanghai
+Jerez de la Frontera	ES	Europe/Madrid
+El Jadida	MA	Africa/Casablanca
+Zitong	CN	Asia/Shanghai
+Loa Janan	ID	Asia/Makassar
+Târgu Mureş	RO	Europe/Bucharest
+Fontana	US	America/Los_Angeles
+Rancagua	CL	America/Santiago
+Zhubei	TW	Asia/Taipei
+Mallawī	EG	Africa/Cairo
+Cape Coast	GH	Africa/Accra
+Bukit Mertajam	MY	Asia/Kuala_Lumpur
+Lipa City	PH	Asia/Manila
+Lanús	AR	America/Argentina/Buenos_Aires
+Lübeck	DE	Europe/Berlin	Luebeck
+Chāndpur	BD	Asia/Dhaka
+Luojiang	CN	Asia/Shanghai
+Sepang	MY	Asia/Kuala_Lumpur
+Cobán	GT	America/Guatemala
+Maricá	BR	America/Sao_Paulo
+Cao Lãnh	VN	Asia/Ho_Chi_Minh
+Isesaki	JP	Asia/Tokyo
+Sabadell	ES	Europe/Madrid
+Jaraguá	BR	America/Sao_Paulo
+Taito	JP	Asia/Tokyo
+Nandyāl	IN	Asia/Kolkata
+Santa Cruz de Tenerife	ES	Atlantic/Canary
+Panchkula	IN	Asia/Kolkata
+Modesto	US	America/Los_Angeles
+Panabo	PH	Asia/Manila
+Lijiang	CN	Asia/Shanghai
+Konibodom	TJ	Asia/Dushanbe
+Hailar	CN	Asia/Shanghai
+Itaquera	BR	America/Sao_Paulo
+Kabankalan	PH	Asia/Manila
+Abha	SA	Asia/Riyadh
+Burhānpur	IN	Asia/Kolkata
+Ternate	ID	Asia/Jayapura
+Burgas	BG	Europe/Sofia
+Pskov	RU	Europe/Moscow
+Morvi	IN	Asia/Kolkata
+Daliang	CN	Asia/Shanghai
+Quilicura	CL	America/Santiago
+Beni Mellal	MA	Africa/Casablanca
+Ashuganj City	BD	Asia/Dhaka
+Sidi Bel Abbes	DZ	Africa/Algiers
+Arroyo Naranjo	CU	America/Havana
+Jebel Ali	AE	Asia/Dubai
+Kostanay	KZ	Asia/Qostanay
+Rochester	US	America/New_York
+Banjar	ID	Asia/Jakarta
+Novi Beograd	RS	Europe/Belgrade
+Kanggye	KP	Asia/Pyongyang
+Chungju	KR	Asia/Seoul
+Anand	IN	Asia/Kolkata
+São Leopoldo	BR	America/Sao_Paulo
+Bade	TW	Asia/Taipei
+Oruro	BO	America/La_Paz
+Bachuan	CN	Asia/Shanghai
+La Romana	DO	America/Santo_Domingo
+Araçatuba	BR	America/Sao_Paulo
+Shashamane	ET	Africa/Addis_Ababa
+Hangu	CN	Asia/Shanghai
+Ongole	IN	Asia/Kolkata
+Pamplona	ES	Europe/Madrid
+Maryvale	US	America/Phoenix
+Gangneung	KR	Asia/Seoul
+Portsmouth	GB	Europe/London
+Gandajika	CD	Africa/Lubumbashi
+Gunan	CN	Asia/Shanghai
+Phan Rang-Tháp Chàm	VN	Asia/Ho_Chi_Minh
+Ciputat	ID	Asia/Jakarta
+Bishoftu	ET	Africa/Addis_Ababa
+Nishi-Tokyo-shi	JP	Asia/Tokyo
+Changam-ch’on	KP	Asia/Pyongyang
+Bila Tserkva	UA	Europe/Kyiv
+Oxnard	US	America/Los_Angeles
+Ciampea	ID	Asia/Jakarta
+Hurghada	EG	Africa/Cairo
+Móstoles	ES	Europe/Madrid
+Mantilla	CU	America/Havana
+Dosquebradas	CO	America/Bogota
+Turku	FI	Europe/Helsinki
+Worcester	US	America/New_York
+Pagadian	PH	Asia/Manila
+Epworth	ZW	Africa/Harare
+San Felipe	VE	America/Caracas
+Dinajpur	BD	Asia/Dhaka
+Hosapete	IN	Asia/Kolkata
+Việt Yên	VN	Asia/Ho_Chi_Minh
+Ifakara	TZ	Africa/Dar_es_Salaam
+Sumbe	AO	Africa/Luanda
+Ségou	ML	Africa/Bamako
+Kon Tum	VN	Asia/Ho_Chi_Minh
+Latacunga	EC	America/Guayaquil
+Nāngloi Jāt	IN	Asia/Kolkata
+Kishiwada	JP	Asia/Tokyo
+Yunjinghong	CN	Asia/Shanghai
+Mdantsane	ZA	Africa/Johannesburg
+Bobruysk	BY	Europe/Minsk
+Gorontalo	ID	Asia/Makassar
+Itaim Paulista	BR	America/Sao_Paulo
+Qā’em Shahr	IR	Asia/Tehran
+Shikarpur	PK	Asia/Karachi
+Gongheyong	CN	Asia/Shanghai
+Linz	AT	Europe/Vienna
+Dhangaḍhi̇̄	NP	Asia/Kathmandu
+Nanchuan	CN	Asia/Shanghai
+Bishan	CN	Asia/Shanghai
+Biskra	DZ	Africa/Algiers
+Xizhi	TW	Asia/Taipei
+Yanghang	CN	Asia/Shanghai
+Gaoping	CN	Asia/Shanghai
+Mpanda	TZ	Africa/Dar_es_Salaam
+Trieste	IT	Europe/Rome
+Moreno Valley	US	America/Los_Angeles
+Secunderabad	IN	Asia/Kolkata
+Punggol	SG	Asia/Singapore
+Sodo	ET	Africa/Addis_Ababa
+Nossa Senhora do Socorro	BR	America/Maceio
+Zliten	LY	Africa/Tripoli
+Padua	IT	Europe/Rome
+Karnaphuli	BD	Asia/Dhaka
+Las Tunas	CU	America/Havana
+Matsue	JP	Asia/Tokyo
+Bayamón	PR	America/Puerto_Rico
+Gimpo-si	KR	Asia/Seoul
+Lauro de Freitas	BR	America/Bahia
+Deoghar	IN	Asia/Kolkata
+Fianarantsoa	MG	Indian/Antananarivo
+Vasyl'evsky Ostrov	RU	Europe/Moscow
+Atsiaman	GH	Africa/Accra
+Bandundu Province	CD	Africa/Kinshasa
+Osmaniye	TR	Europe/Istanbul
+Bābol	IR	Asia/Tehran
+Cabo San Lucas	MX	America/Mazatlan
+Little Rock	US	America/Chicago
+Çorlu	TR	Europe/Istanbul
+Madiun	ID	Asia/Jakarta
+Iringa	TZ	Africa/Dar_es_Salaam
+Debrecen	HU	Europe/Budapest
+Chāpra	IN	Asia/Kolkata
+Motijheel	BD	Asia/Dhaka
+Barishal	BD	Asia/Dhaka
+Richmond Hill	CA	America/Toronto
+Fayetteville	US	America/New_York
+Al Khums	LY	Africa/Tripoli
+Huntington Beach	US	America/Los_Angeles
+Favoriten	AT	Europe/Vienna
+Koronadal	PH	Asia/Manila
+Geneva	CH	Europe/Zurich
+Tallahassee	US	America/New_York
+Swindon	GB	Europe/London
+Njeru	UG	Africa/Kampala
+Rengasdengklok	ID	Asia/Jakarta
+Rio Claro	BR	America/Sao_Paulo
+Cajamarca	PE	America/Lima
+Townsville	AU	Australia/Brisbane
+Thanh Khê	VN	Asia/Ho_Chi_Minh
+La Pintana	CL	America/Santiago
+Daşoguz	TM	Asia/Ashgabat
+Yonkers	US	America/New_York
+Nawābganj	BD	Asia/Dhaka
+Dadu	PK	Asia/Karachi
+Arba Minch	ET	Africa/Addis_Ababa
+Petropavl	KZ	Asia/Almaty
+Lhokseumawe	ID	Asia/Jakarta
+Cypress	US	America/Chicago
+Khandwa	IN	Asia/Kolkata
+Puri	IN	Asia/Kolkata
+Morena	IN	Asia/Kolkata
+Nicosia	CY	Asia/Nicosia
+Brescia	IT	Europe/Rome
+Nasimshahr	IR	Asia/Tehran
+Nasīm Shahr	IR	Asia/Tehran
+Ugep	NG	Africa/Lagos
+Kamina	CD	Africa/Lubumbashi
+Yanbu	SA	Asia/Riyadh
+Nagareyama	JP	Asia/Tokyo
+Charleroi	BE	Europe/Brussels
+Lạng Sơn	VN	Asia/Bangkok
+Talhar	PK	Asia/Karachi
+Az Zāwīyah	LY	Africa/Tripoli
+Bandar Sunway	MY	Asia/Kuala_Lumpur
+Bandar Utama	MY	Asia/Kuala_Lumpur
+Bukit Jalil	MY	Asia/Kuala_Lumpur
+Chakwama	NG	Africa/Lagos
+Dajal	PK	Asia/Karachi
+El Dibir	SO	Africa/Mogadishu
+Gyānpur	IN	Asia/Kolkata
+Nyingchi	CN	Asia/Shanghai
+Qadirpur Ran	PK	Asia/Karachi
+Salé Al Jadida	MA	Africa/Casablanca
+Severnyy	RU	Europe/Moscow
+Sumedang	ID	Asia/Jakarta
+Yuen Long	HK	Asia/Hong_Kong
+Yuen Long San Hui	HK	Asia/Hong_Kong
+Beiliu	CN	Asia/Shanghai
+Sirjan	IR	Asia/Tehran
+Iquique	CL	America/Santiago
+Thuận Thanh	VN	Asia/Bangkok
+Balakovo	RU	Europe/Saratov
+Armavir	RU	Europe/Moscow
+Jaraguá do Sul	BR	America/Sao_Paulo
+Yachiyo	JP	Asia/Tokyo
+Saidpur	BD	Asia/Dhaka
+Quận Bốn	VN	Asia/Ho_Chi_Minh
+Arīsh	EG	Africa/Cairo
+Rawang	MY	Asia/Kuala_Lumpur
+Dudley	GB	Europe/London
+Mushin	NG	Africa/Lagos
+Yuzhno-Sakhalinsk	RU	Asia/Sakhalin
+Hagen	DE	Europe/Berlin
+Salatiga	ID	Asia/Jakarta
+Rio Grande	BR	America/Sao_Paulo
+Guacara	VE	America/Caracas
+Khūy	IR	Asia/Tehran
+Gliwice	PL	Europe/Warsaw
+Changji	CN	Asia/Urumqi
+Kodaira	JP	Asia/Tokyo
+Plano Piloto	BR	America/Sao_Paulo
+Amarillo	US	America/Chicago
+Bulandshahr	IN	Asia/Kolkata
+Lusail	QA	Asia/Qatar
+Aberdeen	GB	Europe/London
+Taranto	IT	Europe/Rome
+Capiatá	PY	America/Asuncion
+Zango	AO	Africa/Luanda
+Duyun	CN	Asia/Shanghai
+Naivasha	KE	Africa/Nairobi
+Kaiyuan	CN	Asia/Shanghai
+Cachoeiro de Itapemirim	BR	America/Sao_Paulo
+Rzeszów	PL	Europe/Warsaw
+Lengshuijiang	CN	Asia/Shanghai
+Rostock	DE	Europe/Berlin
+Parma	IT	Europe/Rome
+Sibu	MY	Asia/Kuching
+Arnavutköy	TR	Europe/Istanbul	Arnavutkoey
+Itami	JP	Asia/Tokyo
+Mentougou	CN	Asia/Shanghai
+Bhind	IN	Asia/Kolkata
+Akron	US	America/New_York
+Talca	CL	America/Santiago
+Kassel	DE	Europe/Berlin
+Ciudad Madero	MX	America/Monterrey
+Sawangan	ID	Asia/Jakarta
+Gemena	CD	Africa/Kinshasa
+Bhālswa Jahangirpur	IN	Asia/Kolkata
+Lushui	CN	Asia/Shanghai
+Bīrjand	IR	Asia/Tehran
+Toruń	PL	Europe/Warsaw
+Almería	ES	Europe/Madrid
+Jijiang	CN	Asia/Shanghai
+Ahmadpur East	PK	Asia/Karachi
+Huánuco	PE	America/Lima
+Higashihiroshima	JP	Asia/Tokyo
+İzmit	TR	Europe/Istanbul
+Reims	FR	Europe/Paris
+Hanfeng	CN	Asia/Shanghai
+Itabuna	BR	America/Bahia
+Laayoune	EH	Africa/El_Aaiun
+Khammam	IN	Asia/Kolkata
+Middelburg	ZA	Africa/Johannesburg
+Icheon-si	KR	Asia/Seoul
+Khirdalan	AZ	Asia/Baku
+Phra Pradaeng	TH	Asia/Bangkok
+Moundou	TD	Africa/Ndjamena
+Sambhal	IN	Asia/Kolkata
+Bhiwāni	IN	Asia/Kolkata
+Engels	RU	Europe/Saratov
+Ciudad Lázaro Cárdenas	MX	America/Mexico_City
+Mocuba	MZ	Africa/Maputo
+Hetauda	NP	Asia/Kathmandu
+Durrës	AL	Europe/Tirane
+Fengcheng	CN	Asia/Shanghai
+Suzuka	JP	Asia/Tokyo
+Hub	PK	Asia/Karachi
+La Plata	AR	America/Argentina/Buenos_Aires
+Janakpur	NP	Asia/Kathmandu
+Kamirenjaku	JP	Asia/Tokyo
+Panvel	IN	Asia/Kolkata
+Peicheng	CN	Asia/Shanghai
+Maharagama	LK	Asia/Colombo
+Montgomery	US	America/Chicago
+Liège	BE	Europe/Brussels
+Kumagaya	JP	Asia/Tokyo
+Guri-si	KR	Asia/Seoul
+Ambāla	IN	Asia/Kolkata
+Grand Rapids	US	America/Detroit
+Prato	IT	Europe/Rome
+Kumarapalayam	IN	Asia/Kolkata
+Butwāl	NP	Asia/Kathmandu
+Dhirkot	PK	Asia/Karachi
+Kayes	ML	Africa/Bamako
+Bontang	ID	Asia/Makassar
+Kafr ash Shaykh	EG	Africa/Cairo
+Tébessa	DZ	Africa/Algiers
+Kuala Kubu Baharu	MY	Asia/Kuala_Lumpur
+Karuri	KE	Africa/Nairobi
+Manéah	GN	Africa/Conakry
+Severodvinsk	RU	Europe/Moscow
+Kowloon City Centre	HK	Asia/Hong_Kong
+Matuga	KE	Africa/Nairobi
+Düzce	TR	Europe/Istanbul	Duezce
+Nnewi	NG	Africa/Lagos
+Yamaguchi	JP	Asia/Tokyo
+Alcalá de Henares	ES	Europe/Madrid
+Başakşehir	TR	Europe/Istanbul
+Ezhou	CN	Asia/Shanghai
+Zhengding	CN	Asia/Shanghai
+Būkān	IR	Asia/Tehran
+Taguatinga	BR	America/Sao_Paulo
+Braga	PT	Europe/Lisbon
+Garhi Khairo	PK	Asia/Karachi
+Luanshya	ZM	Africa/Lusaka
+Padalarang	ID	Asia/Jakarta
+Bang Khae	TH	Asia/Bangkok
+Bago City	PH	Asia/Manila
+Yongchuan	CN	Asia/Shanghai
+Uji	JP	Asia/Tokyo
+Machilīpatnam	IN	Asia/Kolkata
+Hepu	CN	Asia/Shanghai
+Aihui	CN	Asia/Shanghai
+Hyesan	KP	Asia/Pyongyang
+Bayamo	CU	America/Havana
+Kielce	PL	Europe/Warsaw
+Pār Naogaon	BD	Asia/Dhaka
+Fuding	CN	Asia/Shanghai
+Castanhal	BR	America/Belem
+Cidade Tiradentes	BR	America/Sao_Paulo
+Zabrze	PL	Europe/Warsaw
+Bojnūrd	IR	Asia/Tehran
+Surulere	NG	Africa/Lagos
+Humen	CN	Asia/Shanghai
+H̱olon	IL	Asia/Jerusalem
+Benfica	AO	Africa/Luanda
+Hat Yai	TH	Asia/Bangkok
+Haicheng	CN	Asia/Shanghai
+Curug	ID	Asia/Jakarta
+Barrancabermeja	CO	America/Bogota
+Zlatoust	RU	Asia/Yekaterinburg
+Angren	UZ	Asia/Tashkent
+Mukono	UG	Africa/Kampala
+Ciudad del Carmen	MX	America/Merida
+Khairpur Mir’s	PK	Asia/Karachi
+Business Bay	AE	Asia/Dubai
+Khujand	TJ	Asia/Dushanbe
+Peoria	US	America/Phoenix
+Ashaiman	GH	Africa/Accra
+Tanjungbalai	ID	Asia/Jakarta
+Providence	US	America/New_York
+Mahesāna	IN	Asia/Kolkata
+Knoxville	US	America/New_York
+Rangel	AO	Africa/Luanda
+Fuenlabrada	ES	Europe/Madrid
+Hino	JP	Asia/Tokyo
+Jhelum	PK	Asia/Karachi
+Mahbūbnagar	IN	Asia/Kolkata
+Beipiao	CN	Asia/Shanghai
+Pak Kret	TH	Asia/Bangkok
+Cẩm Phả	VN	Asia/Bangkok
+Al Fallūjah	IQ	Asia/Baghdad
+Jinshanlu	CN	Asia/Urumqi
+Ise-Ekiti	NG	Africa/Lagos
+Nova Friburgo	BR	America/Sao_Paulo
+Guarapuava	BR	America/Sao_Paulo
+Kofu	JP	Asia/Tokyo
+Numazu	JP	Asia/Tokyo
+Santa Bárbara d'Oeste	BR	America/Sao_Paulo
+Jōetsu	JP	Asia/Tokyo
+Planaltina	BR	America/Sao_Paulo
+Sunrise Manor	US	America/Los_Angeles
+Sambalpur	IN	Asia/Kolkata
+Syzran	RU	Europe/Samara
+Danshui	TW	Asia/Taipei
+Bytom	PL	Europe/Warsaw
+Mwene-Ditu	CD	Africa/Lubumbashi
+Ilhéus	BR	America/Bahia
+Panalanoy	PH	Asia/Manila
+Ciudad de Las Heras	AR	America/Argentina/Mendoza
+Guixi	CN	Asia/Shanghai
+Odawara	JP	Asia/Tokyo
+Labuan Bajo	ID	Asia/Makassar
+Anjō	JP	Asia/Tokyo
+Boyeros	CU	America/Havana
+George	ZA	Africa/Johannesburg
+Tottori-shi	JP	Asia/Tokyo
+Leganés	ES	Europe/Madrid
+Acarigua	VE	America/Caracas
+Hosa’ina	ET	Africa/Addis_Ababa
+Sai Mai	TH	Asia/Bangkok
+Yawnghwe	MM	Asia/Yangon
+Mabalacat City	PH	Asia/Manila
+Riohacha	CO	America/Bogota
+Laizhou	CN	Asia/Shanghai
+Pilsen	CZ	Europe/Prague
+Grand Prairie	US	America/Chicago
+Sorsogon	PH	Asia/Manila
+Ait Melloul	MA	Africa/Casablanca
+Sutton	GB	Europe/London
+Shreveport	US	America/Chicago
+Choa Chu Kang New Town	SG	Asia/Singapore
+Getafe	ES	Europe/Madrid
+Quận Năm	VN	Asia/Ho_Chi_Minh
+Bhusawal	IN	Asia/Kolkata
+Miraflores	PE	America/Lima
+Alvorada	BR	America/Sao_Paulo
+Chilpancingo	MX	America/Mexico_City
+Donaustadt	AT	Europe/Vienna
+Pinar del Río	CU	America/Havana
+Huixing	CN	Asia/Shanghai
+Kırıkkale	TR	Europe/Istanbul	Kirikkale
+Batumi	GE	Asia/Tbilisi
+Burlington	CA	America/Toronto
+Pābna	BD	Asia/Dhaka
+Brownsville	US	America/Chicago
+Changyuan	CN	Asia/Shanghai
+Cienfuegos	CU	America/Havana
+Beersheba	IL	Asia/Jerusalem
+Dixinn	GN	Africa/Conakry
+El Oued	DZ	Africa/Algiers
+Overland Park	US	America/Chicago
+Raebareli	IN	Asia/Kolkata
+Shangri-La	CN	Asia/Shanghai
+Springs	ZA	Africa/Johannesburg
+Newport News	US	America/New_York
+Yangcheng	CN	Asia/Shanghai
+Mopti	ML	Africa/Bamako
+Khuraybat as Sūq	JO	Asia/Amman
+Zawiya	LY	Africa/Tripoli
+Zamora de Hidalgo	MX	America/Mexico_City
+Haridwar	IN	Asia/Kolkata
+Ad-Damazin	SD	Africa/Khartoum
+Dunhuang	CN	Asia/Shanghai
+Le Havre	FR	Europe/Paris
+Verhunskyi	UA	Europe/Kyiv
+Phusro	IN	Asia/Kolkata
+Donostia / San Sebastián	ES	Europe/Madrid	San Sebastian
+Poza Rica de Hidalgo	MX	America/Mexico_City
+Bilbeis	EG	Africa/Cairo
+Roxas City	PH	Asia/Manila
+Paris 20 Ménilmontant	FR	Europe/Paris
+Kütahya	TR	Europe/Istanbul	Kuetahya
+Palopo	ID	Asia/Makassar
+Potsdam	DE	Europe/Berlin
+Modena	IT	Europe/Rome
+Bolu	TR	Europe/Istanbul
+Sopāra	IN	Asia/Kolkata
+Toyokawa	JP	Asia/Tokyo
+Adoni	IN	Asia/Kolkata
+Izumi	JP	Asia/Tokyo
+Santa Anita - Los Ficus	PE	America/Lima
+Paltan	BD	Asia/Dhaka
+Ivory Park	ZA	Africa/Johannesburg
+Al Qāmishlī	SY	Asia/Damascus
+Abakan	RU	Asia/Krasnoyarsk
+Pemalang	ID	Asia/Jakarta
+Breda	NL	Europe/Amsterdam
+Langsa	ID	Asia/Jakarta
+Vĩnh Châu	VN	Asia/Ho_Chi_Minh
+Baishan	CN	Asia/Shanghai
+Sūjāngarh	IN	Asia/Kolkata
+Linhares	BR	America/Sao_Paulo
+Castelló de la Plana	ES	Europe/Madrid
+Tachikawa	JP	Asia/Tokyo
+Cergy-Pontoise	FR	Europe/Paris
+Unaizah	SA	Asia/Riyadh
+Mobile	US	America/Chicago
+St Helens	GB	Europe/London
+Fort Lauderdale	US	America/New_York
+Lembang	ID	Asia/Jakarta
+Paris 18 Buttes-Montmartre	FR	Europe/Paris
+Sants-Montjuïc	ES	Europe/Madrid
+Oradea	RO	Europe/Bucharest
+Araguaína	BR	America/Araguaina
+Saarbrücken	DE	Europe/Berlin	Saarbruecken
+Bunda	TZ	Africa/Dar_es_Salaam
+Skikda	DZ	Africa/Algiers
+Kyivskyi	UA	Europe/Kyiv
+Tirmiz	UZ	Asia/Samarkand
+Singosari	ID	Asia/Jakarta
+Porto Seguro	BR	America/Bahia
+Cúa	VE	America/Caracas
+Sirsa	IN	Asia/Kolkata
+Kamensk-Ural’skiy	RU	Asia/Yekaterinburg
+Cidade Dutra	BR	America/Sao_Paulo
+Reggio Calabria	IT	Europe/Rome
+Dinapur Nizamat	IN	Asia/Kolkata
+Santa Clarita	US	America/Los_Angeles
+Carletonville	ZA	Africa/Johannesburg
+Dubréka	GN	Africa/Conakry
+Metro	ID	Asia/Jakarta
+Banhā	EG	Africa/Cairo
+Bahraigh	IN	Asia/Kolkata
+Ash Shaţrah	IQ	Asia/Baghdad
+Quarto Oggiaro	IT	Europe/Rome
+Tsing Yi Town	HK	Asia/Hong_Kong
+Monywa	MM	Asia/Yangon
+Dessalines	HT	America/Port-au-Prince
+Mwala	KE	Africa/Nairobi
+Kāraikkudi	IN	Asia/Kolkata
+Araure	VE	America/Caracas
+Barra Mansa	BR	America/Sao_Paulo
+Sultan Pur Majra	IN	Asia/Kolkata
+Zhenping	CN	Asia/Shanghai
+Anda	CN	Asia/Shanghai
+Paris 13 Gobelins	FR	Europe/Paris
+Petropavlovsk-Kamchatsky	RU	Asia/Kamchatka
+Wādī as Sīr	JO	Asia/Amman
+Fardīs	IR	Asia/Tehran
+Chattanooga	US	America/New_York
+Guna	IN	Asia/Kolkata
+Odense	DK	Europe/Copenhagen
+Sacaba	BO	America/La_Paz
+Quetzaltenango	GT	America/Guatemala
+Gongzhuling	CN	Asia/Shanghai
+Chandannagar	IN	Asia/Kolkata
+Baharampur	IN	Asia/Kolkata
+Ploieşti	RO	Europe/Bucharest
+Berazategui	AR	America/Argentina/Buenos_Aires
+Shahuwadi	IN	Asia/Kolkata
+Madanapalle	IN	Asia/Kolkata
+Tangail	BD	Asia/Dhaka
+Shulin	TW	Asia/Taipei
+Edirne	TR	Europe/Istanbul
+Kyaukpyu	MM	Asia/Yangon
+Nepean	CA	America/Toronto
+Phúc Yên	VN	Asia/Bangkok
+Pingwu County	CN	Asia/Shanghai
+Yasenevo	RU	Europe/Moscow
+Shivpuri	IN	Asia/Kolkata
+Yangju	KR	Asia/Seoul
+Borshchahivka	UA	Europe/Kyiv
+Praga Południe	PL	Europe/Warsaw	Praga Poludnie
+Pirituba	BR	America/Sao_Paulo
+Kasama	ZM	Africa/Lusaka
+Surendranagar	IN	Asia/Kolkata
+Alexandra	ZA	Africa/Johannesburg
+Obuase	GH	Africa/Accra
+Desnyanskyi	UA	Europe/Kyiv
+Novozavodskyi	UA	Europe/Kyiv
+Ibirité	BR	America/Sao_Paulo
+Tsentralnyi	UA	Europe/Kyiv
+Legaspi	PH	Asia/Manila
+Podolsk	RU	Europe/Moscow
+Purwakarta	ID	Asia/Jakarta
+Jizzax	UZ	Asia/Samarkand
+Ferraz de Vasconcelos	BR	America/Sao_Paulo
+Ila Orangun	NG	Africa/Lagos
+Thị Trấn Đại Từ	VN	Asia/Ho_Chi_Minh	Thi Tran GJai Tu
+Neyveli	IN	Asia/Kolkata
+Angra dos Reis	BR	America/Sao_Paulo
+Qianjiang	CN	Asia/Shanghai
+Hamm	DE	Europe/Berlin
+Si Racha	TH	Asia/Bangkok
+Tiaret	DZ	Africa/Algiers
+La Rioja	AR	America/Argentina/La_Rioja
+Silchar	IN	Asia/Kolkata
+Amadora	PT	Europe/Lisbon
+Cuautitlán	MX	America/Mexico_City
+Ipswich	GB	Europe/London
+Toliara	MG	Indian/Antananarivo
+Paris 19 Buttes-Chaumont	FR	Europe/Paris
+Saki	NG	Africa/Lagos
+Chlef	DZ	Africa/Algiers
+Fontanar	CU	America/Havana
+Seogwipo	KR	Asia/Seoul
+East Flatbush	US	America/New_York
+Spring Valley	US	America/Los_Angeles
+Livingstone	ZM	Africa/Lusaka
+Potchefstroom	ZA	Africa/Johannesburg
+Ciudad Camilo Cienfuegos	CU	America/Havana
+Paris 13e Arrondissement	FR	Europe/Paris
+Sambizanga	AO	Africa/Luanda
+Proddatūr	IN	Asia/Kolkata
+Sittwe	MM	Asia/Yangon
+Dundo	AO	Africa/Luanda
+Basel	CH	Europe/Zurich
+Meiktila	MM	Asia/Yangon
+Gulu	UG	Africa/Kampala
+Nijmegen	NL	Europe/Amsterdam
+Idkū	EG	Africa/Cairo
+Uppsala	SE	Europe/Stockholm
+Hugli	IN	Asia/Kolkata
+Hashtsāl	IN	Asia/Kolkata
+Bragança Paulista	BR	America/Sao_Paulo
+Bet Shemesh	IL	Asia/Jerusalem
+Teresópolis	BR	America/Sao_Paulo
+San Luis Río Colorado	MX	America/Hermosillo
+Eugene	US	America/Los_Angeles
+Nador	MA	Africa/Casablanca
+Al Muharraq	BH	Asia/Bahrain
+Bielsko-Biala	PL	Europe/Warsaw
+Marsá Maţrūḩ	EG	Africa/Cairo
+Almere Stad	NL	Europe/Amsterdam
+Burgos	ES	Europe/Madrid
+Gijang	KR	Asia/Seoul
+Lander	VE	America/Caracas
+Saint-Étienne	FR	Europe/Paris
+Amroha	IN	Asia/Kolkata
+Narashino	JP	Asia/Tokyo
+Béjaïa	DZ	Africa/Algiers
+Zhenzhou	CN	Asia/Shanghai
+Tempe	US	America/Phoenix
+Xindi	CN	Asia/Shanghai
+Oceanside	US	America/Los_Angeles
+Bella Vista	DO	America/Santo_Domingo
+Wigan	GB	Europe/London
+Garden Grove	US	America/Los_Angeles
+Karaman	TR	Europe/Istanbul
+Oshawa	CA	America/Toronto
+Siverek	TR	Europe/Istanbul
+Rancho Cucamonga	US	America/Los_Angeles
+Cape Coral	US	America/New_York
+Tân Châu	VN	Asia/Ho_Chi_Minh
+Teluknaga	ID	Asia/Jakarta
+Jiutai	CN	Asia/Shanghai
+Chhindwāra	IN	Asia/Kolkata
+Itu	BR	America/Sao_Paulo
+Senador Canedo	BR	America/Sao_Paulo
+Khānaqīn	IQ	Asia/Baghdad
+Naga	PH	Asia/Manila
+Tomakomai	JP	Asia/Tokyo
+Tambaram	IN	Asia/Kolkata
+San Miguel de Allende	MX	America/Mexico_City
+Cianjur	ID	Asia/Jakarta
+Pamulang	ID	Asia/Jakarta
+Hitachi	JP	Asia/Tokyo
+Timon	BR	America/Fortaleza
+Bhetia	IN	Asia/Kolkata
+Pathānkot	IN	Asia/Kolkata
+Tando Adam	PK	Asia/Karachi
+Badlapur	IN	Asia/Kolkata
+Cikupa	ID	Asia/Jakarta
+Puerto Cabello	VE	America/Caracas
+Latkrabang	TH	Asia/Bangkok
+Sakura	JP	Asia/Tokyo
+Ube	JP	Asia/Tokyo
+Daule	EC	America/Guayaquil
+Bayjī	IQ	Asia/Baghdad
+Cuddalore	IN	Asia/Kolkata
+Santander	ES	Europe/Madrid
+Tlemcen	DZ	Africa/Algiers
+Shimla	IN	Asia/Kolkata
+Shāhīn Shahr	IR	Asia/Tehran
+Croydon	GB	Europe/London
+Myeik	MM	Asia/Yangon
+East New York	US	America/New_York
+Khān Yūnis	PS	Asia/Gaza
+Dharān	NP	Asia/Kathmandu
+Albacete	ES	Europe/Madrid
+Mülheim	DE	Europe/Berlin	Muelheim
+Bata	GQ	Africa/Malabo
+Kamakura	JP	Asia/Tokyo
+Chicoloapan de Juárez	MX	America/Mexico_City
+Gadag-Betageri	IN	Asia/Kolkata
+Izumo	JP	Asia/Tokyo
+Licheng	CN	Asia/Shanghai
+São Caetano do Sul	BR	America/Sao_Paulo
+Pindamonhangaba	BR	America/Sao_Paulo
+Gadag	IN	Asia/Kolkata
+Lang'ata	KE	Africa/Nairobi
+Ongata Rongai	KE	Africa/Nairobi
+Tunja	CO	America/Bogota
+Lages	BR	America/Sao_Paulo
+Quillacollo	BO	America/La_Paz
+Alcorcón	ES	Europe/Madrid
+Gisenyi	RW	Africa/Kigali
+Poços de Caldas	BR	America/Sao_Paulo
+Isparta	TR	Europe/Istanbul
+Warrington	GB	Europe/London
+Klaipėda	LT	Europe/Vilnius
+Ramat Gan	IL	Asia/Jerusalem
+Walsall	GB	Europe/London
+Herne	DE	Europe/Berlin
+Lyublino	RU	Europe/Moscow
+Mansfield	GB	Europe/London
+Reggio nell'Emilia	IT	Europe/Rome
+Barreiras	BR	America/Bahia
+Kēng Tung	MM	Asia/Yangon
+Sioux Falls	US	America/Chicago
+Prizren	XK	Europe/Belgrade
+Dongling	CN	Asia/Shanghai
+Ungaran	ID	Asia/Jakarta
+Urayasu	JP	Asia/Tokyo
+Long Khánh	VN	Asia/Ho_Chi_Minh
+Dagupan	PH	Asia/Manila
+Ontario	US	America/Los_Angeles
+Watthana	TH	Asia/Bangkok
+Verāval	IN	Asia/Kolkata
+Navsari	IN	Asia/Kolkata
+Imabari	JP	Asia/Tokyo
+Mansa	ZM	Africa/Lusaka
+Fort Collins	US	America/Denver
+Bảo Lộc	VN	Asia/Ho_Chi_Minh
+Kulim	MY	Asia/Kuala_Lumpur
+Oshodi	NG	Africa/Lagos
+Bahadurgarh	IN	Asia/Kolkata
+Haldia	IN	Asia/Kolkata
+Temirtau	KZ	Asia/Almaty
+East Helsinki	FI	Europe/Helsinki
+Parnaíba	BR	America/Fortaleza
+Carolina	PR	America/Puerto_Rico
+Rāiganj	IN	Asia/Kolkata
+Malāyer	IR	Asia/Tehran
+Springfield	US	America/Chicago
+Sunderland	GB	Europe/London
+Takaoka	JP	Asia/Tokyo
+Baranovichi	BY	Europe/Minsk
+Malda	IN	Asia/Kolkata
+Nishio	JP	Asia/Tokyo
+San Luis	AR	America/Argentina/San_Luis
+Ouargla	DZ	Africa/Algiers
+Olsztyn	PL	Europe/Warsaw
+Kipushi	CD	Africa/Lubumbashi
+Yuen Long Kau Hui	HK	Asia/Hong_Kong
+Jaunpur	IN	Asia/Kolkata
+Khlong Sam Wa	TH	Asia/Bangkok
+Harburg	DE	Europe/Berlin
+Chūō	JP	Asia/Tokyo
+Mufulira	ZM	Africa/Lusaka
+Deoli	IN	Asia/Kolkata
+Jaffna	LK	Asia/Colombo
+Arad	RO	Europe/Bucharest
+Chetumal	MX	America/Cancun
+Bharūch	IN	Asia/Kolkata
+Gurúè	MZ	Africa/Maputo
+Hirosaki	JP	Asia/Tokyo
+Chalco de Díaz Covarrubias	MX	America/Mexico_City
+Toulon	FR	Europe/Paris
+Vila Andrade	BR	America/Sao_Paulo
+Hoshiārpur	IN	Asia/Kolkata
+Calabozo	VE	America/Caracas
+Jabālyā	PS	Asia/Gaza
+Araraquara	BR	America/Sao_Paulo
+Yopal	CO	America/Bogota
+Ituzaingó	AR	America/Argentina/Cordoba
+Mahābād	IR	Asia/Tehran
+Piranshahr	IR	Asia/Tehran
+Florencia	CO	America/Bogota
+Tây Hồ	VN	Asia/Bangkok
+Moratuwa	LK	Asia/Colombo
+Angers	FR	Europe/Paris
+Ilford	GB	Europe/London
+Hasilpur	PK	Asia/Karachi
+Rio das Ostras	BR	America/Sao_Paulo
+Horta-Guinardó	ES	Europe/Madrid
+Pátra	GR	Europe/Athens
+Rutchenkivskyi	UA	Europe/Kyiv
+Đồng Xoài	VN	Asia/Ho_Chi_Minh	GJong Xoai
+Jamālpur	BD	Asia/Dhaka
+Kushiro	JP	Asia/Tokyo
+Berezniki	RU	Asia/Yekaterinburg
+Awka	NG	Africa/Lagos
+Volgodonsk	RU	Europe/Moscow
+Hollywood	US	America/Los_Angeles
+Oyama	JP	Asia/Tokyo
+Ijero-Ekiti	NG	Africa/Lagos
+Jīnd	IN	Asia/Kolkata
+Miass	RU	Asia/Yekaterinburg
+Fortechnyi	UA	Europe/Kyiv
+Tuguegarao	PH	Asia/Manila
+Carúpano	VE	America/Caracas
+Kumbakonam	IN	Asia/Kolkata
+Plumbon	ID	Asia/Jakarta
+Darmstadt	DE	Europe/Berlin
+Mary	TM	Asia/Ashgabat
+Novocherkassk	RU	Europe/Moscow
+Elk Grove	US	America/Los_Angeles
+Ashkelon	IL	Asia/Jerusalem
+Mohali	IN	Asia/Kolkata
+Reẖovot	IL	Asia/Jerusalem
+Sampit	ID	Asia/Pontianak
+Clarksville	US	America/Chicago
+Wan Chai	HK	Asia/Hong_Kong
+Linköping	SE	Europe/Stockholm	Linkoeping
+Iwata	JP	Asia/Tokyo
+Kamalia	PK	Asia/Karachi
+Pembroke Pines	US	America/New_York
+Maicao	CO	America/Bogota
+Obihiro	JP	Asia/Tokyo
+Fatehpur	IN	Asia/Kolkata
+Osnabrück	DE	Europe/Berlin	Osnabrueck
+Calama	CL	America/Santiago
+Nou Barris	ES	Europe/Madrid
+Nepalgunj	NP	Asia/Kathmandu
+Comitán	MX	America/Merida
+Ocumare del Tuy	VE	America/Caracas
+Niiza	JP	Asia/Tokyo
+Greater Sudbury	CA	America/Toronto
+Khobar	SA	Asia/Riyadh
+Songcheng	CN	Asia/Shanghai
+Deer Valley	US	America/Phoenix
+Bang Khun Thian	TH	Asia/Bangkok
+Murfreesboro	US	America/Chicago
+Bushehr	IR	Asia/Tehran
+Dar Bouazza	MA	Africa/Casablanca
+Tonk	IN	Asia/Kolkata
+Saqqez	IR	Asia/Tehran
+Béchar	DZ	Africa/Algiers
+Tam Kỳ	VN	Asia/Ho_Chi_Minh
+Gölbaşı	TR	Europe/Istanbul	Goelbasi
+Francisco Morato	BR	America/Sao_Paulo
+Bima	ID	Asia/Makassar
+Mu-se	MM	Asia/Yangon
+Shahrud	IR	Asia/Tehran
+Udupi	IN	Asia/Kolkata
+Banjaran	ID	Asia/Jakarta
+Thenali	IN	Asia/Kolkata
+Mthatha	ZA	Africa/Johannesburg
+Hengshan	CN	Asia/Shanghai
+Slough	GB	Europe/London
+Bocoio	AO	Africa/Luanda
+Neukölln	DE	Europe/Berlin	Neukoelln
+Port Saint Lucie	US	America/New_York
+Sītāpur	IN	Asia/Kolkata
+Alandur	IN	Asia/Kolkata
+Zenica	BA	Europe/Sarajevo
+Lajeado	BR	America/Sao_Paulo
+Solingen	DE	Europe/Berlin
+Itapetininga	BR	America/Sao_Paulo
+Ðông Hà	VN	Asia/Bangkok	Dong Ha
+Corona	US	America/Los_Angeles
+Ḩawallī	KW	Asia/Kuwait
+Musoma	TZ	Africa/Dar_es_Salaam
+Inisa	NG	Africa/Lagos
+Nazran	RU	Europe/Moscow
+Ilagan	PH	Asia/Manila
+Port-Gentil	GA	Africa/Libreville
+Bhadrāvati	IN	Asia/Kolkata
+Hadano	JP	Asia/Tokyo
+Santana de Parnaíba	BR	America/Sao_Paulo
+Piraeus	GR	Europe/Athens
+Vapi	IN	Asia/Kolkata
+Bournemouth	GB	Europe/London
+Pedreira	BR	America/Sao_Paulo
+Sidon	LB	Asia/Beirut
+Caxias	BR	America/Fortaleza
+‘Ibrī	OM	Asia/Muscat
+Jomvu	KE	Africa/Nairobi
+Garissa	KE	Africa/Nairobi
+Moga	IN	Asia/Kolkata
+Peterborough	GB	Europe/London
+Piedecuesta	CO	America/Bogota
+Tongzhou	CN	Asia/Shanghai
+Ludwigshafen am Rhein	DE	Europe/Berlin
+Lat Krabang	TH	Asia/Bangkok
+Büyükçekmece	TR	Europe/Istanbul	Bueyuekcekmece
+Şalālah	OM	Asia/Muscat
+Rāj-Nāndgaon	IN	Asia/Kolkata
+Aydın	TR	Europe/Istanbul	Aydin
+Envigado	CO	America/Bogota
+Itapecerica da Serra	BR	America/Sao_Paulo
+Al-Junaynah	SD	Africa/Khartoum
+Anbu	CN	Asia/Shanghai
+McKinney	US	America/Chicago
+Mostaganem	DZ	Africa/Algiers
+Chirchiq	UZ	Asia/Tashkent
+Bandar-e Māhshahr	IR	Asia/Tehran
+Floridsdorf	AT	Europe/Vienna
+Leverkusen	DE	Europe/Berlin
+Pandi	PH	Asia/Manila
+Capas	PH	Asia/Manila
+Ning’er	CN	Asia/Shanghai
+Haarlem	NL	Europe/Amsterdam
+Arnhem	NL	Europe/Amsterdam
+Nkongsamba	CM	Africa/Douala
+El Vigía	VE	America/Caracas
+Araucária	BR	America/Sao_Paulo
+Robertsonpet	IN	Asia/Kolkata
+Kitale	KE	Africa/Nairobi
+Suleja	NG	Africa/Lagos
+Pouso Alegre	BR	America/Sao_Paulo
+Taza	MA	Africa/Casablanca
+Oxford	GB	Europe/London
+Al Maţarīyah	EG	Africa/Cairo
+Kunduz	AF	Asia/Kabul
+Trảng Bàng	VN	Asia/Ho_Chi_Minh
+Unnāo	IN	Asia/Kolkata
+Hortaleza	ES	Europe/Madrid
+N'dalatando	AO	Africa/Luanda
+Budaun	IN	Asia/Kolkata
+Ōgaki	JP	Asia/Tokyo
+Newport	GB	Europe/London
+Coquimbo	CL	America/Santiago
+Baubau	ID	Asia/Makassar
+Đưc Trọng	VN	Asia/Ho_Chi_Minh	GJuc Trong
+Blitar	ID	Asia/Jakarta
+Alagoinhas	BR	America/Bahia
+KwaDukuza	ZA	Africa/Johannesburg
+Miyakonojō	JP	Asia/Tokyo
+Madhyamgram	IN	Asia/Kolkata
+Lancaster	US	America/Los_Angeles
+Rubtsovsk	RU	Asia/Barnaul
+Tacheng	CN	Asia/Urumqi
+Kindia	GN	Africa/Conakry
+Tauranga	NZ	Pacific/Auckland
+Kalemie	CD	Africa/Lubumbashi
+Chatuchak	TH	Asia/Bangkok
+San Juan de los Morros	VE	America/Caracas
+Sayama	JP	Asia/Tokyo
+Sullana	PE	America/Lima
+'s-Hertogenbosch	NL	Europe/Amsterdam
+Szeged	HU	Europe/Budapest
+Malakal	SS	Africa/Juba
+Chittoor	IN	Asia/Kolkata
+Salamanca	MX	America/Mexico_City
+Ban Khlong Prawet	TH	Asia/Bangkok
+La Gi	VN	Asia/Ho_Chi_Minh
+Anderlecht	BE	Europe/Brussels
+Mytishchi	RU	Europe/Moscow
+Delegación Cuajimalpa de Morelos	MX	America/Mexico_City
+Hebron	PS	Asia/Hebron
+Camaragibe	BR	America/Recife
+Mogi Guaçu	BR	America/Sao_Paulo
+Mejicanos	SV	America/El_Salvador
+Trà Vinh	VN	Asia/Ho_Chi_Minh
+Parepare	ID	Asia/Makassar
+Jāmuria	IN	Asia/Kolkata
+Koudougou	BF	Africa/Ouagadougou
+Nyzhnodniprovsk	UA	Europe/Kyiv
+Taunggyi	MM	Asia/Yangon
+Dhamār	YE	Asia/Aden
+Ash Sharqāt	IQ	Asia/Baghdad
+Dubai Investments Park	AE	Asia/Dubai
+Dijon	FR	Europe/Paris
+Salavat	RU	Asia/Yekaterinburg
+Ede	NG	Africa/Lagos
+Sukrah	TN	Africa/Tunis
+Manzanillo	MX	America/Mexico_City
+Jalapa	GT	America/Guatemala
+Paech’ŏn-ŭp	KP	Asia/Pyongyang
+Cary	US	America/New_York
+Skudai	MY	Asia/Kuala_Lumpur
+Tahoua	NE	Africa/Niamey
+Tuxtepec	MX	America/Mexico_City
+Puthia	BD	Asia/Dhaka
+Newton	CA	America/Vancouver
+Paris 16 Passy	FR	Europe/Paris
+Zhicheng	CN	Asia/Shanghai
+Ang Mo Kio New Town	SG	Asia/Singapore
+Limuru	KE	Africa/Nairobi
+San Miguel del Padrón	CU	America/Havana
+Tarija	BO	America/La_Paz
+Patos de Minas	BR	America/Sao_Paulo
+Oldenburg	DE	Europe/Berlin
+Paris 17 Batignolles-Monceau	FR	Europe/Paris
+Matsusaka	JP	Asia/Tokyo
+Catamarca	AR	America/Argentina/Catamarca
+Tochigi	JP	Asia/Tokyo
+Bibirevo	RU	Europe/Moscow
+Khoroshëvo-Mnevniki	RU	Europe/Moscow
+Bordj Bou Arreridj	DZ	Africa/Algiers
+Dīla	ET	Africa/Addis_Ababa
+Jaigaon	IN	Asia/Kolkata
+Atibaia	BR	America/Sao_Paulo
+Batāla	IN	Asia/Kolkata
+Grenoble	FR	Europe/Paris
+Sāmarrā’	IQ	Asia/Baghdad
+Tempe Junction	US	America/Phoenix
+Palmdale	US	America/Los_Angeles
+George Town	MY	Asia/Kuala_Lumpur
+El Achir	DZ	Africa/Algiers
+Hayward	US	America/Los_Angeles
+Orai	IN	Asia/Kolkata
+Thốt Nốt	VN	Asia/Ho_Chi_Minh
+Gweru	ZW	Africa/Harare
+Abaetetuba	BR	America/Belem
+Centro Habana	CU	America/Havana
+Panguíla	AO	Africa/Luanda
+Bukit Batok New Town	SG	Asia/Singapore
+Chom Thong	TH	Asia/Bangkok
+Gol’yanovo	RU	Europe/Moscow
+Sunggal	ID	Asia/Jakarta
+Industrialnyi	UA	Europe/Kyiv
+Admiralteisky	RU	Europe/Moscow
+Diourbel	SN	Africa/Dakar
+Ueda	JP	Asia/Tokyo
+Salinas	US	America/Los_Angeles
+San Blas-Canillejas	ES	Europe/Madrid
+Cuautla	MX	America/Mexico_City
+Salzburg	AT	Europe/Vienna
+Perbaungan	ID	Asia/Jakarta
+Nong Chok	TH	Asia/Bangkok
+Ussuriysk	RU	Asia/Vladivostok
+Arif Wala	PK	Asia/Karachi
+Nanpiao	CN	Asia/Shanghai
+Livorno	IT	Europe/Rome
+Río Cuarto	AR	America/Argentina/Cordoba
+Harar	ET	Africa/Addis_Ababa
+Tiraspol	MD	Europe/Chisinau
+Enfield Town	GB	Europe/London
+Westonaria	ZA	Africa/Johannesburg
+Lizhi	CN	Asia/Shanghai
+Hitachi-Naka	JP	Asia/Tokyo
+Saharsa	IN	Asia/Kolkata
+Qalyub	EG	Africa/Cairo
+Escuintla	GT	America/Guatemala
+Marbella	ES	Europe/Madrid
+Ereğli	TR	Europe/Istanbul
+Batu Pahat	MY	Asia/Kuala_Lumpur
+Sitiawan	MY	Asia/Kuala_Lumpur
+Mariveles	PH	Asia/Manila
+San Pablo de las Salinas	MX	America/Mexico_City
+Lampang	TH	Asia/Bangkok
+York	GB	Europe/London
+Bạc Liêu	VN	Asia/Ho_Chi_Minh
+Juja	KE	Africa/Nairobi
+Fès al Bali	MA	Africa/Casablanca
+Nek’emtē	ET	Africa/Addis_Ababa
+Örebro	SE	Europe/Stockholm	OErebro
+Al Miqdādīyah	IQ	Asia/Baghdad
+Katsuta	JP	Asia/Tokyo
+Malabo	GQ	Africa/Malabo
+Vidisha	IN	Asia/Kolkata
+Tuy Hòa	VN	Asia/Ho_Chi_Minh
+Yizhou	CN	Asia/Shanghai
+Xinqiao	CN	Asia/Shanghai
+Sunnyvale	US	America/Los_Angeles
+Tema	GH	Africa/Accra
+Đức Phổ	VN	Asia/Ho_Chi_Minh	GJuc Pho
+San Martin Texmelucan de Labastida	MX	America/Mexico_City
+Ar Ramthā	JO	Asia/Amman
+Hanumāngarh	IN	Asia/Kolkata
+São Mateus	BR	America/Sao_Paulo
+Zemun	RS	Europe/Belgrade
+Telford	GB	Europe/London
+Kisi	NG	Africa/Lagos
+Nilópolis	BR	America/Sao_Paulo
+Villa Canales	GT	America/Guatemala
+Guyong	PH	Asia/Manila
+Settat	MA	Africa/Casablanca
+Brusque	BR	America/Sao_Paulo
+Paço do Lumiar	BR	America/Fortaleza
+Jampur	PK	Asia/Karachi
+Port Louis	MU	Indian/Mauritius
+Kawanishi	JP	Asia/Tokyo
+Thānesar	IN	Asia/Kolkata
+Kajansi	UG	Africa/Kampala
+Al Ḩawāmidīyah	EG	Africa/Cairo
+Hassan	IN	Asia/Kolkata
+Lianghu	CN	Asia/Shanghai
+Tetuán de las Victorias	ES	Europe/Madrid
+Birendranagar	NP	Asia/Kathmandu
+Kishangarh	IN	Asia/Kolkata
+Dalūpura	IN	Asia/Kolkata
+Guangshui	CN	Asia/Shanghai
+Saint-Denis	RE	Indian/Reunion
+Brăila	RO	Europe/Bucharest
+Lyubertsy	RU	Europe/Moscow
+Bumba	CD	Africa/Kinshasa
+Rudrapur	IN	Asia/Kolkata
+La Serena	CL	America/Santiago
+Miskolc	HU	Europe/Budapest
+Abū Kabīr	EG	Africa/Cairo
+Fu’an	CN	Asia/Shanghai
+Kitengela	KE	Africa/Nairobi
+Frisco	US	America/Chicago
+Zhaodong	CN	Asia/Shanghai
+Wujiaqu	CN	Asia/Urumqi
+Shomolu	NG	Africa/Lagos
+Janzūr	LY	Africa/Tripoli
+Xai-Xai	MZ	Africa/Maputo
+Nalgonda	IN	Asia/Kolkata
+Katabi	UG	Africa/Kampala
+Gwangyang	KR	Asia/Seoul
+Kovrov	RU	Europe/Moscow
+Viranşehir	TR	Europe/Istanbul
+Noda	JP	Asia/Tokyo
+East Chattanooga	US	America/New_York
+Limassol	CY	Asia/Nicosia
+Kariya	JP	Asia/Tokyo
+Pasadena	US	America/Chicago
+Mīt Ghamr	EG	Africa/Cairo
+Sanshui	CN	Asia/Shanghai
+Jackson	US	America/Chicago
+Parelheiros	BR	America/Sao_Paulo
+Enschede	NL	Europe/Amsterdam
+Boshan	CN	Asia/Shanghai
+Hazāribāgh	IN	Asia/Kolkata
+Yangchun	CN	Asia/Shanghai
+Souk Ahras	DZ	Africa/Algiers
+Musanze	RW	Africa/Kigali
+Medinīpur	IN	Asia/Kolkata
+Andong	KR	Asia/Seoul
+Bālurghāt	IN	Asia/Kolkata
+Pomona	US	America/Los_Angeles
+Valle de La Pascua	VE	America/Caracas
+Kreuzberg	DE	Europe/Berlin
+Chincha Alta	PE	America/Lima
+Cairns	AU	Australia/Brisbane
+Fyzābād	IN	Asia/Kolkata
+Thị Trấn Thuận Châu	VN	Asia/Ho_Chi_Minh
+Dinapore	IN	Asia/Kolkata
+Dingzhou	CN	Asia/Shanghai
+As Samawah	IQ	Asia/Baghdad
+Porbandar	IN	Asia/Kolkata
+Sinp’o	KP	Asia/Pyongyang
+Pengpu	CN	Asia/Shanghai
+Wazirabad	PK	Asia/Karachi
+Washington Heights	US	America/New_York
+Lakewood	US	America/Denver
+Baqubah	IQ	Asia/Baghdad
+Simele	IQ	Asia/Baghdad
+Sumayl	IQ	Asia/Baghdad
+Neuss	DE	Europe/Berlin
+Chenghua	CN	Asia/Shanghai
+Songnim-ni	KP	Asia/Pyongyang
+Bānda	IN	Asia/Kolkata
+Cần Giuộc	VN	Asia/Ho_Chi_Minh
+Balvanera	AR	America/Argentina/Buenos_Aires
+Longfeng	CN	Asia/Shanghai
+Beining	CN	Asia/Shanghai
+Strogino	RU	Europe/Moscow
+Gonbad-e Kāvūs	IR	Asia/Tehran
+Etwatwa	ZA	Africa/Johannesburg
+Higashimurayama	JP	Asia/Tokyo
+Garanhuns	BR	America/Recife
+Amsterdam Nieuw-West	NL	Europe/Amsterdam
+Hindupur	IN	Asia/Kolkata
+Stavanger	NO	Europe/Oslo
+Bintulu	MY	Asia/Kuching
+Poole	GB	Europe/London
+Akhmīm	EG	Africa/Cairo
+Kohat	PK	Asia/Karachi
+Regensburg	DE	Europe/Berlin
+Layyah	PK	Asia/Karachi
+Girga	EG	Africa/Cairo
+Koforidua	GH	Africa/Accra
+Bukit Merah Estate	SG	Asia/Singapore
+Logroño	ES	Europe/Madrid
+Beāwar	IN	Asia/Kolkata
+Sykhiv	UA	Europe/Kyiv
+Shujaabad	PK	Asia/Karachi
+Escondido	US	America/Los_Angeles
+Ṣuwayliḥ	JO	Asia/Amman
+Erzincan	TR	Europe/Istanbul
+Kırşehir	TR	Europe/Istanbul	Kirsehir
+Zarichnyi	UA	Europe/Kyiv
+La Laguna	ES	Atlantic/Canary
+Kokshetau	KZ	Asia/Almaty
+Eminabad	PK	Asia/Karachi
+Anantnag	IN	Asia/Kolkata
+Kukichūō	JP	Asia/Tokyo
+Badajoz	ES	Europe/Madrid
+Serilingampalle	IN	Asia/Kolkata
+Malatia-Sebastia	AM	Asia/Yerevan
+Talcahuano	CL	America/Santiago
+Chillán	CL	America/Santiago
+Jaranwala	PK	Asia/Karachi
+Kỳ Anh	VN	Asia/Bangkok
+Nong Khaem	TH	Asia/Bangkok
+Piedras Negras	MX	America/Matamoros
+Kızıltepe	TR	Europe/Istanbul	Kiziltepe
+Astoria	US	America/New_York
+Musashino	JP	Asia/Tokyo
+Paranaguá	BR	America/Sao_Paulo
+Balashikha	RU	Europe/Moscow
+Raigarh	IN	Asia/Kolkata
+Gloucester	CA	America/Toronto
+Vryheid	ZA	Africa/Johannesburg
+Bandar Tasik Puteri	MY	Asia/Kuala_Lumpur
+Bercham	MY	Asia/Kuala_Lumpur
+Dili	TL	Asia/Dili
+Gimcheon	KR	Asia/Seoul
+Malkajgiri	IN	Asia/Kolkata
+Setia Alam	MY	Asia/Kuala_Lumpur
+Tordher	PK	Asia/Karachi
+Zhulebino	RU	Europe/Moscow
+Shāntipur	IN	Asia/Kolkata
+Chishtian	PK	Asia/Karachi
+Playa del Carmen	MX	America/Cancun
+Santa Rita	BR	America/Fortaleza
+Split	HR	Europe/Zagreb
+Ursynów	PL	Europe/Warsaw
+Madrid Centro	ES	Europe/Madrid
+Iguatemi	BR	America/Sao_Paulo
+Harunabad	PK	Asia/Karachi
+Shūnan	JP	Asia/Tokyo
+Agadez	NE	Africa/Niamey
+Burnley	GB	Europe/London
+Watampone	ID	Asia/Makassar
+Sabha	LY	Africa/Tripoli
+Disūq	EG	Africa/Cairo
+Cagliari	IT	Europe/Rome
+Borough Park	US	America/New_York
+Harrow	GB	Europe/London
+Berrechid	MA	Africa/Casablanca
+Queimados	BR	America/Sao_Paulo
+Tambacounda	SN	Africa/Dakar
+Huddersfield	GB	Europe/London
+Ārabī	ET	Africa/Addis_Ababa
+Kerch	UA	Europe/Simferopol
+Saguenay	CA	America/Toronto
+Prenzlauer Berg	DE	Europe/Berlin	Prenzlauer Berg Bezirk
+Fazenda Rio Grande	BR	America/Sao_Paulo
+Komaki	JP	Asia/Tokyo
+Marvdasht	IR	Asia/Tehran
+Melitopol	UA	Europe/Kyiv
+Dunhua	CN	Asia/Shanghai
+Bhuj	IN	Asia/Kolkata
+Arganzuela	ES	Europe/Madrid
+Jyväskylä	FI	Europe/Helsinki	Jyvaeskylae
+Yonago	JP	Asia/Tokyo
+Ruqi	SO	Africa/Mogadishu
+Rimini	IT	Europe/Rome
+Coquitlam	CA	America/Vancouver
+Aḍ-Ḍawāḥy	EG	Africa/Cairo
+Arar	SA	Asia/Riyadh
+Moreno	AR	America/Argentina/Buenos_Aires
+Tama	JP	Asia/Tokyo
+Rockford	US	America/Chicago
+El Limón	VE	America/Caracas
+Kalaban-Koro	ML	Africa/Bamako
+Nîmes	FR	Europe/Paris
+Dundee	GB	Europe/London
+Bārākpur	IN	Asia/Kolkata
+Sao Rafael	BR	America/Sao_Paulo
+Sujiatun	CN	Asia/Shanghai
+Astanajapura	ID	Asia/Jakarta
+Xebat	IQ	Asia/Baghdad
+Ciudad Delicias	MX	America/Chihuahua
+Siguiri	GN	Africa/Conakry
+Kamsar	GN	Africa/Conakry
+Mbanza Kongo	AO	Africa/Luanda
+East Hampton	US	America/New_York
+Honggang	CN	Asia/Shanghai
+Sarrià-Sant Gervasi	ES	Europe/Madrid
+Kiambu	KE	Africa/Nairobi
+Clermont-Ferrand	FR	Europe/Paris
+Joliet	US	America/Chicago
+Barrie	CA	America/Toronto
+Bang Kapi	TH	Asia/Bangkok
+Yima	CN	Asia/Shanghai
+Savannah	US	America/New_York
+Paterson	US	America/New_York
+Kolomna	RU	Europe/Moscow
+Hājīpur	IN	Asia/Kolkata
+Rafsanjān	IR	Asia/Tehran
+Hòa Thành	VN	Asia/Ho_Chi_Minh
+Mestre	IT	Europe/Rome
+As Sālimīyah	KW	Asia/Kuwait
+Bridgeport	US	America/New_York
+Shevchenko	UA	Europe/Kyiv
+Kuntsevo	RU	Europe/Moscow
+Kragujevac	RS	Europe/Belgrade
+Aktau	KZ	Asia/Aqtau
+Nusantara	ID	Asia/Makassar
+Balcón de la Lisa	CU	America/Havana
+Sasarām	IN	Asia/Kolkata
+Bohuniya	UA	Europe/Kyiv
+Iruma	JP	Asia/Tokyo
+Renca	CL	America/Santiago
+Kramatorsk	UA	Europe/Kyiv
+Naperville	US	America/Chicago
+Manama	BH	Asia/Bahrain
+Colima	MX	America/Mexico_City
+Bhimavaram	IN	Asia/Kolkata
+Lárisa	GR	Europe/Athens
+Nakhodka	RU	Asia/Vladivostok
+Debre Birhan	ET	Africa/Addis_Ababa
+Cacuaco	AO	Africa/Luanda
+Slobidskyi	UA	Europe/Kyiv
+Aix-en-Provence	FR	Europe/Paris
+Cam Ranh	VN	Asia/Ho_Chi_Minh
+Jalalpur Jattan	PK	Asia/Karachi
+Matanzas	CU	America/Havana
+Beed	IN	Asia/Kolkata
+Khasnahzān	IQ	Asia/Baghdad
+Taozhou	CN	Asia/Shanghai
+Saint-Quentin-en-Yvelines	FR	Europe/Paris
+Bandar Bukit Raja	MY	Asia/Kuala_Lumpur
+Blackburn	GB	Europe/London
+Rosemont–La Petite-Patrie	CA	America/Toronto
+Colina	CL	America/Santiago
+Burāri	IN	Asia/Kolkata
+Ruda Śląska	PL	Europe/Warsaw
+Nouadhibou	MR	Africa/Nouakchott
+Puerto Plata	DO	America/Santo_Domingo
+Urdaneta	PH	Asia/Manila
+Chamberí	ES	Europe/Madrid
+Krishnanagar	IN	Asia/Kolkata
+Xinji	CN	Asia/Shanghai
+Jutiapa	GT	America/Guatemala
+Chitradurga	IN	Asia/Kolkata
+Bueng Kum	TH	Asia/Bangkok
+Cambridge	GB	Europe/London
+Kampung Pasir Gudang Baru	MY	Asia/Kuala_Lumpur
+Kampung Sungai Glugur	MY	Asia/Kuala_Lumpur
+Dibrugarh	IN	Asia/Kolkata
+Médéa	DZ	Africa/Algiers
+Taishan	CN	Asia/Shanghai
+El Eulma	DZ	Africa/Algiers
+Pécs	HU	Europe/Budapest
+Giá Rai	VN	Asia/Ho_Chi_Minh
+Abohar	IN	Asia/Kolkata
+Tiruvannamalai	IN	Asia/Kolkata
+Teixeira de Freitas	BR	America/Bahia
+Gainesville	US	America/New_York
+Concordia	AR	America/Argentina/Cordoba
+Botucatu	BR	America/Sao_Paulo
+Fujieda	JP	Asia/Tokyo
+Spanish Town	JM	America/Jamaica
+Blackpool	GB	Europe/London
+Urganch	UZ	Asia/Samarkand
+Bukoba	TZ	Africa/Dar_es_Salaam
+Kaithal	IN	Asia/Kolkata
+Ingombota	AO	Africa/Luanda
+Basildon	GB	Europe/London
+Franco da Rocha	BR	America/Sao_Paulo
+Villeray–Saint-Michel–Parc-Extension	CA	America/Toronto
+Mesquite	US	America/Chicago
+Ashikaga	JP	Asia/Tokyo
+Huyện Lâm Hà	VN	Asia/Ho_Chi_Minh
+Acheng	CN	Asia/Shanghai
+Kelowna	CA	America/Vancouver
+Umarkot	PK	Asia/Karachi
+León	NI	America/Managua
+Kakamigahara	JP	Asia/Tokyo
+Le Mans	FR	Europe/Paris
+Lodhran	PK	Asia/Karachi
+Campo Largo	BR	America/Sao_Paulo
+Trois-Rivières	CA	America/Toronto
+Hailin	CN	Asia/Shanghai
+Amsterdam-Zuid	NL	Europe/Amsterdam
+Tsuchiura	JP	Asia/Tokyo
+Elektrostal’	RU	Europe/Moscow
+Balasore	IN	Asia/Kolkata
+Yong’an	CN	Asia/Shanghai
+Paris 11e Arrondissement	FR	Europe/Paris
+Kampong Pasir Ris	SG	Asia/Singapore
+Huelva	ES	Europe/Madrid
+Nemyshlyanskyi	UA	Europe/Kyiv
+Navoiy	UZ	Asia/Samarkand
+Syracuse	US	America/New_York
+Pinetown	ZA	Africa/Johannesburg
+Teshi Old Town	GH	Africa/Accra
+Biryulëvo	RU	Europe/Moscow
+Orekhovo-Borisovo	RU	Europe/Moscow
+Kusatsu	JP	Asia/Tokyo
+Amsterdam-West	NL	Europe/Amsterdam
+Nanjin	CN	Asia/Shanghai
+Guelph	CA	America/Toronto
+Ramna Maidan	BD	Asia/Dhaka
+Godhra	IN	Asia/Kolkata
+Khemisset	MA	Africa/Casablanca
+Çanakkale	TR	Europe/Istanbul
+Torrance	US	America/Los_Angeles
+Três Lagoas	BR	America/Campo_Grande
+Ladysmith	ZA	Africa/Johannesburg
+Lévis	CA	America/Toronto
+Cachoeirinha	BR	America/Sao_Paulo
+Heidelberg	DE	Europe/Berlin
+Fresnillo	MX	America/Mexico_City
+Touggourt	DZ	Africa/Algiers
+Shillong	IN	Asia/Kolkata
+Surprise	US	America/Phoenix
+Norwich	GB	Europe/London
+Tịnh Biên	VN	Asia/Ho_Chi_Minh
+Moriguchi	JP	Asia/Tokyo
+Amiens	FR	Europe/Paris
+Cai Lậy	VN	Asia/Ho_Chi_Minh
+Rewāri	IN	Asia/Kolkata
+Basirhat City	IN	Asia/Kolkata
+Kuz’minki	RU	Europe/Moscow
+Novyye Kuz’minki	RU	Europe/Moscow
+Aalborg	DK	Europe/Copenhagen
+La Trinidad	PH	Asia/Manila
+Ghardaïa	DZ	Africa/Algiers
+Timika	ID	Asia/Jayapura
+Pyatigorsk	RU	Europe/Moscow
+Teófilo Otoni	BR	America/Sao_Paulo
+Mbanza-Ngungu	CD	Africa/Kinshasa
+Mercier–Hochelaga-Maisonneuve	CA	America/Toronto
+Okinawa	JP	Asia/Tokyo
+Middlesbrough	GB	Europe/London
+Shahrisabz	UZ	Asia/Samarkand
+Moro	PK	Asia/Karachi
+Ch’ŏngdan-ŭp	KP	Asia/Pyongyang
+Sant Andreu	ES	Europe/Madrid
+Rybnik	PL	Europe/Warsaw
+Saïda	DZ	Africa/Algiers
+Metairie Terrace	US	America/Chicago
+Tuzla	BA	Europe/Sarajevo
+Kovpakivskyi	UA	Europe/Kyiv
+eMbalenhle	ZA	Africa/Johannesburg
+Trindade	BR	America/Sao_Paulo
+Khanpur	PK	Asia/Karachi
+Columbia	US	America/New_York
+Inezgane	MA	Africa/Casablanca
+Puerto Cortez	HN	America/Tegucigalpa
+Toowoomba	AU	Australia/Brisbane
+Paderborn	DE	Europe/Berlin
+Misato, Saitama	JP	Asia/Tokyo
+Chhatarpur	IN	Asia/Kolkata
+Kimberley	ZA	Africa/Johannesburg
+Alto Hospicio	CL	America/Santiago
+Ciego de Ávila	CU	America/Havana
+Samālūţ	EG	Africa/Cairo
+Chertanovo Yuzhnoye	RU	Europe/Moscow
+Jieshou	CN	Asia/Shanghai
+Maykop	RU	Europe/Moscow
+Attock City	PK	Asia/Karachi
+Kisaran	ID	Asia/Jakarta
+Mojokerto	ID	Asia/Jakarta
+Facatativá	CO	America/Bogota
+Masai	MY	Asia/Kuala_Lumpur
+Punto Fijo	VE	America/Caracas
+Myingyan	MM	Asia/Yangon
+Kamālshahr	IR	Asia/Tehran
+Mandsaur	IN	Asia/Kolkata
+Zheleznodorozhnyy	RU	Europe/Moscow
+Chas	IN	Asia/Kolkata
+Jahrom	IR	Asia/Tehran
+Tours	FR	Europe/Paris
+Pālanpur	IN	Asia/Kolkata
+Bondoukou	CI	Africa/Abidjan
+Chichicastenango	GT	America/Guatemala
+Tarragona	ES	Europe/Madrid
+Tobruk	LY	Africa/Tripoli
+Sinch’ŏn-ŭp	KP	Asia/Pyongyang
+Abbotsford	CA	America/Vancouver
+Circoiscrizione II	IT	Europe/Rome
+Bolton	GB	Europe/London
+Yushu	CN	Asia/Shanghai
+Piteşti	RO	Europe/Bucharest
+Fukayachō	JP	Asia/Tokyo
+Potosí	BO	America/La_Paz
+Usera	ES	Europe/Madrid
+Limoges	FR	Europe/Paris
+Cangaiba	BR	America/Sao_Paulo
+Salto	BR	America/Sao_Paulo
+Asaka	JP	Asia/Tokyo
+Ghazni	AF	Asia/Kabul
+Orange	US	America/Los_Angeles
+Wola	PL	Europe/Warsaw
+Īlām	IR	Asia/Tehran
+Shimotoda	JP	Asia/Tokyo
+Comodoro Rivadavia	AR	America/Argentina/Catamarca
+Kampung Sungai Ara	MY	Asia/Kuala_Lumpur
+Fullerton	US	America/Los_Angeles
+Killeen	US	America/Chicago
+Norilsk	RU	Asia/Krasnoyarsk
+Lleida	ES	Europe/Madrid
+Coimbra	PT	Europe/Lisbon
+Mtwara	TZ	Africa/Dar_es_Salaam
+Manjhand	PK	Asia/Karachi
+Beni	CD	Africa/Lubumbashi
+Debre Mark’os	ET	Africa/Addis_Ababa
+Norzagaray	PH	Asia/Manila
+Qeładizê	IQ	Asia/Baghdad	Qeladize
+Vila Curuca	BR	America/Sao_Paulo
+Nigel	ZA	Africa/Johannesburg
+Shengavit	AM	Asia/Yerevan
+Catacamas	HN	America/Tegucigalpa
+Buea	CM	Africa/Douala
+Shuizhai	CN	Asia/Shanghai
+Al’met’yevsk	RU	Europe/Moscow
+Motherwell	ZA	Africa/Johannesburg
+Paris 12e Arrondissement	FR	Europe/Paris
+McAllen	US	America/Chicago
+Lakhīmpur	IN	Asia/Kolkata
+Ishinomaki	JP	Asia/Tokyo
+Mpumalanga	ZA	Africa/Johannesburg
+Mian Channun	PK	Asia/Karachi
+Ji Paraná	BR	America/Porto_Velho
+Zaanstad	NL	Europe/Amsterdam
+Kabin Buri	TH	Asia/Bangkok
+Kuwana	JP	Asia/Tokyo
+Ayacucho	PE	America/Lima
+Torbat-e Ḩeydarīyeh	IR	Asia/Tehran
+Chamartín	ES	Europe/Madrid
+Shanhaiguan	CN	Asia/Shanghai
+Şaḩam	OM	Asia/Muscat
+Abéché	TD	Africa/Ndjamena
+Peristéri	GR	Europe/Athens
+Amersfoort	NL	Europe/Amsterdam
+Darwin	AU	Australia/Darwin
+Jeongeup	KR	Asia/Seoul
+Bellevue	US	America/Los_Angeles
+Korolev	RU	Europe/Moscow
+Valsād	IN	Asia/Kolkata
+Shinyanga	TZ	Africa/Dar_es_Salaam
+Sollentuna	SE	Europe/Stockholm
+Al Hindīyah	IQ	Asia/Baghdad
+Yaizu	JP	Asia/Tokyo
+Payakumbuh	ID	Asia/Jakarta
+Damoh	IN	Asia/Kolkata
+Āsela	ET	Africa/Addis_Ababa
+Haldwani	IN	Asia/Kolkata
+Irewe	NG	Africa/Lagos
+Batang	ID	Asia/Jakarta
+Gbongan	NG	Africa/Lagos
+Gama	BR	America/Sao_Paulo
+Siem Reap	KH	Asia/Phnom_Penh
+Anaco	VE	America/Caracas
+Purwodadi	ID	Asia/Jakarta
+Koga	JP	Asia/Tokyo
+Yuepu	CN	Asia/Shanghai
+Hābra	IN	Asia/Kolkata
+Sidoarjo	ID	Asia/Jakarta
+Şabāḩ as Sālim	KW	Asia/Kuwait
+Balneário Camboriú	BR	America/Sao_Paulo
+Plaza de la Revolución	CU	America/Havana
+Lausanne	CH	Europe/Zurich
+Choloma	HN	America/Tegucigalpa
+Barcarena	BR	America/Belem
+Kairouan	TN	Africa/Tunis
+Stockport	GB	Europe/London
+Budapest XI. kerület	HU	Europe/Budapest	Budapest XI. keruelet
+Huadian	CN	Asia/Shanghai
+Crato	BR	America/Fortaleza
+Kousséri	CM	Africa/Douala
+Weru	ID	Asia/Jakarta
+Al-'Ubūr	EG	Africa/Cairo
+Kolpino	RU	Europe/Moscow
+Itapipoca	BR	America/Fortaleza
+Conselheiro Lafaiete	BR	America/Sao_Paulo
+Belgrano	AR	America/Argentina/Buenos_Aires
+Sarh	TD	Africa/Ndjamena
+Gingoog	PH	Asia/Manila
+San Juan del Río	MX	America/Mexico_City
+Sekondi-Takoradi	GH	Africa/Accra
+Liuzhi	CN	Asia/Shanghai
+Altamira	BR	America/Santarem
+Fuyu	CN	Asia/Shanghai
+Wūdān	CN	Asia/Shanghai
+Vespasiano	BR	America/Sao_Paulo
+Whitby	CA	America/Toronto
+Metairie	US	America/Chicago
+Chaohu	CN	Asia/Shanghai
+Kolār	IN	Asia/Kolkata
+Bizerte	TN	Africa/Tunis
+Táriba	VE	America/Caracas
+Ejigbo	NG	Africa/Lagos
+Santa Cruz do Sul	BR	America/Sao_Paulo
+Ksar El Kebir	MA	Africa/Casablanca
+Paris 11 Popincourt	FR	Europe/Paris
+Dabou	CI	Africa/Abidjan
+Bukit Panjang New Town	SG	Asia/Singapore
+Sao Lucas	BR	America/Sao_Paulo
+Paris 12 Reuilly	FR	Europe/Paris
+Bertoua	CM	Africa/Douala
+Jacmel	HT	America/Port-au-Prince
+Srikakulam	IN	Asia/Kolkata
+Candelaria	PH	Asia/Manila
+Araruama	BR	America/Sao_Paulo
+Vĩnh Long	VN	Asia/Ho_Chi_Minh
+Praia	CV	Atlantic/Cape_Verde
+Resende	BR	America/Sao_Paulo
+Liangping	CN	Asia/Shanghai
+Kirdāsah	EG	Africa/Cairo
+Ponce	PR	America/Puerto_Rico
+Doilungdêqên	CN	Asia/Shanghai
+Jieshi	CN	Asia/Shanghai
+Hejiang	CN	Asia/Shanghai
+Pasir Puteh	MY	Asia/Kuala_Lumpur
+Mandya	IN	Asia/Kolkata
+Xiayang	CN	Asia/Shanghai
+Nor Nork	AM	Asia/Yerevan
+Bhisho	ZA	Africa/Johannesburg
+Freguesia do Ó	BR	America/Sao_Paulo
+Subang	ID	Asia/Jakarta
+Madhurampur Dehri	IN	Asia/Kolkata
+Negombo	LK	Asia/Colombo
+Irákleion	GR	Europe/Athens
+Hampton	US	America/New_York
+Wuyishan	CN	Asia/Shanghai
+Miramar	US	America/New_York
+Jiashan	CN	Asia/Shanghai
+Jiagedaqi	CN	Asia/Shanghai
+Bilqās	EG	Africa/Cairo
+Odintsovo	RU	Europe/Moscow
+Rangkasbitung	ID	Asia/Jakarta
+Foggia	IT	Europe/Rome
+Antsiranana	MG	Indian/Antananarivo
+Kānchrāpāra	IN	Asia/Kolkata
+San Juan Sacatepéquez	GT	America/Guatemala
+Minoh	JP	Asia/Tokyo
+Funtua	NG	Africa/Lagos
+St. Catharines	CA	America/Toronto
+Dawei	MM	Asia/Yangon
+Igboho	NG	Africa/Lagos
+Gunungsitoli	ID	Asia/Jakarta
+Apeldoorn	NL	Europe/Amsterdam
+Cidade Lider	BR	America/Sao_Paulo
+Marīvān	IR	Asia/Tehran
+Phủ Lý	VN	Asia/Bangkok
+Divo	CI	Africa/Abidjan
+Huinong	CN	Asia/Shanghai
+Ebina	JP	Asia/Tokyo
+Larache	MA	Africa/Casablanca
+Varginha	BR	America/Sao_Paulo
+Paris 14 Observatoire	FR	Europe/Paris
+Van Nuys	US	America/Los_Angeles
+Būsh	EG	Africa/Cairo
+Mlolongo	KE	Africa/Nairobi
+Guarapari	BR	America/Sao_Paulo
+Tương Mai	VN	Asia/Bangkok
+San José del Cabo	MX	America/Mazatlan
+West Valley City	US	America/Denver
+Kisarazu	JP	Asia/Tokyo
+Gejiu	CN	Asia/Shanghai
+Bacău	RO	Europe/Bucharest
+Saaba	BF	Africa/Ouagadougou
+Mingaladon	MM	Asia/Yangon
+Dimāpur	IN	Asia/Kolkata
+Sasolburg	ZA	Africa/Johannesburg
+Cheras	MY	Asia/Kuala_Lumpur
+Tasek Glugor	MY	Asia/Kuala_Lumpur
+Osorno	CL	America/Santiago
+Amsterdam-Oost	NL	Europe/Amsterdam
+Araras	BR	America/Sao_Paulo
+Tumxuk	CN	Asia/Urumqi
+Kushtia	BD	Asia/Dhaka
+Pitalito	CO	America/Bogota
+Baliuag	PH	Asia/Manila
+Hoàn Kiếm	VN	Asia/Bangkok
+Isahaya	JP	Asia/Tokyo
+Dayton	US	America/New_York
+Cẩm Phả Mines	VN	Asia/Ho_Chi_Minh
+Petapa	GT	America/Guatemala
+Māler Kotla	IN	Asia/Kolkata
+Buguma	NG	Africa/Lagos
+Itaituba	BR	America/Santarem
+Ahuntsic-Cartierville	CA	America/Toronto
+Pyay	MM	Asia/Yangon
+Shiqiao	CN	Asia/Shanghai
+Rabak	SD	Africa/Khartoum
+Tây Ninh	VN	Asia/Ho_Chi_Minh
+Le Vieux-Longueuil	CA	America/Toronto
+Tyre	LB	Asia/Beirut
+Kutaisi	GE	Asia/Tbilisi
+Andīmeshk	IR	Asia/Tehran
+Siwān	IN	Asia/Kolkata
+Angono	PH	Asia/Manila
+Cartago	CO	America/Bogota
+Shahreẕā	IR	Asia/Tehran
+Hinthada	MM	Asia/Yangon
+Apucarana	BR	America/Sao_Paulo
+Cap-Haïtien	HT	America/Port-au-Prince
+Baturaja	ID	Asia/Jakarta
+Inazawa	JP	Asia/Tokyo
+Rodriguez	PH	Asia/Manila
+Kalol	IN	Asia/Kolkata
+Mīāndoāb	IR	Asia/Tehran
+Laghouat	DZ	Africa/Algiers
+Nevinnomyssk	RU	Europe/Moscow
+San Mateo	PH	Asia/Manila
+Ţahţā	EG	Africa/Cairo
+Sibiu	RO	Europe/Bucharest
+Olathe	US	America/Chicago
+El Geneina Fort	SD	Africa/Khartoum
+Ikirun	NG	Africa/Lagos
+Shenglilu	CN	Asia/Shanghai
+San Nicolás de los Arroyos	AR	America/Argentina/Buenos_Aires
+Léogâne	HT	America/Port-au-Prince
+Vila Jacui	BR	America/Sao_Paulo
+Adiwerna	ID	Asia/Jakarta
+Cametá	BR	America/Belem
+Al Qurnah	IQ	Asia/Baghdad
+Abakaliki	NG	Africa/Lagos
+Vitória de Santo Antão	BR	America/Recife
+Marianao	CU	America/Havana
+Warren	US	America/Detroit
+Cizre	TR	Europe/Istanbul
+Circoiscrizione VIII	IT	Europe/Rome
+Bānkura	IN	Asia/Kolkata
+İnegol	TR	Europe/Istanbul
+Ebetsu	JP	Asia/Tokyo
+Anyama	CI	Africa/Abidjan
+Jiawang	CN	Asia/Shanghai
+Singaraja	ID	Asia/Makassar
+Würzburg	DE	Europe/Berlin	Wuerzburg
+Barysaw	BY	Europe/Minsk
+Đồng Hới	VN	Asia/Bangkok	GJong Hoi
+Randfontein	ZA	Africa/Johannesburg
+Pervouralsk	RU	Asia/Yekaterinburg
+Gondā City	IN	Asia/Kolkata
+Madīnat Ḩamad	BH	Asia/Bahrain
+Ōme	JP	Asia/Tokyo
+Sinnūris	EG	Africa/Cairo
+Votorantim	BR	America/Sao_Paulo
+Milagro	EC	America/Guayaquil
+Jaú	BR	America/Sao_Paulo
+Thandwe	MM	Asia/Yangon
+Thornton	US	America/Denver
+Valdivia	CL	America/Santiago
+Olmaliq	UZ	Asia/Tashkent
+Okrika	NG	Africa/Lagos
+High Wycombe	GB	Europe/London
+Carrollton	US	America/Chicago
+Talisay	PH	Asia/Manila
+Gao	ML	Africa/Bamako
+Dhaulpur	IN	Asia/Kolkata
+Tarime	TZ	Africa/Dar_es_Salaam
+Kentron	AM	Asia/Yerevan
+Milton	CA	America/Toronto
+M'Sila	DZ	Africa/Algiers
+Narita	JP	Asia/Tokyo
+Franceville	GA	Africa/Libreville
+Puqi	CN	Asia/Shanghai
+Tondabayashichō	JP	Asia/Tokyo
+Sandachō	JP	Asia/Tokyo
+Gondiā	IN	Asia/Kolkata
+Dunedin	NZ	Pacific/Auckland
+Kislovodsk	RU	Europe/Moscow
+Kyauktan	MM	Asia/Yangon
+Schaerbeek	BE	Europe/Brussels
+Hoofddorp	NL	Europe/Amsterdam
+Machiques	VE	America/Caracas
+Palakkad	IN	Asia/Kolkata
+Silifke	TR	Europe/Istanbul
+Charleston	US	America/New_York
+Langley	CA	America/Vancouver
+Midland	US	America/Chicago
+Fujinomiya	JP	Asia/Tokyo
+Mingala Tangnyunt	MM	Asia/Yangon
+Innsbruck	AT	Europe/Vienna
+Bragança	BR	America/Belem
+Wugang	CN	Asia/Shanghai
+Kabal	PK	Asia/Karachi
+Waco	US	America/Chicago
+Cerro	CU	America/Havana
+Zama	JP	Asia/Tokyo
+Manokwari	ID	Asia/Jayapura
+Valinhos	BR	America/Sao_Paulo
+Dimitrovgrad	RU	Europe/Ulyanovsk
+Zhalantun	CN	Asia/Shanghai
+Bettiah	IN	Asia/Kolkata
+Maijdi	BD	Asia/Dhaka
+São Félix do Xingu	BR	America/Belem
+San Pedro Garza García	MX	America/Monterrey
+Sapucaia do Sul	BR	America/Sao_Paulo
+Kombolcha	ET	Africa/Addis_Ababa
+Muricay	PH	Asia/Manila
+Sterling Heights	US	America/Detroit
+Surat Thani	TH	Asia/Bangkok
+Fürth	DE	Europe/Berlin	Fuerth
+Ferrara	IT	Europe/Rome
+Quận Đức Thịnh	VN	Asia/Ho_Chi_Minh	Quan GJuc Thinh
+Isidro Casanova	AR	America/Argentina/Buenos_Aires
+Ōmuta	JP	Asia/Tokyo
+Villa Mercedes	CL	America/Santiago
+Palwal	IN	Asia/Kolkata
+Bielany	PL	Europe/Warsaw
+Dawukou	CN	Asia/Shanghai
+Bulaon	PH	Asia/Manila
+Garut	ID	Asia/Jakarta
+Ajdabiya	LY	Africa/Tripoli
+Abiko	JP	Asia/Tokyo
+Kadoma	JP	Asia/Tokyo
+Majie	CN	Asia/Shanghai
+Bhakkar	PK	Asia/Karachi
+Rio Pequeno	BR	America/Sao_Paulo
+Kāshmar	IR	Asia/Tehran
+Jijel	DZ	Africa/Algiers
+Martapura	ID	Asia/Makassar
+Villeurbanne	FR	Europe/Paris
+Hải Châu	VN	Asia/Ho_Chi_Minh
+Limbe	CM	Africa/Douala
+Hepo	CN	Asia/Shanghai
+Iranshahr	IR	Asia/Tehran
+Soubré	CI	Africa/Abidjan
+Onomichi	JP	Asia/Tokyo
+Denton	US	America/Chicago
+Etah	IN	Asia/Kolkata
+Pīlibhīt	IN	Asia/Kolkata
+Shangzhi	CN	Asia/Shanghai
+Lashio	MM	Asia/Yangon
+Rayon KhTZ	UA	Europe/Kyiv
+Novomoskovsk	RU	Europe/Moscow
+Matsubara	JP	Asia/Tokyo
+Abengourou	CI	Africa/Abidjan
+Al Bāb	SY	Asia/Damascus
+Shuangcheng	CN	Asia/Shanghai
+Circoiscrizione III	IT	Europe/Rome
+Exeter	GB	Europe/London
+Ho	GH	Africa/Accra
+Narowal	PK	Asia/Karachi
+Lào Cai	VN	Asia/Bangkok
+Al Ajaylat	LY	Africa/Tripoli
+Udon Thani	TH	Asia/Bangkok
+Baḥarkah	IQ	Asia/Baghdad
+Bayan Lepas	MY	Asia/Kuala_Lumpur
+Petrogradka	RU	Europe/Moscow
+Rajapalayam	IN	Asia/Kolkata
+Zipaquirá	CO	America/Bogota
+Jīroft	IR	Asia/Tehran
+Cedar Rapids	US	America/Chicago
+Dongyang	CN	Asia/Shanghai
+Nantou	CN	Asia/Shanghai
+Botad	IN	Asia/Kolkata
+Nablus	PS	Asia/Hebron
+New Haven	US	America/New_York
+Arcahaie	HT	America/Port-au-Prince
+Jiazi	CN	Asia/Shanghai
+Foumban	CM	Africa/Douala
+Roseville	US	America/Los_Angeles
+Quilpué	CL	America/Santiago
+Rawson	AR	America/Argentina/San_Juan
+Sīdī Ḥusayn	TN	Africa/Tunis
+Kati	ML	Africa/Bamako
+Kembangan	SG	Asia/Singapore
+Seri Kembangan	MY	Asia/Kuala_Lumpur
+Colchester	GB	Europe/London
+Umeå	SE	Europe/Stockholm
+Din Daeng	TH	Asia/Bangkok
+Chaman	PK	Asia/Karachi
+Sennar	SD	Africa/Khartoum
+Masaya	NI	America/Managua
+Visalia	US	America/Los_Angeles
+Nankana Sahib	PK	Asia/Karachi
+Aley	LB	Asia/Beirut
+Caála	AO	Africa/Luanda
+Dongxing	CN	Asia/Shanghai
+Ramenki	RU	Europe/Moscow
+San Martin	PE	America/Lima
+Sonārgaon	BD	Asia/Dhaka
+Tottenham	GB	Europe/London
+Tychy	PL	Europe/Warsaw
+Zugló	HU	Europe/Budapest
+Mardin	TR	Europe/Istanbul
+Zwolle	NL	Europe/Amsterdam
+Baidoa	SO	Africa/Mogadishu
+Sầm Sơn	VN	Asia/Ho_Chi_Minh
+Santo António	CN	Asia/Macau
+Lugazi	UG	Africa/Kampala
+Salford	GB	Europe/London
+Mandi Bahauddin	PK	Asia/Karachi
+Tokat	TR	Europe/Istanbul
+Erebuni	AM	Asia/Yerevan
+Ô Môn	VN	Asia/Ho_Chi_Minh
+Gapan	PH	Asia/Manila
+Deoria	IN	Asia/Kolkata
+Bayambang	PH	Asia/Manila
+Mianwali	PK	Asia/Karachi
+Bat Yam	IL	Asia/Jerusalem
+Coral Springs	US	America/New_York
+Sherbrooke	CA	America/Toronto
+Al Bayḑā’	LY	Africa/Tripoli
+Jardim Helena	BR	America/Sao_Paulo
+Sabará	BR	America/Sao_Paulo
+Acilia-Castel Fusano-Ostia Antica	IT	Europe/Rome
+Charlottenburg	DE	Europe/Berlin
+Thousand Oaks	US	America/Los_Angeles
+Colatina	BR	America/Sao_Paulo
+Győr	HU	Europe/Budapest
+Copiapó	CL	America/Santiago
+Kokubunji	JP	Asia/Tokyo
+Quibdó	CO	America/Bogota
+Guelmim	MA	Africa/Casablanca
+Charallave	VE	America/Caracas
+Shahr-e Kord	IR	Asia/Tehran
+Malambo	CO	America/Bogota
+Tatuí	BR	America/Sao_Paulo
+Iwakuni	JP	Asia/Tokyo
+Leiyang	CN	Asia/Shanghai
+Białołeka	PL	Europe/Warsaw	Bialoleka
+Cadiz	PH	Asia/Manila
+Carnot	CF	Africa/Bangui
+Zacatecas	MX	America/Mexico_City
+Elizabeth	US	America/New_York
+Zyablikovo	RU	Europe/Moscow
+Daur	PK	Asia/Karachi
+Bingöl	TR	Europe/Istanbul	Bingoel
+Copacabana	BR	America/Sao_Paulo
+Sātkhira	BD	Asia/Dhaka
+Parung	ID	Asia/Jakarta
+Palo Negro	VE	America/Caracas
+Stamford	US	America/New_York
+Idlib	SY	Asia/Damascus
+Moanda	CD	Africa/Kinshasa
+Sīnah	IQ	Asia/Baghdad
+Ōsaki	JP	Asia/Tokyo
+Magelang	ID	Asia/Jakarta
+Concord	US	America/Los_Angeles
+Leiria	PT	Europe/Lisbon
+Puno	PE	America/Lima
+Kamyshin	RU	Europe/Volgograd
+Shuanglonghu	CN	Asia/Shanghai
+Nimach	IN	Asia/Kolkata
+Kafr ad Dawwār	EG	Africa/Cairo
+Águas Claras	BR	America/Sao_Paulo
+Bosque Saúde	BR	America/Sao_Paulo
+Novocheboksarsk	RU	Europe/Moscow
+Besançon	FR	Europe/Paris
+Thành phố Sông Công	VN	Asia/Ho_Chi_Minh
+Khardah	IN	Asia/Kolkata
+Sakakah	SA	Asia/Riyadh
+Khenifra	MA	Africa/Casablanca
+Al Manāqil	SD	Africa/Khartoum
+Rustavi	GE	Asia/Tbilisi
+Jose Bonifacio	BR	America/Sao_Paulo
+Yavatmāl	IN	Asia/Kolkata
+Hālīsahar	IN	Asia/Kolkata
+Serpukhov	RU	Europe/Moscow
+Rionegro	CO	America/Bogota
+Shache	CN	Asia/Urumqi
+Siheungdong	KR	Asia/Seoul
+Khanna	IN	Asia/Kolkata
+Koidu	SL	Africa/Freetown
+Norman	US	America/Chicago
+Mosquera	CO	America/Bogota
+Ivanovskoye	RU	Europe/Moscow
+Orekhovo-Borisovo Severnoye	RU	Europe/Moscow
+Bento Gonçalves	BR	America/Sao_Paulo
+Buôn Hồ	VN	Asia/Ho_Chi_Minh
+Chũ	VN	Asia/Bangkok
+Västerås	SE	Europe/Stockholm	Vaesteras
+Seto	JP	Asia/Tokyo
+Alhambra	US	America/Phoenix
+Titāgarh	IN	Asia/Kolkata
+Newcastle under Lyme	GB	Europe/London
+Opole	PL	Europe/Warsaw
+Elbląg	PL	Europe/Warsaw
+Gaojing	CN	Asia/Shanghai
+Sirajganj	BD	Asia/Dhaka
+Jequié	BR	America/Bahia
+Płock	PL	Europe/Warsaw	Plock
+Siguatepeque	HN	America/Tegucigalpa
+Wałbrzych	PL	Europe/Warsaw	Walbrzych
+Mykilska Borshchahivka	UA	Europe/Kyiv
+Yevlakh	AZ	Asia/Baku
+Al Manzalah	EG	Africa/Cairo
+Wau	SS	Africa/Juba
+Songnan	CN	Asia/Shanghai
+Södermalm	SE	Europe/Stockholm	Soedermalm
+Amaigbo	NG	Africa/Lagos
+Vila Mariana	BR	America/Sao_Paulo
+Chiang Mai	TH	Asia/Bangkok
+Lafia	NG	Africa/Lagos
+Jiangyou	CN	Asia/Shanghai
+Cikampek	ID	Asia/Jakarta
+Mustafābād	IN	Asia/Kolkata
+Tengyue	CN	Asia/Shanghai
+Shajing	CN	Asia/Shanghai
+Jinfeng	CN	Asia/Shanghai
+Sancti Spíritus	CU	America/Havana
+Mataró	ES	Europe/Madrid
+Barretos	BR	America/Sao_Paulo
+Kent	US	America/Los_Angeles
+Pakokku	MM	Asia/Yangon
+Murom	RU	Europe/Moscow
+Daska Kalan	PK	Asia/Karachi
+Sertãozinho	BR	America/Sao_Paulo
+Hāthras	IN	Asia/Kolkata
+Pulong Santa Cruz	PH	Asia/Manila
+Klaten	ID	Asia/Jakarta
+Khasavyurt	RU	Europe/Moscow
+Neftekamsk	RU	Asia/Yekaterinburg
+Villaverde	ES	Europe/Madrid
+Simi Valley	US	America/Los_Angeles
+Bayawan	PH	Asia/Manila
+Shakargarh	PK	Asia/Karachi
+Jorhat	IN	Asia/Kolkata
+Santa Cruz	PH	Asia/Manila
+La Victoria	VE	America/Caracas
+Pakpattan	PK	Asia/Karachi
+Jingzhi	CN	Asia/Shanghai
+Circoiscrizione V	IT	Europe/Rome
+Solihull	GB	Europe/London
+East Los Angeles	US	America/Los_Angeles
+Lalitpur	IN	Asia/Kolkata
+Jombang	ID	Asia/Jakarta
+Maxixe	MZ	Africa/Maputo
+Nakhon Ratchasima	TH	Asia/Bangkok
+Chinandega	NI	America/Managua
+Al Jadīd	LY	Africa/Tripoli
+Lambaré	PY	America/Asuncion
+Iizuka	JP	Asia/Tokyo
+Hua Hin	TH	Asia/Bangkok
+San Carlos del Zulia	VE	America/Caracas
+Vilkhivskyi	UA	Europe/Kyiv
+Rafaḩ	PS	Asia/Gaza
+Ampang	MY	Asia/Kuala_Lumpur
+Guntakal	IN	Asia/Kolkata
+Ālā'ĕr	CN	Asia/Urumqi
+Pithampur	IN	Asia/Kolkata
+Paseh	ID	Asia/Jakarta
+Mothīhāri	IN	Asia/Kolkata
+Koganei	JP	Asia/Tokyo
+Retiro	ES	Europe/Madrid
+Nossa Senhora de Fátima	CN	Asia/Macau
+Sunset Park	US	America/New_York
+Topeka	US	America/Chicago
+Orléans	CA	America/Toronto
+Paek'ak	KP	Asia/Pyongyang
+Huicheng	CN	Asia/Shanghai
+Puerto Ayacucho	VE	America/Caracas
+Gashua	NG	Africa/Lagos
+Les Cayes	HT	America/Port-au-Prince
+Salerno	IT	Europe/Rome
+Savannakhet	LA	Asia/Vientiane
+Munūf	EG	Africa/Cairo
+Watford	GB	Europe/London
+Guará	BR	America/Sao_Paulo
+Giresun	TR	Europe/Istanbul
+Xiazhen	CN	Asia/Shanghai
+Chaeryŏng-ni	KP	Asia/Pyongyang
+Kastamonu	TR	Europe/Istanbul
+Kanhangad	IN	Asia/Kolkata
+‘Ajlūn	JO	Asia/Amman
+Derince	TR	Europe/Istanbul
+Sukawati	ID	Asia/Makassar
+Jagdalpur	IN	Asia/Kolkata
+Kuopio	FI	Europe/Helsinki
+Bang Sue	TH	Asia/Bangkok
+Mailsi	PK	Asia/Karachi
+Haimen	CN	Asia/Shanghai
+Karabük	TR	Europe/Istanbul	Karabuek
+Ntuzuma	ZA	Africa/Johannesburg
+Tsuruoka	JP	Asia/Tokyo
+Saint Peters	GB	Europe/London
+Barbacena	BR	America/Sao_Paulo
+Uruma	JP	Asia/Tokyo
+Debre Tabor	ET	Africa/Addis_Ababa
+Sakiet ed Daier	TN	Africa/Tunis
+Nzega	TZ	Africa/Dar_es_Salaam
+Abilene	US	America/Chicago
+Ban Samae Dam	TH	Asia/Bangkok
+Shahecheng	CN	Asia/Shanghai
+Kumbo	CM	Africa/Douala
+Ottawa South	CA	America/Toronto
+Az Zulfī	SA	Asia/Riyadh
+Bălţi	MD	Europe/Chisinau
+Dokri	PK	Asia/Karachi
+Tyoply Stan	RU	Europe/Moscow
+Willemstad	CW	America/Curacao
+Sultan Kudarat	PH	Asia/Manila
+Jagādhri	IN	Asia/Kolkata
+Huixquilucan	MX	America/Mexico_City
+Arapongas	BR	America/Sao_Paulo
+Semnan	IR	Asia/Tehran
+San Francisco de Macorís	DO	America/Santo_Domingo
+Yuanlin	TW	Asia/Taipei
+Santa Tecla	SV	America/El_Salvador
+Sorriso	BR	America/Cuiaba
+Ciudad Valles	MX	America/Mexico_City
+Ouahigouya	BF	Africa/Ouagadougou
+Poblacion	PH	Asia/Manila
+Kashihara-shi	JP	Asia/Tokyo
+Ashmūn	EG	Africa/Cairo
+Ağrı	TR	Europe/Istanbul	Agri
+Leeuwarden	NL	Europe/Amsterdam
+Bến Tre	VN	Asia/Ho_Chi_Minh
+Monza	IT	Europe/Rome
+New Mirpur City	PK	Asia/Karachi
+Chía	CO	America/Bogota
+Olanchito	HN	America/Tegucigalpa
+Koreatown	US	America/Los_Angeles
+Targówek	PL	Europe/Warsaw
+Lecheng	CN	Asia/Shanghai
+Nancun	CN	Asia/Shanghai
+Marand	IR	Asia/Tehran
+As Sinbillāwayn	EG	Africa/Cairo
+Crawley	GB	Europe/London
+Rudnyy	KZ	Asia/Qostanay
+Magangué	CO	America/Bogota
+Itaguaí	BR	America/Sao_Paulo
+Bemowo	PL	Europe/Warsaw
+Metz	FR	Europe/Paris
+Jiupu	CN	Asia/Shanghai
+Dārjiling	IN	Asia/Kolkata
+Salvaleón de Higüey	DO	America/Santo_Domingo	Salvaleon de Higueey
+Butanta	BR	America/Sao_Paulo
+Thaton	MM	Asia/Yangon
+Budapest III. kerület	HU	Europe/Budapest	Budapest III. keruelet
+Kurichchi	IN	Asia/Kolkata
+Lumajang	ID	Asia/Jakarta
+Ise	JP	Asia/Tokyo
+Hagonoy	PH	Asia/Manila
+Samandağ	TR	Europe/Istanbul
+Caraguatatuba	BR	America/Sao_Paulo
+Birigui	BR	America/Sao_Paulo
+Pinsk	BY	Europe/Minsk
+Telde	ES	Atlantic/Canary
+Indramayu	ID	Asia/Jakarta
+Relizane	DZ	Africa/Algiers
+Bordj el Kiffan	DZ	Africa/Algiers
+Manas	KG	Asia/Bishkek
+Kirishima	JP	Asia/Tokyo
+Orizaba	MX	America/Mexico_City
+Toba Tek Singh	PK	Asia/Karachi
+Honmachi	JP	Asia/Tokyo
+Wolfsburg	DE	Europe/Berlin
+Niihama	JP	Asia/Tokyo
+Umuarama	BR	America/Sao_Paulo
+Jiaohe	CN	Asia/Shanghai
+Igarassu	BR	America/Recife
+Tsaritsyno	RU	Europe/Moscow
+Dos Hermanas	ES	Europe/Madrid
+Ajapnyak	AM	Asia/Yerevan
+Dam Dam	IN	Asia/Kolkata
+Hoima	UG	Africa/Kampala
+Wuda	CN	Asia/Shanghai
+Az Zubayr	IQ	Asia/Baghdad
+Schöneberg	DE	Europe/Berlin	Schoeneberg
+Beppu	JP	Asia/Tokyo
+Hardoī	IN	Asia/Kolkata
+Behbahān	IR	Asia/Tehran
+Itatiba	BR	America/Sao_Paulo
+Huangzhou	CN	Asia/Shanghai
+Sheepshead Bay	US	America/New_York
+Puruliya	IN	Asia/Kolkata
+Ubon Ratchathani	TH	Asia/Bangkok
+Virginia	ZA	Africa/Johannesburg
+Brits	ZA	Africa/Johannesburg
+Recklinghausen	DE	Europe/Berlin
+Zhoucun	CN	Asia/Shanghai
+Cherkessk	RU	Europe/Moscow
+Haveli Lakha	PK	Asia/Karachi
+Al Maḩmūdīyah	IQ	Asia/Baghdad
+Maastricht	NL	Europe/Amsterdam
+Amherst	US	America/New_York
+Tekirdağ	TR	Europe/Istanbul
+Shahr-e Ṣadrā	IR	Asia/Tehran
+Victorville	US	America/Los_Angeles
+Burton upon Trent	GB	Europe/London
+Calumpit	PH	Asia/Manila
+Lat Phrao	TH	Asia/Bangkok
+Livoberezhnyi	UA	Europe/Kyiv
+Göttingen	DE	Europe/Berlin	Goettingen
+Titiwangsa	MY	Asia/Kuala_Lumpur
+Phasi Charoen	TH	Asia/Bangkok
+Presnenskiy	RU	Europe/Moscow
+Veshnyaki	RU	Europe/Moscow
+Zābol	IR	Asia/Tehran
+Kaya	BF	Africa/Ouagadougou
+Xiangcheng	CN	Asia/Shanghai
+Dharmavaram	IN	Asia/Kolkata
+Gokalpur	IN	Asia/Kolkata
+Ādīgrat	ET	Africa/Addis_Ababa
+Kotamobagu	ID	Asia/Makassar
+Carora	VE	America/Caracas
+Vallejo	US	America/Los_Angeles
+Bhadreswar	IN	Asia/Kolkata
+Dorūd	IR	Asia/Tehran
+Bern	CH	Europe/Zurich
+San Pedro de la Paz	CL	America/Santiago
+Nagaon	IN	Asia/Kolkata
+Lahti	FI	Europe/Helsinki
+Vejalpur	IN	Asia/Kolkata
+Longshui	CN	Asia/Shanghai
+Siracusa	IT	Europe/Rome
+Mubende	UG	Africa/Kampala
+Stara Zagora	BG	Europe/Sofia
+Ondjiva	AO	Africa/Luanda
+Alberton	ZA	Africa/Johannesburg
+Gràcia	ES	Europe/Madrid
+Chikmagalūr	IN	Asia/Kolkata
+Ekibastuz	KZ	Asia/Almaty
+Algeciras	ES	Europe/Madrid
+Lafayette	US	America/Chicago
+Lianhe	CN	Asia/Shanghai
+Chico	US	America/Los_Angeles
+Bhadrak	IN	Asia/Kolkata
+Bagé	BR	America/Sao_Paulo
+North Stamford	US	America/New_York
+Bergamo	IT	Europe/Rome
+Ruse	BG	Europe/Sofia
+Sawai Madhopur	IN	Asia/Kolkata
+Chơn Thành	VN	Asia/Ho_Chi_Minh
+Ambikāpur	IN	Asia/Kolkata
+Eunápolis	BR	America/Bahia
+Apalit	PH	Asia/Manila
+Hartford	US	America/New_York
+Bukittinggi	ID	Asia/Jakarta
+Dolisie	CG	Africa/Brazzaville
+Zyuzino	RU	Europe/Moscow
+Ejido	VE	America/Caracas
+Berkeley	US	America/Los_Angeles
+Nova Lima	BR	America/Sao_Paulo
+Plaridel	PH	Asia/Manila
+West Palm Beach	US	America/New_York
+Kashiwara	JP	Asia/Tokyo
+Uruguaiana	BR	America/Sao_Paulo
+Ikoma	JP	Asia/Tokyo
+Heilbronn	DE	Europe/Berlin
+El Mourouj	TN	Africa/Tunis
+Ţūz Khūrmātū	IQ	Asia/Baghdad
+Trento	IT	Europe/Rome
+Shahdad Kot	PK	Asia/Karachi
+Catchiungo	AO	Africa/Luanda
+Ingolstadt	DE	Europe/Berlin
+Toa Payoh New Town	SG	Asia/Singapore
+Lichuan	CN	Asia/Shanghai
+Bukit Bintang	MY	Asia/Kuala_Lumpur
+La Concepción	VE	America/Caracas
+Ulm	DE	Europe/Berlin
+Mandoli	IN	Asia/Kolkata
+San Carlos	VE	America/Caracas
+Włocławek	PL	Europe/Warsaw	Wloclawek
+Allentown	US	America/New_York
+Satara	IN	Asia/Kolkata
+Bao'an Centre	CN	Asia/Shanghai
+Charsadda	PK	Asia/Karachi
+Fernando de la Mora	PY	America/Asuncion
+Chūru	IN	Asia/Kolkata
+Perugia	IT	Europe/Rome
+Gangāpur	IN	Asia/Kolkata
+Zhujing	CN	Asia/Shanghai
+Bồ Đề	VN	Asia/Bangkok	Bo GJe
+Guelma	DZ	Africa/Algiers
+Cabudwaaq	SO	Africa/Addis_Ababa
+Cheremushky	UA	Europe/Kyiv
+Dubai Marina	AE	Asia/Dubai
+Gereida	SD	Africa/Khartoum
+International City	AE	Asia/Dubai
+Nabatîyé et Tahta	LB	Asia/Beirut
+Orekhovo-Zuyevo	RU	Europe/Moscow
+Rustaq	OM	Asia/Muscat
+Solntsevo	RU	Europe/Moscow
+Zhaoyuan	CN	Asia/Shanghai
+Madhyapur Thimi	NP	Asia/Kathmandu
+Saint-Louis-de-Terrebonne	CA	America/Toronto
+Evansville	US	America/Chicago
+Bonon	CI	Africa/Abidjan
+Bottrop	DE	Europe/Berlin
+Ghotki	PK	Asia/Karachi
+Kwekwe	ZW	Africa/Harare
+Malindi	KE	Africa/Nairobi
+Ban I Chang	TH	Asia/Bangkok
+Rize	TR	Europe/Istanbul
+Almirante Tamandaré	BR	America/Sao_Paulo
+Palm Bay	US	America/New_York
+Ann	MM	Asia/Yangon
+Leiden	NL	Europe/Amsterdam
+Thon Buri	TH	Asia/Bangkok
+Ajax	CA	America/Toronto
+Bergedorf	DE	Europe/Berlin
+Sambrial	PK	Asia/Karachi
+Pescara	IT	Europe/Rome
+Modakeke	NG	Africa/Lagos
+Nobeoka	JP	Asia/Tokyo
+Silang	PH	Asia/Manila
+Amanfrom	GH	Africa/Accra
+Marituba	BR	America/Belem
+Moḩammad Shahr	IR	Asia/Tehran
+Paulo Afonso	BR	America/Bahia
+Īẕeh	IR	Asia/Tehran
+Nazilli	TR	Europe/Istanbul
+Daitō	JP	Asia/Tokyo
+Hòa Cường	VN	Asia/Ho_Chi_Minh
+Lira	UG	Africa/Kampala
+Pforzheim	DE	Europe/Berlin
+Salihli	TR	Europe/Istanbul
+Arabkir	AM	Asia/Yerevan
+Port Dickson	MY	Asia/Kuala_Lumpur
+Berkane	MA	Africa/Casablanca
+Catanduva	BR	America/Sao_Paulo
+Dordrecht	NL	Europe/Amsterdam
+Battambang	KH	Asia/Phnom_Penh
+Offenbach	DE	Europe/Berlin
+Kitami	JP	Asia/Tokyo
+Vĩnh Yên	VN	Asia/Bangkok
+Madhavaram	IN	Asia/Kolkata
+Cagua	VE	America/Caracas
+Fujairah	AE	Asia/Dubai
+Mandimba	MZ	Africa/Maputo
+Reykjavík	IS	Atlantic/Reykjavik
+Dohad	IN	Asia/Kolkata
+Cheltenham	GB	Europe/London
+Huaraz	PE	America/Lima
+Santa Coloma de Gramenet	ES	Europe/Madrid
+Santana	BR	America/Belem
+Araxá	BR	America/Sao_Paulo
+Piraquara	BR	America/Sao_Paulo
+Barshi	IN	Asia/Kolkata
+Bắc Quang	VN	Asia/Ho_Chi_Minh
+Xunchang	CN	Asia/Shanghai
+Hưng Yên	VN	Asia/Bangkok
+Bremerhaven	DE	Europe/Berlin
+Queenstown	ZA	Africa/Johannesburg
+Nanbin	CN	Asia/Shanghai
+Bandar-e Anzalī	IR	Asia/Tehran
+Khlong Luang	TH	Asia/Bangkok
+Ādilābād	IN	Asia/Kolkata
+Fargo	US	America/Chicago
+Brugge	BE	Europe/Brussels
+Jhunjhunūn	IN	Asia/Kolkata
+Iguala de la Independencia	MX	America/Mexico_City
+Sarandi	BR	America/Sao_Paulo
+Zomba	MW	Africa/Blantyre
+Sepatan	ID	Asia/Jakarta
+Malita	PH	Asia/Manila
+Zielona Góra	PL	Europe/Warsaw
+Luodian	CN	Asia/Shanghai
+Jetpur	IN	Asia/Kolkata
+Tsentralno-Miskyi	UA	Europe/Kyiv
+Uppal Kalan	IN	Asia/Kolkata
+São Lourenço da Mata	BR	America/Recife
+Maghāghah	EG	Africa/Cairo
+Pita Kotte	LK	Asia/Colombo
+Guiguinto	PH	Asia/Manila
+Gudivāda	IN	Asia/Kolkata
+Setúbal	PT	Europe/Lisbon
+Torrejón de Ardoz	ES	Europe/Madrid
+Aizu-Wakamatsu	JP	Asia/Tokyo
+Bama	NG	Africa/Lagos
+Ilobu	NG	Africa/Lagos
+Manolo Fortich	PH	Asia/Manila
+Itabira	BR	America/Sao_Paulo
+Kiến An	VN	Asia/Bangkok
+Jandira	BR	America/Sao_Paulo
+Guaratinguetá	BR	America/Sao_Paulo
+San Rafael	AR	America/Argentina/Mendoza
+Shaoshan	CN	Asia/Shanghai
+Troparëvo	RU	Europe/Moscow
+Bārān	IN	Asia/Kolkata
+Narmadapuram	IN	Asia/Kolkata
+Amreli	IN	Asia/Kolkata
+Nakhon Pathom	TH	Asia/Bangkok
+Kakegawa	JP	Asia/Tokyo
+Manfalūţ	EG	Africa/Cairo
+Handa	JP	Asia/Tokyo
+Wushan	CN	Asia/Shanghai
+Friedrichshain	DE	Europe/Berlin	Friedrichshain Bezirk
+Abomey	BJ	Africa/Porto-Novo
+Sokodé	TG	Africa/Lome
+Araguari	BR	America/Sao_Paulo
+Tarnów	PL	Europe/Warsaw
+Bangkok Noi	TH	Asia/Bangkok
+Jalingo	NG	Africa/Lagos
+Raposo Tavares	BR	America/Sao_Paulo
+Saanich	CA	America/Vancouver
+Ibanda	UG	Africa/Kampala
+Bairro da Penha	BR	America/Sao_Paulo
+Nyíregyháza	HU	Europe/Budapest
+Sano	JP	Asia/Tokyo
+Karatsu	JP	Asia/Tokyo
+Achinsk	RU	Asia/Krasnoyarsk
+Pudukkottai	IN	Asia/Kolkata
+Shunyi	CN	Asia/Shanghai
+Rotherham	GB	Europe/London
+Ciudad de Villa de Álvarez	MX	America/Mexico_City
+Banyuwangi	ID	Asia/Jakarta
+Rouiba	DZ	Africa/Algiers
+Tebingtinggi	ID	Asia/Jakarta
+Tigwav	HT	America/Port-au-Prince
+Narasaraopet	IN	Asia/Kolkata
+Lisala	CD	Africa/Kinshasa
+Badin	PK	Asia/Karachi
+Banfora	BF	Africa/Ouagadougou
+Punta Arenas	CL	America/Punta_Arenas
+Midsayap	PH	Asia/Manila
+Camboriú	BR	America/Sao_Paulo
+Pyin Oo Lwin	MM	Asia/Yangon
+Clearwater	US	America/New_York
+Himamaylan	PH	Asia/Manila
+Independence	US	America/Chicago
+Heroica Guaymas	MX	America/Hermosillo
+Kedungwuni	ID	Asia/Jakarta
+Ilebo	CD	Africa/Lubumbashi
+Kristiansand	NO	Europe/Oslo
+Longjing	CN	Asia/Shanghai
+Kroonstad	ZA	Africa/Johannesburg
+Remscheid	DE	Europe/Berlin
+Billings	US	America/Denver
+Möng Yang	MM	Asia/Yangon	Moeng Yang
+Čačak	RS	Europe/Belgrade
+Ann Arbor	US	America/Detroit
+Los Baños	PH	Asia/Manila
+Duekoué	CI	Africa/Abidjan
+Higashikurume	JP	Asia/Tokyo
+Rishra	IN	Asia/Kolkata
+Pinhais	BR	America/Sao_Paulo
+Kyzyl	RU	Asia/Krasnoyarsk
+Dąbrowa Górnicza	PL	Europe/Warsaw
+Passos	BR	America/Sao_Paulo
+Fāqūs	EG	Africa/Cairo
+Tacurong	PH	Asia/Manila
+Hōfu	JP	Asia/Tokyo
+Gabela	AO	Africa/Luanda
+Serangoon	SG	Asia/Singapore
+Serangoon New Town	SG	Asia/Singapore
+Funza	CO	America/Bogota
+Merauke	ID	Asia/Jayapura
+Baripāda	IN	Asia/Kolkata
+Kōnosu	JP	Asia/Tokyo
+Soreang	ID	Asia/Jakarta
+Smolyanskyi	UA	Europe/Kyiv
+Noord	NL	Europe/Amsterdam
+Dinaig	PH	Asia/Manila
+Manp’o	KP	Asia/Pyongyang
+Muktsar	IN	Asia/Kolkata
+El Monte	US	America/Los_Angeles
+Tubarão	BR	America/Sao_Paulo
+Forlì	IT	Europe/Rome
+Azamgarh	IN	Asia/Kolkata
+Masaka	UG	Africa/Kampala
+Cờ Đỏ	VN	Asia/Ho_Chi_Minh	Co GJo
+Taldykorgan	KZ	Asia/Almaty
+Moncloa-Aravaca	ES	Europe/Madrid
+Gulin	CN	Asia/Shanghai
+Al Majaz	AE	Asia/Dubai
+Thung Khru	TH	Asia/Bangkok
+Barnāla	IN	Asia/Kolkata
+Yelahanka	IN	Asia/Kolkata
+Pattaya	TH	Asia/Bangkok
+Chittorgarh	IN	Asia/Kolkata
+Chenggu	CN	Asia/Shanghai
+Harlem	US	America/New_York
+Rouen	FR	Europe/Paris
+Tinsukia	IN	Asia/Kolkata
+Westminster	US	America/Denver
+Dasha	CN	Asia/Shanghai
+Yakeshi	CN	Asia/Shanghai
+Ipiranga	BR	America/Sao_Paulo
+Makumbako	TZ	Africa/Dar_es_Salaam
+Khargone	IN	Asia/Kolkata
+Mariara	VE	America/Caracas
+Digos	PH	Asia/Manila
+Tshilenge	CD	Africa/Lubumbashi
+Aïn Beïda	DZ	Africa/Algiers
+Andīsheh	IR	Asia/Tehran
+Shahre Jadide Andisheh	IR	Asia/Tehran
+Breves	BR	America/Belem
+Alcobendas	ES	Europe/Madrid
+Kissidougou	GN	Africa/Conakry
+San Tung Chung Hang	HK	Asia/Hong_Kong
+Taganskiy	RU	Europe/Moscow
+Round Rock	US	America/Chicago
+Noginsk	RU	Europe/Moscow
+Tinaquillo	VE	America/Caracas
+Wilmington	US	America/New_York
+Cavite City	PH	Asia/Manila
+East Harlem	US	America/New_York
+Tandil	AR	America/Argentina/Buenos_Aires
+Zoetermeer	NL	Europe/Amsterdam
+São Gonçalo do Amarante	BR	America/Fortaleza
+Sri Jayewardenepura Kotte	LK	Asia/Colombo
+Nasushiobara	JP	Asia/Tokyo
+Várzea Paulista	BR	America/Sao_Paulo
+Baisha	CN	Asia/Shanghai
+Banī Mazār	EG	Africa/Cairo
+Taunsa	PK	Asia/Karachi
+Urasoe	JP	Asia/Tokyo
+Yelets	RU	Europe/Moscow
+Suan Luang	TH	Asia/Bangkok
+Parla	ES	Europe/Madrid
+Mỹ Hào	VN	Asia/Bangkok
+Anliu	CN	Asia/Shanghai
+Ribeirão Pires	BR	America/Sao_Paulo
+Recanto das Emas	BR	America/Sao_Paulo
+Chunga	ZM	Africa/Lusaka
+Bīshah	SA	Asia/Riyadh
+Novo-Peredelkino	RU	Europe/Moscow
+Baidyabāti	IN	Asia/Kolkata
+Okigwe	NG	Africa/Lagos
+Ar Rifā‘	BH	Asia/Bahrain
+Uzhhorod	UA	Europe/Kyiv
+Kasese	UG	Africa/Kampala
+Tianfu	CN	Asia/Shanghai
+Arvada	US	America/Denver
+Otaru	JP	Asia/Tokyo
+Tayabas	PH	Asia/Manila
+Inkisi	CD	Africa/Kinshasa
+Iriga City	PH	Asia/Manila
+Thornhill	CA	America/Toronto
+Vacoas	MU	Indian/Mauritius
+Beaumont	US	America/Chicago
+Vlorë	AL	Europe/Tirane
+Sanxia	TW	Asia/Taipei
+Provo	US	America/Denver
+Tucuruí	BR	America/Belem
+Bastī	IN	Asia/Kolkata
+Ezeiza	AR	America/Argentina/Buenos_Aires
+Lasnamäe	EE	Europe/Tallinn	Lasnamaee
+Xiva	UZ	Asia/Samarkand
+Amasya	TR	Europe/Istanbul
+Mendoza	AR	America/Argentina/Mendoza
+Balkh	AF	Asia/Kabul
+Cubatão	BR	America/Sao_Paulo
+Mingshui	CN	Asia/Shanghai
+Vila Medeiros	BR	America/Sao_Paulo
+Phong Điền	VN	Asia/Bangkok	Phong GJien
+Nova Serrana	BR	America/Sao_Paulo
+Wang Thonglang	TH	Asia/Bangkok
+Carlsbad	US	America/Los_Angeles
+Mandera	KE	Africa/Nairobi
+Qiaotou	CN	Asia/Shanghai
+Gyumri	AM	Asia/Yerevan
+Silopi	TR	Europe/Istanbul
+Gangavati	IN	Asia/Kolkata
+Ambur	IN	Asia/Kolkata
+Tangará da Serra	BR	America/Cuiaba
+Gorzów Wielkopolski	PL	Europe/Warsaw
+Simões Filho	BR	America/Bahia
+Giridih	IN	Asia/Kolkata
+Phool Nagar	PK	Asia/Karachi
+Quezon	PH	Asia/Manila
+Aryanah	TN	Africa/Tunis
+Tungipara	BD	Asia/Dhaka
+Ichinoseki	JP	Asia/Tokyo
+Khenchela	DZ	Africa/Algiers
+Khon Kaen	TH	Asia/Bangkok
+Odessa	US	America/Chicago
+Catalão	BR	America/Sao_Paulo
+Tando Muhammad Khan	PK	Asia/Karachi
+Somaroboro	ZA	Africa/Johannesburg
+Guadalajara de Buga	CO	America/Bogota
+Pamanukan	ID	Asia/Jakarta
+Codó	BR	America/Fortaleza
+Pardīs	IR	Asia/Tehran
+Pleiku	VN	Asia/Ho_Chi_Minh
+Downey	US	America/Los_Angeles
+Lower Hutt	NZ	Pacific/Auckland
+Yuyao	CN	Asia/Shanghai
+Hatsukaichi	JP	Asia/Tokyo
+Rānyah	IQ	Asia/Baghdad
+Tung Chung	HK	Asia/Hong_Kong
+Korolyov	UA	Europe/Kyiv
+Siirt	TR	Europe/Istanbul
+Zhaozhou	CN	Asia/Shanghai
+Ochakovo-Matveyevskoye	RU	Europe/Moscow
+Villa Lugano	AR	America/Argentina/Buenos_Aires
+Punta Cardón	VE	America/Caracas
+Akishima	JP	Asia/Tokyo
+Itacoatiara	BR	America/Manaus
+Chililabombwe	ZM	Africa/Lusaka
+Rivière-des-Prairies–Pointe-aux-Trembles	CA	America/Toronto
+Worthing	GB	Europe/London
+Navojoa	MX	America/Hermosillo
+Offa	NG	Africa/Lagos
+Tobolsk	RU	Asia/Yekaterinburg
+Tōkai	JP	Asia/Tokyo
+Wardha	IN	Asia/Kolkata
+Wansheng	CN	Asia/Shanghai
+Pattoki	PK	Asia/Karachi
+Wayaobu	CN	Asia/Shanghai
+Hikone	JP	Asia/Tokyo
+Nagahama	JP	Asia/Tokyo
+Pingshan	CN	Asia/Shanghai
+Songyuan	CN	Asia/Shanghai
+Maba	CN	Asia/Shanghai
+Fujimino	JP	Asia/Tokyo
+Doncaster	GB	Europe/London
+Bình Thủy	VN	Asia/Ho_Chi_Minh
+Dumaguete	PH	Asia/Manila
+Budapest XIII. kerület	HU	Europe/Budapest	Budapest XIII. keruelet
+Nippes	DE	Europe/Berlin
+Jaén	ES	Europe/Madrid
+Chengqiao	CN	Asia/Shanghai
+Chorzów	PL	Europe/Warsaw
+Porz am Rhein	DE	Europe/Berlin
+Louga	SN	Africa/Dakar
+Elmhurst	US	America/New_York
+Hoàng Mai	VN	Asia/Bangkok
+Yaritagua	VE	America/Caracas
+Shahdadpur	PK	Asia/Karachi
+Itumbiara	BR	America/Sao_Paulo
+Khwisero	KE	Africa/Nairobi
+Costa Mesa	US	America/Los_Angeles
+Jauharabad	PK	Asia/Karachi
+Miami Gardens	US	America/New_York
+Bagrām	AF	Asia/Kabul
+Chesterfield	GB	Europe/London
+North Peoria	US	America/Chicago
+Shchyolkovo	RU	Europe/Moscow
+Al Fashn	EG	Africa/Cairo
+Fairfield	US	America/Los_Angeles
+Guanabacoa	CU	America/Havana
+Hammanskraal	ZA	Africa/Johannesburg
+Ōshū	JP	Asia/Tokyo
+Taourirt	MA	Africa/Casablanca
+Ţalkhā	EG	Africa/Cairo
+Neili	TW	Asia/Taipei
+Vihari	PK	Asia/Karachi
+Taonan	CN	Asia/Shanghai
+Youkaichi	JP	Asia/Tokyo
+Kazo	JP	Asia/Tokyo
+Santa Lucía Cotzumalguapa	GT	America/Guatemala
+Jönköping	SE	Europe/Stockholm	Joenkoeping
+City of Port Phillip	AU	Australia/Melbourne
+Tadepalligudem	IN	Asia/Kolkata
+Lansing	US	America/Detroit
+Chanduasi	IN	Asia/Kolkata
+Bagaha	IN	Asia/Kolkata
+Nefteyugansk	RU	Asia/Yekaterinburg
+Reutlingen	DE	Europe/Berlin
+Bushwick	US	America/New_York
+Upata	VE	America/Caracas
+Shaowu	CN	Asia/Shanghai
+Mengmao	CN	Asia/Shanghai
+Lawang	ID	Asia/Jakarta
+Bouskoura	MA	Africa/Casablanca
+Satu Mare	RO	Europe/Bucharest
+Itanhaém	BR	America/Sao_Paulo
+Kisii	KE	Africa/Nairobi
+Petržalka	SK	Europe/Bratislava
+Kāzerūn	IR	Asia/Tehran
+Ermelino Matarazzo	BR	America/Sao_Paulo
+Achalpur	IN	Asia/Kolkata
+Guanare	VE	America/Caracas
+Wuzhishan	CN	Asia/Shanghai
+Gravesend	US	America/New_York
+Gondal	IN	Asia/Kolkata
+Chichawatni	PK	Asia/Karachi
+Farīdpur	BD	Asia/Dhaka
+Apopa	SV	America/El_Salvador
+Carmona	PH	Asia/Manila
+Laoag	PH	Asia/Manila
+Elgin	US	America/Chicago
+Dharashiv	IN	Asia/Kolkata
+Xigang	CN	Asia/Shanghai
+Chóngfú	CN	Asia/Shanghai
+Taipa	MO	Asia/Macau
+Port Blair	IN	Asia/Kolkata
+Minatitlán	MX	America/Mexico_City
+Esuk Oron	NG	Africa/Lagos
+Atbara	SD	Africa/Khartoum
+Vicenza	IT	Europe/Rome
+Ciudad Guzmán	MX	America/Mexico_City
+Ballarat	AU	Australia/Melbourne
+Tocoa	HN	America/Tegucigalpa
+West Jordan	US	America/Denver
+Bagalkot	IN	Asia/Kolkata
+Lomas de Zamora	AR	America/Argentina/Buenos_Aires
+Yeoju	KR	Asia/Seoul
+Dūmā	SY	Asia/Damascus
+Winterthur	CH	Europe/Zurich
+Novokuybyshevsk	RU	Europe/Samara
+Bou Saâda	DZ	Africa/Algiers
+Abnūb	EG	Africa/Cairo
+Qūchān	IR	Asia/Tehran
+Manacapuru	BR	America/Manaus
+Kuningan	ID	Asia/Jakarta
+Suriāpet	IN	Asia/Kolkata
+Kandy	LK	Asia/Colombo
+Zefta	EG	Africa/Cairo
+Bangaon	IN	Asia/Kolkata
+Inglewood	US	America/Los_Angeles
+Kilis	TR	Europe/Istanbul
+Terrebonne	CA	America/Toronto
+Kyimyindine	MM	Asia/Yangon
+Set Ka Lay	MM	Asia/Yangon
+Chelmsford	GB	Europe/London
+Marzahn	DE	Europe/Berlin
+Chiquimula	GT	America/Guatemala
+Cileunyi	ID	Asia/Jakarta
+Ashoknagar Kalyangarh	IN	Asia/Kolkata
+Mongu	ZM	Africa/Lusaka
+Mulhouse	FR	Europe/Paris
+Al Fqih Ben Çalah	MA	Africa/Casablanca
+Pulilan	PH	Asia/Manila
+Beau Bassin-Rose Hill	MU	Indian/Mauritius
+Tuscaloosa	US	America/Chicago
+Sogamoso	CO	America/Bogota
+Mbale	UG	Africa/Kampala
+Sainte-Foy	CA	America/Toronto
+Sainte-Foy–Sillery–Cap-Rouge	CA	America/Toronto
+Montreuil	FR	Europe/Paris
+Terni	IT	Europe/Rome
+Deesa	IN	Asia/Kolkata
+Navadwīp	IN	Asia/Kolkata
+Maran	MY	Asia/Kuala_Lumpur
+Nandurbar	IN	Asia/Kolkata
+Kasuga	JP	Asia/Tokyo
+Nsukka	NG	Africa/Lagos
+Nguru	NG	Africa/Lagos
+Mabopane	ZA	Africa/Johannesburg
+Namur	BE	Europe/Brussels
+Cambé	BR	America/Sao_Paulo
+Encheng	CN	Asia/Shanghai
+Herzliya	IL	Asia/Jerusalem
+Turhal	TR	Europe/Istanbul
+Gò Vấp	VN	Asia/Ho_Chi_Minh
+Richardson	US	America/Chicago
+Bokhtar	TJ	Asia/Dushanbe
+Hadejia	NG	Africa/Lagos
+Zhuji	CN	Asia/Shanghai
+Perpignan	FR	Europe/Paris
+Lowell	US	America/New_York
+Lavras	BR	America/Sao_Paulo
+São Pedro da Aldeia	BR	America/Sao_Paulo
+East Independence	US	America/Chicago
+Caen	FR	Europe/Paris
+Açailândia	BR	America/Fortaleza
+Borāzjān	IR	Asia/Tehran
+Gresham	US	America/Los_Angeles
+Yenangyaung	MM	Asia/Yangon
+Antioch	US	America/Los_Angeles
+Manzini	SZ	Africa/Mbabane
+Paulínia	BR	America/Sao_Paulo
+St. John's	CA	America/St_Johns
+Delicias	ES	Europe/Madrid
+Masindi	UG	Africa/Kampala
+Matsutō	JP	Asia/Tokyo
+Sultānpur	IN	Asia/Kolkata
+Delhi Cantonment	IN	Asia/Kolkata
+Bayugan	PH	Asia/Manila
+Firozpur	IN	Asia/Kolkata
+High Point	US	America/New_York
+Datun	CN	Asia/Shanghai
+Bāneh	IR	Asia/Tehran
+Gulshan	BD	Asia/Dhaka
+Geylang	SG	Asia/Singapore
+Kresek	ID	Asia/Jakarta
+Bender	MD	Europe/Chisinau
+Mbombela	ZA	Africa/Johannesburg
+Rodenkirchen	DE	Europe/Berlin
+Sembawang Estate	SG	Asia/Singapore
+Gabès	TN	Africa/Tunis
+Orkney	ZA	Africa/Johannesburg
+Qingnian	CN	Asia/Shanghai
+Temecula	US	America/Los_Angeles
+An Nu‘mānīyah	IQ	Asia/Baghdad
+Kufa	IQ	Asia/Baghdad
+Lucapa	AO	Africa/Luanda
+Mendip	GB	Europe/London
+Noyabrsk	RU	Asia/Yekaterinburg
+Qal‘at Sukkar	IQ	Asia/Baghdad
+Ressano Garcia	MZ	Africa/Maputo
+Sengerema	TZ	Africa/Dar_es_Salaam
+Bataysk	RU	Europe/Moscow
+Pisa	IT	Europe/Rome
+Linshui	CN	Asia/Shanghai
+Kamagaya	JP	Asia/Tokyo
+Sutton Coldfield	GB	Europe/London
+Hailun	CN	Asia/Shanghai
+Maramag	PH	Asia/Manila
+Kecskemét	HU	Europe/Budapest
+Seversk	RU	Asia/Tomsk
+Ciamis	ID	Asia/Jakarta
+Murrieta	US	America/Los_Angeles
+Brovary	UA	Europe/Kyiv
+Santo Antônio de Jesus	BR	America/Bahia
+Lak Si	TH	Asia/Bangkok
+Wakefield	GB	Europe/London
+Centennial	US	America/Denver
+Shilong	CN	Asia/Shanghai
+Thới Lai	VN	Asia/Ho_Chi_Minh
+Vilhena	BR	America/Porto_Velho
+Pandit Deen Dayal Upadhyaya Nagar	IN	Asia/Kolkata
+Dchira El Jihadia	MA	Africa/Casablanca
+Didao	CN	Asia/Shanghai
+Arsuz	TR	Europe/Istanbul
+Pelabuhanratu	ID	Asia/Jakarta
+Marugame	JP	Asia/Tokyo
+Arzamas	RU	Europe/Moscow
+Habikino	JP	Asia/Tokyo
+Phalaborwa	ZA	Africa/Johannesburg
+Walthamstow	GB	Europe/London
+Pueblo	US	America/Denver
+Guaianases	BR	America/Sao_Paulo
+Ijebu-Igbo	NG	Africa/Lagos
+Sergiyev Posad	RU	Europe/Moscow
+Sehore	IN	Asia/Kolkata
+Jianchang	CN	Asia/Shanghai
+Hulan	CN	Asia/Shanghai
+Matagalpa	NI	America/Managua
+Khlong Toei	TH	Asia/Bangkok
+Leninsk-Kuznetsky	RU	Asia/Novokuznetsk
+Kiryū	JP	Asia/Tokyo
+Handeni	TZ	Africa/Dar_es_Salaam
+Balombo	AO	Africa/Luanda
+Thunder Bay	CA	America/Toronto
+Iwatsuki	JP	Asia/Tokyo
+Pearland	US	America/Chicago
+Dehui	CN	Asia/Shanghai
+Pangkalanbuun	ID	Asia/Pontianak
+Waterbury	US	America/New_York
+Greeley	US	America/Denver
+Boulogne-Billancourt	FR	Europe/Paris
+Baia Mare	RO	Europe/Bucharest
+Kalisz	PL	Europe/Warsaw
+Warīsān	AE	Asia/Dubai
+Coronel Fabriciano	BR	America/Sao_Paulo
+Mascara	DZ	Africa/Algiers
+Maranguape	BR	America/Fortaleza
+Uromi	NG	Africa/Lagos
+Katumba	TZ	Africa/Dar_es_Salaam
+Móng Cái	VN	Asia/Bangkok
+Vila Maria	BR	America/Sao_Paulo
+Kanpur Cantonment	IN	Asia/Kolkata
+Komatsu	JP	Asia/Tokyo
+West Covina	US	America/Los_Angeles
+Enterprise	US	America/Los_Angeles
+Bānsbāria	IN	Asia/Kolkata
+Girón	CO	America/Bogota
+Baghlān	AF	Asia/Kabul
+Muriaé	BR	America/Sao_Paulo
+Hanjia	CN	Asia/Shanghai
+Trincomalee	LK	Asia/Colombo
+La Cité-Limoilou	CA	America/Toronto
+Taibai	CN	Asia/Shanghai
+Vedado	CU	America/Havana
+Dagenham	GB	Europe/London
+Xuyong	CN	Asia/Shanghai
+North Charleston	US	America/New_York
+Sohar	OM	Asia/Muscat
+Nehe	CN	Asia/Shanghai
+Abu Gharaq	IQ	Asia/Baghdad
+Oktyabrsky	RU	Asia/Yekaterinburg
+Tadpatri	IN	Asia/Kolkata
+Birnin Kebbi	NG	Africa/Lagos
+Novobavarskyi	UA	Europe/Kyiv
+Everett	US	America/Los_Angeles
+An Nuhūd	SD	Africa/Khartoum
+Ŭllyul	KP	Asia/Pyongyang
+Hadera	IL	Asia/Jerusalem
+Rijeka	HR	Europe/Zagreb
+Douliu	TW	Asia/Taipei
+Luis Eduardo Magalhães	BR	America/Bahia
+Catbalogan	PH	Asia/Manila
+College Station	US	America/Chicago
+As Salţ	JO	Asia/Amman
+Mishima	JP	Asia/Tokyo
+Baía Farta	AO	Africa/Luanda
+Jalpāiguri	IN	Asia/Kolkata
+Jalai Nur	CN	Asia/Shanghai
+Tajimi	JP	Asia/Tokyo
+Castelar	AR	America/Argentina/Buenos_Aires
+Pompano Beach	US	America/New_York
+Coronel	CL	America/Santiago
+Bacabal	BR	America/Fortaleza
+Novo Gama	BR	America/Sao_Paulo
+Dusit	TH	Asia/Bangkok
+Mandurah	AU	Australia/Perth
+Basingstoke	GB	Europe/London
+Bandırma	TR	Europe/Istanbul	Bandirma
+Maidstone	GB	Europe/London
+Tieli	CN	Asia/Shanghai
+Umm Qaşr	IQ	Asia/Baghdad
+Butterworth	MY	Asia/Kuala_Lumpur
+Shaping	CN	Asia/Shanghai
+Labé	GN	Africa/Conakry
+Chālūs	IR	Asia/Tehran
+Koszalin	PL	Europe/Warsaw
+Bolzano	IT	Europe/Rome
+South Fulton	US	America/New_York
+Ubá	BR	America/Sao_Paulo
+Sherpur	BD	Asia/Dhaka
+Obninsk	RU	Europe/Moscow
+Circoiscrizione VI	IT	Europe/Rome
+Girardot City	CO	America/Bogota
+Koblenz	DE	Europe/Berlin
+Itaperuna	BR	America/Sao_Paulo
+Siegen	DE	Europe/Berlin
+Hirnytskyi	UA	Europe/Kyiv
+Mangalagiri	IN	Asia/Kolkata
+Thohoyandou	ZA	Africa/Johannesburg
+As Suwayq	OM	Asia/Muscat
+Norwalk	US	America/Los_Angeles
+Yên Vinh	VN	Asia/Bangkok
+Mitrovicë	XK	Europe/Belgrade
+Yevpatoriya	UA	Europe/Simferopol
+Pati	ID	Asia/Jakarta
+Elista	RU	Europe/Moscow
+Dera Murad Jamali	PK	Asia/Karachi
+Taungoo	MM	Asia/Yangon
+Bedford	GB	Europe/London
+Bagong Silangan	PH	Asia/Manila
+Kangnyŏng	KP	Asia/Pyongyang
+Catia La Mar	VE	America/Caracas
+Boulder	US	America/Denver
+Anning	CN	Asia/Shanghai
+Ituiutaba	BR	America/Sao_Paulo
+Rayong	TH	Asia/Bangkok
+Sirte	LY	Africa/Tripoli
+Kotri	PK	Asia/Karachi
+Cherëmushki	RU	Europe/Moscow
+Broken Arrow	US	America/Chicago
+Daly City	US	America/Los_Angeles
+Cikarang	ID	Asia/Jakarta
+Arlit	NE	Africa/Niamey
+Bahārestān	IR	Asia/Tehran
+Ba Đồn	VN	Asia/Bangkok	Ba GJon
+Ranebennur	IN	Asia/Kolkata
+Longjiang	CN	Asia/Shanghai
+Hwado	KR	Asia/Seoul
+Buhe	CN	Asia/Shanghai
+Hammamet	TN	Africa/Tunis
+Pindiga	NG	Africa/Lagos
+Berdyansk	UA	Europe/Kyiv
+Toufen	TW	Asia/Taipei
+Mīāneh	IR	Asia/Tehran
+Dakhla	EH	Africa/El_Aaiun
+Paniqui	PH	Asia/Manila
+Novotroitsk	RU	Asia/Yekaterinburg
+Bergisch Gladbach	DE	Europe/Berlin
+Rangamati	BD	Asia/Dhaka
+Alchevsk	UA	Europe/Kyiv
+Sơn La	VN	Asia/Bangkok
+Mingachevir	AZ	Asia/Baku
+Legnica	PL	Europe/Warsaw
+Drammen	NO	Europe/Oslo
+Pare	ID	Asia/Jakarta
+Tokoza	ZA	Africa/Johannesburg
+Balsas	BR	America/Fortaleza
+Derbent	RU	Europe/Moscow
+Xinghua	CN	Asia/Shanghai
+Khurja	IN	Asia/Kolkata
+Mati	PH	Asia/Manila
+Arjawinangun	ID	Asia/Jakarta
+Le Plateau-Mont-Royal	CA	America/Toronto
+Funchal	PT	Atlantic/Madeira
+Kishanganj	IN	Asia/Kolkata
+Yautepec	MX	America/Mexico_City
+Jataí	BR	America/Sao_Paulo
+Sergeli	UZ	Asia/Tashkent
+Azare	NG	Africa/Lagos
+Ipojuca	BR	America/Recife
+Lahad Datu	MY	Asia/Kuching
+Vila Prudente	BR	America/Sao_Paulo
+Subulussalam	ID	Asia/Jakarta
+Paragominas	BR	America/Belem
+Bukama	CD	Africa/Lubumbashi
+Ponnāni	IN	Asia/Kolkata
+Tanza	PH	Asia/Manila
+Inzai	JP	Asia/Tokyo
+Bhairab Bāzār	BD	Asia/Dhaka
+Hindaun	IN	Asia/Kolkata
+Abū Tīj	EG	Africa/Cairo
+Coatepeque	GT	America/Guatemala
+Baraki	DZ	Africa/Algiers
+Robāţ Karīm	IR	Asia/Tehran
+'Ākra	IQ	Asia/Baghdad
+Sandy Springs	US	America/New_York
+Burbank	US	America/Los_Angeles
+Taling Chan	TH	Asia/Bangkok
+San Justo	AR	America/Argentina/Buenos_Aires
+Hòa Bình	VN	Asia/Bangkok
+Ourense	ES	Europe/Madrid
+Nāgaur	IN	Asia/Kolkata
+Riacho Fundo II	BR	America/Sao_Paulo
+Green Bay	US	America/Chicago
+Mityana	UG	Africa/Kampala
+Jizan	SA	Asia/Riyadh
+Texcoco de Mora	MX	America/Mexico_City
+Bang Bon	TH	Asia/Bangkok
+Nikopol	UA	Europe/Kyiv
+Slovyansk	UA	Europe/Kyiv
+San Francisco De Borja	PE	America/Lima
+Yidu	CN	Asia/Shanghai
+Nancy	FR	Europe/Paris
+Kuala Krai	MY	Asia/Kuala_Lumpur
+Zhonghe	CN	Asia/Shanghai
+Universal City	US	America/Los_Angeles
+Puyang Chengguanzhen	CN	Asia/Shanghai
+Ikeda	JP	Asia/Tokyo
+Waterloo	CA	America/Toronto
+Ambala Sadar	IN	Asia/Kolkata
+Chinautla	GT	America/Guatemala
+Salzgitter	DE	Europe/Berlin
+Ville-Marie	CA	America/Toronto
+Moratalaz	ES	Europe/Madrid
+Bhiwadi	IN	Asia/Kolkata
+Būndi	IN	Asia/Kolkata
+Miryalaguda	IN	Asia/Kolkata
+Daxing	CN	Asia/Shanghai
+Artur Alvim	BR	America/Sao_Paulo
+Assis	BR	America/Sao_Paulo
+Santa Cruz do Capibaribe	BR	America/Recife
+Yezhou	CN	Asia/Shanghai
+Hidalgo del Parral	MX	America/Chihuahua
+Saijō	JP	Asia/Tokyo
+Jena	DE	Europe/Berlin
+Wichita Falls	US	America/Chicago
+Brantford	CA	America/Toronto
+Gera	DE	Europe/Berlin
+Tuyên Quang	VN	Asia/Bangkok
+Ottakring	AT	Europe/Vienna
+Al Fāw	IQ	Asia/Baghdad
+Angoche	MZ	Africa/Maputo
+Toride	JP	Asia/Tokyo
+Mostar	BA	Europe/Sarajevo
+Mazyr	BY	Europe/Minsk
+Kamloops	CA	America/Vancouver
+Mazabuka	ZM	Africa/Lusaka
+Lakeland	US	America/New_York
+Pozniaky	UA	Europe/Kyiv
+Zhezqazghan	KZ	Asia/Almaty
+Pailou	CN	Asia/Shanghai
+Lo Prado	CL	America/Santiago
+Tizi Ouzou	DZ	Africa/Algiers
+Pulandian	CN	Asia/Shanghai
+Helsingborg	SE	Europe/Stockholm
+Abreu e Lima	BR	America/Recife
+Kot Addu	PK	Asia/Karachi
+Bouaflé	CI	Africa/Abidjan
+Kara	TG	Africa/Lome
+Clovis	US	America/Los_Angeles
+Kafue	ZM	Africa/Lusaka
+Campo Mourão	BR	America/Sao_Paulo
+Salaqi	CN	Asia/Shanghai
+Kalulushi	ZM	Africa/Lusaka
+Lewisville	US	America/Chicago
+Oued Zem	MA	Africa/Casablanca
+Izmaylovo	RU	Europe/Moscow
+Kiselëvsk	RU	Asia/Novokuznetsk
+Soyībug	IN	Asia/Kolkata
+Weldiya	ET	Africa/Addis_Ababa
+Jishu	CN	Asia/Shanghai
+El Kelaa des Srarhna	MA	Africa/Casablanca
+Séguéla	CI	Africa/Abidjan
+Ourinhos	BR	America/Sao_Paulo
+Totonicapán	GT	America/Guatemala
+Ad-Damir	SD	Africa/Khartoum
+Jagtiāl	IN	Asia/Kolkata
+Woking	GB	Europe/London
+Roorkee	IN	Asia/Kolkata
+Edéa	CM	Africa/Douala
+Yuxi	CN	Asia/Shanghai
+Poá	BR	America/Sao_Paulo
+Bashan	CN	Asia/Shanghai
+Nkpor	NG	Africa/Lagos
+Berbérati	CF	Africa/Bangui
+Sangla Hill	PK	Asia/Karachi
+Tongren	CN	Asia/Shanghai
+Tyler	US	America/Chicago
+Male	MV	Indian/Maldives
+El Cajon	US	America/Los_Angeles
+Mandaqui	BR	America/Sao_Paulo
+Piacenza	IT	Europe/Rome
+Gardez	AF	Asia/Kabul
+Zhanaozen	KZ	Asia/Aqtau
+Gangu Chengguanzhen	CN	Asia/Shanghai
+Teziutlan	MX	America/Mexico_City
+Kolda	SN	Africa/Dakar
+Vila Matilde	BR	America/Sao_Paulo
+Udgīr	IN	Asia/Kolkata
+Viseu	PT	Europe/Lisbon
+Nagda	IN	Asia/Kolkata
+Moers	DE	Europe/Berlin
+Brandon	US	America/New_York
+Buzău	RO	Europe/Bucharest
+Reus	ES	Europe/Madrid
+Prabumulih	ID	Asia/Jakarta
+Itabaiana	BR	America/Maceio
+Francistown	BW	Africa/Gaborone
+Isehara	JP	Asia/Tokyo
+Queluz	PT	Europe/Lisbon
+Betūl	IN	Asia/Kolkata
+Chikushino-shi	JP	Asia/Tokyo
+Akademicheskoe	RU	Europe/Moscow
+Turgutlu	TR	Europe/Istanbul
+Lida	BY	Europe/Minsk
+Taitung	TW	Asia/Taipei
+Kalynivskyi	UA	Europe/Kyiv
+San	ML	Africa/Bamako
+Jahānābād	IN	Asia/Kolkata
+Lethbridge	CA	America/Edmonton
+Cursino	BR	America/Sao_Paulo
+Velikiye Luki	RU	Europe/Moscow
+Kashipur	IN	Asia/Kolkata
+Rialto	US	America/Los_Angeles
+West Bromwich	GB	Europe/London
+Ghazīpur	IN	Asia/Kolkata
+Tanjung Pandan	ID	Asia/Jakarta
+Ikere-Ekiti	NG	Africa/Lagos
+Hildesheim	DE	Europe/Berlin
+Kharian	PK	Asia/Karachi
+Bendigo	AU	Australia/Melbourne
+Rantauprapat	ID	Asia/Jakarta
+Chumakivskyi	UA	Europe/Kyiv
+Amaravati	IN	Asia/Kolkata
+Bogorodskoye	RU	Europe/Moscow
+Nkayi	CG	Africa/Brazzaville
+Pārsābād	IR	Asia/Tehran
+Lahān	NP	Asia/Kathmandu
+Liberec	CZ	Europe/Prague
+Nagapattinam	IN	Asia/Kolkata
+Qurayyat	SA	Asia/Riyadh
+Buxar	IN	Asia/Kolkata
+Portmore	JM	America/Jamaica
+Palma Soriano	CU	America/Havana
+Pushkino	RU	Europe/Moscow
+Khushāb	PK	Asia/Karachi
+Lafiagi	NG	Africa/Lagos
+Caieiras	BR	America/Sao_Paulo
+Xincheng	CN	Asia/Urumqi
+Lyon 03	FR	Europe/Paris
+Pasrur	PK	Asia/Karachi
+Belawan	ID	Asia/Jakarta
+Pano Aqil	PK	Asia/Karachi
+Piatra Neamţ	RO	Europe/Bucharest
+Cabudare	VE	America/Caracas
+Erlangen	DE	Europe/Berlin
+Tepexpan	MX	America/Mexico_City
+Tivaouane	SN	Africa/Dakar
+Entebbe	UG	Africa/Kampala
+Davenport	US	America/Chicago
+Darnah	LY	Africa/Tripoli
+Dayrūţ	EG	Africa/Cairo
+Whalley	CA	America/Vancouver
+Edison	US	America/New_York
+Skhidni Kvartaly	UA	Europe/Kyiv
+Curicó	CL	America/Santiago
+Kangsŏn	KP	Asia/Pyongyang
+La Vega	DO	America/Santo_Domingo
+Shāhzādpur	BD	Asia/Dhaka
+Tulancingo	MX	America/Mexico_City
+Perdizes	BR	America/Sao_Paulo
+Yono	JP	Asia/Tokyo
+Apatzingán	MX	America/Mexico_City
+Ciutat Vella	ES	Europe/Madrid
+Hillsboro	US	America/Los_Angeles
+Mormugao	IN	Asia/Kolkata
+Seoni	IN	Asia/Kolkata
+Shabqadar	PK	Asia/Karachi
+Mitte	DE	Europe/Berlin
+Sabanalarga	CO	America/Bogota
+Jishou	CN	Asia/Shanghai
+Ngong	KE	Africa/Nairobi
+Francisco Beltrão	BR	America/Sao_Paulo
+Artëm	RU	Asia/Vladivostok
+Sebeta	ET	Africa/Addis_Ababa
+Tsuyama	JP	Asia/Tokyo
+Limerick	IE	Europe/Dublin
+Lampa	CL	America/Santiago
+Sungai Penuh	ID	Asia/Jakarta
+Ukhta	RU	Europe/Moscow
+Japeri	BR	America/Sao_Paulo
+Nakhon Si Thammarat	TH	Asia/Bangkok
+Putatan	PH	Asia/Manila
+Kani	JP	Asia/Tokyo
+Shuifu	CN	Asia/Shanghai
+Ōnojō	JP	Asia/Tokyo
+Kot Radha Kishan	PK	Asia/Karachi
+Al Jumayl	LY	Africa/Tripoli
+Brateyevo	RU	Europe/Moscow
+Maldonado	UY	America/Montevideo
+Shchukino	RU	Europe/Moscow
+Venlo	NL	Europe/Amsterdam
+Mairiporã	BR	America/Sao_Paulo
+Novara	IT	Europe/Rome
+Shūshtar	IR	Asia/Tehran
+Wilmersdorf	DE	Europe/Berlin
+Al-Musayab	IQ	Asia/Baghdad
+Pôr do Sol	BR	America/Sao_Paulo
+Parintins	BR	America/Manaus
+Hedong	CN	Asia/Shanghai
+Hinganghāt	IN	Asia/Kolkata
+Zonguldak	TR	Europe/Istanbul
+Iğdır	TR	Europe/Istanbul	Igdir
+Kawachi-Nagano	JP	Asia/Tokyo
+Eastbourne	GB	Europe/London
+Dhamtari	IN	Asia/Kolkata
+Delta	CA	America/Vancouver
+Orsha	BY	Europe/Minsk
+Las Cruces	US	America/Denver
+Székesfehérvár	HU	Europe/Budapest
+Lagarto	BR	America/Maceio
+Kindrativskyi	UA	Europe/Kyiv
+Bath	GB	Europe/London
+Sidi Slimane	MA	Africa/Casablanca
+Leme	BR	America/Sao_Paulo
+Iida	JP	Asia/Tokyo
+Los Puertos de Altagracia	VE	America/Caracas
+South Bend	US	America/Indiana/Indianapolis
+Kansk	RU	Asia/Krasnoyarsk
+Kalmiuskyi	UA	Europe/Kyiv
+Chilliwack	CA	America/Vancouver
+Queenstown Estate	SG	Asia/Singapore
+Argenteuil	FR	Europe/Paris
+Khanty-Mansiysk	RU	Asia/Yekaterinburg
+Isulan	PH	Asia/Manila
+Itaim Bibi	BR	America/Sao_Paulo
+Mbaké	SN	Africa/Dakar
+Pavlohrad	UA	Europe/Kyiv
+Simmering	AT	Europe/Vienna
+Mustafakemalpaşa	TR	Europe/Istanbul
+Burayu	ET	Africa/Addis_Ababa
+Chilakalūrupet	IN	Asia/Kolkata
+Malappuram	IN	Asia/Kolkata
+Ébolowa	CM	Africa/Douala
+Dartmouth	CA	America/Halifax
+Orihuela	ES	Europe/Madrid
+Kallang	SG	Asia/Singapore
+Sangju	KR	Asia/Seoul
+Perling	MY	Asia/Kuala_Lumpur
+Albany	US	America/New_York
+São Cristóvão	BR	America/Maceio
+Medina Estates	GH	Africa/Accra
+Chakwal	PK	Asia/Karachi
+Ngã Bảy	VN	Asia/Ho_Chi_Minh
+Gillingham	GB	Europe/London
+Suruç	TR	Europe/Istanbul
+Huacheng	CN	Asia/Shanghai
+Ocaña	CO	America/Bogota
+Hồng Ngự	VN	Asia/Ho_Chi_Minh
+Daoukro	CI	Africa/Abidjan
+Tokuyama	JP	Asia/Tokyo
+Ţimā	EG	Africa/Cairo
+Donghae City	KR	Asia/Seoul
+Standerton	ZA	Africa/Johannesburg
+Kanoya	JP	Asia/Tokyo
+Mokopane	ZA	Africa/Johannesburg
+Dikirnis	EG	Africa/Cairo
+New Bedford	US	America/New_York
+Lāhījān	IR	Asia/Tehran
+Leuven	BE	Europe/Brussels
+Mezhdurechensk	RU	Asia/Novokuznetsk
+Bānswāra	IN	Asia/Kolkata
+Jolo	PH	Asia/Manila
+Novyye Cherëmushki	RU	Europe/Moscow
+Ryazanskiy	RU	Europe/Moscow
+Elbasan	AL	Europe/Tirane
+Pechersk	UA	Europe/Kyiv
+Ijok	MY	Asia/Kuala_Lumpur
+Vista	US	America/Los_Angeles
+Davie	US	America/New_York
+Errachidia	MA	Africa/Casablanca
+Twifu Praso	GH	Africa/Accra
+Red Deer	CA	America/Edmonton
+Solikamsk	RU	Asia/Yekaterinburg
+El Progreso	HN	America/Tegucigalpa
+Chirmiri	IN	Asia/Kolkata
+Barra do Piraí	BR	America/Sao_Paulo
+Chikusei	JP	Asia/Tokyo
+Sungailiat	ID	Asia/Jakarta
+Arezzo	IT	Europe/Rome
+Újpest	HU	Europe/Budapest
+Calasiao	PH	Asia/Manila
+Glazov	RU	Europe/Samara
+Rosarito	MX	America/Tijuana
+Ahar	IR	Asia/Tehran
+Kallithéa	GR	Europe/Athens
+Juan Díaz	PA	America/Panama
+Yên Bái	VN	Asia/Bangkok
+Grogol	ID	Asia/Jakarta
+Nāḩiyat al Iskandarīyah	IQ	Asia/Baghdad
+Puerto Barrios	GT	America/Guatemala
+Bakwa	CD	Africa/Lubumbashi
+Chinatown	US	America/Los_Angeles
+Itārsi	IN	Asia/Kolkata
+Votuporanga	BR	America/Sao_Paulo
+Si Maha Phot	TH	Asia/Bangkok
+Hà Tiên	VN	Asia/Ho_Chi_Minh
+Oleksiyivka	UA	Europe/Kyiv
+Los Rastrojos	VE	America/Caracas
+Masjed Soleymān	IR	Asia/Tehran
+Vasco da Gama	IN	Asia/Kolkata
+Torbat-e Jām	IR	Asia/Tehran
+Thākurgaon	BD	Asia/Dhaka
+Barakaldo	ES	Europe/Madrid
+Oleksandrivskyi	UA	Europe/Kyiv
+Ermelo	ZA	Africa/Johannesburg
+Klagenfurt am Wörthersee	AT	Europe/Vienna	Klagenfurt am Woerthersee
+Linxi	CN	Asia/Shanghai
+Tiébo	SN	Africa/Dakar
+Gangtok	IN	Asia/Kolkata
+Datia	IN	Asia/Kolkata
+Sakado	JP	Asia/Tokyo
+Sakata	JP	Asia/Tokyo
+Ust’-Ilimsk	RU	Asia/Irkutsk
+Girona	ES	Europe/Madrid
+Renton	US	America/Los_Angeles
+Chust	UZ	Asia/Tashkent
+Kalmunai	LK	Asia/Colombo
+Udine	IT	Europe/Rome
+Xinzhai	CN	Asia/Shanghai
+Phagwāra	IN	Asia/Kolkata
+Izumisano	JP	Asia/Tokyo
+Trier	DE	Europe/Berlin
+Ginowan	JP	Asia/Tokyo
+Inda Silasē	ET	Africa/Addis_Ababa
+Negara	ID	Asia/Makassar
+Caçapava	BR	America/Sao_Paulo
+Qaşr Bin Ghashīr	LY	Africa/Tripoli
+Renala Khurd	PK	Asia/Karachi
+Punta Cana	DO	America/Santo_Domingo
+Roanoke	US	America/New_York
+Airoli	IN	Asia/Kolkata
+Alamar	CU	America/Havana
+Alasia	NG	Africa/Lagos
+Bandar Mahkota Cheras	MY	Asia/Kuala_Lumpur
+Becontree	GB	Europe/London
+Colonia Lindavista	MX	America/Mexico_City
+Jaffa	IL	Asia/Jerusalem
+Kangding	CN	Asia/Shanghai
+Model Town	PK	Asia/Karachi
+Nyagatare	RW	Africa/Kigali
+P’yŏngsŏng	KP	Asia/Pyongyang
+Raja Jang	PK	Asia/Karachi
+Sabt Alalayah	SA	Asia/Riyadh
+Sakiet ez Zit	TN	Africa/Tunis
+Sentul	MY	Asia/Kuala_Lumpur
+Seri Manjung	MY	Asia/Kuala_Lumpur
+Shahrak-e Pardīsān	IR	Asia/Tehran
+Sino-Singapore Tianjin Eco-city	CN	Asia/Shanghai
+Subotica	RS	Europe/Belgrade
+Suifenhe	CN	Asia/Shanghai
+Sumedang Utara	ID	Asia/Jakarta
+Tekstil’shchiki	RU	Europe/Moscow
+Tājūrā’	LY	Africa/Tripoli
+Yanjia	CN	Asia/Shanghai
+Thimphu	BT	Asia/Thimphu
+Bridgetown	BB	America/Barbados
+Nouméa	NC	Pacific/Noumea
+Fort-de-France	MQ	America/Martinique
+Suva	FJ	Pacific/Fiji
+Luxembourg	LU	Europe/Luxembourg
+Mbabane	SZ	Africa/Mbabane
+Moroni	KM	Indian/Comoro
+Gitega	BI	Africa/Bujumbura
+Bandar Seri Begawan	BN	Asia/Brunei
+Cayenne	GF	America/Cayenne
+Kuwait City	KW	Asia/Kuwait
+Honiara	SB	Pacific/Guadalcanal
+Mamoudzou	YT	Indian/Mayotte
+São Tomé	ST	Africa/Sao_Tome
+Saint John’s	AG	America/Antigua
+Port of Spain	TT	America/Port_of_Spain
+Saipan	MP	Pacific/Saipan
+Apia	WS	Pacific/Apia
+Tarawa	KI	Pacific/Tarawa
+Banjul	GM	Africa/Banjul
+Port-Vila	VU	Pacific/Efate
+Monaco	MC	Europe/Monaco
+Oranjestad	AW	America/Aruba
+Saint Helier	JE	Europe/Jersey
+Gibraltar	GI	Europe/Gibraltar
+Papeete	PF	Pacific/Tahiti
+Douglas	IM	Europe/Isle_of_Man
+Majuro	MH	Pacific/Majuro
+Kingstown	VC	America/St_Vincent
+Nuku‘alofa	TO	Pacific/Tongatapu
+Andorra la Vella	AD	Europe/Andorra
+Castries	LC	America/St_Lucia
+Charlotte Amalie	VI	America/St_Thomas
+Roseau	DM	America/Dominica
+Saint Peter Port	GG	Europe/Guernsey
+Nuuk	GL	America/Nuuk
+Belmopan	BZ	America/Belize
+Avarua	CK	Pacific/Rarotonga
+Tórshavn	FO	Atlantic/Faroe
+Basseterre	KN	America/St_Kitts
+Pago Pago	AS	Pacific/Pago_Pago
+Basse-Terre	GP	America/Guadeloupe
+Mariehamn	AX	Europe/Mariehamn
+Kralendijk	BQ	America/Kralendijk
+Road Town	VG	America/Tortola
+Saint George's	GD	America/Grenada
+Palikir	FM	Pacific/Pohnpei
+Valletta	MT	Europe/Malta
+Funafuti	TV	Pacific/Funafuti
+Saint-Pierre	PM	America/Miquelon
+Gustavia	BL	America/St_Barthelemy
+Marigot	MF	America/Marigot
+Vaduz	LI	Europe/Vaduz
+San Marino	SM	Europe/San_Marino
+Cockburn Town	TC	America/Grand_Turk
+Longyearbyen	SJ	Arctic/Longyearbyen
+Stanley	FK	Atlantic/Stanley
+The Valley	AI	America/Anguilla
+Ciudad de la Paz	GQ	Africa/Malabo
+Philipsburg	SX	America/Lower_Princes
+Flying Fish Cove	CX	Indian/Christmas
+Mata-Utu	WF	Pacific/Wallis
+Yaren	NR	Pacific/Nauru
+Hagåtña	GU	Pacific/Guam
+Vatican City	VA	Europe/Vatican
+Jamestown	SH	Atlantic/St_Helena
+Alofi	NU	Pacific/Niue
+West Island	CC	Indian/Cocos
+Adamstown	PN	Pacific/Pitcairn
+Port-aux-Français	TF	Indian/Kerguelen
+Grytviken	GS	Atlantic/South_Georgia
+Ngerulmud	PW	Pacific/Palau
+@AD	Europe/Andorra
+@AE	Asia/Dubai
+@AF	Asia/Kabul
+@AG	America/Antigua
+@AI	America/Anguilla
+@AL	Europe/Tirane
+@AM	Asia/Yerevan
+@AO	Africa/Luanda
+@AS	Pacific/Pago_Pago
+@AT	Europe/Vienna
+@AW	America/Aruba
+@AX	Europe/Mariehamn
+@AZ	Asia/Baku
+@BA	Europe/Sarajevo
+@BB	America/Barbados
+@BD	Asia/Dhaka
+@BE	Europe/Brussels
+@BF	Africa/Ouagadougou
+@BG	Europe/Sofia
+@BH	Asia/Bahrain
+@BI	Africa/Bujumbura
+@BJ	Africa/Porto-Novo
+@BL	America/St_Barthelemy
+@BM	Atlantic/Bermuda
+@BN	Asia/Brunei
+@BO	America/La_Paz
+@BQ	America/Kralendijk
+@BS	America/Nassau
+@BT	Asia/Thimphu
+@BW	Africa/Gaborone
+@BY	Europe/Minsk
+@BZ	America/Belize
+@CC	Indian/Cocos
+@CF	Africa/Bangui
+@CG	Africa/Brazzaville
+@CH	Europe/Zurich
+@CI	Africa/Abidjan
+@CK	Pacific/Rarotonga
+@CL	America/Santiago
+@CM	Africa/Douala
+@CN	Asia/Shanghai
+@CO	America/Bogota
+@CR	America/Costa_Rica
+@CU	America/Havana
+@CV	Atlantic/Cape_Verde
+@CW	America/Curacao
+@CX	Indian/Christmas
+@CZ	Europe/Prague
+@DE	Europe/Berlin
+@DJ	Africa/Djibouti
+@DK	Europe/Copenhagen
+@DM	America/Dominica
+@DO	America/Santo_Domingo
+@DZ	Africa/Algiers
+@EC	America/Guayaquil
+@EE	Europe/Tallinn
+@EG	Africa/Cairo
+@EH	Africa/El_Aaiun
+@ER	Africa/Asmara
+@ES	Europe/Madrid
+@ET	Africa/Addis_Ababa
+@FI	Europe/Helsinki
+@FJ	Pacific/Fiji
+@FK	Atlantic/Stanley
+@FM	Pacific/Pohnpei
+@FO	Atlantic/Faroe
+@FR	Europe/Paris
+@GA	Africa/Libreville
+@GB	Europe/London
+@GD	America/Grenada
+@GE	Asia/Tbilisi
+@GF	America/Cayenne
+@GG	Europe/Guernsey
+@GH	Africa/Accra
+@GI	Europe/Gibraltar
+@GL	America/Nuuk
+@GM	Africa/Banjul
+@GN	Africa/Conakry
+@GP	America/Guadeloupe
+@GQ	Africa/Malabo
+@GR	Europe/Athens
+@GS	Atlantic/South_Georgia
+@GT	America/Guatemala
+@GU	Pacific/Guam
+@GW	Africa/Bissau
+@GY	America/Guyana
+@HK	Asia/Hong_Kong
+@HN	America/Tegucigalpa
+@HR	Europe/Zagreb
+@HT	America/Port-au-Prince
+@HU	Europe/Budapest
+@IE	Europe/Dublin
+@IL	Asia/Jerusalem
+@IM	Europe/Isle_of_Man
+@IN	Asia/Kolkata
+@IQ	Asia/Baghdad
+@IR	Asia/Tehran
+@IS	Atlantic/Reykjavik
+@IT	Europe/Rome
+@JE	Europe/Jersey
+@JM	America/Jamaica
+@JO	Asia/Amman
+@JP	Asia/Tokyo
+@KE	Africa/Nairobi
+@KG	Asia/Bishkek
+@KH	Asia/Phnom_Penh
+@KI	Pacific/Tarawa
+@KM	Indian/Comoro
+@KN	America/St_Kitts
+@KP	Asia/Pyongyang
+@KR	Asia/Seoul
+@KW	Asia/Kuwait
+@KY	America/Cayman
+@LA	Asia/Vientiane
+@LB	Asia/Beirut
+@LC	America/St_Lucia
+@LI	Europe/Vaduz
+@LK	Asia/Colombo
+@LR	Africa/Monrovia
+@LS	Africa/Maseru
+@LT	Europe/Vilnius
+@LU	Europe/Luxembourg
+@LV	Europe/Riga
+@LY	Africa/Tripoli
+@MA	Africa/Casablanca
+@MC	Europe/Monaco
+@MD	Europe/Chisinau
+@ME	Europe/Podgorica
+@MF	America/Marigot
+@MG	Indian/Antananarivo
+@MH	Pacific/Majuro
+@MK	Europe/Skopje
+@ML	Africa/Bamako
+@MM	Asia/Yangon
+@MN	Asia/Ulaanbaatar
+@MO	Asia/Macau
+@MP	Pacific/Saipan
+@MQ	America/Martinique
+@MR	Africa/Nouakchott
+@MS	America/Montserrat
+@MT	Europe/Malta
+@MU	Indian/Mauritius
+@MV	Indian/Maldives
+@MW	Africa/Blantyre
+@MZ	Africa/Maputo
+@NA	Africa/Windhoek
+@NC	Pacific/Noumea
+@NE	Africa/Niamey
+@NF	Pacific/Norfolk
+@NG	Africa/Lagos
+@NI	America/Managua
+@NL	Europe/Amsterdam
+@NO	Europe/Oslo
+@NP	Asia/Kathmandu
+@NR	Pacific/Nauru
+@NU	Pacific/Niue
+@NZ	Pacific/Auckland
+@OM	Asia/Muscat
+@PA	America/Panama
+@PE	America/Lima
+@PF	Pacific/Tahiti
+@PG	Pacific/Port_Moresby
+@PH	Asia/Manila
+@PK	Asia/Karachi
+@PL	Europe/Warsaw
+@PM	America/Miquelon
+@PN	Pacific/Pitcairn
+@PR	America/Puerto_Rico
+@PT	Europe/Lisbon
+@PY	America/Asuncion
+@QA	Asia/Qatar
+@RE	Indian/Reunion
+@RO	Europe/Bucharest
+@RS	Europe/Belgrade
+@RW	Africa/Kigali
+@SA	Asia/Riyadh
+@SB	Pacific/Guadalcanal
+@SC	Indian/Mahe
+@SD	Africa/Khartoum
+@SE	Europe/Stockholm
+@SG	Asia/Singapore
+@SH	Atlantic/St_Helena
+@SI	Europe/Ljubljana
+@SJ	Arctic/Longyearbyen
+@SK	Europe/Bratislava
+@SL	Africa/Freetown
+@SM	Europe/San_Marino
+@SN	Africa/Dakar
+@SO	Africa/Mogadishu
+@SR	America/Paramaribo
+@SS	Africa/Juba
+@ST	Africa/Sao_Tome
+@SV	America/El_Salvador
+@SX	America/Lower_Princes
+@SY	Asia/Damascus
+@SZ	Africa/Mbabane
+@TC	America/Grand_Turk
+@TD	Africa/Ndjamena
+@TF	Indian/Kerguelen
+@TG	Africa/Lome
+@TH	Asia/Bangkok
+@TJ	Asia/Dushanbe
+@TL	Asia/Dili
+@TM	Asia/Ashgabat
+@TN	Africa/Tunis
+@TO	Pacific/Tongatapu
+@TR	Europe/Istanbul
+@TT	America/Port_of_Spain
+@TV	Pacific/Funafuti
+@TW	Asia/Taipei
+@TZ	Africa/Dar_es_Salaam
+@UA	Europe/Kyiv
+@UG	Africa/Kampala
+@UY	America/Montevideo
+@VA	Europe/Vatican
+@VC	America/St_Vincent
+@VE	America/Caracas
+@VG	America/Tortola
+@VI	America/St_Thomas
+@VU	Pacific/Efate
+@WF	Pacific/Wallis
+@WS	Pacific/Apia
+@XK	Europe/Belgrade
+@YE	Asia/Aden
+@YT	Indian/Mayotte
+@ZA	Africa/Johannesburg
+@ZM	Africa/Lusaka
+@ZW	Africa/Harare

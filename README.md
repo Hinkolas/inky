@@ -1,8 +1,8 @@
 # Inky
 
 A fast, open source launcher for macOS. Press a hotkey anywhere, type, and act:
-launch apps, open links with arguments, calculate and convert, find files, run
-system commands. No accounts, no subscriptions, no telemetry.
+launch apps, open links with arguments, calculate and convert, ask for the
+time somewhere, find files, run system commands. No accounts, no subscriptions, no telemetry.
 
 Inky is at an early stage. The core works and is meant to be built on.
 
@@ -12,6 +12,7 @@ Inky is at an early stage. The core works and is meant to be built on.
 - **Quicklinks**: named shortcuts to websites, folders and app links. Placeholders such as `{argument name="Query"}`, `{clipboard}` and `{selection}` are filled in when the link opens; arguments are typed right in the search bar. Websites show their own icon.
 - **Fallback commands**: every search can be sent on to a quicklink, such as a web search. They are listed below the results, and are all there is when nothing was found. Pick which quicklinks in Settings.
 - **Calculator**: type `128 * 3 + 4`, `20% off 80` or `sqrt(2) ^ 10`, press Return to copy the result. It converts units (`5 ft 10 in in cm`, `72 F to C`, `1 GiB in MB`), currencies (`100 usd in eur`) and number bases (`255 in hex`, `0xFF`).
+- **Time**: `time in tokyo`, `5pm london in berlin`, `time diff san francisco`, `monday in 3 weeks`, `days until 24 dec`.
 - **File search**: files and folders by name, from the Spotlight index.
 - **System commands**: lock, sleep, restart, shut down, log out, empty trash, toggle dark mode.
 
@@ -55,6 +56,7 @@ Requires macOS 15 or later and Xcode 26 or later.
 ```sh
 make run     # build and launch
 make test    # run the core tests
+make places  # rebuild the list of cities from GeoNames
 ```
 
 Or open `Inky.xcodeproj` in Xcode and run the `Inky` scheme.
@@ -83,10 +85,16 @@ are built from these, and extensions will describe the same parts as data.
 Your data lives in `~/Library/Application Support/Inky/` as readable JSON:
 `quicklinks.json` and `usage.json`.
 
-The calculator (`InkyCore/Sources/InkyCore/Calculator/`) is a lexer, a
-recursive descent parser and a table of units. A calculation becomes a number
-or an amount with a unit. A word or a number on its own is not answered, so a
-search stays a search.
+The calculator and the time provider share a lexer and the table of units
+(`InkyCore/Sources/InkyCore/Calculator/`). Each has a recursive descent parser
+of its own on top: a calculation becomes a number or an amount with a unit, a
+question about time becomes a moment or a day. Neither answers a word or a
+number on its own, so a search stays a search.
+
+The cities the time provider knows, in
+`InkyCore/Sources/InkyCore/Resources/places.tsv`, are from
+[GeoNames](https://www.geonames.org), licensed under
+[CC BY 4.0](https://creativecommons.org/licenses/by/4.0/).
 
 ### Development flags
 

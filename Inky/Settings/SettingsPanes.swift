@@ -235,6 +235,11 @@ struct ProviderPane: View {
                     "100 usd in eur", "255 in hex",
                 ])
                 ExchangeRateSettings(preferences: preferences, store: context.exchangeRates)
+            case "time":
+                Examples([
+                    "time in tokyo", "5pm london in berlin", "time diff san francisco",
+                    "monday in 3 weeks", "days until 24 dec",
+                ])
             case "files":
                 FileSearchSettings(context: context)
             case "quicklinks":

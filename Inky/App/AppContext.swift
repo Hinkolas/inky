@@ -52,6 +52,7 @@ final class AppContext {
                 SystemProvider(),
                 ApplicationProvider(),
                 CalculatorProvider(exchangeRates: exchangeRates),
+                TimeProvider(),
                 fileProvider,
             ],
             usage: UsageStore(fileURL: directory.appendingPathComponent("usage.json"))
