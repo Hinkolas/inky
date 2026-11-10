@@ -126,7 +126,7 @@ struct CircleButton: View {
     }
 }
 
-/// A capsule button on a surface. `isProminent` fills it with the accent color.
+/// A capsule button for the end of the bar. `isProminent` fills it with the accent color.
 struct CapsuleButton: View {
     let title: String
     var keys: [String] = []
@@ -137,13 +137,13 @@ struct CapsuleButton: View {
         Button(action: action) {
             HStack(spacing: 7) {
                 Text(title)
-                    .font(.system(size: 13.5, weight: .semibold))
+                    .font(.system(size: 14.5, weight: .semibold))
                     .foregroundStyle(isProminent ? AnyShapeStyle(Theme.onAccent) : AnyShapeStyle(.primary))
                 Keycap(keys, tone: isProminent ? .onAccent : .plain)
             }
-            .padding(.leading, 14)
-            .padding(.trailing, keys.isEmpty ? 14 : 8)
-            .frame(height: 32)
+            .padding(.leading, 16)
+            .padding(.trailing, keys.isEmpty ? 16 : 9)
+            .frame(height: LauncherMetrics.barControlSize)
             .background(isProminent ? AnyShapeStyle(Theme.accent) : AnyShapeStyle(Theme.controlFill), in: Capsule())
             .overlay {
                 if !isProminent { Capsule().strokeBorder(Theme.controlStroke) }

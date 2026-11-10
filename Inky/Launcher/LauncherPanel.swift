@@ -192,8 +192,8 @@ final class LauncherController: NSObject, NSWindowDelegate {
     }
     #endif
 
-    /// On the screen the pointer is on, with the search bar a little under a
-    /// quarter of the way down.
+    /// On the screen the pointer is on, with the bar a little under a quarter
+    /// of the way down.
     private func position() {
         let pointer = NSEvent.mouseLocation
         let screen = NSScreen.screens.first { $0.frame.contains(pointer) } ?? NSScreen.main
@@ -201,8 +201,8 @@ final class LauncherController: NSObject, NSWindowDelegate {
 
         let canvas = LauncherMetrics.canvas
         let margin = LauncherMetrics.margin
-        // The top of the content, where a command's header goes.
-        var top = area.maxY - area.height * 0.24 + LauncherMetrics.searchDrop
+        // The top of the bar.
+        var top = area.maxY - area.height * 0.24
         // On a small screen, move up until the tallest command fits.
         top = max(top, area.minY + 12 + LauncherMetrics.maxContentSize.height)
         top = min(top, area.maxY - 8)

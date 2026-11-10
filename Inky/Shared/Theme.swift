@@ -3,11 +3,20 @@ import SwiftUI
 
 /// The launcher's measurements. Everything floats on a transparent canvas: a
 /// bar on top, and below it, unconnected, whatever the bar is showing.
+///
+/// The search bar and a command's header are the same bar in the same place:
+/// opening a command turns one into the other.
 enum LauncherMetrics {
-    static let barHeight: CGFloat = 48
+    static let barHeight: CGFloat = 56
+    /// Round buttons inside the bar, and the icon of a command.
+    static let barControlSize: CGFloat = 36
+    /// Between the bar's edge and the controls at its ends.
+    static let barInset: CGFloat = (barHeight - barControlSize) / 2
+    /// What is typed into the bar.
+    static let barFontSize: CGFloat = 20
     /// Between the bar and the card below it, and between the back button and the bar.
     static let gap: CGFloat = 10
-    static let searchWidth: CGFloat = 680
+    static let searchWidth: CGFloat = 720
     static let cardRadius: CGFloat = 26
     /// Sidebars and side panels sit inside a card, this far from its edge.
     static let panelInset: CGFloat = 10
@@ -17,12 +26,10 @@ enum LauncherMetrics {
     static let sectionHeaderHeight: CGFloat = 30
     static let listMaxHeight: CGFloat = 420
 
-    /// How much lower the search bar sits than a command's header. A command
-    /// needs the room below; the search bar looks better near eye level.
-    static let searchDrop: CGFloat = 68
     /// Room around the content for shadows.
     static let margin = NSEdgeInsets(top: 40, left: 60, bottom: 94, right: 60)
-    static let maxContentSize = NSSize(width: 940, height: 626)
+    /// The largest command: its bar, the gap and its body card.
+    static let maxContentSize = NSSize(width: 940, height: barHeight + gap + 500)
     static let canvas = NSSize(
         width: maxContentSize.width + margin.left + margin.right,
         height: maxContentSize.height + margin.top + margin.bottom

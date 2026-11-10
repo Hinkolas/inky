@@ -35,7 +35,7 @@ struct LauncherView: View {
                     .contentShape(Rectangle())
                     .onTapGesture {}
             }
-            .padding(.top, LauncherMetrics.margin.top + (model.route == nil ? LauncherMetrics.searchDrop : 0))
+            .padding(.top, LauncherMetrics.margin.top)
         }
         .frame(width: LauncherMetrics.canvas.width, height: LauncherMetrics.canvas.height)
     }
@@ -68,16 +68,16 @@ private struct SearchBar: View {
     @FocusState private var focus: LauncherModel.FocusTarget?
 
     private static let placeholder = "Search apps, commands and files"
-    private static let fontSize: CGFloat = 17
+    private static let fontSize = LauncherMetrics.barFontSize
 
     var body: some View {
         let arguments = model.selectedItem?.arguments ?? []
 
         HStack(spacing: 10) {
             Image(systemName: "magnifyingglass")
-                .font(.system(size: 15, weight: .semibold))
+                .font(.system(size: 18, weight: .semibold))
                 .foregroundStyle(.primary.opacity(0.75))
-                .frame(width: 20)
+                .frame(width: 24)
 
             TextField(Self.placeholder, text: Binding(get: { model.query }, set: model.setQuery))
                 .textFieldStyle(.plain)
@@ -111,19 +111,19 @@ private struct SearchBar: View {
                     Image(systemName: "xmark")
                         .font(.system(size: 9, weight: .heavy))
                         .foregroundStyle(.primary.opacity(0.7))
-                        .frame(width: 22, height: 22)
+                        .frame(width: 24, height: 24)
                         .background(Theme.subtleFill, in: Circle())
                 }
                 .buttonStyle(PressableButtonStyle())
                 .help("Clear (esc)")
             }
 
-            CircleButton(symbol: "ellipsis", help: "Actions (⌘K)") {
+            CircleButton(symbol: "ellipsis", size: LauncherMetrics.barControlSize, help: "Actions (⌘K)") {
                 model.toggleActionMenu()
             }
         }
-        .padding(.leading, 17)
-        .padding(.trailing, 8)
+        .padding(.leading, 19)
+        .padding(.trailing, LauncherMetrics.barInset)
         .frame(height: LauncherMetrics.barHeight)
         .glassSurface(cornerRadius: nil)
         .onChange(of: model.focusTick, initial: true) {
@@ -136,7 +136,7 @@ private struct SearchBar: View {
 
     private var queryWidth: CGFloat {
         let text = model.query.isEmpty ? Self.placeholder : model.query
-        return min(340, textWidth(text, size: Self.fontSize) + 6)
+        return min(360, textWidth(text, size: Self.fontSize) + 6)
     }
 }
 
@@ -146,7 +146,7 @@ private struct ArgumentField: View {
     @Binding var text: String
     let isFocused: Bool
 
-    private static let fontSize: CGFloat = 14
+    private static let fontSize: CGFloat = 15
 
     var body: some View {
         let placeholder = hint ?? name
@@ -154,8 +154,8 @@ private struct ArgumentField: View {
             .textFieldStyle(.plain)
             .font(.system(size: Self.fontSize))
             .frame(width: min(200, max(64, textWidth(text.isEmpty ? placeholder : text, size: Self.fontSize) + 6)))
-            .padding(.horizontal, 11)
-            .frame(height: 30)
+            .padding(.horizontal, 12)
+            .frame(height: 34)
             .background(Theme.fieldFill, in: Capsule())
             .overlay {
                 Capsule().strokeBorder(

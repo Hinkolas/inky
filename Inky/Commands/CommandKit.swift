@@ -61,20 +61,20 @@ struct CommandScreen<Header: View, Accessory: View, Content: View>: View {
             HStack(spacing: LauncherMetrics.gap) {
                 Button(action: onBack) {
                     Image(systemName: "chevron.left")
-                        .font(.system(size: 13, weight: .bold))
+                        .font(.system(size: 15, weight: .bold))
                         .frame(width: LauncherMetrics.barHeight, height: LauncherMetrics.barHeight)
                         .glassSurface(cornerRadius: nil)
                 }
                 .buttonStyle(PressableButtonStyle())
                 .help("Back (esc)")
 
-                HStack(spacing: 10) {
-                    IconView(icon: icon, size: 30, shape: .circle)
+                HStack(spacing: 11) {
+                    IconView(icon: icon, size: LauncherMetrics.barControlSize, shape: .circle)
                     Breadcrumb(path: path)
                     if Header.self != EmptyView.self {
                         Rectangle()
                             .fill(Theme.separator)
-                            .frame(width: 1, height: 22)
+                            .frame(width: 1, height: 24)
                             .padding(.horizontal, 2)
                         header.layoutPriority(1)
                     }
@@ -83,8 +83,7 @@ struct CommandScreen<Header: View, Accessory: View, Content: View>: View {
                         .fixedSize()
                         .layoutPriority(2)
                 }
-                .padding(.leading, 9)
-                .padding(.trailing, 8)
+                .padding(.horizontal, LauncherMetrics.barInset)
                 .frame(height: LauncherMetrics.barHeight)
                 .glassSurface(cornerRadius: nil)
             }
@@ -118,12 +117,12 @@ private struct Breadcrumb: View {
             ForEach(Array(path.enumerated()), id: \.offset) { index, title in
                 let isLast = index == path.count - 1
                 Text(title)
-                    .font(.system(size: 15, weight: isLast ? .semibold : .regular))
+                    .font(.system(size: 17, weight: isLast ? .semibold : .regular))
                     .foregroundStyle(isLast ? .primary : .secondary)
                     .lineLimit(1)
                 if !isLast {
                     Image(systemName: "chevron.right")
-                        .font(.system(size: 9, weight: .bold))
+                        .font(.system(size: 10, weight: .bold))
                         .foregroundStyle(.tertiary)
                 }
             }
@@ -141,7 +140,7 @@ struct FilterField: View {
     var body: some View {
         TextField(prompt, text: $text)
             .textFieldStyle(.plain)
-            .font(.system(size: 16))
+            .font(.system(size: LauncherMetrics.barFontSize))
             .focused(focus)
             .frame(maxWidth: .infinity)
     }
