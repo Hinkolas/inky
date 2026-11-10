@@ -408,6 +408,26 @@ private struct ResultsList: View {
         .transaction { $0.animation = nil }
     }
 
+    /// A section title or a result, in the order they are shown.
+    enum Line: Identifiable {
+        case header(String)
+        case item(ResultItem)
+
+        /// A result's own id, so `scrollTo` finds it by that.
+        var id: String {
+            switch self {
+            case .header(let title): "inky.section.\(title)"
+            case .item(let item): item.id
+            }
+        }
+    }
+
+    static func lines(for sections: [ResultSection]) -> [Line] {
+        sections.flatMap { section in
+            [.header(section.title)] + section.items.map(Line.item)
+        }
+    }
+
     /// Known from the data, so the card can be exactly as tall as its rows.
     static func height(for sections: [ResultSection]) -> CGFloat {
         guard !sections.isEmpty else { return emptyHeight }
@@ -422,17 +442,21 @@ private struct ResultsList: View {
             ScrollView {
                 LazyVStack(alignment: .leading, spacing: 0) {
                     Color.clear.frame(height: 0).id(Self.top)
-                    ForEach(model.sections) { section in
-                        PanelLabel(section.title)
-                            .padding(.horizontal, 18)
-                            .padding(.top, 5)
-                            .frame(height: LauncherMetrics.sectionHeaderHeight)
-
-                        ForEach(section.items) { item in
+                    // One flat list rather than a ForEach per section. A row
+                    // that moved into another section, such as into the top
+                    // hit as the query grew, otherwise kept its old look and
+                    // was not drawn as selected.
+                    ForEach(Self.lines(for: model.sections)) { line in
+                        switch line {
+                        case .header(let title):
+                            PanelLabel(title)
+                                .padding(.horizontal, 18)
+                                .padding(.top, 5)
+                                .frame(height: LauncherMetrics.sectionHeaderHeight)
+                        case .item(let item):
                             let isSelected = item.id == model.selectedID
                             ResultRow(item: item, isSelected: isSelected, primaryAction: isSelected ? item.actions.first?.title : nil)
                                 .frame(height: Self.rowSlot)
-                                .id(item.id)
                                 .onTapGesture(count: 2) {
                                     model.select(item.id)
                                     model.runPrimaryAction()
