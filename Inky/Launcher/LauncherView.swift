@@ -380,10 +380,13 @@ private struct ArgumentField: View {
                 // Only the outline pops in. A field that takes the keyboard
                 // while it is being scaled keeps its text where it was at
                 // that moment, a point or two off, so the field stays put.
-                Capsule()
+                // Round ends, not the smooth ones a capsule has unasked. Those
+                // start to turn well before the end, which bends the long
+                // sides by a pixel and shows as a step in the focus ring.
+                Capsule(style: .circular)
                     .fill(Theme.fieldFill)
                     .overlay {
-                        Capsule().strokeBorder(
+                        Capsule(style: .circular).strokeBorder(
                             isFocused ? AnyShapeStyle(Theme.accent) : AnyShapeStyle(Theme.fieldStroke),
                             lineWidth: isFocused ? 1.5 : 1
                         )
