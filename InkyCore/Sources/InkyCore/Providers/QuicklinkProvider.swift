@@ -31,19 +31,47 @@ public final class QuicklinkProvider: Provider {
                 icon: Self.icon(for: template),
                 kind: "Quicklink",
                 arguments: template.arguments,
-                actions: [
-                    Action("Open Quicklink", symbol: "arrow.up.forward", usesArguments: true) { context in
-                        try QuicklinkOpener.open(quicklink, context: context)
-                    },
-                    Action("Copy Link", symbol: "doc.on.doc", usesArguments: true) { context in
-                        Pasteboard.copy(QuicklinkOpener.resolve(quicklink, context: context))
-                    },
-                    Action("Edit Quicklink", symbol: "pencil", shortcut: KeyShortcut("e"), behavior: .keepOpen) { [weak self] _ in
-                        self?.onEdit?(quicklink)
-                    },
-                ]
+                actions: actions(for: quicklink) { $0 }
             )
         }
+    }
+
+    /// The same quicklinks as in `candidates`, but these take what was typed
+    /// as their argument instead of asking for one.
+    public func fallbackResults(for query: String) -> [ResultItem] {
+        store.fallbacks.map { quicklink in
+            ResultItem(
+                // Not the id it has as a candidate: both can be listed at once.
+                id: "fallback:\(quicklink.id.uuidString)",
+                title: quicklink.name,
+                subtitle: Self.summary(of: quicklink.link),
+                icon: Self.icon(for: quicklink.template),
+                kind: "Quicklink",
+                actions: actions(for: quicklink) { context in
+                    var context = context
+                    context.arguments = [context.query.trimmingCharacters(in: .whitespaces)]
+                    return context
+                }
+            )
+        }
+    }
+
+    /// `context` turns what the launcher knows into what the link is filled in from.
+    private func actions(
+        for quicklink: Quicklink,
+        context: @escaping @Sendable (ActionContext) -> ActionContext
+    ) -> [Action] {
+        [
+            Action("Open Quicklink", symbol: "arrow.up.forward", usesArguments: true) {
+                try QuicklinkOpener.open(quicklink, context: context($0))
+            },
+            Action("Copy Link", symbol: "doc.on.doc", usesArguments: true) {
+                Pasteboard.copy(QuicklinkOpener.resolve(quicklink, context: context($0)))
+            },
+            Action("Edit Quicklink", symbol: "pencil", shortcut: KeyShortcut("e"), behavior: .keepOpen) { [weak self] _ in
+                self?.onEdit?(quicklink)
+            },
+        ]
     }
 
     /// Folders show their own icon; everything else gets the link tile.

@@ -28,6 +28,7 @@ final class LauncherModel {
     @ObservationIgnored let quicklinks: QuicklinkStore
     @ObservationIgnored var dismiss: () -> Void = {}
     @ObservationIgnored var openSettings: () -> Void = {}
+    @ObservationIgnored var configureFallbacks: () -> Void = {}
     @ObservationIgnored var isVisible: () -> Bool = { false }
     @ObservationIgnored private var frontmostPID: pid_t?
     @ObservationIgnored private var deferredSearch: Task<Void, Never>?
@@ -78,6 +79,8 @@ final class LauncherModel {
 
     /// The first selectable item, which the list scrolls fully to the top for.
     var firstItemID: String? { sections.first?.items.first?.id }
+    /// The last one, which it scrolls fully to the end for.
+    var lastItemID: String? { sections.last?.items.last?.id }
 
     // MARK: - Lifecycle
 
@@ -129,7 +132,9 @@ final class LauncherModel {
 
         let query = query
         let immediate = engine.results(for: query)
-        apply(immediate, resetSelection: resetSelection)
+        // Last, below whatever was found or is still to come.
+        let fallbacks = engine.fallbacks(for: query).map { [$0] } ?? []
+        apply(immediate + fallbacks, resetSelection: resetSelection)
 
         guard !query.trimmingCharacters(in: .whitespaces).isEmpty else { return }
         deferredSearch = Task { [weak self] in
@@ -138,7 +143,10 @@ final class LauncherModel {
             guard let self, !Task.isCancelled else { return }
             let deferred = await engine.deferredResults(for: query)
             guard !Task.isCancelled, query == self.query, !deferred.isEmpty else { return }
-            apply(immediate + deferred, resetSelection: false)
+            // A fallback that was selected only because nothing had been
+            // found yet gives way to what has been found now.
+            let wasOnlyChoice = immediate.isEmpty && selectedID == fallbacks.first?.items.first?.id
+            apply(immediate + deferred + fallbacks, resetSelection: wasOnlyChoice)
         }
     }
 
@@ -278,6 +286,9 @@ final class LauncherModel {
                 self?.browse()
             })
         }
+        general.append(CommandAction(title: "Configure Fallback Commands", symbol: ResultsFooter.symbol) { [weak self] in
+            self?.configureFallbacks()
+        })
         general.append(CommandAction(title: "Inky Settings", symbol: "gearshape", shortcut: KeyShortcut(",")) { [weak self] in
             self?.openSettings()
         })

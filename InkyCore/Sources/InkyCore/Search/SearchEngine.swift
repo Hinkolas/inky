@@ -137,6 +137,24 @@ public final class SearchEngine {
         return sections
     }
 
+    /// Ways to take the query elsewhere, to be listed below everything else.
+    public func fallbacks(for query: String) -> ResultSection? {
+        let query = query.trimmingCharacters(in: .whitespaces)
+        guard !query.isEmpty else { return nil }
+
+        let items = enabledProviders.flatMap { $0.fallbackResults(for: query) }
+        return items.isEmpty ? nil : ResultSection(title: Self.fallbackTitle(for: query), items: items)
+    }
+
+    /// A long query is cut short, so the title still says what the section is.
+    static func fallbackTitle(for query: String) -> String {
+        let limit = 40
+        let shown = query.count > limit
+            ? query.prefix(limit).trimmingCharacters(in: .whitespaces) + "…"
+            : query
+        return "Use “\(shown)” with"
+    }
+
     public func recordUse(of item: ResultItem, query: String) {
         usage.record(item.id, query: query)
     }

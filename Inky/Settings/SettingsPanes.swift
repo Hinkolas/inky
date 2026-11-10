@@ -187,6 +187,7 @@ struct ProviderPane: View {
                 FileSearchSettings(context: context)
             case "quicklinks":
                 QuicklinkSettings(store: context.quicklinks)
+                FallbackSettings(store: context.quicklinks)
             default:
                 EmptyView()
             }
@@ -254,6 +255,57 @@ private struct QuicklinkSettings: View {
         }
         .sheet(item: $draft) { draft in
             QuicklinkSheet(draft: draft) { store.save(draft.quicklink) }
+        }
+    }
+}
+
+/// Which quicklinks the launcher offers to send a search to, and in what order.
+private struct FallbackSettings: View {
+    let store: QuicklinkStore
+
+    /// The same quicklinks are rows of the section above. A form tells its
+    /// rows apart by id across sections, so these need ids of their own.
+    private struct Row: Identifiable {
+        let index: Int
+        let quicklink: Quicklink
+
+        var id: String { "fallback:\(quicklink.id.uuidString)" }
+    }
+
+    var body: some View {
+        let candidates = store.fallbackCandidates
+        Section {
+            if candidates.isEmpty {
+                Text("None of your quicklinks asks for exactly one argument.")
+                    .foregroundStyle(.secondary)
+            }
+            ForEach(candidates.enumerated().map(Row.init)) { row in
+                let (index, quicklink) = (row.index, row.quicklink)
+                HStack(spacing: 10) {
+                    Text(quicklink.name)
+                    Spacer()
+                    Button("Move Up", systemImage: "chevron.up") {
+                        store.moveFallbackCandidate(quicklink.id, by: -1)
+                    }
+                    .disabled(index == 0)
+                    .help("Offer \(quicklink.name) earlier")
+                    Button("Move Down", systemImage: "chevron.down") {
+                        store.moveFallbackCandidate(quicklink.id, by: 1)
+                    }
+                    .disabled(index == candidates.count - 1)
+                    .help("Offer \(quicklink.name) later")
+                    Toggle("Use \(quicklink.name) as a fallback", isOn: Binding(
+                        get: { quicklink.isFallback },
+                        set: { store.setFallback(quicklink.id, $0) }
+                    ))
+                    .labelsHidden()
+                }
+                .labelStyle(.iconOnly)
+            }
+        } header: {
+            Text("Fallback commands")
+        } footer: {
+            Text("Listed below the results of every search, with what you typed as their argument. When nothing was found, Return runs the first one. Any quicklink with exactly one argument can be a fallback.")
         }
     }
 }

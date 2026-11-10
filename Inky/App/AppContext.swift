@@ -39,6 +39,7 @@ final class AppContext {
 
         launcher = LauncherController(engine: engine, quicklinks: quicklinks)
         launcher.model.openSettings = { [unowned self] in showSettings() }
+        launcher.model.configureFallbacks = { [unowned self] in showSettings(pane: quicklinkProvider.id) }
 
         commands.openSettings = { [unowned self] in showSettings() }
         commands.createQuicklink = { [unowned self] in launcher.model.editQuicklink(nil) }

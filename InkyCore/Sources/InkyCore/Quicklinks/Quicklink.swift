@@ -8,15 +8,43 @@ public struct Quicklink: Codable, Identifiable, Sendable, Hashable {
     public var link: String
     /// Bundle identifier of the app to open the link with. Nil uses the default app.
     public var openWith: String?
+    /// Whether the launcher offers to send any search to this quicklink.
+    /// Only counts while `canBeFallback`.
+    public var isFallback: Bool
 
-    public init(id: UUID = UUID(), name: String, link: String, openWith: String? = nil) {
+    public init(id: UUID = UUID(), name: String, link: String, openWith: String? = nil, isFallback: Bool = false) {
         self.id = id
         self.name = name
         self.link = link
         self.openWith = openWith
+        self.isFallback = isFallback
+    }
+
+    public init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        id = try container.decode(UUID.self, forKey: .id)
+        name = try container.decode(String.self, forKey: .name)
+        let link = try container.decode(String.self, forKey: .link)
+        self.link = link
+        openWith = try container.decodeIfPresent(String.self, forKey: .openWith)
+        // Files from before fallbacks existed say nothing. There, the searches
+        // Inky came with are fallbacks, as they are on a new install.
+        isFallback = try container.decodeIfPresent(Bool.self, forKey: .isFallback)
+            ?? Self.starters.contains { $0.isFallback && $0.link == link }
     }
 
     public var template: LinkTemplate { LinkTemplate(link) }
+
+    /// A fallback gets the search as its argument, so it must ask for exactly one.
+    public var canBeFallback: Bool { template.arguments.count == 1 }
+
+    /// What a new install starts with, so the features are discoverable.
+    static let starters = [
+        Quicklink(name: "Search DuckDuckGo", link: "https://duckduckgo.com/?q={argument name=\"Query\"}", isFallback: true),
+        Quicklink(name: "Search GitHub", link: "https://github.com/search?q={argument name=\"Query\"}", isFallback: true),
+        Quicklink(name: "Search Wikipedia", link: "https://en.wikipedia.org/w/index.php?search={argument name=\"Query\"}", isFallback: true),
+        Quicklink(name: "Downloads", link: "~/Downloads"),
+    ]
 
     public enum Kind: Sendable, Hashable, CaseIterable {
         case website, file, appLink
@@ -47,7 +75,7 @@ public final class QuicklinkStore {
         if let data = try? Data(contentsOf: fileURL) {
             quicklinks = (try? JSONDecoder().decode([Quicklink].self, from: data)) ?? []
         } else {
-            quicklinks = Self.starters
+            quicklinks = Quicklink.starters
             write()
         }
     }
@@ -67,13 +95,41 @@ public final class QuicklinkStore {
         didChange()
     }
 
-    /// Written on first launch so the feature is discoverable.
-    private static let starters = [
-        Quicklink(name: "Search DuckDuckGo", link: "https://duckduckgo.com/?q={argument name=\"Query\"}"),
-        Quicklink(name: "Search GitHub", link: "https://github.com/search?q={argument name=\"Query\"}"),
-        Quicklink(name: "Search Wikipedia", link: "https://en.wikipedia.org/w/index.php?search={argument name=\"Query\"}"),
-        Quicklink(name: "Downloads", link: "~/Downloads"),
-    ]
+    // MARK: - Fallbacks
+
+    /// The quicklinks that could be fallbacks, in the order they are offered.
+    public var fallbackCandidates: [Quicklink] {
+        quicklinks.filter(\.canBeFallback)
+    }
+
+    /// The quicklinks the launcher offers to send a search to, first choice first.
+    public var fallbacks: [Quicklink] {
+        fallbackCandidates.filter(\.isFallback)
+    }
+
+    public func setFallback(_ id: UUID, _ isFallback: Bool) {
+        guard let index = quicklinks.firstIndex(where: { $0.id == id }),
+              quicklinks[index].isFallback != isFallback
+        else { return }
+        quicklinks[index].isFallback = isFallback
+        didChange()
+    }
+
+    /// Moves a quicklink up (negative) or down among `fallbackCandidates`.
+    public func moveFallbackCandidate(_ id: UUID, by offset: Int) {
+        // The candidates trade places with each other; the quicklinks between
+        // them stay where they are.
+        let slots = quicklinks.indices.filter { quicklinks[$0].canBeFallback }
+        guard let position = slots.firstIndex(where: { quicklinks[$0].id == id }),
+              slots.indices.contains(position + offset), offset != 0
+        else { return }
+        var candidates = slots.map { quicklinks[$0] }
+        candidates.insert(candidates.remove(at: position), at: position + offset)
+        for (slot, quicklink) in zip(slots, candidates) {
+            quicklinks[slot] = quicklink
+        }
+        didChange()
+    }
 
     private func didChange() {
         write()

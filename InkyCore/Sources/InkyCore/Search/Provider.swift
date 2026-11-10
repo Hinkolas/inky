@@ -16,7 +16,7 @@ public struct ProviderInfo: Sendable {
 ///
 /// This is the contract every built-in feature is written against, and the one
 /// scripted extensions will be hosted behind. A provider contributes results in
-/// up to three ways, and implements only the ones it needs:
+/// up to four ways, and implements only the ones it needs:
 ///
 /// - `candidates` are indexed by the engine, which matches and ranks them
 ///   against the query. Use it for a known set of things: apps, commands, links.
@@ -24,6 +24,9 @@ public struct ProviderInfo: Sendable {
 ///   must return immediately. Use it for answers, such as a calculation.
 /// - `deferredResults` may take time and arrive after the rest. Use it for
 ///   searches that leave the process, such as the file index.
+/// - `fallbackResults` take the query somewhere else. They are offered below
+///   everything that was found, and are all there is when nothing was. Like
+///   instant results they must return immediately.
 @MainActor
 public protocol Provider: AnyObject {
     var id: String { get }
@@ -39,6 +42,7 @@ public protocol Provider: AnyObject {
     func candidates() async -> [ResultItem]
     func instantResults(for query: String) -> [ResultItem]
     func deferredResults(for query: String) async -> ResultSection?
+    func fallbackResults(for query: String) -> [ResultItem]
 }
 
 public extension Provider {
@@ -46,4 +50,5 @@ public extension Provider {
     func candidates() async -> [ResultItem] { [] }
     func instantResults(for query: String) -> [ResultItem] { [] }
     func deferredResults(for query: String) async -> ResultSection? { nil }
+    func fallbackResults(for query: String) -> [ResultItem] { [] }
 }

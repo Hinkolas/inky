@@ -389,17 +389,14 @@ private struct ResultsList: View {
     let model: LauncherModel
 
     private static let rowSlot = LauncherMetrics.rowHeight + 1
-    private static let bottomInset: CGFloat = 8
-    private static let emptyHeight: CGFloat = 60
+    private static let emptyHeight: CGFloat = 124
     private static let top = "inky.list.top"
+    private static let end = "inky.list.end"
 
     var body: some View {
         Group {
             if model.sections.isEmpty {
-                Text("No results")
-                    .font(.system(size: 14, weight: .medium))
-                    .foregroundStyle(.secondary)
-                    .frame(maxWidth: .infinity)
+                NoResults(configureFallbacks: model.configureFallbacks)
             } else {
                 list
                     .clipShape(SurfaceShape(cornerRadius: LauncherMetrics.cardRadius))
@@ -414,7 +411,7 @@ private struct ResultsList: View {
     /// Known from the data, so the card can be exactly as tall as its rows.
     static func height(for sections: [ResultSection]) -> CGFloat {
         guard !sections.isEmpty else { return emptyHeight }
-        let rows = sections.reduce(bottomInset) { height, section in
+        let rows = sections.reduce(ResultsFooter.height) { height, section in
             height + LauncherMetrics.sectionHeaderHeight + CGFloat(section.items.count) * rowSlot
         }
         return min(LauncherMetrics.listMaxHeight, rows)
@@ -445,7 +442,8 @@ private struct ResultsList: View {
                                 })
                         }
                     }
-                    Color.clear.frame(height: Self.bottomInset)
+                    ResultsFooter(action: model.configureFallbacks)
+                        .id(Self.end)
                 }
             }
             .scrollIndicators(.never)
@@ -454,11 +452,77 @@ private struct ResultsList: View {
                 if id == model.firstItemID {
                     // Bring the section title back into view too.
                     proxy.scrollTo(Self.top, anchor: .top)
+                } else if id == model.lastItemID {
+                    // And the footer.
+                    proxy.scrollTo(Self.end, anchor: .bottom)
                 } else {
                     proxy.scrollTo(id)
                 }
             }
         }
+    }
+}
+
+/// Ends every list, as tall as a section's title above its rows.
+///
+/// The card's corners are rounder than a row's. A selected row right at the
+/// end of the card would pinch against them; a quiet line of text does not.
+struct ResultsFooter: View {
+    static let height = LauncherMetrics.sectionHeaderHeight
+    static let title = "Configure Fallback Commands…"
+    static let symbol = "slider.horizontal.3"
+
+    let action: () -> Void
+    @State private var isHovered = false
+
+    var body: some View {
+        Button(action: action) {
+            HStack(spacing: 5) {
+                Image(systemName: Self.symbol)
+                    .font(.system(size: 10.5, weight: .semibold))
+                Text(Self.title)
+                    .font(.system(size: 11.5, weight: .semibold))
+            }
+            .foregroundStyle(isHovered ? AnyShapeStyle(.primary) : AnyShapeStyle(.secondary))
+        }
+        .buttonStyle(PressableButtonStyle())
+        .onHover { isHovered = $0 }
+        .padding(.horizontal, 18)
+        .padding(.bottom, 5)
+        .frame(height: Self.height)
+    }
+}
+
+/// Shown when nothing was found and there is no fallback to offer either,
+/// which is when one would have helped.
+private struct NoResults: View {
+    let configureFallbacks: () -> Void
+
+    var body: some View {
+        VStack(spacing: 0) {
+            Text("No results")
+                .font(.system(size: 14, weight: .semibold))
+            Text("Fallback commands send a search like this somewhere else, such as the web.")
+                .font(.system(size: 12.5))
+                .foregroundStyle(.secondary)
+                .padding(.top, 3)
+            Button(action: configureFallbacks) {
+                HStack(spacing: 6) {
+                    Image(systemName: ResultsFooter.symbol)
+                        .font(.system(size: 11.5, weight: .semibold))
+                    Text(ResultsFooter.title)
+                        .font(.system(size: 12.5, weight: .semibold))
+                }
+                .padding(.leading, 11)
+                .padding(.trailing, 14)
+                .frame(height: 28)
+                .background(Theme.controlFill, in: Capsule())
+                .overlay { Capsule().strokeBorder(Theme.controlStroke) }
+            }
+            .buttonStyle(PressableButtonStyle())
+            .padding(.top, 12)
+        }
+        .frame(maxWidth: .infinity)
     }
 }
 
