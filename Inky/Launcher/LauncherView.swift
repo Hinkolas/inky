@@ -600,23 +600,47 @@ private struct HintBar: View {
     let model: LauncherModel
 
     var body: some View {
+        let closes = model.query.isEmpty
+
         HStack(spacing: 16) {
-            hint(["↑", "↓"], "Move")
-            hint(["⌘", "K"], "Actions")
-            hint(["esc"], model.query.isEmpty ? "Close" : "Clear")
+            hint(["↑", "↓"]) { label("Move") }
+            hint(["⌘", "K"]) { label("Actions") }
+            hint(["esc"]) {
+                // Both are always there and one is seen. The bar keeps its
+                // width, and neither has to find its place while the bar
+                // is on the move.
+                ZStack(alignment: .leading) {
+                    label("Close")
+                        .opacity(closes ? 1 : 0)
+                        .accessibilityHidden(!closes)
+                    label("Clear")
+                        .opacity(closes ? 0 : 1)
+                        .accessibilityHidden(closes)
+                }
+            }
         }
+        // As wide as what it says, whatever room it is given while the
+        // launcher around it changes size.
+        .fixedSize()
         .padding(.horizontal, 12)
         .frame(height: 32)
         .glassSurface(cornerRadius: nil)
     }
 
-    private func hint(_ keys: [String], _ title: String) -> some View {
+    private func hint(_ keys: [String], @ViewBuilder title: () -> some View) -> some View {
         HStack(spacing: 6) {
             Keycap(keys)
-            Text(title)
-                .font(.system(size: 12.5, weight: .medium))
-                .foregroundStyle(.secondary)
+            title()
         }
+    }
+
+    /// A word that is never broken or cut short.
+    private func label(_ title: String) -> some View {
+        Text(title)
+            .font(.system(size: 12.5, weight: .medium))
+            .foregroundStyle(.secondary)
+            .lineLimit(1)
+            .fixedSize()
     }
 }
 
