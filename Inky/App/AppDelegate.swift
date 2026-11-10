@@ -63,7 +63,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
 
 #if DEBUG
 /// Launch arguments that put the app into a known state for development:
-/// `--show`, `--pin`, `--quiet`, `--query <text>`, `--keys "tab a cmd+k"`,
+/// `--show`, `--pin`, `--quiet`, `--query <text>`, `--keys "tab a cmd+k hide show"`,
 /// `--settings [pane]`, `--new-quicklink`.
 enum DebugLaunch {
     static func apply(to context: AppContext) {
@@ -95,7 +95,11 @@ enum DebugLaunch {
             }
             for key in (value(after: "--keys") ?? "").split(separator: " ") {
                 try? await Task.sleep(for: .milliseconds(120))
-                context.launcher.debugPress(String(key))
+                switch key {
+                case "hide": context.launcher.hide()
+                case "show": context.launcher.show()
+                default: context.launcher.debugPress(String(key))
+                }
             }
             try? await Task.sleep(for: .milliseconds(300))
             FileHandle.standardError.write(Data((context.launcher.debugState + "\n").utf8))

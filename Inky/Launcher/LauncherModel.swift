@@ -67,6 +67,10 @@ final class LauncherModel {
     func reset() {
         deferredSearch?.cancel()
         query = ""
+        // Without this, reopening onto the same top result would keep the
+        // arguments typed last time.
+        selectedID = nil
+        argumentValues = []
         route = nil
         isActionMenuOpen = false
         toast = nil
