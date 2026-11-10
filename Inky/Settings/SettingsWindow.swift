@@ -106,7 +106,7 @@ struct SettingsView: View {
             Group {
                 switch navigation.pane {
                 case .general:
-                    GeneralPane(preferences: context.preferences)
+                    GeneralPane(preferences: context.preferences, context: context)
                 case .about:
                     AboutPane()
                 case .provider(let id):

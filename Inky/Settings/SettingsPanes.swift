@@ -7,6 +7,7 @@ import SwiftUI
 
 struct GeneralPane: View {
     @Bindable var preferences: Preferences
+    let context: AppContext
     @State private var launchesAtLogin = false
     @State private var loginError: String?
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
@@ -68,8 +69,59 @@ struct GeneralPane: View {
                     Text("Reduce Motion is on in System Settings, so the launcher fades instead of moving.")
                 }
             }
+
+            WebsiteIconSettings(preferences: preferences, context: context)
         }
         .onAppear { launchesAtLogin = preferences.launchesAtLogin }
+    }
+}
+
+/// Where website icons come from, and a way to fetch them all again.
+private struct WebsiteIconSettings: View {
+    @Bindable var preferences: Preferences
+    let context: AppContext
+
+    var body: some View {
+        let favicons = context.favicons
+        let refresh = favicons.refresh
+        Section {
+            Picker("Website icons", selection: $preferences.faviconSource) {
+                ForEach(FaviconSource.allCases) { source in
+                    Text(source.title).tag(source)
+                }
+            }
+            if preferences.faviconSource != .off {
+                LabeledContent("Saved icons") {
+                    HStack(spacing: 10) {
+                        if let refresh, refresh.isRunning {
+                            ProgressView()
+                                .controlSize(.small)
+                            Text("\(refresh.completed) of \(refresh.total)")
+                                .monospacedDigit()
+                        } else {
+                            Text("\(favicons.iconCount)")
+                                .monospacedDigit()
+                        }
+                        Button("Refresh All") { context.refreshFavicons() }
+                            .disabled(refresh?.isRunning == true)
+                    }
+                }
+            }
+        } footer: {
+            VStack(alignment: .leading, spacing: 6) {
+                switch preferences.faviconSource {
+                case .duckDuckGo:
+                    Text("Inky asks DuckDuckGo for the icon of each website in your quicklinks. Only the domain name is sent, and the icon is kept for 30 days. Local addresses, such as localhost, are never sent.")
+                case .off:
+                    Text("Inky makes no requests for icons, and websites show the link tile.")
+                }
+                if preferences.faviconSource != .off, let refresh, !refresh.isRunning, refresh.failed > 0 {
+                    Text(refresh.failed == 1
+                        ? "1 website could not be asked about. What was saved for it is unchanged."
+                        : "\(refresh.failed) websites could not be asked about. What was saved for them is unchanged.")
+                }
+            }
+        }
     }
 }
 

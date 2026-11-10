@@ -567,12 +567,7 @@ private struct ResultRow: View {
         let dimmed = isSelected ? AnyShapeStyle(Theme.onAccent.opacity(0.82)) : AnyShapeStyle(.secondary)
 
         HStack(spacing: 12) {
-            IconView(icon: item.icon, size: 24)
-                .overlay {
-                    if isSelected, case .symbol = item.icon {
-                        RoundedRectangle(cornerRadius: 24 * 0.26, style: .continuous).strokeBorder(.white.opacity(0.55))
-                    }
-                }
+            IconView(icon: item.icon, size: 24, outline: isSelected ? 0.55 : 0)
             Text(item.title)
                 .font(.system(size: 15, weight: isSelected ? .semibold : .medium))
                 .lineLimit(1)

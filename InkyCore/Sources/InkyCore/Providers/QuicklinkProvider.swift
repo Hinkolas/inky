@@ -74,7 +74,8 @@ public final class QuicklinkProvider: Provider {
         ]
     }
 
-    /// Folders show their own icon; everything else gets the link tile.
+    /// Folders show their own icon and websites theirs; everything else gets
+    /// the link tile.
     public static func icon(for template: LinkTemplate) -> Icon {
         if template.isFilePath, template.segments.count == 1 {
             let path = (template.source.trimmingCharacters(in: .whitespaces) as NSString).expandingTildeInPath
@@ -82,7 +83,11 @@ public final class QuicklinkProvider: Provider {
                 return .file(path: path)
             }
         }
-        return .symbol("link", tint: .purple)
+        let tile = Icon.symbol("link", tint: .purple)
+        if let host = Favicon.host(of: template.source) {
+            return .favicon(host: host, fallback: tile)
+        }
+        return tile
     }
 
     /// The site or folder a link goes to, without the noise.

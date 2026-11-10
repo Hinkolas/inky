@@ -138,7 +138,7 @@ struct QuicklinkEditorScreen: View {
         let name = draft.name.trimmingCharacters(in: .whitespaces)
 
         HStack(spacing: 8) {
-            IconView(icon: QuicklinkProvider.icon(for: template), size: 22)
+            IconView(icon: QuicklinkProvider.icon(for: template), size: 22, loadsFavicon: false)
             Text(name.isEmpty ? "Name" : name)
                 .font(.system(size: 13.5, weight: .medium))
                 .foregroundStyle(name.isEmpty ? .secondary : .primary)

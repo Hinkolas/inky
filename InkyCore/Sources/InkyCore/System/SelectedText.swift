@@ -44,4 +44,10 @@ public enum AppSupport {
         try? FileManager.default.createDirectory(at: directory, withIntermediateDirectories: true)
         return directory
     }
+
+    /// Where Inky keeps what it can fetch again: ~/Library/Caches/Inky.
+    public static var cacheDirectory: URL {
+        let base = FileManager.default.urls(for: .cachesDirectory, in: .userDomainMask)[0]
+        return base.appendingPathComponent("Inky", isDirectory: true)
+    }
 }

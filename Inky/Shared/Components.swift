@@ -2,7 +2,8 @@ import AppKit
 import InkyCore
 import SwiftUI
 
-/// Draws an `Icon`: a Finder icon, or a symbol on a tinted tile.
+/// Draws an `Icon`: a Finder icon, a symbol on a tinted tile, or a website's
+/// icon on a white one.
 struct IconView: View {
     enum Shape {
         case tile, circle
@@ -11,6 +12,12 @@ struct IconView: View {
     let icon: Icon
     var size: CGFloat = 24
     var shape: Shape = .tile
+    /// How strong a white line is drawn around a tinted tile, to set it off
+    /// from a selected row.
+    var outline: Double = 0
+    /// Whether a website's icon is fetched when it is not there. Off where
+    /// the link is still being typed.
+    var loadsFavicon = true
 
     var body: some View {
         switch icon {
@@ -20,7 +27,7 @@ struct IconView: View {
                 .interpolation(.high)
                 .frame(width: size, height: size)
         case .symbol(let name, let tint):
-            RoundedRectangle(cornerRadius: shape == .circle ? size / 2 : size * 0.26, style: .continuous)
+            tile
                 .fill(tint.color)
                 .frame(width: size, height: size)
                 .overlay {
@@ -28,12 +35,46 @@ struct IconView: View {
                         .font(.system(size: size * 0.5, weight: .semibold))
                         .foregroundStyle(.white)
                 }
+                .overlay {
+                    if outline > 0 { tile.strokeBorder(.white.opacity(outline)) }
+                }
+        case .favicon(let host, let fallback):
+            Group {
+                if let image = IconCache.shared.favicon(for: host) {
+                    // Icons come in any color, and many are see-through: on a
+                    // tile of their own they read in light and dark alike.
+                    // Two thirds of 24 points is 32 pixels, the size most
+                    // websites have.
+                    tile
+                        .fill(.white)
+                        .frame(width: size, height: size)
+                        .overlay {
+                            Image(nsImage: image)
+                                .resizable()
+                                .interpolation(.high)
+                                .frame(width: size * 2 / 3, height: size * 2 / 3)
+                        }
+                        .overlay { tile.strokeBorder(.black.opacity(0.1)) }
+                } else {
+                    IconView(icon: fallback, size: size, shape: shape, outline: outline)
+                }
+            }
+            .task(id: host) {
+                if loadsFavicon { IconCache.shared.favicons?.load(host) }
+            }
         }
+    }
+
+    private var tile: RoundedRectangle {
+        RoundedRectangle(cornerRadius: shape == .circle ? size / 2 : size * 0.26, style: .continuous)
     }
 }
 
 final class IconCache {
     static let shared = IconCache()
+
+    /// Set by the app. Without it, websites show their fallback.
+    var favicons: FaviconStore?
 
     private let cache = NSCache<NSString, NSImage>()
 
@@ -41,6 +82,18 @@ final class IconCache {
         if let cached = cache.object(forKey: path as NSString) { return cached }
         let image = NSWorkspace.shared.icon(forFile: path)
         cache.setObject(image, forKey: path as NSString)
+        return image
+    }
+
+    /// The icon of the website at `host`, if one is kept. Read while a view
+    /// draws, this makes the view draw again when the icon arrives.
+    func favicon(for host: String) -> NSImage? {
+        guard let kept = favicons?.icon(for: host) else { return nil }
+        // A refreshed icon is a new one.
+        let key = "favicon:\(host):\(kept.fetched.timeIntervalSinceReferenceDate)" as NSString
+        if let cached = cache.object(forKey: key) { return cached }
+        guard let image = NSImage(contentsOf: kept.url) else { return nil }
+        cache.setObject(image, forKey: key)
         return image
     }
 }

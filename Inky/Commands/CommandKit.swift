@@ -240,12 +240,7 @@ struct DetailRow: View {
 
     var body: some View {
         HStack(spacing: 11) {
-            IconView(icon: icon, size: 30)
-                .overlay {
-                    if isSelected, case .symbol = icon {
-                        RoundedRectangle(cornerRadius: 30 * 0.26, style: .continuous).strokeBorder(.white.opacity(0.5))
-                    }
-                }
+            IconView(icon: icon, size: 30, outline: isSelected ? 0.5 : 0)
             VStack(alignment: .leading, spacing: 2) {
                 Text(title)
                     .font(.system(size: 14, weight: .medium))

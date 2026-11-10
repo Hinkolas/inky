@@ -9,7 +9,7 @@ Inky is at an early stage. The core works and is meant to be built on.
 ## What it does today
 
 - **Applications**: fuzzy search over installed apps, ranked by how often and how recently you pick them.
-- **Quicklinks**: named shortcuts to websites, folders and app links. Placeholders such as `{argument name="Query"}`, `{clipboard}` and `{selection}` are filled in when the link opens; arguments are typed right in the search bar.
+- **Quicklinks**: named shortcuts to websites, folders and app links. Placeholders such as `{argument name="Query"}`, `{clipboard}` and `{selection}` are filled in when the link opens; arguments are typed right in the search bar. Websites show their own icon.
 - **Fallback commands**: every search can be sent on to a quicklink, such as a web search. They are listed below the results, and are all there is when nothing was found. Pick which quicklinks in Settings.
 - **Calculator**: type `128 * 3 + 4` or `sqrt(2) ^ 10`, press Return to copy the result.
 - **File search**: files and folders by name, from the Spotlight index.
@@ -19,6 +19,12 @@ The default hotkey is ⌥Space. Change it under Settings → General, where you
 also choose a light or dark appearance, or leave that to the system, and turn
 the launcher's animations off. With Reduce Motion on in System Settings the
 launcher fades instead of moving.
+
+Website icons are the one thing Inky fetches from the internet. It asks
+DuckDuckGo for the icon of each website in your quicklinks, sending only the
+domain name, and keeps the answer on your Mac for 30 days. Local addresses
+such as `localhost` are never sent. Settings → General turns this off, and
+fetches all icons again when you ask.
 
 Inky opens as a single floating bar. Results appear in a card below it as you
 type. A command that needs more room, such as Manage Quicklinks, takes over

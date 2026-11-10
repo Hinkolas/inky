@@ -6,11 +6,14 @@ public enum Tint: String, Sendable, Hashable, CaseIterable {
     case gray, red, orange, yellow, green, teal, blue, indigo, purple, pink
 }
 
-public enum Icon: Sendable, Hashable {
+public indirect enum Icon: Sendable, Hashable {
     /// The Finder icon of the file, folder or application at `path`.
     case file(path: String)
     /// An SF Symbol drawn on a tinted tile.
     case symbol(String, tint: Tint)
+    /// The icon of the website at `host`, see `Favicon.host(of:)`. `fallback`
+    /// is drawn until the icon is there, and when the website has none.
+    case favicon(host: String, fallback: Icon)
 }
 
 /// An input a result asks for before it can run, shown inline in the search bar.

@@ -1,4 +1,5 @@
 import AppKit
+import InkyCore
 import Observation
 import ServiceManagement
 
@@ -38,6 +39,7 @@ final class Preferences {
     @ObservationIgnored var onHotkeyChange: (() -> Void)?
     @ObservationIgnored var onMenuBarChange: (() -> Void)?
     @ObservationIgnored var onAppearanceChange: (() -> Void)?
+    @ObservationIgnored var onFaviconSourceChange: (() -> Void)?
 
     var hotkey: KeyCombo {
         didSet {
@@ -73,6 +75,14 @@ final class Preferences {
         didSet { defaults.set(animations, forKey: Key.animations) }
     }
 
+    /// Where website icons come from, if anywhere.
+    var faviconSource: FaviconSource {
+        didSet {
+            defaults.set(faviconSource.rawValue, forKey: Key.faviconSource)
+            onFaviconSourceChange?()
+        }
+    }
+
     var fileSearchLimit: Int {
         didSet { defaults.set(fileSearchLimit, forKey: Key.fileSearchLimit) }
     }
@@ -93,6 +103,7 @@ final class Preferences {
         showMenuBarIcon = defaults.bool(forKey: Key.showMenuBarIcon)
         appearance = defaults.string(forKey: Key.appearance).flatMap(AppearanceMode.init) ?? .system
         animations = defaults.bool(forKey: Key.animations)
+        faviconSource = defaults.string(forKey: Key.faviconSource).flatMap(FaviconSource.init) ?? .duckDuckGo
         fileSearchLimit = defaults.integer(forKey: Key.fileSearchLimit)
         disabledProviders = Set(defaults.stringArray(forKey: Key.disabledProviders) ?? [])
     }
@@ -128,6 +139,7 @@ final class Preferences {
         static let showMenuBarIcon = "showMenuBarIcon"
         static let appearance = "appearance"
         static let animations = "animations"
+        static let faviconSource = "faviconSource"
         static let fileSearchLimit = "fileSearchLimit"
         static let disabledProviders = "disabledProviders"
         static let hasLaunchedBefore = "hasLaunchedBefore"

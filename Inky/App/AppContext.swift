@@ -5,6 +5,7 @@ import InkyCore
 final class AppContext {
     let preferences = Preferences.shared
     let quicklinks: QuicklinkStore
+    let favicons: FaviconStore
     let engine: SearchEngine
     let launcher: LauncherController
     let fileProvider = FileProvider()
@@ -14,10 +15,21 @@ final class AppContext {
     init() {
         #if DEBUG
         let directory = DebugLaunch.dataDirectory ?? AppSupport.directory
+        let caches = DebugLaunch.dataDirectory ?? AppSupport.cacheDirectory
         #else
         let directory = AppSupport.directory
+        let caches = AppSupport.cacheDirectory
         #endif
         quicklinks = QuicklinkStore(fileURL: directory.appendingPathComponent("quicklinks.json"))
+
+        favicons = FaviconStore(
+            directory: caches.appendingPathComponent("Favicons", isDirectory: true),
+            source: preferences.faviconSource
+        )
+        IconCache.shared.favicons = favicons
+        preferences.onFaviconSourceChange = { [preferences, favicons] in
+            favicons.source = preferences.faviconSource
+        }
 
         let commands = InkyCommandProvider()
         let quicklinkProvider = QuicklinkProvider(store: quicklinks)
@@ -45,6 +57,11 @@ final class AppContext {
         commands.createQuicklink = { [unowned self] in launcher.model.editQuicklink(nil) }
         commands.manageQuicklinks = { [unowned self] in launcher.model.showQuicklinks() }
         quicklinkProvider.onEdit = { [unowned self] quicklink in launcher.model.editQuicklink(quicklink) }
+    }
+
+    /// Fetches every website icon again, in the background.
+    func refreshFavicons() {
+        favicons.refreshAll(including: quicklinks.quicklinks.compactMap { Favicon.host(of: $0.link) })
     }
 
     func showSettings(pane: String? = nil, activating: Bool = true) {
