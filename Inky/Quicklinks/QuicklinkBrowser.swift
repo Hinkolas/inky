@@ -105,6 +105,9 @@ struct QuicklinkBrowserScreen: View {
     @Bindable var browser: QuicklinkBrowser
     @FocusState private var isFilterFocused: Bool
 
+    /// Of the body card.
+    static let size = CGSize(width: 940, height: 500)
+
     var body: some View {
         let visible = browser.visible
         let selected = browser.selected
@@ -113,8 +116,7 @@ struct QuicklinkBrowserScreen: View {
         CommandScreen(
             icon: .symbol("link", tint: .purple),
             path: ["Quicklinks"],
-            size: CGSize(width: 940, height: 500),
-            onBack: model.popRoute
+            size: Self.size
         ) {
             FilterField(
                 text: $browser.query,

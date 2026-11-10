@@ -2,9 +2,10 @@ import InkyCore
 import SwiftUI
 
 // The parts a command's screen is built from. A command takes over the
-// launcher with a `CommandScreen`: a back button and a header pill it
-// configures, above a body card it fills. Inside the card, a `Sidebar`
-// narrows what is shown and a `SidePanel` previews, inspects or assists.
+// launcher with a `CommandScreen`: a header pill it configures, above a body
+// card it fills. The launcher turns its bar and card into the two, and adds
+// the back button. Inside the card, a `Sidebar` narrows what is shown and a
+// `SidePanel` previews, inspects or assists.
 // Built-in commands use these directly; extensions will describe the same
 // parts as data.
 
@@ -22,7 +23,7 @@ struct CommandAction: Identifiable {
 
 // MARK: - Screen
 
-/// A command's screen: back button, header pill and body card.
+/// What a command puts on the launcher's surfaces: a header pill and a body card.
 ///
 /// The header pill shows the command's icon and where the user is, then
 /// `header` (a filter field, say) and, at its trailing edge, `accessory`
@@ -31,9 +32,9 @@ struct CommandScreen<Header: View, Accessory: View, Content: View>: View {
     let icon: Icon
     /// Where the user is, outermost first: `["Quicklinks", "New Quicklink"]`.
     let path: [String]
-    /// The size of the body card. The header is as wide.
+    /// The size of the body card. The header and the back button are
+    /// together as wide. `LauncherView` sizes the surfaces to match.
     let size: CGSize
-    let onBack: () -> Void
     let header: Header
     let accessory: Accessory
     let content: Content
@@ -42,7 +43,6 @@ struct CommandScreen<Header: View, Accessory: View, Content: View>: View {
         icon: Icon,
         path: [String],
         size: CGSize,
-        onBack: @escaping () -> Void,
         @ViewBuilder header: () -> Header,
         @ViewBuilder accessory: () -> Accessory,
         @ViewBuilder content: () -> Content
@@ -50,7 +50,6 @@ struct CommandScreen<Header: View, Accessory: View, Content: View>: View {
         self.icon = icon
         self.path = path
         self.size = size
-        self.onBack = onBack
         self.header = header()
         self.accessory = accessory()
         self.content = content()
@@ -58,39 +57,28 @@ struct CommandScreen<Header: View, Accessory: View, Content: View>: View {
 
     var body: some View {
         VStack(spacing: LauncherMetrics.gap) {
-            HStack(spacing: LauncherMetrics.gap) {
-                Button(action: onBack) {
-                    Image(systemName: "chevron.left")
-                        .font(.system(size: 15, weight: .bold))
-                        .frame(width: LauncherMetrics.barHeight, height: LauncherMetrics.barHeight)
-                        .glassSurface(cornerRadius: nil)
+            HStack(spacing: 11) {
+                IconView(icon: icon, size: LauncherMetrics.barControlSize, shape: .circle)
+                Breadcrumb(path: path)
+                if Header.self != EmptyView.self {
+                    Rectangle()
+                        .fill(Theme.separator)
+                        .frame(width: 1, height: 24)
+                        .padding(.horizontal, 2)
+                    header.layoutPriority(1)
                 }
-                .buttonStyle(PressableButtonStyle())
-                .help("Back (esc)")
-
-                HStack(spacing: 11) {
-                    IconView(icon: icon, size: LauncherMetrics.barControlSize, shape: .circle)
-                    Breadcrumb(path: path)
-                    if Header.self != EmptyView.self {
-                        Rectangle()
-                            .fill(Theme.separator)
-                            .frame(width: 1, height: 24)
-                            .padding(.horizontal, 2)
-                        header.layoutPriority(1)
-                    }
-                    Spacer(minLength: 8)
-                    accessory
-                        .fixedSize()
-                        .layoutPriority(2)
-                }
-                .padding(.horizontal, LauncherMetrics.barInset)
-                .frame(height: LauncherMetrics.barHeight)
-                .glassSurface(cornerRadius: nil)
+                Spacer(minLength: 8)
+                accessory
+                    .fixedSize()
+                    .layoutPriority(2)
             }
+            .padding(.horizontal, LauncherMetrics.barInset)
+            .frame(height: LauncherMetrics.barHeight)
+            // The launcher's back button is in front of the bar.
+            .padding(.leading, LauncherMetrics.barHeight + LauncherMetrics.gap)
 
             content
                 .frame(width: size.width, height: size.height)
-                .glassSurface(cornerRadius: LauncherMetrics.cardRadius)
         }
         .frame(width: size.width)
     }
@@ -101,11 +89,10 @@ extension CommandScreen where Header == EmptyView {
         icon: Icon,
         path: [String],
         size: CGSize,
-        onBack: @escaping () -> Void,
         @ViewBuilder accessory: () -> Accessory,
         @ViewBuilder content: () -> Content
     ) {
-        self.init(icon: icon, path: path, size: size, onBack: onBack, header: { EmptyView() }, accessory: accessory, content: content)
+        self.init(icon: icon, path: path, size: size, header: { EmptyView() }, accessory: accessory, content: content)
     }
 }
 
@@ -235,7 +222,7 @@ struct SidebarRow: View {
                 in: RoundedRectangle(cornerRadius: 9, style: .continuous)
             )
         }
-        .buttonStyle(PressableButtonStyle())
+        .buttonStyle(PressableButtonStyle(pressedScale: 1))
     }
 }
 
@@ -360,7 +347,7 @@ struct ActionList: View {
                         in: RoundedRectangle(cornerRadius: 9, style: .continuous)
                     )
                 }
-                .buttonStyle(PressableButtonStyle())
+                .buttonStyle(PressableButtonStyle(pressedScale: 1))
             }
         }
     }

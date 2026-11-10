@@ -9,6 +9,7 @@ struct GeneralPane: View {
     @Bindable var preferences: Preferences
     @State private var launchesAtLogin = false
     @State private var loginError: String?
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
 
     var body: some View {
         Form {
@@ -57,6 +58,14 @@ struct GeneralPane: View {
                     Text(loginError).foregroundStyle(.red)
                 } else if !preferences.showMenuBarIcon {
                     Text("Without the menu bar icon, open settings by searching for “Inky Settings”.")
+                }
+            }
+
+            Section {
+                Toggle("Animate the launcher", isOn: $preferences.animations)
+            } footer: {
+                if preferences.animations, reduceMotion {
+                    Text("Reduce Motion is on in System Settings, so the launcher fades instead of moving.")
                 }
             }
         }

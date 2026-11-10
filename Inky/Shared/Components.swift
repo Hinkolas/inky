@@ -95,11 +95,28 @@ struct Keycap: View {
     }
 }
 
-/// Dims its label while pressed. For buttons that draw their own background.
+/// Dims its label while pressed, and lets it give a little. For buttons that
+/// draw their own background.
 struct PressableButtonStyle: ButtonStyle {
+    /// How small the label gets while pressed. Pass 1 for a row that spans
+    /// its panel, which would pull away from the edges.
+    var pressedScale: CGFloat = 0.94
+
     func makeBody(configuration: Configuration) -> some View {
+        PressableLabel(configuration: configuration, pressedScale: pressedScale)
+    }
+}
+
+private struct PressableLabel: View {
+    let configuration: ButtonStyleConfiguration
+    let pressedScale: CGFloat
+    @Environment(\.motion) private var motion
+
+    var body: some View {
         configuration.label
             .opacity(configuration.isPressed ? 0.7 : 1)
+            .scaleEffect(configuration.isPressed && motion.level == .full ? pressedScale : 1)
+            .animation(motion.press, value: configuration.isPressed)
             .contentShape(Rectangle())
     }
 }

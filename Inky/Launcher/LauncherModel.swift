@@ -42,6 +42,8 @@ final class LauncherModel {
     private(set) var argumentValues: [String] = []
     /// The screens pushed over the search, innermost last.
     private(set) var routes: [Route] = []
+    /// Whether the last change of screen went back towards the search.
+    private(set) var isNavigatingBack = false
     private(set) var isActionMenuOpen = false
     private(set) var actionMenuIndex = 0
     private(set) var toast: String?
@@ -49,6 +51,9 @@ final class LauncherModel {
     /// Where keyboard focus should be. Views apply it whenever `focusTick` changes.
     private(set) var focusTarget: FocusTarget = .search
     private(set) var focusTick = 0
+    /// Counts the times an action was asked for while the focused argument,
+    /// which it needs, was still empty.
+    private(set) var missingArgumentTick = 0
 
     init(engine: SearchEngine, quicklinks: QuicklinkStore) {
         self.engine = engine
@@ -93,6 +98,7 @@ final class LauncherModel {
         selectedID = nil
         argumentValues = []
         routes = []
+        isNavigatingBack = false
         isActionMenuOpen = false
         toast = nil
         focusTarget = .search
@@ -216,6 +222,9 @@ final class LauncherModel {
                     && argumentValues[index].trimmingCharacters(in: .whitespaces).isEmpty
             }
             if let missing {
+                // Asking again from inside the empty field is a mistake;
+                // the first time, moving there is answer enough.
+                if focusTarget == .argument(missing) { missingArgumentTick += 1 }
                 focus(.argument(missing))
                 return
             }
@@ -308,11 +317,13 @@ final class LauncherModel {
 
     private func push(_ route: Route) {
         isActionMenuOpen = false
+        isNavigatingBack = false
         routes.append(route)
     }
 
     func popRoute() {
         guard !routes.isEmpty else { return }
+        isNavigatingBack = true
         routes.removeLast()
         if routes.isEmpty { focus(.search) }
     }

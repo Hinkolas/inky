@@ -79,7 +79,12 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
 /// Launch arguments that put the app into a known state for development:
 /// `--show`, `--pin`, `--quiet`, `--query <text>`, `--keys "tab a cmd+k hide show"`,
 /// `--settings [pane]`, `--new-quicklink`, `--quicklinks`,
-/// `--appearance light|dark`, `--backdrop light|dark`, `--data <folder>`.
+/// `--appearance light|dark`, `--backdrop light|dark`, `--data <folder>`,
+/// `--motion full|reduced|off`, `--slow <factor>`.
+///
+/// To look at an animation, stretch it with `--slow` and put `mark` before
+/// the key that starts it: `--keys "wait mark return"`. `mark` prints a line
+/// to wait for, `wait` pauses for a second.
 enum DebugLaunch {
     private static let arguments = ProcessInfo.processInfo.arguments
 
@@ -109,6 +114,10 @@ enum DebugLaunch {
         if let appearance = value(after: "--appearance").flatMap(AppearanceMode.init) {
             NSApp.appearance = appearance.appearance
         }
+        Motion.debugLevel = value(after: "--motion").flatMap(Motion.Level.init)
+        if let slowdown = value(after: "--slow").flatMap(Double.init), slowdown > 0 {
+            Motion.debugSlowdown = slowdown
+        }
         if quiet, let backdrop = value(after: "--backdrop") {
             context.launcher.debugShowBackdrop(dark: backdrop == "dark")
         }
@@ -135,6 +144,8 @@ enum DebugLaunch {
                 switch key {
                 case "hide": context.launcher.hide()
                 case "show": context.launcher.show()
+                case "wait": try? await Task.sleep(for: .seconds(1))
+                case "mark": FileHandle.standardError.write(Data("MARK\n".utf8))
                 default: context.launcher.debugPress(String(key))
                 }
             }

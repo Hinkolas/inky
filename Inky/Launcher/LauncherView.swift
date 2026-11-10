@@ -2,10 +2,19 @@ import InkyCore
 import SwiftUI
 
 /// Everything the launcher shows, laid out from the top of a transparent canvas.
+///
+/// The bar and the card are the same two surfaces whatever is showing. A
+/// screen draws only what goes on them, so going from the search to a command
+/// and back moves and resizes the surfaces instead of swapping them.
 struct LauncherView: View {
     let model: LauncherModel
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
 
     var body: some View {
+        let motion = Motion(isEnabled: Preferences.shared.animations, reduceMotion: reduceMotion)
+        let layout = layout
+        let depth = model.routes.count
+
         ZStack(alignment: .top) {
             // Where the canvas is see-through, clicks go to whatever is behind
             // the panel. What does arrive here landed on a shadow.
@@ -14,20 +23,62 @@ struct LauncherView: View {
                 .onTapGesture { model.dismiss() }
 
             VStack(spacing: LauncherMetrics.gap) {
-                switch model.route {
-                case nil:
-                    SearchScreen(model: model)
-                case .quicklinks(let browser):
-                    QuicklinkBrowserScreen(model: model, browser: browser)
-                case .quicklinkEditor(let draft):
-                    QuicklinkEditorScreen(model: model, draft: draft)
-                }
+                ZStack(alignment: .top) {
+                    LauncherSurfaces(layout: layout, onBack: model.popRoute)
 
-                if let toast = model.toast {
-                    Toast(message: toast)
-                } else if model.route == nil, model.showsResults {
-                    HintBar(model: model)
+                    // One view whatever it holds, so that what is cut out of
+                    // it changes shape instead of being replaced.
+                    ZStack(alignment: .top) {
+                        switch model.route {
+                        case nil:
+                            SearchScreen(model: model)
+                                .transition(motion.screen(isGoingBack: model.isNavigatingBack))
+                        case .quicklinks(let browser):
+                            QuicklinkBrowserScreen(model: model, browser: browser)
+                                .transition(motion.screen(isGoingBack: model.isNavigatingBack))
+                        case .quicklinkEditor(let draft):
+                            QuicklinkEditorScreen(model: model, draft: draft)
+                                .transition(motion.screen(isGoingBack: model.isNavigatingBack))
+                        }
+                    }
+                    // A screen is laid out at its final size from the start.
+                    // Cut to the outline of the surfaces, it never shows
+                    // beyond them while they are still on their way.
+                    .frame(
+                        width: LauncherMetrics.maxContentSize.width,
+                        height: LauncherMetrics.maxContentSize.height,
+                        alignment: .top
+                    )
+                    .clipShape(SurfaceOutline(layout))
+                    .frame(width: layout.width, height: layout.height, alignment: .top)
                 }
+                .overlay(alignment: .topTrailing) {
+                    ZStack(alignment: .topTrailing) {
+                        if model.route == nil, model.isActionMenuOpen {
+                            ActionMenu(model: model)
+                                .transition(motion.popping(
+                                    .scale(scale: 0.9, anchor: UnitPoint(x: 0.92, y: 0)).combined(with: .opacity)
+                                ))
+                        }
+                    }
+                    .offset(y: LauncherMetrics.barHeight + 6)
+                    .animation(motion.quick, value: model.isActionMenuOpen)
+                }
+                // Without motion the surfaces may not travel either: one
+                // screen fades into the next, each with surfaces of its own.
+                .id(motion.level == .reduced ? depth : 0)
+                .transition(motion.fade)
+
+                ZStack {
+                    if let toast = model.toast {
+                        Toast(message: toast)
+                            .transition(motion.popping(.offset(y: 8).combined(with: .opacity)))
+                    } else if model.route == nil, model.showsResults {
+                        HintBar(model: model)
+                            .transition(motion.belowCard)
+                    }
+                }
+                .animation(motion.quick, value: model.toast)
             }
             // The gaps between the floating parts belong to the launcher.
             .background {
@@ -35,9 +86,152 @@ struct LauncherView: View {
                     .contentShape(Rectangle())
                     .onTapGesture {}
             }
+            // Of two that apply at once the inner one wins: a change of screen.
+            .animation(motion.morph, value: depth)
+            .animation(motion.resize, value: layout.cardHeight)
             .padding(.top, LauncherMetrics.margin.top)
         }
         .frame(width: LauncherMetrics.canvas.width, height: LauncherMetrics.canvas.height)
+        .transaction { transaction in
+            // Off means off, whatever asked for the change.
+            if motion.level == .off {
+                transaction.animation = nil
+                transaction.disablesAnimations = true
+            }
+        }
+        .environment(\.motion, motion)
+    }
+
+    private var layout: LauncherLayout {
+        switch model.route {
+        case nil:
+            LauncherLayout(
+                width: LauncherMetrics.searchWidth,
+                hasBackButton: false,
+                cardHeight: model.showsResults ? ResultsList.height(for: model.sections) : nil
+            )
+        case .quicklinks:
+            LauncherLayout(command: QuicklinkBrowserScreen.size)
+        case .quicklinkEditor:
+            LauncherLayout(command: QuicklinkEditorScreen.size)
+        }
+    }
+}
+
+// MARK: - Surfaces
+
+/// Where the launcher's surfaces are.
+private nonisolated struct LauncherLayout: Equatable {
+    var width: CGFloat
+    /// Commands have one, at the leading end of the bar.
+    var hasBackButton: Bool
+    /// Nil while the bar is all there is.
+    var cardHeight: CGFloat?
+
+    /// The bar, and the card below it if there is one.
+    var height: CGFloat {
+        LauncherMetrics.barHeight + (cardHeight.map { LauncherMetrics.gap + $0 } ?? 0)
+    }
+
+    /// Where the bar starts: after the back button, if there is one.
+    var barLeading: CGFloat {
+        hasBackButton ? LauncherMetrics.barHeight + LauncherMetrics.gap : 0
+    }
+}
+
+extension LauncherLayout {
+    /// A command's: `size` is that of its body card.
+    init(command size: CGSize) {
+        self.init(width: size.width, hasBackButton: true, cardHeight: size.height)
+    }
+}
+
+/// The bar, the back button and the card, with nothing on them.
+private struct LauncherSurfaces: View {
+    let layout: LauncherLayout
+    let onBack: () -> Void
+    @Environment(\.motion) private var motion
+
+    var body: some View {
+        VStack(spacing: LauncherMetrics.gap) {
+            ZStack(alignment: .leading) {
+                if layout.hasBackButton {
+                    BackButton(action: onBack)
+                        // It starts out where the search bar began, and comes
+                        // out of that end as the bar makes room.
+                        .transition(motion.transition(
+                            .offset(x: (layout.width - LauncherMetrics.searchWidth) / 2).combined(with: .opacity)
+                        ))
+                }
+                Color.clear
+                    .frame(maxWidth: .infinity)
+                    .frame(height: LauncherMetrics.barHeight)
+                    .glassSurface(cornerRadius: nil)
+                    .padding(.leading, layout.barLeading)
+            }
+
+            // Always there, so that it grows out from under the bar and
+            // shrinks back instead of appearing.
+            Color.clear
+                .frame(maxWidth: .infinity)
+                .frame(height: layout.cardHeight ?? 0)
+                .glassSurface(cornerRadius: LauncherMetrics.cardRadius)
+                .opacity(layout.cardHeight == nil ? 0 : 1)
+        }
+        .frame(width: layout.width)
+        .frame(height: layout.height, alignment: .top)
+    }
+}
+
+/// The outline of the bar and the card together.
+private nonisolated struct SurfaceOutline: Shape {
+    var width: CGFloat
+    var barLeading: CGFloat
+    var cardHeight: CGFloat
+
+    init(_ layout: LauncherLayout) {
+        width = layout.width
+        barLeading = layout.barLeading
+        cardHeight = layout.cardHeight ?? 0
+    }
+
+    var animatableData: AnimatablePair<CGFloat, AnimatablePair<CGFloat, CGFloat>> {
+        get { AnimatablePair(width, AnimatablePair(barLeading, cardHeight)) }
+        set {
+            width = newValue.first
+            barLeading = newValue.second.first
+            cardHeight = newValue.second.second
+        }
+    }
+
+    /// Centered at the top of `rect`, as the surfaces are.
+    func path(in rect: CGRect) -> Path {
+        let leading = rect.midX - width / 2
+        let bar = CGRect(
+            x: leading + barLeading, y: rect.minY,
+            width: max(0, width - barLeading), height: LauncherMetrics.barHeight
+        )
+        var path = Capsule().path(in: bar)
+        if cardHeight > 0 {
+            let card = CGRect(x: leading, y: bar.maxY + LauncherMetrics.gap, width: width, height: cardHeight)
+            path.addPath(RoundedRectangle(cornerRadius: LauncherMetrics.cardRadius, style: .continuous).path(in: card))
+        }
+        return path
+    }
+}
+
+private struct BackButton: View {
+    let action: () -> Void
+
+    var body: some View {
+        Button(action: action) {
+            Image(systemName: "chevron.left")
+                .font(.system(size: 15, weight: .bold))
+                .frame(width: LauncherMetrics.barHeight, height: LauncherMetrics.barHeight)
+                .glassSurface(cornerRadius: nil)
+        }
+        .buttonStyle(PressableButtonStyle())
+        .help("Back (esc)")
     }
 }
 
@@ -45,27 +239,24 @@ struct LauncherView: View {
 
 private struct SearchScreen: View {
     let model: LauncherModel
+    @Environment(\.motion) private var motion
 
     var body: some View {
         VStack(spacing: LauncherMetrics.gap) {
             SearchBar(model: model)
             if model.showsResults {
-                ResultsCard(model: model)
+                ResultsList(model: model)
+                    .transition(motion.fade)
             }
         }
         .frame(width: LauncherMetrics.searchWidth)
-        .overlay(alignment: .topTrailing) {
-            if model.isActionMenuOpen {
-                ActionMenu(model: model)
-                    .offset(y: LauncherMetrics.barHeight + 6)
-            }
-        }
     }
 }
 
 private struct SearchBar: View {
     let model: LauncherModel
     @FocusState private var focus: LauncherModel.FocusTarget?
+    @Environment(\.motion) private var motion
 
     private static let placeholder = "Search apps, commands and files"
     private static let fontSize = LauncherMetrics.barFontSize
@@ -94,9 +285,11 @@ private struct SearchBar: View {
                         get: { index < model.argumentValues.count ? model.argumentValues[index] : "" },
                         set: { model.setArgument(index, $0) }
                     ),
-                    isFocused: focus == .argument(index)
+                    isFocused: focus == .argument(index),
+                    missingTick: model.missingArgumentTick
                 )
                 .focused($focus, equals: .argument(index))
+                .transition(motion.popping(.scale(scale: 0.9, anchor: .leading).combined(with: .opacity)))
             }
 
             if !arguments.isEmpty {
@@ -116,6 +309,7 @@ private struct SearchBar: View {
                 }
                 .buttonStyle(PressableButtonStyle())
                 .help("Clear (esc)")
+                .transition(motion.popping(.scale(scale: 0.5).combined(with: .opacity)))
             }
 
             CircleButton(symbol: "ellipsis", size: LauncherMetrics.barControlSize, help: "Actions (⌘K)") {
@@ -125,7 +319,9 @@ private struct SearchBar: View {
         .padding(.leading, 19)
         .padding(.trailing, LauncherMetrics.barInset)
         .frame(height: LauncherMetrics.barHeight)
-        .glassSurface(cornerRadius: nil)
+        .animation(motion.quick, value: BarParts(hasQuery: !model.query.isEmpty, arguments: arguments.map(\.name)))
+        // Typing must not: the field would lag behind what is typed into it.
+        .animation(nil, value: model.query)
         .onChange(of: model.focusTick, initial: true) {
             focus = model.focusTarget
         }
@@ -138,6 +334,12 @@ private struct SearchBar: View {
         let text = model.query.isEmpty ? Self.placeholder : model.query
         return min(360, textWidth(text, size: Self.fontSize) + 6)
     }
+
+    /// What comes and goes in the bar.
+    private struct BarParts: Equatable {
+        var hasQuery: Bool
+        var arguments: [String]
+    }
 }
 
 private struct ArgumentField: View {
@@ -145,6 +347,11 @@ private struct ArgumentField: View {
     let hint: String?
     @Binding var text: String
     let isFocused: Bool
+    /// Goes up when an action wanted this argument and it was empty.
+    let missingTick: Int
+
+    @Environment(\.motion) private var motion
+    @State private var shakes: CGFloat = 0
 
     private static let fontSize: CGFloat = 15
 
@@ -164,6 +371,11 @@ private struct ArgumentField: View {
                 )
             }
             .help(name)
+            .modifier(Shake(shakes: shakes))
+            .onChange(of: missingTick) {
+                guard isFocused else { return }
+                withAnimation(motion.shake) { shakes += 1 }
+            }
     }
 }
 
@@ -173,11 +385,12 @@ private func textWidth(_ text: String, size: CGFloat) -> CGFloat {
 
 // MARK: - Results
 
-private struct ResultsCard: View {
+private struct ResultsList: View {
     let model: LauncherModel
 
     private static let rowSlot = LauncherMetrics.rowHeight + 1
     private static let bottomInset: CGFloat = 8
+    private static let emptyHeight: CGFloat = 60
     private static let top = "inky.list.top"
 
     var body: some View {
@@ -187,21 +400,24 @@ private struct ResultsCard: View {
                     .font(.system(size: 14, weight: .medium))
                     .foregroundStyle(.secondary)
                     .frame(maxWidth: .infinity)
-                    .frame(height: 60)
             } else {
                 list
-                    .frame(height: min(LauncherMetrics.listMaxHeight, contentHeight))
                     .clipShape(SurfaceShape(cornerRadius: LauncherMetrics.cardRadius))
             }
         }
-        .glassSurface(cornerRadius: LauncherMetrics.cardRadius)
+        .frame(height: Self.height(for: model.sections))
+        // Results change with every key. They are there at once, and the
+        // card catches up around them.
+        .transaction { $0.animation = nil }
     }
 
     /// Known from the data, so the card can be exactly as tall as its rows.
-    private var contentHeight: CGFloat {
-        model.sections.reduce(Self.bottomInset) { height, section in
-            height + LauncherMetrics.sectionHeaderHeight + CGFloat(section.items.count) * Self.rowSlot
+    static func height(for sections: [ResultSection]) -> CGFloat {
+        guard !sections.isEmpty else { return emptyHeight }
+        let rows = sections.reduce(bottomInset) { height, section in
+            height + LauncherMetrics.sectionHeaderHeight + CGFloat(section.items.count) * rowSlot
         }
+        return min(LauncherMetrics.listMaxHeight, rows)
     }
 
     private var list: some View {
@@ -395,7 +611,7 @@ private struct ActionMenu: View {
                             in: RoundedRectangle(cornerRadius: 9, style: .continuous)
                         )
                     }
-                    .buttonStyle(PressableButtonStyle())
+                    .buttonStyle(PressableButtonStyle(pressedScale: 1))
                 }
             }
         }

@@ -68,6 +68,11 @@ final class Preferences {
         }
     }
 
+    /// Whether the launcher animates. The Mac's Reduce Motion still applies.
+    var animations: Bool {
+        didSet { defaults.set(animations, forKey: Key.animations) }
+    }
+
     var fileSearchLimit: Int {
         didSet { defaults.set(fileSearchLimit, forKey: Key.fileSearchLimit) }
     }
@@ -82,11 +87,12 @@ final class Preferences {
     }
 
     private init() {
-        defaults.register(defaults: [Key.showMenuBarIcon: true, Key.fileSearchLimit: 8])
+        defaults.register(defaults: [Key.showMenuBarIcon: true, Key.animations: true, Key.fileSearchLimit: 8])
         hotkey = defaults.data(forKey: Key.hotkey)
             .flatMap { try? JSONDecoder().decode(KeyCombo.self, from: $0) } ?? .defaultLauncher
         showMenuBarIcon = defaults.bool(forKey: Key.showMenuBarIcon)
         appearance = defaults.string(forKey: Key.appearance).flatMap(AppearanceMode.init) ?? .system
+        animations = defaults.bool(forKey: Key.animations)
         fileSearchLimit = defaults.integer(forKey: Key.fileSearchLimit)
         disabledProviders = Set(defaults.stringArray(forKey: Key.disabledProviders) ?? [])
     }
@@ -121,6 +127,7 @@ final class Preferences {
         static let hotkey = "hotkey"
         static let showMenuBarIcon = "showMenuBarIcon"
         static let appearance = "appearance"
+        static let animations = "animations"
         static let fileSearchLimit = "fileSearchLimit"
         static let disabledProviders = "disabledProviders"
         static let hasLaunchedBefore = "hasLaunchedBefore"

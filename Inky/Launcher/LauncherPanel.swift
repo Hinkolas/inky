@@ -1,5 +1,6 @@
 import AppKit
 import InkyCore
+import QuartzCore
 import SwiftUI
 
 /// The floating window. It takes keyboard focus without activating Inky, so
@@ -79,6 +80,11 @@ final class LauncherController: NSObject, NSWindowDelegate {
     var isPinned = false
 
     private let panel = LauncherPanel()
+    /// True while the panel fades out. It is still on screen, but gone as
+    /// far as anyone using it is concerned.
+    private var isClosing = false
+    /// Tells a fade that ran to its end from one that was cut short.
+    private var closeCount = 0
 
     init(engine: SearchEngine, quicklinks: QuicklinkStore) {
         model = LauncherModel(engine: engine, quicklinks: quicklinks)
@@ -88,14 +94,18 @@ final class LauncherController: NSObject, NSWindowDelegate {
         content.sizingOptions = []
         panel.contentView = content
         panel.delegate = self
-        panel.keyHandler = { [weak self] event in self?.model.handleKey(event) ?? false }
+        panel.keyHandler = { [weak self] event in
+            guard let self else { return false }
+            // Keys pressed while it fades out are not meant for it anymore.
+            return isClosing || model.handleKey(event)
+        }
 
         model.dismiss = { [weak self] in self?.hide() }
         model.isVisible = { [weak self] in self?.isVisible ?? false }
         engine.onChange = { [weak self] in self?.model.refresh() }
     }
 
-    var isVisible: Bool { panel.isVisible }
+    var isVisible: Bool { panel.isVisible && !isClosing }
 
     func toggle() {
         if isVisible { hide() } else { show() }
@@ -103,33 +113,133 @@ final class LauncherController: NSObject, NSWindowDelegate {
 
     func show() {
         let frontmost = NSWorkspace.shared.frontmostApplication
+        // Asked for again before it had faded out: start over.
+        if isClosing { finishHiding() }
+        let isOpening = !panel.isVisible
+        let motion = Motion.current
+
         model.prepareForShow(frontmostPID: frontmost == .current ? nil : frontmost?.processIdentifier)
         position()
+        if isOpening, motion.level != .off { panel.alphaValue = 0 }
         #if DEBUG
         if debugQuiet {
             panel.level = .beneathDesktop
             debugBackdrop?.setFrame(panel.frame, display: true)
             debugBackdrop?.orderFrontRegardless()
             panel.orderFrontRegardless()
-            model.focus(.search)
-            return
+        } else {
+            panel.makeKeyAndOrderFront(nil)
         }
-        #endif
+        #else
         panel.makeKeyAndOrderFront(nil)
+        #endif
         model.focus(.search)
+        if isOpening { animateIn(motion) }
     }
 
     func hide() {
         guard isVisible else { return }
-        panel.orderOut(nil)
-        #if DEBUG
-        debugBackdrop?.orderOut(nil)
-        #endif
-        model.reset()
+        let motion = Motion.current
+        guard motion.level != .off else {
+            finishHiding()
+            return
+        }
+
+        isClosing = true
+        let count = closeCount
+        fade(to: 0, duration: motion.seconds(Self.closeDuration), timing: .easeIn) { [weak self] in
+            guard let self, isClosing, count == closeCount else { return }
+            finishHiding()
+        }
+        if motion.level == .full {
+            let animation = CABasicAnimation(keyPath: "transform")
+            animation.toValue = scale(Self.closedScale)
+            animation.duration = motion.seconds(Self.closeDuration)
+            animation.timingFunction = CAMediaTimingFunction(name: .easeIn)
+            // Stays small until the panel is off screen.
+            animation.fillMode = .forwards
+            animation.isRemovedOnCompletion = false
+            panel.contentView?.layer?.add(animation, forKey: Self.scaleKey)
+        }
     }
 
     func windowDidResignKey(_ notification: Notification) {
         if !isPinned { hide() }
+    }
+
+    // MARK: - Opening and closing
+
+    // The panel fades as a whole, which a window can do with everything in
+    // it, blur included. On top of that its content grows into place from
+    // around the bar, and gives a little on the way out. Opening has to feel
+    // instant: the panel takes keys from the first frame.
+
+    private static let openDuration = 0.16
+    private static let closeDuration = 0.11
+    private static let openedScale = 0.96
+    private static let closedScale = 0.985
+    private static let scaleKey = "inky.launcher.scale"
+
+    private func animateIn(_ motion: Motion) {
+        guard motion.level != .off else { return }
+        fade(to: 1, duration: motion.seconds(Self.openDuration), timing: .easeOut)
+
+        guard motion.level == .full, let layer = panel.contentView?.layer else { return }
+        let animation = CASpringAnimation(perceptualDuration: motion.seconds(0.3), bounce: 0.18)
+        animation.keyPath = "transform"
+        animation.fromValue = scale(Self.openedScale)
+        animation.toValue = CATransform3DIdentity
+        animation.duration = animation.settlingDuration
+        layer.add(animation, forKey: Self.scaleKey)
+    }
+
+    private func finishHiding() {
+        isClosing = false
+        closeCount += 1
+        panel.orderOut(nil)
+        panel.contentView?.layer?.removeAnimation(forKey: Self.scaleKey)
+        fade(to: 1, duration: 0, timing: .linear)
+        #if DEBUG
+        debugBackdrop?.orderOut(nil)
+        #endif
+        // Nobody is looking, and a change left half-animated would finish
+        // in front of the user the next time the panel opens.
+        var transaction = Transaction()
+        transaction.disablesAnimations = true
+        withTransaction(transaction) { model.reset() }
+    }
+
+    private func fade(
+        to alpha: CGFloat,
+        duration: TimeInterval,
+        timing: CAMediaTimingFunctionName,
+        completion: (@MainActor @Sendable () -> Void)? = nil
+    ) {
+        NSAnimationContext.runAnimationGroup({ context in
+            context.duration = duration
+            context.timingFunction = CAMediaTimingFunction(name: timing)
+            panel.animator().alphaValue = alpha
+        }, completionHandler: {
+            MainActor.assumeIsolated { completion?() }
+        })
+    }
+
+    /// The content scaled around the middle of the bar, so that the bar
+    /// stays where it is.
+    private func scale(_ scale: CGFloat) -> CATransform3D {
+        guard let view = panel.contentView, let layer = view.layer else { return CATransform3DIdentity }
+        let barMiddle = LauncherMetrics.margin.top + LauncherMetrics.barHeight / 2
+        // A layer's transform is about its anchor point.
+        let anchor = CGPoint(
+            x: layer.bounds.minX + layer.bounds.width * layer.anchorPoint.x,
+            y: layer.bounds.minY + layer.bounds.height * layer.anchorPoint.y
+        )
+        let x = view.bounds.midX - anchor.x
+        // Measured from the bottom, whichever way up the view counts.
+        let y = view.bounds.height - barMiddle - anchor.y
+        var transform = CATransform3DMakeTranslation(x, y, 0)
+        transform = CATransform3DScale(transform, scale, scale, 1)
+        return CATransform3DTranslate(transform, -x, -y, 0)
     }
 
     #if DEBUG

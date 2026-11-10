@@ -13,12 +13,14 @@ struct QuicklinkEditorScreen: View {
         case name, link
     }
 
+    /// Of the body card.
+    static let size = CGSize(width: 820, height: 410)
+
     var body: some View {
         CommandScreen(
             icon: .symbol("link", tint: .purple),
             path: ["Quicklinks", draft.isNew ? "New Quicklink" : "Edit Quicklink"],
-            size: CGSize(width: 820, height: 410),
-            onBack: model.popRoute
+            size: Self.size
         ) {
             CapsuleButton(title: draft.isNew ? "Add" : "Save", keys: ["⌘", "↵"], isProminent: true) {
                 model.saveQuicklink()

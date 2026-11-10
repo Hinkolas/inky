@@ -15,7 +15,9 @@ Inky is at an early stage. The core works and is meant to be built on.
 - **System commands**: lock, sleep, restart, shut down, log out, empty trash, toggle dark mode.
 
 The default hotkey is ⌥Space. Change it under Settings → General, where you
-also choose a light or dark appearance, or leave that to the system.
+also choose a light or dark appearance, or leave that to the system, and turn
+the launcher's animations off. With Reduce Motion on in System Settings the
+launcher fades instead of moving.
 
 Inky opens as a single floating bar. Results appear in a card below it as you
 type. A command that needs more room, such as Manage Quicklinks, takes over
@@ -57,8 +59,9 @@ contract that scripted extensions will use, so the extension API is one that has
 already been proven by real features.
 
 A command's screen is put together from a small set of parts in
-`Inky/Commands/CommandKit.swift`: `CommandScreen` (the back button, the header
-pill a command configures, and the body card), `Sidebar` for narrowing down
+`Inky/Commands/CommandKit.swift`: `CommandScreen` (the header pill a command
+configures and the body card, which the launcher's own bar and card turn
+into), `Sidebar` for narrowing down
 what is shown, `SidePanel` for previews, details and actions, and the rows,
 form groups and controls that go inside them. The quicklink browser and editor
 are built from these, and extensions will describe the same parts as data.
@@ -78,8 +81,10 @@ Inky.app/Contents/MacOS/Inky --pin --query "saf" --keys "cmd+k down"
 take no focus and register no hotkey or menu bar icon, for automated captures),
 `--query <text>`, `--keys "<keys>"`, `--settings [pane]`, `--quicklinks`,
 `--new-quicklink`, `--appearance light|dark`, `--backdrop light|dark` (a
-stand-in wallpaper behind a quiet launcher, to see the translucency), and
-`--data <folder>` (keep quicklinks and usage there instead of in your own).
+stand-in wallpaper behind a quiet launcher, to see the translucency),
+`--data <folder>` (keep quicklinks and usage there instead of in your own),
+`--motion full|reduced|off`, and `--slow <factor>` (stretch every animation, to
+look at one frame by frame).
 
 ## Roadmap
 

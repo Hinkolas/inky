@@ -5,8 +5,9 @@ import SwiftUI
 /// bar on top, and below it, unconnected, whatever the bar is showing.
 ///
 /// The search bar and a command's header are the same bar in the same place:
-/// opening a command turns one into the other.
-enum LauncherMetrics {
+/// opening a command turns one into the other. `LauncherView` draws the
+/// surfaces; a screen draws what goes on them.
+nonisolated enum LauncherMetrics {
     static let barHeight: CGFloat = 56
     /// Round buttons inside the bar, and the icon of a command.
     static let barControlSize: CGFloat = 36
@@ -107,6 +108,8 @@ nonisolated struct SurfaceShape: InsettableShape {
 
     func path(in rect: CGRect) -> Path {
         let rect = rect.insetBy(dx: inset, dy: inset)
+        // A card that is growing out of nothing has no room for its border yet.
+        guard !rect.isNull, !rect.isEmpty else { return Path() }
         guard let cornerRadius else { return Capsule().path(in: rect) }
         return RoundedRectangle(cornerRadius: max(0, cornerRadius - inset), style: .continuous).path(in: rect)
     }
