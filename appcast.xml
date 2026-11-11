@@ -1,0 +1,55 @@
+<?xml version="1.0" standalone="yes"?><!-- sparkle-sign-warning:
+IMPORTANT: This file was signed by Sparkle. Any modifications to this file requires re-signing this file with generate_appcast or sign_update! The signed signature will be embedded at the end of this file.
+--><rss xmlns:sparkle="http://www.andymatuschak.org/xml-namespaces/sparkle" version="2.0">
+    <channel>
+        <title>Inky</title>
+        <item>
+            <title>0.1.0-alpha.1</title>
+            <pubDate>Wed, 11 Nov 2026 18:14:15 +0000</pubDate>
+            <link>https://github.com/Hinkolas/inky</link>
+            <sparkle:fullReleaseNotesLink>https://github.com/Hinkolas/inky/releases/tag/v0.1.0-alpha.1</sparkle:fullReleaseNotesLink>
+            <sparkle:channel>beta</sparkle:channel>
+            <sparkle:version>48</sparkle:version>
+            <sparkle:shortVersionString>0.1.0-alpha.1</sparkle:shortVersionString>
+            <sparkle:minimumSystemVersion>15.0</sparkle:minimumSystemVersion>
+            <sparkle:hardwareRequirements>arm64</sparkle:hardwareRequirements>
+            <description><![CDATA[<p>The first public alpha.</p>
+<div class="markdown-heading"><h3 class="heading-element">Included</h3><a id="user-content-included" class="anchor" aria-label="Permalink: Included" href="#included"><span aria-hidden="true" class="octicon octicon-link"></span></a></div>
+<ul>
+<li>An app icon made in Icon Composer, with a matching template icon in the menu bar.</li>
+<li>A disk image to download, with Inky and the Applications folder to drag it onto.</li>
+<li>Updates from GitHub Releases through Sparkle, with a signed feed and archives, for signed and notarized downloads. Every version is a download; Settings → General picks the Stable or the Beta update channel, and a pre-release starts on Beta. About and the update window show the whole version, such as 0.1.0-alpha.1.</li>
+<li>A welcome window on first launch for the hotkey, features, clipboard history and its permissions, online lookups and startup.</li>
+<li>Application launching, fuzzy search, usage ranking and Spotlight file search.</li>
+<li>Quicklinks with arguments, clipboard and selected-text placeholders.</li>
+<li>Clipboard history for text, images and files, with pins and retention settings. Copies that password managers mark as confidential are left out by default.</li>
+<li>Calculator, unit and currency conversions, time queries and color conversion.</li>
+<li>System commands, per-command hotkeys, disabled commands and configurable fallbacks.</li>
+<li>Application uninstall review with selected files moved to the Trash.</li>
+<li>MIT source license, GeoNames attribution, contribution and security policies, and macOS test/build CI.</li>
+</ul>
+<div class="markdown-heading"><h3 class="heading-element">Fixed during release preparation</h3><a id="user-content-fixed-during-release-preparation" class="anchor" aria-label="Permalink: Fixed during release preparation" href="#fixed-during-release-preparation"><span aria-hidden="true" class="octicon octicon-link"></span></a></div>
+<ul>
+<li>Failed clipboard database opens preserve saved databases, journals and images; a visible temporary history is used until the problem is resolved.</li>
+<li>Clipboard text containing embedded null characters is preserved when copied again.</li>
+<li>Uninstalling revalidates selected files against the current application inventory, rejecting unrelated files and data now shared by another installed copy.</li>
+<li>Failed GeoNames regeneration no longer truncates the bundled city list.</li>
+<li>Time arithmetic rejects durations that overflow or produce dates outside years 1–9999.</li>
+</ul>
+<div class="markdown-heading"><h3 class="heading-element">Known limitations</h3><a id="user-content-known-limitations" class="anchor" aria-label="Permalink: Known limitations" href="#known-limitations"><span aria-hidden="true" class="octicon octicon-link"></span></a></div>
+<ul>
+<li>Requires a Mac with Apple silicon; Intel Macs are not supported.</li>
+<li>Clipboard history is stored without application-level encryption. Passwords copied from apps that do not mark them as confidential are kept. Disable the module if needed.</li>
+<li>Builds from source use an ad-hoc signature and do not update themselves. Signed, notarized, self-updating downloads start with this version.</li>
+<li>Application-data matching for uninstalling is heuristic; review the selected files.</li>
+<li>Currency conversions may use stale cached reference rates.</li>
+<li>Lua extensions are planned and cannot be installed yet.</li>
+</ul>
+]]></description>
+            <enclosure url="https://github.com/Hinkolas/inky/releases/download/v0.1.0-alpha.1/Inky-0.1.0-alpha.1.zip" length="3736629" type="application/octet-stream" sparkle:edSignature="mjUSJWMtQgiZgSY+RhMKllCzMdmaPfjoEXKMAGZDvdaruPYCgQKtQQkqCUx+jhAawZAfc4nfuNw/FmEFhYlqDA=="></enclosure>
+        </item>
+    </channel>
+</rss><!-- sparkle-signatures:
+edSignature: f13kiz4GNszBmmmOwMBW8erR+Jx8iY9mQwZ/VQccVFjxUr0qI358m6rk698xVkjE1NWqYtVbcLW8mRWCYv3BAA==
+length: 4912
+-->
