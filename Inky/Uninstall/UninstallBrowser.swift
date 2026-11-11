@@ -67,7 +67,7 @@ final class UninstallBrowser {
 struct UninstallBrowserScreen: View {
     let model: LauncherModel
     @Bindable var browser: UninstallBrowser
-    @FocusState private var isFilterFocused: Bool
+    let focus: LauncherFocus
 
     /// Of the body card.
     static let size = CGSize(width: 780, height: 440)
@@ -97,7 +97,7 @@ struct UninstallBrowserScreen: View {
             FilterField(
                 text: $browser.query,
                 prompt: total == 1 ? "Filter 1 application" : "Filter \(total) applications",
-                focus: $isFilterFocused
+                focus: focus
             )
         } accessory: {
             EmptyView()
@@ -105,7 +105,6 @@ struct UninstallBrowserScreen: View {
             list(visible, selected: selected)
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
         }
-        .onAppear { isFilterFocused = true }
     }
 
     @ViewBuilder private func list(_ applications: [ApplicationInfo], selected: ApplicationInfo?) -> some View {

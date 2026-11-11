@@ -184,8 +184,14 @@ Debug builds accept launch arguments that put the app into a known state:
 
 `--show`, `--pin` (stay open without focus), `--quiet` (draw beneath the desktop,
 take no focus and register no hotkey or menu bar icon, for automated captures),
+`--key` (with `--quiet`: take the keyboard while still hidden, to check where
+focus ends up, and drop what is typed meanwhile),
 `--query <text>`, `--keys "<keys>"` (among them `run:<command id>`, which does
-what the command's hotkey does), `--settings [pane]`, `--search <text>` (what
+what the command's hotkey does, and with `--key` also `hotkey` and
+`hotkey:<command id>`, which press a real one, and `probe`, which prints
+whether a key press arrives at the launcher), `--key-delay <milliseconds>`
+(between those keys), `--run <command id>` (open the launcher the way the
+command's hotkey does), `--settings [pane]`, `--search <text>` (what
 the settings' list of all commands is narrowed down to),
 `--onboarding [hotkey|features|clipboard|online|ready]` (the welcome window,
 at a step), `--quicklinks`, `--new-quicklink`, `--uninstall [application]`,

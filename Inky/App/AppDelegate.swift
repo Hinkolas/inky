@@ -125,9 +125,9 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
 
 #if DEBUG
 /// Launch arguments that put the app into a known state for development:
-/// `--show`, `--pin`, `--quiet`, `--query <text>`,
-/// `--keys "tab a cmd+k hide show clipboard run:<command id>"`,
-/// `--settings [pane]`, `--search <text>`, `--onboarding [step]`, `--new-quicklink`, `--quicklinks`, `--uninstall [application]`,
+/// `--show`, `--pin`, `--quiet`, `--key`, `--query <text>`,
+/// `--keys "tab a cmd+k hide show toggle clipboard run:<command id>"`, `--key-delay <milliseconds>`,
+/// `--run <command id>`, `--settings [pane]`, `--search <text>`, `--onboarding [step]`, `--new-quicklink`, `--quicklinks`, `--uninstall [application]`,
 /// `--clipboard [filter]`, `--clipboard-samples`,
 /// `--appearance light|dark`, `--backdrop light|dark`, `--data <folder>`,
 /// `--motion full|reduced|off`, `--slow <factor>`.
@@ -135,6 +135,15 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
 /// To look at an animation, stretch it with `--slow` and put `mark` before
 /// the key that starts it: `--keys "wait mark return"`. `mark` prints a line
 /// to wait for, `wait` pauses for a second.
+///
+/// Where the keyboard ends up depends on the launcher being the key window,
+/// which a quiet run is not. `--quiet --key` takes the keyboard while still
+/// hidden, and drops what is typed meanwhile instead of acting on it. In
+/// such a run `hotkey` and `hotkey:<command id>` press a real hotkey, for
+/// Inky and for a command, `probe` presses a key and prints whether it
+/// arrived at the launcher, and `blur` takes the keyboard from the field
+/// that has it. `--run` opens the launcher as a command's hotkey does. The
+/// state line names the field that has the keyboard by its placeholder.
 enum DebugLaunch {
     private static let arguments = ProcessInfo.processInfo.arguments
 
@@ -158,10 +167,41 @@ enum DebugLaunch {
         return arguments[index + 1]
     }
 
+    /// The hotkeys of this run, on keys nothing else uses: F13 and up, with
+    /// every modifier held.
+    private static var hotKeys: [String: (keyCode: UInt32, hotKey: GlobalHotKey)] = [:]
+
+    /// Registers a hotkey for `name` the first time, and presses its keys the
+    /// way a keyboard does.
+    private static func pressHotKey(_ name: String, handler: @escaping () -> Void) {
+        let codes: [UInt32] = [0x69, 0x6B, 0x71, 0x6A, 0x40, 0x4F, 0x50]
+        if hotKeys[name] == nil, hotKeys.count < codes.count {
+            let code = codes[hotKeys.count]
+            let modifiers = NSEvent.ModifierFlags([.command, .option, .control, .shift]).rawValue
+            if let hotKey = GlobalHotKey(KeyCombo(keyCode: code, modifiers: modifiers), handler: handler) {
+                hotKeys[name] = (code, hotKey)
+            }
+        }
+        guard let code = hotKeys[name]?.keyCode else {
+            FileHandle.standardError.write(Data("HOTKEY unavailable\n".utf8))
+            return
+        }
+        let source = CGEventSource(stateID: .combinedSessionState)
+        for isDown in [true, false] {
+            let event = CGEvent(keyboardEventSource: source, virtualKey: CGKeyCode(code), keyDown: isDown)
+            event?.flags = [.maskCommand, .maskAlternate, .maskControl, .maskShift, .maskSecondaryFn]
+            // Where a keyboard's keys come in: hotkeys are matched before a
+            // session ever sees them.
+            event?.post(tap: .cghidEventTap)
+        }
+    }
+
     static func apply(to context: AppContext) {
         let quiet = isQuiet
         context.launcher.isPinned = arguments.contains("--pin")
         context.launcher.debugQuiet = quiet
+        context.launcher.debugTakesKeyboard = quiet && arguments.contains("--key")
+        let keyDelay = value(after: "--key-delay").flatMap(Int.init) ?? 120
         // Overrides the setting for this run only.
         if let appearance = value(after: "--appearance").flatMap(AppearanceMode.init) {
             NSApp.appearance = appearance.appearance
@@ -188,7 +228,7 @@ enum DebugLaunch {
                 Task { await context.engine.reloadAll() }
             }
         }
-        guard !Set(arguments).isDisjoint(with: ["--show", "--query", "--new-quicklink", "--quicklinks", "--uninstall", "--clipboard"]) else {
+        guard !Set(arguments).isDisjoint(with: ["--show", "--query", "--new-quicklink", "--quicklinks", "--uninstall", "--clipboard", "--run"]) else {
             return
         }
         Task {
@@ -197,7 +237,12 @@ enum DebugLaunch {
                 await ClipboardSamples.fill(context.clipboard.store)
             }
             await context.engine.reloadAll()
-            context.launcher.show()
+            if let command = value(after: "--run") {
+                // As the command's hotkey does, with the launcher never shown before.
+                context.runCommand(command)
+            } else {
+                context.launcher.show()
+            }
             if let query = value(after: "--query") {
                 context.launcher.model.setQuery(query)
             }
@@ -229,7 +274,7 @@ enum DebugLaunch {
                 try? await Task.sleep(for: .milliseconds(200))
             }
             for key in (value(after: "--keys") ?? "").split(separator: " ") {
-                try? await Task.sleep(for: .milliseconds(120))
+                try? await Task.sleep(for: .milliseconds(keyDelay))
                 switch key {
                 case "hide": context.launcher.hide()
                 case "show": context.launcher.show()
@@ -238,6 +283,19 @@ enum DebugLaunch {
                 // As the hotkey of any command does: `run:inky:manage-quicklinks`.
                 case _ where key.hasPrefix("run:"): context.runCommand(String(key.dropFirst(4)))
                 case "wait": try? await Task.sleep(for: .seconds(1))
+                case "toggle": context.launcher.toggle()
+                case "blur": context.launcher.debugBlur()
+                // The real thing: a hotkey registered with macOS, and its keys pressed.
+                case "hotkey":
+                    pressHotKey("") { context.launcher.toggle() }
+                    try? await Task.sleep(for: .milliseconds(keyDelay))
+                case _ where key.hasPrefix("hotkey:"):
+                    let id = String(key.dropFirst(7))
+                    pressHotKey(id) { context.runCommand(id) }
+                    try? await Task.sleep(for: .milliseconds(keyDelay))
+                case "probe":
+                    let arrived = await context.launcher.debugProbe()
+                    FileHandle.standardError.write(Data("PROBE arrived=\(arrived)\n".utf8))
                 case "mark": FileHandle.standardError.write(Data("MARK\n".utf8))
                 default: context.launcher.debugPress(String(key))
                 }

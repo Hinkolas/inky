@@ -218,8 +218,7 @@ final class ClipboardBrowser {
 struct ClipboardBrowserScreen: View {
     let model: LauncherModel
     @Bindable var browser: ClipboardBrowser
-    @FocusState private var isFilterFocused: Bool
-    @FocusState private var isNameFocused: Bool
+    let focus: LauncherFocus
 
     /// Of the body card.
     static let size = CGSize(width: 940, height: 500)
@@ -239,7 +238,7 @@ struct ClipboardBrowserScreen: View {
             FilterField(
                 text: $browser.query,
                 prompt: total == 1 ? "Filter 1 item" : "Filter \(total) items",
-                focus: $isFilterFocused
+                focus: focus
             )
         } accessory: {
             rangeMenu
@@ -268,14 +267,11 @@ struct ClipboardBrowserScreen: View {
                 }
             }
         }
-        .onAppear {
-            isFilterFocused = true
-            browser.history.refreshAccess()
-        }
+        .onAppear { browser.history.refreshAccess() }
         .onChange(of: browser.history.revision) { browser.reload() }
-        .onChange(of: browser.renaming != nil) { _, isRenaming in
-            if isRenaming { isNameFocused = true } else { isFilterFocused = true }
-        }
+        // The name is typed where it is shown, and the filter is typed into
+        // again once the name is saved or let be.
+        .onChange(of: browser.renaming != nil) { model.focusDefault() }
     }
 
     private var rangeMenu: some View {
@@ -448,9 +444,8 @@ struct ClipboardBrowserScreen: View {
             ))
                 .textFieldStyle(.plain)
                 .font(.system(size: 13.5))
-                .focused($isNameFocused)
-                .onAppear { isNameFocused = true }
-                .modifier(FieldBox(isFocused: true))
+                .launcherFocus(focus, .clipName)
+                .modifier(FieldBox(isFocused: focus.wrappedValue == .clipName))
                 .padding(.bottom, 14)
         }
 

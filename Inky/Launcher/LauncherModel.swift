@@ -16,9 +16,16 @@ final class LauncherModel {
         case clipboard(ClipboardBrowser)
     }
 
+    /// A field that can be typed into.
     enum FocusTarget: Hashable {
         case search
         case argument(Int)
+        /// The field in a command's header that narrows down what it lists.
+        case filter
+        case quicklinkName
+        case quicklinkLink
+        /// The name of the entry of the clipboard history that is being renamed.
+        case clipName
     }
 
     struct MenuSection: Identifiable {
@@ -48,6 +55,13 @@ final class LauncherModel {
     /// Shows a command in the settings, where it gets a hotkey.
     @ObservationIgnored var configureCommand: (ResultItem) -> Void = { _ in }
     @ObservationIgnored var isVisible: () -> Bool = { false }
+    /// Called when the keyboard is wanted somewhere. The launcher's window
+    /// puts it there.
+    @ObservationIgnored var focusDidChange: () -> Void = {}
+    /// True for a moment after the keyboard was asked somewhere, while the
+    /// window sees it get there. Until then, where it is says nothing about
+    /// where the user wants it.
+    @ObservationIgnored var isFocusSettling = false
     @ObservationIgnored private var frontmostPID: pid_t?
     @ObservationIgnored private var deferredSearch: Task<Void, Never>?
     @ObservationIgnored private var toastTimer: Task<Void, Never>?
@@ -72,9 +86,12 @@ final class LauncherModel {
     private(set) var actionMenuIndex = 0
     private(set) var toast: String?
 
-    /// Where keyboard focus should be. Views apply it whenever `focusTick` changes.
-    private(set) var focusTarget: FocusTarget = .search
-    private(set) var focusTick = 0
+    /// The field the keyboard should be in. Nil on a screen that has
+    /// nothing to type into.
+    private(set) var focusTarget: FocusTarget? = .search
+    /// Goes up when SwiftUI is to move the keyboard there itself, because
+    /// the window could not find the field.
+    private(set) var focusFallbackTick = 0
     /// Counts the times an action was asked for while the focused argument,
     /// which it needs, was still empty.
     private(set) var missingArgumentTick = 0
@@ -205,7 +222,9 @@ final class LauncherModel {
     private func selectionDidChange() {
         argumentValues = Array(repeating: "", count: selectedItem?.arguments.count ?? 0)
         isActionMenuOpen = false
-        if focusTarget != .search { focus(.search) }
+        // The arguments went with the result they were for. Results also
+        // change behind a command's screen, which has the keyboard then.
+        if route == nil, focusTarget != .search { focus(.search) }
     }
 
     private func moveSelection(by offset: Int) {
@@ -222,14 +241,38 @@ final class LauncherModel {
         argumentValues[index] = value
     }
 
-    func focus(_ target: FocusTarget) {
+    func focus(_ target: FocusTarget?) {
         focusTarget = target
-        focusTick += 1
+        focusDidChange()
+    }
+
+    /// The field a screen is typed into, unless the user moved elsewhere.
+    private var defaultFocus: FocusTarget? {
+        switch route {
+        case nil: .search
+        case .quicklinks, .uninstallBrowser: .filter
+        case .quicklinkEditor(let draft): draft.isNew ? .quicklinkName : .quicklinkLink
+        // It lists what goes with an application. There is nothing to type.
+        case .uninstall: nil
+        case .clipboard(let browser): browser.renaming == nil ? .filter : .clipName
+        }
+    }
+
+    /// Puts the keyboard where the screen that is showing wants it: when
+    /// the launcher opens, the screen changes, or a field comes or goes.
+    func focusDefault() {
+        focus(defaultFocus)
     }
 
     /// Called when focus moved without the model asking, such as by a click.
     func focusDidMove(to target: FocusTarget) {
+        guard !isFocusSettling else { return }
         focusTarget = target
+    }
+
+    /// Has SwiftUI move the keyboard, for a field the window did not find.
+    func focusBySwiftUI() {
+        focusFallbackTick += 1
     }
 
     private func cycleFocus(by offset: Int) {
@@ -357,11 +400,12 @@ final class LauncherModel {
         }
         query = item.title
         refresh(resetSelection: true)
-        guard itemIDs.contains(item.id) else { return }
-        select(item.id)
-        if let missing = item.arguments.firstIndex(where: \.isRequired) {
-            focus(.argument(missing))
+        guard itemIDs.contains(item.id) else {
+            focusDefault()
+            return
         }
+        select(item.id)
+        focus(item.arguments.firstIndex(where: \.isRequired).map { .argument($0) } ?? .search)
     }
 
     /// The keys that run an action of a result: Return for the first,
@@ -497,23 +541,23 @@ final class LauncherModel {
     private func push(_ route: Route) {
         isActionMenuOpen = false
         isNavigatingBack = false
-        guard arrivesInstantly else {
+        if arrivesInstantly {
+            var transaction = Transaction()
+            transaction.disablesAnimations = true
+            withTransaction(transaction) { routes.append(route) }
+        } else {
             routes.append(route)
-            return
         }
-        var transaction = Transaction()
-        transaction.disablesAnimations = true
-        withTransaction(transaction) { routes.append(route) }
+        focusDefault()
     }
 
     func popRoute() {
         guard !routes.isEmpty else { return }
         isNavigatingBack = true
         routes.removeLast()
-        if routes.isEmpty {
-            rootCommand = nil
-            focus(.search)
-        }
+        if routes.isEmpty { rootCommand = nil }
+        // The screen that comes back is made anew, and its field with it.
+        focusDefault()
     }
 
     func showQuicklinks() {
@@ -823,6 +867,13 @@ final class LauncherModel {
             switch (key, modifiers) {
             case ("escape", []): popRoute()
             case ("return", .command): saveQuicklink()
+            case ("tab", []), ("tab", .shift):
+                // With Full Keyboard Access the buttons take the keyboard
+                // too, and Tab is left to macOS. Otherwise it goes from one
+                // field to the other: left to itself, Tab in the link, which
+                // has several lines, leaves the keyboard with neither.
+                guard !NSApp.isFullKeyboardAccessEnabled else { return false }
+                focus(focusTarget == .quicklinkName ? .quicklinkLink : .quicklinkName)
             default: return false
             }
             return true

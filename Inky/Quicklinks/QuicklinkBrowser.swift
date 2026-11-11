@@ -103,7 +103,7 @@ final class QuicklinkBrowser {
 struct QuicklinkBrowserScreen: View {
     let model: LauncherModel
     @Bindable var browser: QuicklinkBrowser
-    @FocusState private var isFilterFocused: Bool
+    let focus: LauncherFocus
 
     /// Of the body card.
     static let size = CGSize(width: 940, height: 500)
@@ -121,7 +121,7 @@ struct QuicklinkBrowserScreen: View {
             FilterField(
                 text: $browser.query,
                 prompt: total == 1 ? "Filter 1 quicklink" : "Filter \(total) quicklinks",
-                focus: $isFilterFocused
+                focus: focus
             )
         } accessory: {
             CapsuleButton(title: "New", keys: ["⌘", "N"]) {
@@ -156,7 +156,6 @@ struct QuicklinkBrowserScreen: View {
                 }
             }
         }
-        .onAppear { isFilterFocused = true }
     }
 
     @ViewBuilder private func list(_ quicklinks: [Quicklink], selected: Quicklink?) -> some View {

@@ -1,4 +1,5 @@
 import AppKit
+import Carbon.HIToolbox
 import InkyCore
 import QuartzCore
 import SwiftUI
@@ -11,6 +12,9 @@ import SwiftUI
 final class LauncherPanel: NSPanel {
     /// Sees every key press before the focused text field. Returns true to consume it.
     var keyHandler: ((NSEvent) -> Bool)?
+    /// Called before a key press or a click goes anywhere, while there is
+    /// still time to see that typing has somewhere to go.
+    var inputWillArrive: ((NSEvent) -> Void)?
 
     init() {
         super.init(
@@ -34,12 +38,47 @@ final class LauncherPanel: NSPanel {
     override var canBecomeKey: Bool { true }
     override var canBecomeMain: Bool { false }
 
+    #if DEBUG
+    /// In a run that takes the keyboard while hidden, what the user types
+    /// meanwhile must not do anything here. Only the run's own keys count.
+    var debugIgnoresTyping = false
+    var debugIsPressing = false
+    /// F20, which nothing uses: pressed to see whether typing arrives here.
+    static let debugProbeKey: UInt16 = 0x5A
+    var debugProbeArrived = false
+    #endif
+
     override func sendEvent(_ event: NSEvent) {
-        if event.type == .keyDown, handle(event) { return }
+        #if DEBUG
+        if event.type == .keyDown || event.type == .keyUp {
+            if event.keyCode == Self.debugProbeKey {
+                debugProbeArrived = true
+                return
+            }
+            if debugIgnoresTyping, !debugIsPressing { return }
+        }
+        #endif
+        switch event.type {
+        case .keyDown:
+            inputWillArrive?(event)
+            if handle(event) { return }
+        case .leftMouseDown, .rightMouseDown, .otherMouseDown:
+            inputWillArrive?(event)
+        default:
+            break
+        }
         super.sendEvent(event)
     }
 
     override func performKeyEquivalent(with event: NSEvent) -> Bool {
+        #if DEBUG
+        if event.keyCode == Self.debugProbeKey {
+            debugProbeArrived = true
+            return true
+        }
+        if debugIgnoresTyping, !debugIsPressing { return true }
+        #endif
+        inputWillArrive?(event)
         if handle(event) || super.performKeyEquivalent(with: event) { return true }
 
         // Inky is not the active app while the panel is up, so its Edit menu
@@ -101,6 +140,8 @@ final class LauncherController: NSObject, NSWindowDelegate {
             // Keys pressed while it fades out are not meant for it anymore.
             return isClosing || model.handleKey(event)
         }
+        panel.inputWillArrive = { [weak self] event in self?.inputWillArrive(event) }
+        model.focusDidChange = { [weak self] in self?.settleFocus() }
 
         model.dismiss = { [weak self] in self?.hide() }
         model.dismissThen = { [weak self] action in
@@ -131,14 +172,19 @@ final class LauncherController: NSObject, NSWindowDelegate {
             panel.level = .beneathDesktop
             debugBackdrop?.setFrame(panel.frame, display: true)
             debugBackdrop?.orderFrontRegardless()
-            panel.orderFrontRegardless()
+            if debugTakesKeyboard {
+                panel.makeKeyAndOrderFront(nil)
+            } else {
+                panel.orderFrontRegardless()
+            }
         } else {
             panel.makeKeyAndOrderFront(nil)
         }
         #else
         panel.makeKeyAndOrderFront(nil)
         #endif
-        model.focus(.search)
+        // The search, or the screen that is showing if the launcher was open.
+        model.focusDefault()
         if isOpening { animateIn(motion) }
     }
 
@@ -200,6 +246,102 @@ final class LauncherController: NSObject, NSWindowDelegate {
 
     func windowDidResignKey(_ notification: Notification) {
         if !isPinned { hide() }
+    }
+
+    func windowDidBecomeKey(_ notification: Notification) {
+        settleFocus()
+    }
+
+    // MARK: - Focus
+
+    // The model says which field is typed into. This puts the keyboard
+    // there, which SwiftUI cannot be relied on to do: see LauncherFocus.swift.
+
+    /// Counts the times the keyboard was asked somewhere, so that seeing to
+    /// one request ends where the next begins.
+    private var focusRequest = 0
+    /// The keyboard is looked after for a moment once it was asked
+    /// somewhere: right away, which does it if the field is there, and then
+    /// again after each of these waits, in seconds. The next turns of the
+    /// run loop are when SwiftUI has made a field that was not there yet.
+    /// The later looks are for anything but the user moving the keyboard
+    /// away again while a window or a screen settles in.
+    private static let focusWaits: [TimeInterval] = [0, 0, 0.02, 0.03, 0.05, 0.1]
+    /// The look by which a field that is going to be there, is.
+    private static let focusFallbackLook = 3
+
+    /// Whether the panel is to have the keyboard while it is up.
+    private var takesKeyboard: Bool {
+        #if DEBUG
+        if debugQuiet { return debugTakesKeyboard }
+        #endif
+        return true
+    }
+
+    /// Puts the keyboard where the model wants it, and sees that it stays.
+    private func settleFocus() {
+        focusRequest += 1
+        model.isFocusSettling = true
+        settleFocus(focusRequest, look: 0)
+    }
+
+    private func settleFocus(_ request: Int, look: Int) {
+        guard request == focusRequest else { return }
+        guard isVisible else {
+            endSettlingFocus()
+            return
+        }
+        // Up, and not pinned open: it is the window that is typed into.
+        if takesKeyboard, !isPinned, !panel.isKeyWindow { panel.makeKey() }
+        // Still not there after SwiftUI had its turns to make the field:
+        // it is not going to be found. SwiftUI knows its own.
+        if !placeFocus(), look == Self.focusFallbackLook { model.focusBySwiftUI() }
+
+        guard look < Self.focusWaits.count else {
+            endSettlingFocus()
+            return
+        }
+        DispatchQueue.main.asyncAfter(deadline: .now() + Self.focusWaits[look]) { [weak self] in
+            self?.settleFocus(request, look: look + 1)
+        }
+    }
+
+    /// Gives the keyboard to the field the model wants it in. False if that
+    /// field is not there, which it is not until SwiftUI has made it.
+    @discardableResult
+    private func placeFocus() -> Bool {
+        guard let target = model.focusTarget else { return true }
+        guard let field = panel.contentView?.textField(for: target) else { return false }
+        // Typed into already: what is selected in it stays as it is.
+        if let editor = field.currentEditor(), panel.firstResponder === editor { return true }
+        guard panel.makeFirstResponder(field) else { return false }
+        // A field that takes the keyboard selects what it holds, to be typed
+        // over. A link is added to more often than it is replaced.
+        if target == .quicklinkLink, let editor = field.currentEditor() {
+            editor.selectedRange = NSRange(location: (editor.string as NSString).length, length: 0)
+        }
+        return true
+    }
+
+    /// From here on the keyboard is where the user puts it.
+    private func endSettlingFocus() {
+        focusRequest += 1
+        model.isFocusSettling = false
+    }
+
+    private func inputWillArrive(_ event: NSEvent) {
+        guard isVisible else { return }
+        if event.type == .keyDown {
+            // With no field at all, as when the one that had the keyboard
+            // went away, it goes where it belongs first, so that nothing
+            // typed is lost.
+            if panel.firstResponder === panel { placeFocus() }
+            // Tab moves the keyboard, as a click does. Other keys are typed.
+            guard Int(event.keyCode) == kVK_Tab else { return }
+        }
+        // The user is about to move the keyboard themselves. Once it has
+        // got where it was asked, that is theirs to do.
+        if model.isFocusSettling, placeFocus() { endSettlingFocus() }
     }
 
     // MARK: - Opening and closing
@@ -288,6 +430,19 @@ final class LauncherController: NSObject, NSWindowDelegate {
     /// do not get in the way of whoever is using the Mac.
     var debugQuiet = false
 
+    /// Has a quiet run take the keyboard as the launcher really does, still
+    /// hidden: where focus ends up depends on the panel being the key window.
+    /// What the user types meanwhile is dropped instead of acted on.
+    var debugTakesKeyboard = false {
+        didSet { panel.debugIgnoresTyping = debugTakesKeyboard }
+    }
+
+    /// Takes the keyboard away from whichever field has it, as nothing
+    /// should, to see that it comes back.
+    func debugBlur() {
+        panel.makeFirstResponder(nil)
+    }
+
     /// Feeds a key press such as "tab", "cmd+k" or "a" straight to the panel.
     func debugPress(_ token: String) {
         var flags: NSEvent.ModifierFlags = []
@@ -306,11 +461,28 @@ final class LauncherController: NSObject, NSWindowDelegate {
             timestamp: ProcessInfo.processInfo.systemUptime, windowNumber: panel.windowNumber, context: nil,
             characters: key.characters, charactersIgnoringModifiers: key.characters, isARepeat: false, keyCode: key.code
         ) else { return }
+        panel.debugIsPressing = true
+        defer { panel.debugIsPressing = false }
         if flags.contains(.command) {
             _ = panel.performKeyEquivalent(with: event)
         } else {
             panel.sendEvent(event)
         }
+    }
+
+    /// Presses F20, a key nothing uses, the way a keyboard does, and says
+    /// whether it arrived at the panel: whether typing really lands here.
+    func debugProbe() async -> Bool {
+        panel.debugProbeArrived = false
+        let source = CGEventSource(stateID: .combinedSessionState)
+        for isDown in [true, false] {
+            CGEvent(keyboardEventSource: source, virtualKey: LauncherPanel.debugProbeKey, keyDown: isDown)?
+                .post(tap: .cgSessionEventTap)
+        }
+        for _ in 0..<20 where !panel.debugProbeArrived {
+            try? await Task.sleep(for: .milliseconds(10))
+        }
+        return panel.debugProbeArrived
     }
 
     var debugState: String {
@@ -334,7 +506,13 @@ final class LauncherController: NSObject, NSWindowDelegate {
                     + "actions=\(browser.selected.map { model.actions(for: $0, in: browser).map(\.title) } ?? []))"
             }
         }
-        return "focus=\(model.focusTarget) responder=\(panel.firstResponder.map { String(describing: type(of: $0)) + "<" + (($0 as? NSTextView)?.string ?? "") + ">" } ?? "nil") "
+        // The field that has the keyboard, told by its placeholder, with what
+        // is typed and selected in it.
+        let editor = panel.firstResponder as? NSTextView
+        let field = (editor?.delegate as? NSTextField).map { $0.placeholderString ?? $0.placeholderAttributedString?.string ?? "?" }
+        let responder = editor.map { "\(field ?? "editor")<\($0.string)>\($0.selectedRange())" }
+            ?? panel.firstResponder.map { String(describing: type(of: $0)) } ?? "nil"
+        return "focus=\(model.focusTarget.map { "\($0)" } ?? "none") key=\(panel.isKeyWindow) visible=\(isVisible) responder=\(responder) "
             + "query=\(model.query) results=\(model.showsResults) sections=\(model.sections.map { "\($0.title):\($0.items.count)" }) "
             + "selected=\(model.selectedID ?? "nil") arguments=\(model.argumentValues) "
             + "menu=\(model.isActionMenuOpen ? "\(model.actionMenuIndex)" : "closed") route=\(route.isEmpty ? "root" : route.joined(separator: " > ")) "

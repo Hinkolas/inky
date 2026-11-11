@@ -7,11 +7,7 @@ import SwiftUI
 struct QuicklinkEditorScreen: View {
     let model: LauncherModel
     @Bindable var draft: QuicklinkDraft
-    @FocusState private var focus: Field?
-
-    private enum Field {
-        case name, link
-    }
+    let focus: LauncherFocus
 
     /// Of the body card.
     static let size = CGSize(width: 820, height: 410)
@@ -37,7 +33,6 @@ struct QuicklinkEditorScreen: View {
                 }
             }
         }
-        .onAppear { focus = draft.isNew ? .name : .link }
     }
 
     // MARK: - Form
@@ -48,7 +43,7 @@ struct QuicklinkEditorScreen: View {
             TextField("Name", text: $draft.name, prompt: Text(verbatim: "Search Wikipedia"))
                 .textFieldStyle(.plain)
                 .font(.system(size: 24, weight: .bold))
-                .focused($focus, equals: .name)
+                .launcherFocus(focus, .quicklinkName)
                 .padding(.top, 3)
 
             PanelLabel("Link")
@@ -57,8 +52,8 @@ struct QuicklinkEditorScreen: View {
                 .textFieldStyle(.plain)
                 .lineLimit(3...5)
                 .font(.system(size: 13, design: .monospaced))
-                .focused($focus, equals: .link)
-                .modifier(FieldBox(isFocused: focus == .link))
+                .launcherFocus(focus, .quicklinkLink)
+                .modifier(FieldBox(isFocused: focus.wrappedValue == .quicklinkLink))
                 .padding(.top, 7)
             Text("A website, a folder or a link into an app.")
                 .font(.system(size: 12))
@@ -112,7 +107,7 @@ struct QuicklinkEditorScreen: View {
                 ForEach(QuicklinkDraft.placeholders, id: \.title) { placeholder in
                     Chip(title: placeholder.title) {
                         draft.link += placeholder.text
-                        focus = .link
+                        model.focus(.quicklinkLink)
                     }
                 }
             }
