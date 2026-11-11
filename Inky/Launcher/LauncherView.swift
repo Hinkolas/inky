@@ -68,6 +68,9 @@ struct LauncherView: View {
                 // screen fades into the next, each with surfaces of its own.
                 .id(motion.level == .reduced ? depth : 0)
                 .transition(motion.fade)
+                // A long action menu reaches past the card, and lies over
+                // the hints below it.
+                .zIndex(1)
 
                 ZStack {
                     if let toast = model.toast {
