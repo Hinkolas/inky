@@ -41,6 +41,7 @@ final class Preferences {
     @ObservationIgnored var onAppearanceChange: (() -> Void)?
     @ObservationIgnored var onFaviconSourceChange: (() -> Void)?
     @ObservationIgnored var onExchangeRateSourceChange: (() -> Void)?
+    @ObservationIgnored var onPixelsPerRemChange: (() -> Void)?
 
     var hotkey: KeyCombo {
         didSet {
@@ -92,6 +93,16 @@ final class Preferences {
         }
     }
 
+    /// How many pixels the calculator takes a rem to be.
+    var pixelsPerRem: Int {
+        didSet {
+            defaults.set(pixelsPerRem, forKey: Key.pixelsPerRem)
+            onPixelsPerRemChange?()
+        }
+    }
+
+    static let pixelsPerRemRange = 1...100
+
     var fileSearchLimit: Int {
         didSet { defaults.set(fileSearchLimit, forKey: Key.fileSearchLimit) }
     }
@@ -106,7 +117,9 @@ final class Preferences {
     }
 
     private init() {
-        defaults.register(defaults: [Key.showMenuBarIcon: true, Key.animations: true, Key.fileSearchLimit: 8])
+        defaults.register(defaults: [
+            Key.showMenuBarIcon: true, Key.animations: true, Key.fileSearchLimit: 8, Key.pixelsPerRem: 16,
+        ])
         hotkey = defaults.data(forKey: Key.hotkey)
             .flatMap { try? JSONDecoder().decode(KeyCombo.self, from: $0) } ?? .defaultLauncher
         showMenuBarIcon = defaults.bool(forKey: Key.showMenuBarIcon)
@@ -114,6 +127,8 @@ final class Preferences {
         animations = defaults.bool(forKey: Key.animations)
         faviconSource = defaults.string(forKey: Key.faviconSource).flatMap(FaviconSource.init) ?? .duckDuckGo
         exchangeRateSource = defaults.string(forKey: Key.exchangeRateSource).flatMap(ExchangeRateSource.init) ?? .ecb
+        let pixels = defaults.integer(forKey: Key.pixelsPerRem)
+        pixelsPerRem = Self.pixelsPerRemRange.contains(pixels) ? pixels : 16
         fileSearchLimit = defaults.integer(forKey: Key.fileSearchLimit)
         disabledProviders = Set(defaults.stringArray(forKey: Key.disabledProviders) ?? [])
     }
@@ -151,6 +166,7 @@ final class Preferences {
         static let animations = "animations"
         static let faviconSource = "faviconSource"
         static let exchangeRateSource = "exchangeRateSource"
+        static let pixelsPerRem = "pixelsPerRem"
         static let fileSearchLimit = "fileSearchLimit"
         static let disabledProviders = "disabledProviders"
         static let hasLaunchedBefore = "hasLaunchedBefore"

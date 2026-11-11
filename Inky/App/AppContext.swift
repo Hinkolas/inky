@@ -40,6 +40,12 @@ final class AppContext {
             exchangeRates.source = preferences.exchangeRateSource
         }
 
+        let calculator = CalculatorProvider(exchangeRates: exchangeRates)
+        calculator.pixelsPerRem = Double(preferences.pixelsPerRem)
+        preferences.onPixelsPerRemChange = { [preferences, calculator] in
+            calculator.pixelsPerRem = Double(preferences.pixelsPerRem)
+        }
+
         let commands = InkyCommandProvider()
         let quicklinkProvider = QuicklinkProvider(store: quicklinks)
         fileProvider.maxResults = preferences.fileSearchLimit
@@ -51,7 +57,7 @@ final class AppContext {
                 commands,
                 SystemProvider(),
                 ApplicationProvider(),
-                CalculatorProvider(exchangeRates: exchangeRates),
+                calculator,
                 TimeProvider(),
                 fileProvider,
             ],

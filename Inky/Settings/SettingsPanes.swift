@@ -232,9 +232,10 @@ struct ProviderPane: View {
             case "calculator":
                 Examples([
                     "128 * 3 + 4", "20% off 80", "sqrt(2) ^ 10", "5 ft 10 in in cm", "72 F to C",
-                    "100 usd in eur", "255 in hex",
+                    "100 usd in eur", "255 in hex", "2rem in px",
                 ])
                 ExchangeRateSettings(preferences: preferences, store: context.exchangeRates)
+                WebUnitSettings(preferences: preferences)
             case "time":
                 Examples([
                     "time in tokyo", "5pm london in berlin", "time diff san francisco",
@@ -315,6 +316,23 @@ private struct ExchangeRateSettings: View {
                         : "Newer rates could not be fetched. The ones above stay in use.")
                 }
             }
+        }
+    }
+}
+
+/// How large a rem is, for the units of a web page.
+private struct WebUnitSettings: View {
+    @Bindable var preferences: Preferences
+
+    var body: some View {
+        Section {
+            Stepper(
+                "1 rem is \(preferences.pixelsPerRem) px",
+                value: $preferences.pixelsPerRem,
+                in: Preferences.pixelsPerRemRange
+            )
+        } footer: {
+            Text("For the units of a web page, as in “2rem in px”. An em is taken to be as large as a rem.")
         }
     }
 }

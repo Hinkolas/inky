@@ -12,8 +12,16 @@ public final class CalculatorProvider: Provider {
     )
     public var onChange: (@MainActor () -> Void)?
 
+    /// How many pixels a rem and an em are, for "2rem in px".
+    public var pixelsPerRem: Double = 16 {
+        didSet {
+            if pixelsPerRem != oldValue { buildUnits() }
+        }
+    }
+
     private var calculator: Calculator
-    /// The units without the currencies, which are added from the rates.
+    /// The units that never change. Those of a web page and the currencies
+    /// are added to them.
     private let units: UnitTable
     private let exchangeRates: ExchangeRateStore?
     private var ratesInUse: ExchangeRates?
@@ -23,6 +31,7 @@ public final class CalculatorProvider: Provider {
         self.calculator = calculator
         units = calculator.units
         self.exchangeRates = exchangeRates
+        buildUnits()
         watchRates()
     }
 
@@ -58,7 +67,12 @@ public final class CalculatorProvider: Provider {
         let rates = exchangeRates.rates
         guard rates != ratesInUse else { return }
         ratesInUse = rates
-        calculator.units = rates.map { units.adding($0, locale: calculator.locale) } ?? units
+        buildUnits()
+    }
+
+    private func buildUnits() {
+        let units = units.adding(pixelsPerRem: pixelsPerRem)
+        calculator.units = ratesInUse.map { units.adding($0, locale: calculator.locale) } ?? units
     }
 
     /// Says so when the rates change. A result that is on screen may be of

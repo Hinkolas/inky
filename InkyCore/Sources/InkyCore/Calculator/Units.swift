@@ -5,6 +5,8 @@ import Foundation
 public enum Dimension: String, Sendable, Hashable {
     case length, mass, duration, temperature, area, volume, speed, data
     case angle, energy, power, pressure, frequency, currency
+    /// Lengths on a web page, which are counted in pixels.
+    case screen
 }
 
 public struct Unit: Sendable, Hashable {
@@ -270,6 +272,21 @@ public extension UnitTable {
 
         return table
     }()
+
+    /// The table with the lengths of a web page: the pixel, and the rem and
+    /// the em, each `pixelsPerRem` pixels. That is the size of a page's text,
+    /// 16 unless the page says otherwise, and an em is taken to be as large.
+    ///
+    /// A pixel is not a length that can be measured, so none of them convert
+    /// into inches or centimeters.
+    func adding(pixelsPerRem: Double) -> UnitTable {
+        var table = self
+        table.add(Unit("px", .screen, scale: 1), names: ["pixel", "pixels"])
+        guard pixelsPerRem.isFinite, pixelsPerRem > 0 else { return table }
+        table.add(Unit("rem", .screen, scale: pixelsPerRem), names: ["rems"])
+        table.add(Unit("em", .screen, scale: pixelsPerRem), names: ["ems"])
+        return table
+    }
 
     private static let siPrefixes: [Character: (name: String, factor: Double)] = [
         "n": ("nano", 1e-9), "µ": ("micro", 1e-6), "m": ("milli", 1e-3), "c": ("centi", 1e-2),

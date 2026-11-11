@@ -249,6 +249,48 @@ import Testing
         #expect(calculator.calculate("72 F to C")?.unit?.symbol == "°C")
     }
 
+    // MARK: - The units of a web page
+
+    @Test(arguments: [
+        ("2rem in px", "32 px"),
+        ("32px in rem", "2 rem"),
+        ("1.5 em to pixels", "24 px"),
+        ("2em in px", "32 px"),
+        ("1rem + 8px", "1.5 rem"),
+        ("1920 px / 2", "960 px"),
+        ("rem in px", "16 px"),
+    ])
+    func convertsTheUnitsOfAWebPage(input: String, expected: String) {
+        let calculator = Calculator(locale: calculator.locale, units: UnitTable.standard.adding(pixelsPerRem: 16))
+        #expect(calculator.calculate(input)?.text == expected)
+    }
+
+    @Test func aRemIsAsLargeAsItIsSaidToBe() {
+        let calculator = Calculator(locale: calculator.locale, units: UnitTable.standard.adding(pixelsPerRem: 10))
+        #expect(calculator.calculate("2rem in px")?.text == "20 px")
+        #expect(calculator.calculate("25px in rem")?.text == "2.5 rem")
+    }
+
+    @Test func aPixelIsNotALengthToMeasure() {
+        let calculator = Calculator(locale: calculator.locale, units: UnitTable.standard.adding(pixelsPerRem: 16))
+        #expect(calculator.calculate("2 in in px") == nil)
+        #expect(calculator.calculate("96 px in cm") == nil)
+        // On its own it is a search.
+        #expect(calculator.calculate("2rem") == nil)
+        // A rem that is nothing is not known, and a pixel still is.
+        let without = Calculator(locale: calculator.locale, units: UnitTable.standard.adding(pixelsPerRem: 0))
+        #expect(without.calculate("2rem in px") == nil)
+        #expect(without.calculate("10 px + 5 px")?.text == "15 px")
+    }
+
+    @MainActor
+    @Test func theProviderIsToldHowLargeARemIs() {
+        let provider = CalculatorProvider(calculator: Calculator(locale: Locale(identifier: "en_US")))
+        #expect(provider.instantResults(for: "2rem in px").first?.title == "32 px")
+        provider.pixelsPerRem = 10
+        #expect(provider.instantResults(for: "2rem in px").first?.title == "20 px")
+    }
+
     // MARK: - Bases
 
     @Test(arguments: [
