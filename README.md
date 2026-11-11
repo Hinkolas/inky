@@ -18,6 +18,8 @@ See [Security and privacy](SECURITY.md) for storage, permissions and reporting.
 
 ## What it does today
 
+- **Welcome window**: the first launch walks through the settings that matter most: the hotkey, which features are on, the clipboard history and its permissions, what Inky may look up online, and how it starts. Settings → About shows it again.
+
 - **Applications**: fuzzy search over installed apps, ranked by how often and how recently you pick them. What you pick for a search rises to the top; Reset Ranking under ⌘K makes a result forget that.
 - **Uninstall Application**: removes an app together with what it left in your Library: settings, caches, saved state. Pick the app from the command's list, or press ⌃X on it in the results. Inky lists what it found, each file with a box to keep it, and ⌘↵ moves the rest to the Trash, where everything can be put back. A file counts as the app's if it is named after the app's bundle identifier, or after the app itself; what another installed app calls its own is never listed, and neither are the apps macOS is made of.
 - **Quicklinks**: named shortcuts to websites, folders and app links. Placeholders such as `{argument name="Query"}`, `{clipboard}` and `{selection}` are filled in when the link opens; arguments are typed right in the search bar. Websites show their own icon. Edit (⌘E) or delete (⌃X) one right from the results.
@@ -161,7 +163,9 @@ Inky.app/Contents/MacOS/Inky --pin --query "saf" --keys "cmd+k down"
 take no focus and register no hotkey or menu bar icon, for automated captures),
 `--query <text>`, `--keys "<keys>"` (among them `run:<command id>`, which does
 what the command's hotkey does), `--settings [pane]`, `--search <text>` (what
-the settings' list of all commands is narrowed down to), `--quicklinks`,
+the settings' list of all commands is narrowed down to),
+`--onboarding [hotkey|features|clipboard|online|ready]` (the welcome window,
+at a step), `--quicklinks`,
 `--new-quicklink`, `--uninstall [application]`, `--clipboard [filter]`,
 `--clipboard-samples` (fill an empty history with made-up copies, with `--data`
 only), `--appearance light|dark`, `--backdrop light|dark` (a

@@ -45,10 +45,10 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
             await context.engine.reloadAll()
         }
 
-        // An app without a Dock icon that shows nothing on first launch looks broken.
+        // An app without a Dock icon that shows nothing on first launch looks
+        // broken. Until the welcome window has been closed once, it greets.
         if !preferences.hasLaunchedBefore {
-            preferences.hasLaunchedBefore = true
-            context.launcher.show()
+            context.showOnboarding()
         }
 
         #if DEBUG
@@ -123,7 +123,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
 /// Launch arguments that put the app into a known state for development:
 /// `--show`, `--pin`, `--quiet`, `--query <text>`,
 /// `--keys "tab a cmd+k hide show clipboard run:<command id>"`,
-/// `--settings [pane]`, `--search <text>`, `--new-quicklink`, `--quicklinks`, `--uninstall [application]`,
+/// `--settings [pane]`, `--search <text>`, `--onboarding [step]`, `--new-quicklink`, `--quicklinks`, `--uninstall [application]`,
 /// `--clipboard [filter]`, `--clipboard-samples`,
 /// `--appearance light|dark`, `--backdrop light|dark`, `--data <folder>`,
 /// `--motion full|reduced|off`, `--slow <factor>`.
@@ -173,6 +173,13 @@ enum DebugLaunch {
             context.showSettings(pane: value(after: "--settings"), search: value(after: "--search"), activating: !quiet)
             // A quiet run loads nothing by itself, and the fallback commands
             // are listed from what the modules offer.
+            if quiet {
+                Task { await context.engine.reloadAll() }
+            }
+        }
+        if arguments.contains("--onboarding") {
+            context.showOnboarding(step: value(after: "--onboarding").flatMap(OnboardingStep.init(name:)), activating: !quiet)
+            // The features and the examples are listed from the modules.
             if quiet {
                 Task { await context.engine.reloadAll() }
             }

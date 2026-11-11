@@ -18,6 +18,7 @@ final class AppContext {
     var onCommandsChange: () -> Void = {}
 
     private var settingsWindow: SettingsWindowController?
+    private var onboardingWindow: OnboardingWindowController?
     private let clipboardModule = ClipboardModule()
     /// False until the app says that what is copied may be kept.
     private var recordsClipboard = false
@@ -184,6 +185,20 @@ final class AppContext {
             settingsWindow = SettingsWindowController(context: self)
         }
         settingsWindow?.show(pane: pane, search: search, activating: activating)
+    }
+
+    /// Shows the welcome window. Once it closes, it is not shown by itself again.
+    func showOnboarding(step: OnboardingStep? = nil, activating: Bool = true) {
+        launcher.hide()
+        if onboardingWindow == nil {
+            let window = OnboardingWindowController(context: self)
+            window.onClose = { [unowned self] in
+                preferences.hasLaunchedBefore = true
+                onboardingWindow = nil
+            }
+            onboardingWindow = window
+        }
+        onboardingWindow?.show(step: step, activating: activating)
     }
 }
 

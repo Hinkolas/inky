@@ -136,7 +136,7 @@ struct SettingsView: View {
                 case .fallbacks:
                     FallbackPane(engine: context.engine)
                 case .about:
-                    AboutPane()
+                    AboutPane { context.showOnboarding() }
                 case .module(let id):
                     if let module = modules.first(where: { $0.id == id }) {
                         ModulePane(module: module, context: context)

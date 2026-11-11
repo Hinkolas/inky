@@ -342,6 +342,7 @@ struct FallbackPane: View {
 // MARK: - About
 
 struct AboutPane: View {
+    let showWelcome: () -> Void
     private let version = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "–"
     private let repository = URL(string: "https://github.com/Hinkolas/inky")!
 
@@ -351,6 +352,9 @@ struct AboutPane: View {
                 LabeledContent("Version", value: version)
                 LabeledContent("Source code") {
                     Link("github.com/Hinkolas/inky", destination: repository)
+                }
+                LabeledContent("Welcome") {
+                    Button("Show Welcome Window", action: showWelcome)
                 }
             } header: {
                 PaneHeader(

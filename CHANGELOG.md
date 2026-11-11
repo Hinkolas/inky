@@ -6,6 +6,8 @@ First public alpha, in preparation.
 
 ### Included
 
+- A welcome window on first launch for the hotkey, features, clipboard history
+  and its permissions, online lookups and startup.
 - Application launching, fuzzy search, usage ranking and Spotlight file search.
 - Quicklinks with arguments, clipboard and selected-text placeholders.
 - Clipboard history for text, images and files, with pins and retention settings.
