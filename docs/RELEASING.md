@@ -86,7 +86,7 @@ until the draft is published.
 Publishing a release runs `.github/workflows/update-feed.yml`. It adds the
 release to the update feed, signs the whole feed with the EdDSA key, saves it
 on the `appcast` branch and deploys that branch to GitHub Pages, where
-installed apps read `https://hinkolas.github.io/inky/appcast.xml`. Releases
+installed apps read `https://getinky.dev/appcast.xml`. Releases
 are items without a channel, which every installed app accepts; pre-releases
 are items in the `beta` channel, which only apps set to the Beta update
 channel accept. The feed keeps the latest three items of each channel; their
@@ -132,16 +132,36 @@ window are its published notes on GitHub.
 3. **Notarization.** Done on 2026-11-11. Create an App Store Connect API key with the Developer
    role and store `base64 -i AuthKey.p8` as `NOTARY_API_KEY_P8`, with
    `NOTARY_API_KEY_ID` and `NOTARY_API_ISSUER_ID`.
-4. **GitHub Pages.** Once the repository is public, set Settings → Pages →
+4. **Domain.** `getinky.dev` is registered, with its DNS at Cloudflare. The
+   update feed is served from it, and every installed app has
+   `https://getinky.dev/appcast.xml` built in, so keep the domain renewed
+   and keep it pointing at this repository's Pages for as long as any copy
+   might still be in use.
+   - Verify it for the GitHub account, so no other account can claim it:
+     github.com/settings/pages → Add a domain, and add the TXT record shown.
+   - At Cloudflare, for `getinky.dev` (`@`): A records `185.199.108.153`,
+     `185.199.109.153`, `185.199.110.153`, `185.199.111.153` and AAAA records
+     `2606:50c0:8000::153`, `2606:50c0:8001::153`, `2606:50c0:8002::153`,
+     `2606:50c0:8003::153`; for `www`: CNAME `hinkolas.github.io`. Set all of
+     them to "DNS only" (grey cloud): GitHub issues the HTTPS certificate,
+     and Cloudflare's proxy keeps it from doing so.
+5. **GitHub Pages.** Once the repository is public, set Settings → Pages →
    Source to "GitHub Actions"
-   (`gh api -X POST repos/Hinkolas/inky/pages -f build_type=workflow`). Then
-   let the release tags deploy: Settings → Environments → `github-pages` →
-   Deployment branches and tags → add the tag rule `v*`
+   (`gh api -X POST repos/Hinkolas/inky/pages -f build_type=workflow`), and
+   the custom domain to `getinky.dev`
+   (`gh api -X PUT repos/Hinkolas/inky/pages -f cname=getinky.dev`). When
+   GitHub has issued the certificate, which can take up to a day, turn on
+   Enforce HTTPS (`gh api -X PUT repos/Hinkolas/inky/pages -F https_enforced=true`);
+   `.dev` domains only work over HTTPS. Then let the release tags deploy:
+   Settings → Environments → `github-pages` → Deployment branches and tags →
+   add the tag rule `v*`
    (`gh api -X POST repos/Hinkolas/inky/environments/github-pages/deployment-branch-policies -f name='v*' -f type=tag`).
    Without it, the feed workflow, which runs for the release's tag, is
    refused with "not allowed to deploy to github-pages due to environment
    protection rules". The `appcast` branch is created by the first run.
-5. Protect the secrets with a `release` environment that requires your
+   A website added later goes on the same Pages site, so the deploy job must
+   then publish it together with `appcast.xml`.
+6. Protect the secrets with a `release` environment that requires your
    approval, if more people get write access to the repository.
 
 ### Each release

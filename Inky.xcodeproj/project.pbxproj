@@ -216,7 +216,7 @@
 				);
 				MARKETING_VERSION = 0.1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = io.github.hinkolas.inky;
-				INKY_UPDATE_FEED_URL = "https://hinkolas.github.io/inky/appcast.xml";
+				INKY_UPDATE_FEED_URL = "https://getinky.dev/appcast.xml";
 				INKY_UPDATE_PUBLIC_KEY = "poyl1dBS6H/iyQNP2E+tqWv9UGEO1n22f8vAWM4IqCA=";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_APPROACHABLE_CONCURRENCY = YES;
@@ -249,7 +249,7 @@
 				);
 				MARKETING_VERSION = 0.1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = io.github.hinkolas.inky;
-				INKY_UPDATE_FEED_URL = "https://hinkolas.github.io/inky/appcast.xml";
+				INKY_UPDATE_FEED_URL = "https://getinky.dev/appcast.xml";
 				INKY_UPDATE_PUBLIC_KEY = "poyl1dBS6H/iyQNP2E+tqWv9UGEO1n22f8vAWM4IqCA=";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_APPROACHABLE_CONCURRENCY = YES;

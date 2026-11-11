@@ -54,7 +54,7 @@ services can be disabled in Settings:
 - Currency rates: the same ECB reference-rate file is fetched for all users;
   the amount and currencies you type are not sent. Cached rates may be old.
 - Updates: downloaded builds fetch the update feed from GitHub Pages
-  (`hinkolas.github.io/inky/appcast.xml`) about once a day, through Sparkle,
+  (`getinky.dev/appcast.xml`) about once a day, through Sparkle,
   without its optional system profile. The chosen update channel decides
   whether pre-releases in it are offered; it is not sent anywhere. The feed
   and each update archive must carry EdDSA signatures matching the public key

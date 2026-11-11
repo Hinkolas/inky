@@ -1,7 +1,7 @@
 name: Update feed
 
 # Adds a published release to the update feed that Inky reads,
-# https://hinkolas.github.io/inky/appcast.xml, and deploys it to GitHub Pages.
+# https://getinky.dev/appcast.xml, and deploys it to GitHub Pages.
 # Releases are open to every installed copy; pre-releases go to the feed's
 # beta channel, which only copies set to the beta update channel accept.
 #

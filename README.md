@@ -54,7 +54,7 @@ convert is sent. Settings → Calculator turns this off, and currencies are then
 not converted.
 
 Updates: a downloaded version asks GitHub once a day for the list of Inky's
-releases (`hinkolas.github.io/inky/appcast.xml`, on GitHub Pages), and
+releases (`getinky.dev/appcast.xml`, on GitHub Pages), and
 installs an update only if it is signed with Inky's release key. Settings →
 General turns the checks off, lets updates install by themselves, and picks
 the update channel. Builds you make yourself from source do not update
