@@ -187,7 +187,7 @@ private struct StepList: View {
                 .accessibilityAddTraits(step == current ? .isSelected : [])
             }
         }
-        .padding(.top, 50)
+        .padding(.top, 14)
         .padding(.horizontal, 10)
     }
 
