@@ -31,10 +31,10 @@ concurrency:
 
 jobs:
   release:
-    runs-on: macos-15
+    runs-on: macos-26
     timeout-minutes: 45
     env:
-      DEVELOPER_DIR: /Applications/Xcode_26.2.app/Contents/Developer
+      DEVELOPER_DIR: /Applications/Xcode_26.6.app/Contents/Developer
       TAG: ${{ inputs.tag || github.ref_name }}
       REPOSITORY_URL: https://github.com/${{ github.repository }}
     steps:

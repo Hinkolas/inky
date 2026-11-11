@@ -17,7 +17,9 @@ no release is published by the build commands or CI workflow.
   line with the shipped behavior. Copies marked confidential by password
   managers are left out by default.
 - Configure GitHub Actions for the repository and run CI on the release commit.
-  The workflow uses Xcode 26.2 on `macos-15`; update the pin if that image retires it.
+  The workflows use Xcode 26.6 on `macos-26`; update the pin if that image retires it.
+  The app icon is an Icon Composer file, which Xcode 26 can only compile on
+  macOS 26 or later: on `macos-15`, `actool` crashes in `CompileAssetCatalogVariant`.
 - After changing visibility, enable private vulnerability reporting under the
   repository's security settings and verify the form linked in SECURITY.md
   from another account. A SECURITY.md file alone does not enable this feature.
