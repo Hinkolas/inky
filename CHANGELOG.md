@@ -7,6 +7,7 @@ The first public alpha.
 ### Included
 
 - An app icon made in Icon Composer, with a matching template icon in the menu bar.
+- A disk image to download, with Inky and the Applications folder to drag it onto.
 - Updates from GitHub Releases through Sparkle, with a signed feed and archives,
   for signed and notarized downloads. Every version is a download; Settings →
   General picks the Stable or the Beta update channel, and a pre-release starts

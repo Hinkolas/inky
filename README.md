@@ -27,9 +27,9 @@ No accounts, no subscriptions, no telemetry.
 
 ## Install
 
-Download the latest version from the
-[releases page](https://github.com/Hinkolas/inky/releases), unzip it and move
-`Inky.app` to Applications. Every version is signed and notarized, and updates
+Download the disk image of the latest version from the
+[releases page](https://github.com/Hinkolas/inky/releases), open it and drag
+Inky to Applications. Every version is signed and notarized, and updates
 itself.
 
 Inky needs a Mac with Apple silicon and macOS 15 or later. The first launch

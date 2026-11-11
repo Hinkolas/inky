@@ -2,6 +2,8 @@ name: Release
 
 # Builds, signs, notarizes and drafts a release for a version tag, such as
 # v0.1.0 or v0.1.0-alpha.1. A tag with a suffix is drafted as a pre-release.
+# The draft holds a disk image to download, and a zip that the update feed
+# points to.
 # Nothing reaches users until the draft is reviewed and published; publishing
 # runs update-feed.yml, which adds the release to the update feed.
 #
@@ -132,12 +134,10 @@ jobs:
           xcrun stapler staple "$RUNNER_TEMP/export/Inky.app"
           spctl --assess --type execute --verbose "$RUNNER_TEMP/export/Inky.app"
 
-      - name: Archive for download
+      - name: Archive for updates
         run: |
           mkdir -p dist
-          archive="Inky-$VERSION.zip"
-          ditto -c -k --sequesterRsrc --keepParent "$RUNNER_TEMP/export/Inky.app" "dist/$archive"
-          (cd dist && shasum -a 256 "$archive" > "$archive.sha256")
+          ditto -c -k --sequesterRsrc --keepParent "$RUNNER_TEMP/export/Inky.app" "dist/Inky-$VERSION.zip"
           # This version's section of the changelog, as the release notes.
           # update-feed.yml shows the published release's notes in Sparkle's
           # update window, so edits to the draft's notes reach it too.
@@ -156,7 +156,38 @@ jobs:
             END { flush() }
           ' > "$RUNNER_TEMP/notes.md"
           test -s "$RUNNER_TEMP/notes.md" || { echo "::error::CHANGELOG.md has no section for $VERSION"; exit 1; }
-          ls -la dist
+
+      # The download: a window with Inky and the Applications folder to drag
+      # it onto. The disk image is signed and notarized as well, so Gatekeeper
+      # opens it without a warning; the app inside is already stapled.
+      - name: Disk image for download
+        env:
+          API_KEY: ${{ secrets.NOTARY_API_KEY_P8 }}
+          API_KEY_ID: ${{ secrets.NOTARY_API_KEY_ID }}
+          API_ISSUER_ID: ${{ secrets.NOTARY_API_ISSUER_ID }}
+        run: |
+          dmg="dist/Inky-$VERSION.dmg"
+          python3 -m venv "$RUNNER_TEMP/dmgbuild"
+          "$RUNNER_TEMP/dmgbuild/bin/pip" install --quiet dmgbuild==1.6.7
+          "$RUNNER_TEMP/dmgbuild/bin/dmgbuild" -s Scripts/dmg-settings.py \
+            -D app="$RUNNER_TEMP/export/Inky.app" Inky "$dmg"
+          codesign --sign "Developer ID Application" --timestamp --verbose "$dmg"
+          echo "$API_KEY" | base64 --decode > "$RUNNER_TEMP/notary.p8"
+          xcrun notarytool submit "$dmg" \
+            --key "$RUNNER_TEMP/notary.p8" --key-id "$API_KEY_ID" --issuer "$API_ISSUER_ID" --wait
+          rm "$RUNNER_TEMP/notary.p8"
+          xcrun stapler staple "$dmg"
+          spctl --assess --type open --context context:primary-signature --verbose "$dmg"
+          mount=$(hdiutil attach -nobrowse -readonly "$dmg" | awk -F'\t' '/Apple_HFS/ { print $NF }')
+          test -d "$mount/Inky.app" && test -L "$mount/Applications"
+          spctl --assess --type execute --verbose "$mount/Inky.app"
+          hdiutil detach "$mount"
+
+      - name: Checksums
+        run: |
+          cd dist
+          for file in Inky-*.zip Inky-*.dmg; do shasum -a 256 "$file" > "$file.sha256"; done
+          ls -la
 
       - name: Draft the release
         env:

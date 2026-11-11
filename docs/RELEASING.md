@@ -81,9 +81,17 @@ update itself.
 
 Pushing a `v*` tag runs `.github/workflows/release.yml`, which archives the
 Apple silicon app, signs it with the Developer ID certificate, notarizes and
-staples it, zips it, and drafts a GitHub release with the zip and a SHA-256
-checksum, as a pre-release when the tag has a suffix. Nothing reaches users
-until the draft is published.
+staples it, and drafts a GitHub release, as a pre-release when the tag has a
+suffix. The draft holds two files, each with a SHA-256 checksum:
+
+- `Inky-<version>.dmg`, the download: a window with Inky and the Applications
+  folder, laid out by `Scripts/dmg-settings.py` with
+  [dmgbuild](https://dmgbuild.readthedocs.io). The disk image is signed and
+  notarized too.
+- `Inky-<version>.zip`, which the update feed points to. Sparkle installs
+  updates from it; people do not need it.
+
+Nothing reaches users until the draft is published.
 
 Publishing a release runs `.github/workflows/update-feed.yml`. It adds the
 release to the update feed, signs the whole feed with the EdDSA key, saves it
@@ -172,9 +180,9 @@ window are its published notes on GitHub.
    followed by a space or nothing: the workflow uses it as the notes of the
    draft.
 2. Tag the tested commit on `main` and push the tag.
-3. Download the draft's zip on a clean Mac: it opens without a Gatekeeper
-   warning, `spctl --assess --type execute -v Inky.app` accepts it, and About
-   shows the whole version.
+3. Download the draft's disk image on a clean Mac: it opens without a
+   Gatekeeper warning and shows Inky next to Applications; the copied app
+   starts without a warning, and About shows the whole version.
 4. Publish the draft, and wait for the feed workflow to finish. Its summary
    links the deployed feed; the new item is at its top.
 5. On a Mac with the previous version on the matching channel, Check for
