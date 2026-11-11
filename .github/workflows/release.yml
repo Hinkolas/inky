@@ -178,10 +178,10 @@ jobs:
           rm "$RUNNER_TEMP/notary.p8"
           xcrun stapler staple "$dmg"
           spctl --assess --type open --context context:primary-signature --verbose "$dmg"
-          mount=$(hdiutil attach -nobrowse -readonly "$dmg" | awk -F'\t' '/Apple_HFS/ { print $NF }')
+          mount="$RUNNER_TEMP/dmg-mount"
+          hdiutil attach -nobrowse -readonly -mountpoint "$mount" "$dmg"
           test -d "$mount/Inky.app" && test -L "$mount/Applications"
-          # As a user does: copy the app off the disk image. Gatekeeper cannot
-          # assess an app on a read-only volume ("invalid API object reference").
+          # As a user does: copy the app off the disk image, and open that.
           ditto "$mount/Inky.app" "$RUNNER_TEMP/copied/Inky.app"
           hdiutil detach "$mount"
           xcrun stapler validate "$RUNNER_TEMP/copied/Inky.app"
