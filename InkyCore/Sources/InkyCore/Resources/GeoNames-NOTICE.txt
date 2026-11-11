@@ -1,0 +1,15 @@
+GeoNames geographic data
+
+places.tsv is derived from GeoNames cities15000:
+https://www.geonames.org/
+https://download.geonames.org/export/dump/readme.txt
+
+Licensed under Creative Commons Attribution 4.0 International (CC BY 4.0):
+https://creativecommons.org/licenses/by/4.0/
+https://creativecommons.org/licenses/by/4.0/legalcode
+
+Modified for Inky by selecting large cities and capitals, retaining the largest
+city for a shared name, selecting name/country/time-zone fields, and deriving
+country time-zone shortcuts. See Scripts/places.swift in the source repository.
+GeoNames does not endorse Inky. Data is supplied without a warranty of accuracy,
+completeness or timeliness. This dataset is not covered by Inky's MIT license.

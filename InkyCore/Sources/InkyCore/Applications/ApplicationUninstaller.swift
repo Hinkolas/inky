@@ -122,6 +122,7 @@ public struct ApplicationUninstaller: Sendable {
     /// Whether the application is the user's to remove. What macOS is made
     /// of is not, and neither is Inky while it runs.
     public func canUninstall(_ app: ApplicationInfo) -> Bool {
+        guard URL(fileURLWithPath: app.path).standardizedFileURL.path == app.path else { return false }
         guard applicationFolders.contains(where: { app.path.hasPrefix($0 + "/") }) else { return false }
         let resolved = URL(fileURLWithPath: app.path).resolvingSymlinksInPath().path
         guard !app.path.hasPrefix("/System/"), !resolved.hasPrefix("/System/") else { return false }
@@ -134,6 +135,7 @@ public struct ApplicationUninstaller: Sendable {
     /// `installedApplications`. A file that goes by the identifier of one of
     /// the others is theirs and is left out.
     public func items(for app: ApplicationInfo, installed: [ApplicationInfo]) -> [UninstallItem] {
+        guard canUninstall(app) else { return [] }
         let matcher = LeftoverMatcher(app: app, installed: installed)
         let fileManager = FileManager.default
         var items = [UninstallItem(path: app.path, isApplication: true)]
@@ -204,10 +206,11 @@ public struct ApplicationUninstaller: Sendable {
     ) async throws -> UninstallOutcome {
         // Only what `items(for:)` could have listed. Whatever else is asked
         // for, by whatever mistake, is not moved.
-        let folders = Set(libraries.flatMap { library in library.folders.map { library.path + "/" + $0.name } })
+        let listed = await Task.detached(priority: .userInitiated) {
+            Set(self.items(for: app, installed: self.installedApplications()))
+        }.value
         for item in items {
-            let isListed = item.isApplication ? item.path == app.path && canUninstall(app) : folders.contains(item.folder)
-            guard isListed else {
+            guard listed.contains(item) else {
                 throw InkyError("“\(item.name)” is not part of “\(app.name)”")
             }
         }

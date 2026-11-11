@@ -1,0 +1,42 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  test-and-build:
+    runs-on: macos-15
+    timeout-minutes: 20
+    env:
+      DEVELOPER_DIR: /Applications/Xcode_26.2.app/Contents/Developer
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          persist-credentials: false
+      - name: Toolchain
+        run: |
+          xcodebuild -version
+          swift --version
+      - name: Core tests
+        run: make test
+      - name: Debug build
+        run: make build
+      - name: Universal Release build
+        run: |
+          xcodebuild -project Inky.xcodeproj -scheme Inky -derivedDataPath build \
+            -configuration Release ARCHS='arm64 x86_64' ONLY_ACTIVE_ARCH=NO build
+      - name: Check bundled notices
+        run: |
+          test -f build/Build/Products/Release/Inky.app/Contents/Resources/LICENSE
+          test -f build/Build/Products/Release/Inky.app/Contents/Resources/THIRD_PARTY_NOTICES.md
+          test -f build/Build/Products/Release/Inky.app/Contents/Resources/InkyCore_InkyCore.bundle/Contents/Resources/GeoNames-NOTICE.txt

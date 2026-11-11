@@ -54,7 +54,8 @@ struct SQLiteRow {
     }
 
     func text(_ column: Int32) -> String? {
-        sqlite3_column_text(statement, column).map { String(cString: $0) }
+        guard let bytes = sqlite3_column_text(statement, column) else { return nil }
+        return String(decoding: UnsafeBufferPointer(start: bytes, count: Int(sqlite3_column_bytes(statement, column))), as: UTF8.self)
     }
 
     func data(_ column: Int32) -> Data? {
@@ -174,7 +175,9 @@ final class SQLiteDatabase {
             case .real(let real):
                 sqlite3_bind_double(statement, index, real)
             case .text(let text):
-                sqlite3_bind_text(statement, index, text, -1, Self.transient)
+                text.withCString { bytes in
+                    sqlite3_bind_text(statement, index, bytes, Int32(text.utf8.count), Self.transient)
+                }
             case .blob(let data):
                 data.withUnsafeBytes { bytes in
                     sqlite3_bind_blob(statement, index, bytes.baseAddress, Int32(bytes.count), Self.transient)

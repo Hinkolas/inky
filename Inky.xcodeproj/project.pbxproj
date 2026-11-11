@@ -8,11 +8,15 @@
 
 /* Begin PBXBuildFile section */
 		1A0000000000000000000001 /* InkyCore in Frameworks */ = {isa = PBXBuildFile; productRef = 1A0000000000000000000002 /* InkyCore */; };
+		1A0000000000000000000003 /* LICENSE in Resources */ = {isa = PBXBuildFile; fileRef = 1A0000000000000000000012 /* LICENSE */; };
+		1A0000000000000000000004 /* THIRD_PARTY_NOTICES.md in Resources */ = {isa = PBXBuildFile; fileRef = 1A0000000000000000000013 /* THIRD_PARTY_NOTICES.md */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		1A0000000000000000000010 /* Inky.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Inky.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		1A0000000000000000000011 /* InkyCore */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = InkyCore; sourceTree = "<group>"; };
+		1A0000000000000000000012 /* LICENSE */ = {isa = PBXFileReference; lastKnownFileType = text; path = LICENSE; sourceTree = "<group>"; };
+		1A0000000000000000000013 /* THIRD_PARTY_NOTICES.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = THIRD_PARTY_NOTICES.md; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
@@ -40,6 +44,8 @@
 			children = (
 				1A0000000000000000000020 /* Inky */,
 				1A0000000000000000000011 /* InkyCore */,
+				1A0000000000000000000012 /* LICENSE */,
+				1A0000000000000000000013 /* THIRD_PARTY_NOTICES.md */,
 				1A0000000000000000000041 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -120,6 +126,8 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				1A0000000000000000000003 /* LICENSE in Resources */,
+				1A0000000000000000000004 /* THIRD_PARTY_NOTICES.md in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

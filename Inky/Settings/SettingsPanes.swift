@@ -545,6 +545,14 @@ private struct ClipboardSettings: View {
     var body: some View {
         let isOn = preferences.isEnabled("clipboard")
 
+        if !history.store.isPersistent {
+            Section {
+                Label("History is temporary", systemImage: "exclamationmark.triangle")
+            } footer: {
+                Text(ClipDescription.storageNotice)
+            }
+        }
+
         if isOn, history.access != .allowed {
             Section {
                 LabeledContent {

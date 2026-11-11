@@ -48,6 +48,10 @@ for line in text.split(separator: "\n") {
         population: population, isCapital: fields[7] == "PPLC"
     ))
 }
+guard !cities.isEmpty else {
+    FileHandle.standardError.write(Data("No valid cities found in the GeoNames input\n".utf8))
+    exit(1)
+}
 cities.sort { ($0.population, $1.name) > ($1.population, $0.name) }
 
 var lines: [String] = []

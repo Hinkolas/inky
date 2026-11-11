@@ -448,13 +448,64 @@ private func image(width: Int = 40, height: Int = 20, gray: CGFloat = 0.5, type:
         #expect(await reopened.statistics().bytes > 0)
     }
 
-    @Test func beginsAgainWhenTheFileIsUnreadable() async throws {
-        try Data("this is not a database, and long enough to be read as one".utf8)
-            .write(to: scratch.url.appendingPathComponent("history.sqlite"))
+    @Test func anUnreadableHistoryAndItsImagesAreLeftAlone() async throws {
+        let original = Data("this is not a database, and long enough to be read as one".utf8)
+        let file = scratch.url.appendingPathComponent("history.sqlite")
+        try original.write(to: file)
+        let images = scratch.url.appendingPathComponent("Images")
+        try FileManager.default.createDirectory(at: images, withIntermediateDirectories: true)
+        let imageFile = images.appendingPathComponent("previous.png")
+        let previousImage = image(width: 20, height: 10)
+        try previousImage.write(to: imageFile)
+        let previousBackup = scratch.url.appendingPathComponent("history.unreadable.sqlite")
+        try original.write(to: previousBackup)
         let store = makeStore()
+        #expect(!store.isPersistent)
         await fill(store, ["after"])
         #expect(await titles(store) == ["after"])
-        #expect(FileManager.default.fileExists(atPath: scratch.url.appendingPathComponent("history.unreadable.sqlite").path))
+        await store.removeStrayImages()
+        #expect(try Data(contentsOf: file) == original)
+        #expect(try Data(contentsOf: previousBackup) == original)
+        #expect(try Data(contentsOf: imageFile) == previousImage)
+        let id = try #require(await store.record(.image(previousImage, type: "public.png")))
+        let temporaryImage = try #require(await store.payload(of: id)?.imageURL)
+        #expect(temporaryImage.deletingLastPathComponent() != images)
+        await store.delete(id)
+        #expect(try Data(contentsOf: imageFile) == previousImage)
+    }
+
+    @Test func preservesTextContainingNullCharacters() async throws {
+        let store = makeStore()
+        let value = "Before\0After café 🐙"
+        let id = try #require(await store.record(text(value)))
+        #expect(await store.payload(of: id)?.text == value)
+    }
+
+    @Test func aLockedHistoryIsNotReplaced() async throws {
+        var original: ClipboardStore? = makeStore()
+        await fill(original!, ["keep me"])
+        original = nil
+        let file = scratch.url.appendingPathComponent("history.sqlite")
+        let lock = try SQLiteDatabase(path: file.path)
+        try lock.execute("PRAGMA journal_mode = DELETE; BEGIN EXCLUSIVE")
+        defer { try? lock.execute("ROLLBACK") }
+        let second = makeStore()
+        // Opening another connection must leave the live database in place.
+        #expect(FileManager.default.fileExists(atPath: file.path))
+        #expect(!second.isPersistent)
+        try lock.execute("ROLLBACK")
+        #expect(await titles(makeStore()) == ["keep me"])
+    }
+
+    @Test func aNewerHistoryIsLeftForTheVersionThatWroteIt() async throws {
+        let file = scratch.url.appendingPathComponent("history.sqlite")
+        let database = try SQLiteDatabase(path: file.path)
+        try database.execute("PRAGMA user_version = 2")
+        let store = makeStore()
+        #expect(!store.isPersistent)
+        await fill(store, ["only this session"])
+        #expect(await titles(store) == ["only this session"])
+        #expect(try database.query("PRAGMA user_version") { $0.int(0) } == [2])
     }
 
     @Test func manyEntriesAreListedAndSearchedQuickly() async {

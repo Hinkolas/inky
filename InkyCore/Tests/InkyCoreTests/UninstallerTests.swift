@@ -335,6 +335,8 @@ import Testing
             home.path + "/Library/Preferences",
             home.path + "/Documents/Pako",
             home.path + "/Library/Application Support/Vendor/Pako",
+            home.path + "/Library/Preferences/com.someone.else.plist",
+            home.path + "/Library/Caches/Another App",
             "/Applications/Safari.app",
         ] {
             for isApplication in [false, true] {
@@ -345,6 +347,20 @@ import Testing
                     )
                 }
             }
+        }
+        #expect(trash.calls.isEmpty)
+    }
+
+    @Test func rechecksSharedFilesBeforeUninstalling() async throws {
+        let home = try Home()
+        let app = try home.addApplication("Pako", identifier: "io.github.hinkolas.pako")
+        try home.addFile("Library/Preferences/io.github.hinkolas.pako.plist")
+        let items = home.uninstaller.items(for: app, installed: [app])
+        // A second copy appeared after the review was opened.
+        try home.addApplication("Pako Copy", identifier: "io.github.hinkolas.pako")
+        let trash = FakeTrash()
+        await #expect(throws: InkyError.self) {
+            try await home.uninstaller.uninstall(items, of: app, trash: trash.trasher)
         }
         #expect(trash.calls.isEmpty)
     }

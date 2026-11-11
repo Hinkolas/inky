@@ -248,6 +248,12 @@ struct ClipboardBrowserScreen: View {
                 Sidebar { sidebar(selected) }
 
                 VStack(spacing: 0) {
+                    if !browser.history.store.isPersistent {
+                        Label(ClipDescription.storageNotice, systemImage: "exclamationmark.triangle")
+                            .font(.system(size: 12))
+                            .fixedSize(horizontal: false, vertical: true)
+                            .padding(12)
+                    }
                     if browser.history.access != .allowed {
                         AccessNotice(access: browser.history.access, dismiss: model.dismiss)
                     }
@@ -766,6 +772,8 @@ enum ClipDescription {
         formatter.doesRelativeDateFormatting = true
         return formatter
     }()
+
+    static let storageNotice = "The saved history could not be opened. New copies are kept only until Inky quits. Your saved files have been left in place. Try reopening Inky. If this continues, report the problem using the repository linked in Settings → About."
 
     static func notice(for access: ClipboardHistory.Access) -> String {
         switch access {

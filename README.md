@@ -6,6 +6,15 @@ time somewhere, look at a color, find files, run system commands. No accounts, n
 
 Inky is at an early stage. The core works and is meant to be built on.
 
+The first public alpha is being prepared as `0.1.0-alpha.1`. Build from source
+using the instructions below. Alpha versions may change their behavior and
+data formats; back up data you want to keep.
+
+**Clipboard privacy:** history currently retains password-manager copies,
+including copies marked confidential, without application-level encryption.
+Disable Clipboard History in Settings if that does not suit your use.
+See [Security and privacy](SECURITY.md) for storage, permissions and reporting.
+
 ## What it does today
 
 - **Applications**: fuzzy search over installed apps, ranked by how often and how recently you pick them. What you pick for a search rises to the top; Reset Ranking under ⌘K makes a result forget that.
@@ -73,6 +82,7 @@ Requires macOS 15 or later and Xcode 26 or later.
 ```sh
 make run     # build and launch
 make test    # run the core tests
+make release # optimized local build (ad-hoc signed, not notarized)
 make places  # rebuild the list of cities from GeoNames
 ```
 
@@ -91,7 +101,7 @@ modules; an extension is a module that does not come with Inky. A module hands
 the engine results as plain data: a title, an icon description, actions. The app
 renders them. System modules are written against the same contract that scripted
 extensions will use, so the extension API is one that has already been proven by
-real features.
+real features. Loading third-party extensions is not implemented yet.
 
 A command's screen is put together from a small set of parts in
 `Inky/Commands/CommandKit.swift`: `CommandScreen` (the header pill a command
@@ -123,6 +133,18 @@ The cities the time module knows, in
 `InkyCore/Sources/InkyCore/Resources/places.tsv`, are from
 [GeoNames](https://www.geonames.org), licensed under
 [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/).
+See [third-party notices](THIRD_PARTY_NOTICES.md) for the source and modifications.
+
+## Contributing and licensing
+
+Inky's source is available under the [MIT license](LICENSE). The GeoNames data
+retains its CC BY 4.0 license. License and attribution notices are also included
+in the built application's resources.
+
+See [CONTRIBUTING.md](CONTRIBUTING.md) for development and pull requests,
+[SECURITY.md](SECURITY.md) for private vulnerability reports, and
+[CHANGELOG.md](CHANGELOG.md) for release notes. Maintainers can follow the
+[release checklist](docs/RELEASING.md).
 
 ### Development flags
 

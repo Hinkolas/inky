@@ -14,6 +14,9 @@ import UniformTypeIdentifiers
 public actor ClipboardStore {
     /// The folder of images. A `Clip` of an image names its file in here.
     public nonisolated let imageDirectory: URL
+    /// False when the saved history could not be opened. New copies then
+    /// last only for this session; the saved history is left untouched.
+    public nonisolated let isPersistent: Bool
 
     private let directory: URL
     private let database: SQLiteDatabase
@@ -36,10 +39,8 @@ public actor ClipboardStore {
 
     /// Opens the history in `directory`, or begins one there.
     public init(directory: URL) {
-        self.directory = directory
-        imageDirectory = directory.appendingPathComponent("Images", isDirectory: true)
         try? FileManager.default.createDirectory(
-            at: imageDirectory,
+            at: directory,
             withIntermediateDirectories: true,
             // What was copied is nobody else's to read.
             attributes: [.posixPermissions: 0o700]
@@ -47,19 +48,20 @@ public actor ClipboardStore {
         try? FileManager.default.setAttributes([.posixPermissions: 0o700], ofItemAtPath: directory.path)
 
         let file = directory.appendingPathComponent("history.sqlite")
-        var opened = try? Self.open(file.path)
-        if opened == nil, FileManager.default.fileExists(atPath: file.path) {
-            // A file that cannot be read is put aside rather than lost, and
-            // the history begins again.
-            Self.log.error("The clipboard history could not be opened and was put aside")
-            let aside = directory.appendingPathComponent("history.unreadable.sqlite")
-            try? FileManager.default.removeItem(at: aside)
-            try? FileManager.default.moveItem(at: file, to: aside)
-            for suffix in ["-wal", "-shm"] {
-                try? FileManager.default.removeItem(atPath: file.path + suffix)
-            }
-            opened = try? Self.open(file.path)
+        let opened = try? Self.open(file.path)
+        isPersistent = opened != nil
+        if opened == nil {
+            // Failure can mean a lock or a newer schema, not just corruption.
+            // Keep the database, journals and images together for recovery.
+            Self.log.error("The saved clipboard history could not be opened; new copies will last only for this session")
         }
+        self.directory = opened == nil
+            ? FileManager.default.temporaryDirectory.appendingPathComponent("Inky-Clipboard-\(UUID().uuidString)", isDirectory: true)
+            : directory
+        imageDirectory = self.directory.appendingPathComponent("Images", isDirectory: true)
+        try? FileManager.default.createDirectory(
+            at: imageDirectory, withIntermediateDirectories: true, attributes: [.posixPermissions: 0o700]
+        )
         // Without a file there is still a history, until Inky quits.
         let database = opened ?? (try? Self.open(":memory:"))
         guard let database else { fatalError("SQLite could not open a database in memory") }
@@ -69,12 +71,17 @@ public actor ClipboardStore {
         ) { _ in true }) ?? []).isEmpty == false
     }
 
+    deinit {
+        if !isPersistent { try? FileManager.default.removeItem(at: directory) }
+    }
+
     /// Whether searching goes through the index.
     var isIndexed: Bool { hasIndex }
 
     private static func open(_ path: String) throws -> SQLiteDatabase {
         let database = try SQLiteDatabase(path: path)
         let version = try database.query("PRAGMA user_version") { $0.int(0) }.first ?? 0
+        guard version <= 1 else { throw InkyError("This clipboard history needs a newer version of Inky") }
         if version == 0 {
             // Has to be said before the first table is there.
             try database.execute("PRAGMA auto_vacuum = INCREMENTAL")

@@ -9,7 +9,16 @@ xcuserdata/
 
 # Swift Package Manager
 .swiftpm/
-Package.resolved
+# Keep Package.resolved tracked if external dependencies are added.
 
 # macOS
 .DS_Store
+
+# Local credentials and signing material
+.env
+.env.*
+!.env.example
+*.p12
+*.p8
+*.mobileprovision
+*.provisionprofile

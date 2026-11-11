@@ -24,7 +24,9 @@ places: ## Rebuild the list of cities and their time zones from GeoNames
 	rm -rf $(BUILD)/geonames && mkdir -p $(BUILD)/geonames
 	curl -fsS -o $(BUILD)/geonames/cities15000.zip https://download.geonames.org/export/dump/cities15000.zip
 	unzip -q -o $(BUILD)/geonames/cities15000.zip -d $(BUILD)/geonames
-	swift Scripts/places.swift $(BUILD)/geonames/cities15000.txt > $(PLACES)
+	swift Scripts/places.swift $(BUILD)/geonames/cities15000.txt > $(BUILD)/geonames/places.tsv
+	test -s $(BUILD)/geonames/places.tsv
+	mv $(BUILD)/geonames/places.tsv $(PLACES)
 
 clean:
 	rm -rf $(BUILD) InkyCore/.build

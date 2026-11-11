@@ -63,15 +63,23 @@ public struct TimeCalculator: Sendable {
     }
 
     func result(_ input: String, now: Date = .now) -> TimeResult? {
+        guard Self.supports(now) else { return nil }
         let input = input.trimmingCharacters(in: .whitespaces)
         if let date = Self.timestamp(input) {
-            return .time(date, zone: timeZone, place: nil)
+            return Self.supports(date) ? .time(date, zone: timeZone, place: nil) : nil
         }
         guard let tokens = Lexer(locale: locale).tokens(of: input), !tokens.isEmpty else { return nil }
         var parser = TimeParser(
             tokens: tokens, places: places, names: names, calendar: calendar(in: timeZone), now: now
         )
         return parser.result()
+    }
+
+    /// Keep arithmetic within years 1–9999, where the calendar and ISO date
+    /// formatters can represent the answer. A finite duration can overflow
+    /// when converted to seconds, or still produce an unrepresentable date.
+    static func supports(_ date: Date) -> Bool {
+        (-62_135_596_800..<253_402_300_800).contains(date.timeIntervalSince1970)
     }
 
     private func calendar(in zone: TimeZone) -> Calendar {
@@ -432,7 +440,7 @@ private struct TimeParser {
                     moment.zone = place.timeZone
                     moment.place = place
                 } else if let amounts = amounts(or: nil) {
-                    add(amounts, to: &moment, sign: 1)
+                    guard add(amounts, to: &moment, sign: 1) else { return nil }
                 } else {
                     return nil
                 }
@@ -452,24 +460,26 @@ private struct TimeParser {
     /// time and days for a day: "3:45pm + 5", "5 august + 5".
     private mutating func move(_ moment: inout Moment, by sign: Int) -> Bool {
         guard let amounts = amounts(or: moment.hasTime ? .hour : .day) else { return false }
-        add(amounts, to: &moment, sign: sign)
-        return true
+        return add(amounts, to: &moment, sign: sign)
     }
 
-    private func add(_ amounts: [Amount], to moment: inout Moment, sign: Int) {
+    private func add(_ amounts: [Amount], to moment: inout Moment, sign: Int) -> Bool {
         // Days are counted on the calendar of the place it is shown in.
         var calendar = calendar
         calendar.timeZone = moment.zone
         for amount in amounts {
+            guard amount.seconds.isFinite else { return false }
             if amount.value == amount.value.rounded(), abs(amount.value) < 1e6,
                let moved = calendar.date(byAdding: amount.component, value: sign * Int(amount.value), to: moment.date) {
                 moment.date = moved
             } else {
                 moment.date = moment.date.addingTimeInterval(Double(sign) * amount.seconds)
             }
+            guard TimeCalculator.supports(moment.date) else { return false }
             // A day moved by hours is a time.
             if amount.seconds < amount.value * 86_400 { moment.hasTime = true }
         }
+        return true
     }
 
     // MARK: - Moments
@@ -485,7 +495,7 @@ private struct TimeParser {
             }
             if asked, let amounts = amounts(or: nil) {
                 var moment = Moment(date: now, zone: home, place: nil, hasTime: true, isTrivial: false)
-                add(amounts, to: &moment, sign: 1)
+                guard add(amounts, to: &moment, sign: 1) else { return nil }
                 return moment
             }
             position = start

@@ -2,6 +2,17 @@ import Foundation
 import Testing
 @testable import InkyCore
 
+@Suite struct TimeRangeTests {
+    @Test(arguments: [
+        "time in 1e308 years", "now + 1e308 seconds", "today + 1e20 days",
+        "now + 1e20 seconds + 1 day", "today - 1e20 days",
+    ])
+    func rejectsUnrepresentableDates(_ input: String) {
+        let clock = TimeCalculator(locale: Locale(identifier: "en_US"), timeZone: .gmt)
+        #expect(clock.answer(input, now: Date(timeIntervalSince1970: 1_800_000_000)) == nil)
+    }
+}
+
 @Suite struct TimeTests {
     private static let list = """
     Tokyo\tJP\tAsia/Tokyo
