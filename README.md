@@ -133,6 +133,12 @@ make places  # rebuild the list of cities from GeoNames
 
 Or open `Inky.xcodeproj` in Xcode and run the `Inky` scheme.
 
+A Debug build is an app of its own, **Inky (Debug)**, with its own bundle
+identifier (`io.github.hinkolas.inky.debug`), settings, permissions and data
+folder (`~/Library/Application Support/Inky (Debug)`). It never touches the
+data of an installed Inky, and both can run side by side with different
+hotkeys.
+
 <details>
 <summary><strong>How it is organized</strong></summary>
 
@@ -172,7 +178,8 @@ of its own on top.
 Debug builds accept launch arguments that put the app into a known state:
 
 ```sh
-Inky.app/Contents/MacOS/Inky --pin --query "saf" --keys "cmd+k down"
+"build/Build/Products/Debug/Inky (Debug).app/Contents/MacOS/Inky (Debug)" \
+  --pin --query "saf" --keys "cmd+k down"
 ```
 
 `--show`, `--pin` (stay open without focus), `--quiet` (draw beneath the desktop,

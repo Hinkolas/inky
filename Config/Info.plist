@@ -3,7 +3,11 @@
 <plist version="1.0">
 <dict>
 	<!-- Merged with the keys Xcode generates. The update keys come from the
-	     INKY_UPDATE_* build settings; see docs/RELEASING.md. -->
+	     INKY_UPDATE_* build settings; see docs/RELEASING.md. The data folder's
+	     name is "Inky", or "Inky (Debug)" for a Debug build, which is an app
+	     of its own so that it never touches the data of an installed Inky. -->
+	<key>InkyDataFolder</key>
+	<string>$(INKY_DATA_FOLDER)</string>
 	<key>SUFeedURL</key>
 	<string>$(INKY_UPDATE_FEED_URL)</string>
 	<key>SUPublicEDKey</key>

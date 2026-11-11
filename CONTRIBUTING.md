@@ -20,6 +20,8 @@ The core tests use temporary data and a separate pasteboard. They must not
 change the user's real clipboard, uninstall installed apps, or call live
 network services. Use injected fetch and Trash implementations in tests.
 For manual testing, a Debug build accepts `--data <folder>`; see the README.
+Debug builds are a separate app, Inky (Debug), with its own bundle identifier,
+settings and data folder, so they do not touch an installed Inky's data.
 The argument isolates application data and the clipboard, but does not isolate
 all macOS preferences or permissions. Use a separate macOS account when testing
 first launch and permissions.

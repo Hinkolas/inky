@@ -37,10 +37,18 @@ public enum SelectedText {
 }
 
 public enum AppSupport {
+    /// The name of Inky's folders: "Inky", or "Inky (Debug)" for a Debug
+    /// build, so that a build being worked on never touches the data of the
+    /// Inky that is installed. Set by the app's `InkyDataFolder` Info.plist key.
+    public static let folderName: String = {
+        let name = Bundle.main.object(forInfoDictionaryKey: "InkyDataFolder") as? String ?? ""
+        return name.isEmpty ? "Inky" : name
+    }()
+
     /// Where Inky keeps its data: ~/Library/Application Support/Inky.
     public static var directory: URL {
         let base = FileManager.default.urls(for: .applicationSupportDirectory, in: .userDomainMask)[0]
-        let directory = base.appendingPathComponent("Inky", isDirectory: true)
+        let directory = base.appendingPathComponent(folderName, isDirectory: true)
         try? FileManager.default.createDirectory(at: directory, withIntermediateDirectories: true)
         return directory
     }
@@ -48,6 +56,6 @@ public enum AppSupport {
     /// Where Inky keeps what it can fetch again: ~/Library/Caches/Inky.
     public static var cacheDirectory: URL {
         let base = FileManager.default.urls(for: .cachesDirectory, in: .userDomainMask)[0]
-        return base.appendingPathComponent("Inky", isDirectory: true)
+        return base.appendingPathComponent(folderName, isDirectory: true)
     }
 }

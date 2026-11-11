@@ -13,9 +13,11 @@ build: ## Debug build
 release: ## Optimized build
 	$(XCODE) -configuration Release build
 
-run: build ## Build and launch, replacing a running Inky
-	-pkill -x Inky && sleep 0.5
-	open $(BUILD)/Build/Products/Debug/Inky.app
+DEBUG_APP := $(BUILD)/Build/Products/Debug/Inky (Debug).app
+
+run: build ## Build and launch Inky (Debug), replacing a running one; an installed Inky keeps running
+	-pkill -x "Inky (Debug)" && sleep 0.5
+	open "$(DEBUG_APP)"
 
 test: ## Run the InkyCore tests
 	swift test --package-path InkyCore
