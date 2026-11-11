@@ -2,8 +2,8 @@ import AppKit
 import InkyCore
 import SwiftUI
 
-/// Draws an `Icon`: a Finder icon, a symbol on a tinted tile, or a website's
-/// icon on a white one.
+/// Draws an `Icon`: a Finder icon, a symbol on a tinted tile, a website's
+/// icon on a white one, or a tile of one color.
 struct IconView: View {
     enum Shape {
         case tile, circle
@@ -62,11 +62,39 @@ struct IconView: View {
             .task(id: host) {
                 if loadsFavicon { IconCache.shared.favicons?.load(host) }
             }
+        case .swatch(let red, let green, let blue, let alpha):
+            tile
+                .fill(Color(.sRGB, red: red, green: green, blue: blue, opacity: alpha))
+                .background {
+                    // What shows through a color that is see-through.
+                    if alpha < 1 { Checkerboard(squares: 4).clipShape(tile) }
+                }
+                .frame(width: size, height: size)
+                // A color may be the one it lies on.
+                .overlay { tile.strokeBorder(outline > 0 ? Color.white.opacity(outline) : Color.primary.opacity(0.22)) }
         }
     }
 
     private var tile: RoundedRectangle {
         RoundedRectangle(cornerRadius: shape == .circle ? size / 2 : size * 0.26, style: .continuous)
+    }
+}
+
+/// White and gray squares, the way see-through is drawn.
+private struct Checkerboard: View {
+    let squares: Int
+
+    var body: some View {
+        Canvas { context, size in
+            let side = size.width / CGFloat(squares)
+            context.fill(Path(CGRect(origin: .zero, size: size)), with: .color(.white))
+            for row in 0..<squares {
+                for column in 0..<squares where (row + column).isMultiple(of: 2) {
+                    let square = CGRect(x: CGFloat(column) * side, y: CGFloat(row) * side, width: side, height: side)
+                    context.fill(Path(square), with: .color(Color(white: 0.78)))
+                }
+            }
+        }
     }
 }
 

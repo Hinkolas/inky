@@ -50,6 +50,8 @@ final class AppContext {
         let quicklinkProvider = QuicklinkProvider(store: quicklinks)
         fileProvider.maxResults = preferences.fileSearchLimit
 
+        let usage = UsageStore(fileURL: directory.appendingPathComponent("usage.json"))
+
         // This order is the order of sections when nothing is typed.
         engine = SearchEngine(
             providers: [
@@ -59,9 +61,10 @@ final class AppContext {
                 ApplicationProvider(),
                 calculator,
                 TimeProvider(),
+                ColorProvider(usage: usage),
                 fileProvider,
             ],
-            usage: UsageStore(fileURL: directory.appendingPathComponent("usage.json"))
+            usage: usage
         )
         engine.isEnabled = { [preferences] id in preferences.isEnabled(id) }
 

@@ -241,6 +241,11 @@ struct ProviderPane: View {
                     "time in tokyo", "5pm london in berlin", "time diff san francisco",
                     "monday in 3 weeks", "days until 24 dec",
                 ])
+            case "color":
+                Examples([
+                    "#ff6363", "rgb(255, 99, 99)", "oklch(0.7 0.19 23)", "rgb(255 99 99 / 50%)",
+                    "#fa32fa in rgb", "rgb(255, 0, 0) to hsl",
+                ])
             case "files":
                 FileSearchSettings(context: context)
             case "quicklinks":

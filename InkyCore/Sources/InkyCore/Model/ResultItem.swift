@@ -14,6 +14,9 @@ public indirect enum Icon: Sendable, Hashable {
     /// The icon of the website at `host`, see `Favicon.host(of:)`. `fallback`
     /// is drawn until the icon is there, and when the website has none.
     case favicon(host: String, fallback: Icon)
+    /// A tile filled with one color: its red, green and blue in sRGB, and
+    /// how see-through it is, each from 0 to 1.
+    case swatch(red: Double, green: Double, blue: Double, alpha: Double)
 }
 
 /// An input a result asks for before it can run, shown inline in the search bar.
