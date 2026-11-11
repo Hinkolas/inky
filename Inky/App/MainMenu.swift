@@ -60,7 +60,9 @@ final class StatusItemController: NSObject {
 
         let item = item ?? NSStatusBar.system.statusItem(withLength: NSStatusItem.squareLength)
         self.item = item
-        item.button?.image = NSImage(systemSymbolName: "drop.fill", accessibilityDescription: "Inky")
+        let image = NSImage(resource: .menuBarIcon)
+        image.accessibilityDescription = "Inky"
+        item.button?.image = image
 
         let menu = NSMenu()
         let open = menu.addItem(withTitle: "Open Inky", action: #selector(open(_:)), keyEquivalent: "")

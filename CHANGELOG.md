@@ -6,6 +6,7 @@ First public alpha, in preparation.
 
 ### Included
 
+- An app icon made in Icon Composer, with a matching template icon in the menu bar.
 - Updates from GitHub Releases through Sparkle, with signed appcasts and archives,
   for signed and notarized releases.
 - A welcome window on first launch for the hotkey, features, clipboard history
