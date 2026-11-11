@@ -206,7 +206,8 @@
 				ENABLE_HARDENED_RUNTIME = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Config/Info.plist;
-				INFOPLIST_KEY_CFBundleDisplayName = Inky;
+				INFOPLIST_KEY_CFBundleDisplayName = "Inky (Debug)";
+				INKY_DATA_FOLDER = "Inky (Debug)";
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.productivity";
 				INFOPLIST_KEY_LSUIElement = YES;
 				INFOPLIST_KEY_NSAppleEventsUsageDescription = "Inky sends commands to other apps for actions such as Restart, Empty Trash and Toggle Dark Mode.";
@@ -215,10 +216,11 @@
 					"@executable_path/../Frameworks",
 				);
 				MARKETING_VERSION = 0.1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = io.github.hinkolas.inky;
+				PRODUCT_BUNDLE_IDENTIFIER = io.github.hinkolas.inky.debug;
 				INKY_UPDATE_FEED_URL = "https://getinky.dev/appcast.xml";
 				INKY_UPDATE_PUBLIC_KEY = "poyl1dBS6H/iyQNP2E+tqWv9UGEO1n22f8vAWM4IqCA=";
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_MODULE_NAME = Inky;
+				PRODUCT_NAME = "Inky (Debug)";
 				SWIFT_APPROACHABLE_CONCURRENCY = YES;
 				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;
 				SWIFT_EMIT_LOC_STRINGS = YES;
@@ -240,6 +242,7 @@
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Config/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = Inky;
+				INKY_DATA_FOLDER = Inky;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.productivity";
 				INFOPLIST_KEY_LSUIElement = YES;
 				INFOPLIST_KEY_NSAppleEventsUsageDescription = "Inky sends commands to other apps for actions such as Restart, Empty Trash and Toggle Dark Mode.";
