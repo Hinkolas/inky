@@ -1,8 +1,31 @@
-<?xml version="1.0" standalone="yes"?><!-- sparkle-sign-warning:
+<?xml version="1.0" standalone="yes"?>
+<!-- sparkle-sign-warning:
 IMPORTANT: This file was signed by Sparkle. Any modifications to this file requires re-signing this file with generate_appcast or sign_update! The signed signature will be embedded at the end of this file.
---><rss xmlns:sparkle="http://www.andymatuschak.org/xml-namespaces/sparkle" version="2.0">
+-->
+<rss xmlns:sparkle="http://www.andymatuschak.org/xml-namespaces/sparkle" version="2.0">
     <channel>
         <title>Inky</title>
+        <item>
+            <title>0.1.0-alpha.2</title>
+            <pubDate>Wed, 11 Nov 2026 22:49:54 +0000</pubDate>
+            <link>https://github.com/Hinkolas/inky</link>
+            <sparkle:fullReleaseNotesLink>https://github.com/Hinkolas/inky/releases/tag/v0.1.0-alpha.2</sparkle:fullReleaseNotesLink>
+            <sparkle:channel>beta</sparkle:channel>
+            <sparkle:version>51</sparkle:version>
+            <sparkle:shortVersionString>0.1.0-alpha.2</sparkle:shortVersionString>
+            <sparkle:minimumSystemVersion>15.0</sparkle:minimumSystemVersion>
+            <sparkle:hardwareRequirements>arm64</sparkle:hardwareRequirements>
+            <description><![CDATA[<p>Where the keyboard is in the launcher, which the first testers found unreliable.</p>
+<div class="markdown-heading"><h3 class="heading-element">Fixed</h3><a id="user-content-fixed" class="anchor" aria-label="Permalink: Fixed" href="#fixed"><span aria-hidden="true" class="octicon octicon-link"></span></a></div>
+<ul>
+<li>The launcher puts the keyboard into the field of the screen it shows and keeps it there, instead of leaving that to how soon macOS moves focus to a field that has just appeared. This covers opening the launcher right after closing it, opening the clipboard history, the quicklinks or another command with its hotkey, and renaming a pinned entry of the clipboard history.</li>
+<li>Going back to a list, as from editing a quicklink or from what uninstalling an application would remove, puts the keyboard into its filter again. Before, typing did nothing until the filter was clicked.</li>
+<li>In the quicklink editor, Tab goes from the link back to the name. Before, it left the keyboard with neither. Editing a quicklink puts the insertion point at the end of its link instead of selecting all of it.</li>
+<li>Typing is never lost to a launcher that is open: should the keyboard be with no field at all, the first key puts it back where it belongs.</li>
+</ul>
+]]></description>
+            <enclosure url="https://github.com/Hinkolas/inky/releases/download/v0.1.0-alpha.2/Inky-0.1.0-alpha.2.zip" length="3742897" type="application/octet-stream" sparkle:edSignature="xrbcYVMwzcbBL09wm5NjlH73XB1Wbv57iQAXprEjIQw8d/8yAmL3oSdHAAgTKqgpsJWagXGT1FuvgKkn98h3BA=="/>
+        </item>
         <item>
             <title>0.1.0-alpha.1</title>
             <pubDate>Wed, 11 Nov 2026 18:14:15 +0000</pubDate>
@@ -46,10 +69,11 @@ IMPORTANT: This file was signed by Sparkle. Any modifications to this file requi
 <li>Lua extensions are planned and cannot be installed yet.</li>
 </ul>
 ]]></description>
-            <enclosure url="https://github.com/Hinkolas/inky/releases/download/v0.1.0-alpha.1/Inky-0.1.0-alpha.1.zip" length="3736629" type="application/octet-stream" sparkle:edSignature="mjUSJWMtQgiZgSY+RhMKllCzMdmaPfjoEXKMAGZDvdaruPYCgQKtQQkqCUx+jhAawZAfc4nfuNw/FmEFhYlqDA=="></enclosure>
+            <enclosure url="https://github.com/Hinkolas/inky/releases/download/v0.1.0-alpha.1/Inky-0.1.0-alpha.1.zip" length="3736629" type="application/octet-stream" sparkle:edSignature="mjUSJWMtQgiZgSY+RhMKllCzMdmaPfjoEXKMAGZDvdaruPYCgQKtQQkqCUx+jhAawZAfc4nfuNw/FmEFhYlqDA=="/>
         </item>
     </channel>
-</rss><!-- sparkle-signatures:
-edSignature: f13kiz4GNszBmmmOwMBW8erR+Jx8iY9mQwZ/VQccVFjxUr0qI358m6rk698xVkjE1NWqYtVbcLW8mRWCYv3BAA==
-length: 4912
+</rss>
+<!-- sparkle-signatures:
+edSignature: 4OCb4O+tUy7kb12cwQr9LauCNekEIFAgvUAFWhX4b4TGdAC5fNPXcioJRtk+6fBQRHzlaawmMwnFRK/BGzVHCQ==
+length: 7188
 -->
