@@ -1,6 +1,8 @@
 # Changelog
 
-## Unreleased
+## 0.1.0-alpha.3 — 2026-11-12
+
+What is typed into the launcher is no longer lost when it closes.
 
 ### Added
 
