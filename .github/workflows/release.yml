@@ -180,8 +180,12 @@ jobs:
           spctl --assess --type open --context context:primary-signature --verbose "$dmg"
           mount=$(hdiutil attach -nobrowse -readonly "$dmg" | awk -F'\t' '/Apple_HFS/ { print $NF }')
           test -d "$mount/Inky.app" && test -L "$mount/Applications"
-          spctl --assess --type execute --verbose "$mount/Inky.app"
+          # As a user does: copy the app off the disk image. Gatekeeper cannot
+          # assess an app on a read-only volume ("invalid API object reference").
+          ditto "$mount/Inky.app" "$RUNNER_TEMP/copied/Inky.app"
           hdiutil detach "$mount"
+          xcrun stapler validate "$RUNNER_TEMP/copied/Inky.app"
+          spctl --assess --type execute --verbose "$RUNNER_TEMP/copied/Inky.app"
 
       - name: Checksums
         run: |
