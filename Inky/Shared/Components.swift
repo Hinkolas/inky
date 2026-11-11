@@ -2,7 +2,7 @@ import AppKit
 import InkyCore
 import SwiftUI
 
-/// Draws an `Icon`: a Finder icon, a symbol on a tinted tile, a website's
+/// Draws an `Icon`: a Finder icon, a symbol on a shaded tile, a website's
 /// icon on a white one, or a tile of one color.
 struct IconView: View {
     enum Shape {
@@ -27,17 +27,39 @@ struct IconView: View {
                 .interpolation(.high)
                 .frame(width: size, height: size)
         case .symbol(let name, let tint):
+            // A little depth, in the spirit of the app icon: light falls from
+            // above, catches the top edge and lifts the glyph off the tile.
+            let pointSize = size * 0.5
+            let nudge = Self.nudges[name] ?? .zero
             tile
                 .fill(tint.color)
+                .overlay {
+                    // Laid over the tint rather than mixed into it: mixing
+                    // system colors comes out washed out in the app.
+                    tile.fill(LinearGradient(
+                        colors: [.white.opacity(0.16), .black.opacity(0.06)],
+                        startPoint: .top,
+                        endPoint: .bottom
+                    ))
+                }
+                .overlay {
+                    tile.strokeBorder(
+                        LinearGradient(colors: [.white.opacity(0.45), .white.opacity(0.04)], startPoint: .top, endPoint: .bottom),
+                        lineWidth: max(0.5, size / 40)
+                    )
+                }
                 .frame(width: size, height: size)
                 .overlay {
                     Image(systemName: name)
-                        .font(.system(size: size * 0.5, weight: .semibold))
+                        .font(.system(size: pointSize, weight: .semibold))
                         .foregroundStyle(.white)
+                        .offset(x: nudge.width * pointSize, y: nudge.height * pointSize)
+                        .shadow(color: .black.opacity(0.18), radius: size * 0.02, y: size * 0.02)
                 }
                 .overlay {
                     if outline > 0 { tile.strokeBorder(.white.opacity(outline)) }
                 }
+                .shadow(color: .black.opacity(0.18), radius: size * 0.03, y: size * 0.02)
         case .favicon(let host, let fallback):
             Group {
                 if let image = IconCache.shared.favicon(for: host) {
@@ -74,6 +96,17 @@ struct IconView: View {
                 .overlay { tile.strokeBorder(outline > 0 ? Color.white.opacity(outline) : Color.primary.opacity(0.22)) }
         }
     }
+
+    /// How far to move a symbol, in fractions of its point size, so that it
+    /// looks centered on its tile. Symbols center their whole frame, and a
+    /// few of them leave room on one side or carry their weight off center.
+    private static let nudges: [String: CGSize] = [
+        "clipboard.fill": CGSize(width: 0, height: -0.06),
+        "doc.text.magnifyingglass": CGSize(width: -0.022, height: 0.033),
+        "link.badge.plus": CGSize(width: -0.018, height: 0.01),
+        "info": CGSize(width: -0.015, height: 0),
+        "restart": CGSize(width: 0.058, height: 0),
+    ]
 
     private var tile: RoundedRectangle {
         RoundedRectangle(cornerRadius: shape == .circle ? size / 2 : size * 0.26, style: .continuous)
