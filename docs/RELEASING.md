@@ -17,6 +17,8 @@ no release is published by the build commands or CI workflow.
   line with the shipped behavior. Copies marked confidential by password
   managers are left out by default.
 - Configure GitHub Actions for the repository and run CI on the release commit.
+  CI runs for pull requests into `main`, not for what is merged, so a commit on
+  `main` has no run of its own: start one with `gh workflow run CI --ref main`.
   The workflows use Xcode 26.6 on `macos-26`; update the pin if that image retires it.
   The app icon is an Icon Composer file, which Xcode 26 can only compile on
   macOS 26 or later: on `macos-15`, `actool` crashes in `CompileAssetCatalogVariant`.
@@ -24,8 +26,9 @@ no release is published by the build commands or CI workflow.
   repository's security settings and verify the form linked in SECURITY.md
   from another account. A SECURITY.md file alone does not enable this feature.
   See [GitHub's instructions](https://docs.github.com/en/code-security/how-tos/report-and-fix-vulnerabilities/configure-vulnerability-reporting/configure-for-a-repository).
-- Enable available secret scanning and push protection; consider requiring CI
-  and pull requests for changes to `main`.
+- Enable available secret scanning and push protection. Changes to `main` need
+  a pull request that passes CI and is up to date with `main`; CI relies on
+  that to check each change once.
 
 Changing visibility, pushing, creating a release and publishing artifacts are
 separate maintainer actions. Local preparation does not perform them.
