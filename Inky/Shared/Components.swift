@@ -107,6 +107,9 @@ final class IconCache {
     private let cache = NSCache<NSString, NSImage>()
 
     func icon(forFile path: String) -> NSImage {
+        // Finder can keep showing an older icon of a build it has seen before;
+        // Inky's own icon comes straight from its bundle.
+        if path == Bundle.main.bundlePath, let own = NSApp.applicationIconImage { return own }
         if let cached = cache.object(forKey: path as NSString) { return cached }
         let image = NSWorkspace.shared.icon(forFile: path)
         cache.setObject(image, forKey: path as NSString)
@@ -124,6 +127,11 @@ final class IconCache {
         cache.setObject(image, forKey: key)
         return image
     }
+}
+
+extension Icon {
+    /// Inky's app icon.
+    static var inky: Icon { .file(path: Bundle.main.bundlePath) }
 }
 
 extension Tint {

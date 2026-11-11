@@ -390,7 +390,7 @@ struct AboutPane: View {
                 }
             } header: {
                 PaneHeader(
-                    icon: .symbol("drop.fill", tint: .indigo),
+                    icon: .inky,
                     title: "Inky",
                     summary: "A fast, open source launcher for macOS."
                 )

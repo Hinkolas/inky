@@ -156,7 +156,7 @@ private struct StepList: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 2) {
             HStack(spacing: 8) {
-                IconView(icon: .symbol("drop.fill", tint: .indigo), size: 22)
+                IconView(icon: .inky, size: 22)
                 Text("Inky").font(.headline)
             }
             .padding(.horizontal, 10)
@@ -295,7 +295,7 @@ private struct HotkeyStep: View {
                 }
             } header: {
                 StepHeader(
-                    icon: .symbol("drop.fill", tint: .indigo),
+                    icon: .inky,
                     title: "Welcome to Inky",
                     summary: "A fast launcher for your Mac. Choose the keys that open it from anywhere."
                 )

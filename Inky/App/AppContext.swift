@@ -212,7 +212,7 @@ final class InkyCommandModule: Module {
     let info = ModuleInfo(
         title: "Inky",
         summary: "Commands for Inky itself.",
-        icon: .symbol("drop.fill", tint: .indigo)
+        icon: .inky
     )
     var onChange: (@MainActor () -> Void)?
 
