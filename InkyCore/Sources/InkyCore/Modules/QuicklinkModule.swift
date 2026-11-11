@@ -13,6 +13,8 @@ public final class QuicklinkModule: Module {
 
     /// Set by the app to show its editor for a quicklink.
     public var onEdit: (@MainActor (Quicklink) -> Void)?
+    /// Set by the app to delete a quicklink and say so.
+    public var onDelete: (@MainActor (Quicklink) -> Void)?
 
     private let store: QuicklinkStore
 
@@ -40,6 +42,15 @@ public final class QuicklinkModule: Module {
                     },
                     Action("Edit Quicklink", symbol: "pencil", shortcut: KeyShortcut("e"), behavior: .keepOpen) { [weak self] _ in
                         self?.onEdit?(quicklink)
+                    },
+                    Action(
+                        "Delete Quicklink",
+                        symbol: "trash",
+                        shortcut: KeyShortcut("x", [.control]),
+                        behavior: .keepOpen,
+                        isDestructive: true
+                    ) { [weak self] _ in
+                        self?.onDelete?(quicklink)
                     },
                 ]
             )

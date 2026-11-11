@@ -749,7 +749,11 @@ private struct ActionMenu: View {
                             Spacer(minLength: 16)
                             Keycap(action.shortcut?.symbols ?? [], tone: isSelected ? .onAccent : .plain)
                         }
-                        .foregroundStyle(isSelected ? AnyShapeStyle(Theme.onAccent) : AnyShapeStyle(.primary))
+                        .foregroundStyle(
+                            isSelected ? AnyShapeStyle(Theme.onAccent)
+                                : action.isDestructive ? AnyShapeStyle(Theme.destructive)
+                                : AnyShapeStyle(.primary)
+                        )
                         .padding(.leading, 9)
                         .padding(.trailing, 7)
                         .frame(height: 32)

@@ -39,6 +39,17 @@ public final class UsageStore {
         save()
     }
 
+    /// Whether anything about the item is remembered.
+    public func hasHistory(_ itemID: String) -> Bool {
+        records[itemID] != nil
+    }
+
+    /// Forgets that the item was ever picked, so it ranks by its match alone.
+    public func forget(_ itemID: String) {
+        guard records.removeValue(forKey: itemID) != nil else { return }
+        save()
+    }
+
     /// 0...1, combining how often and how recently the item was used.
     public func frecency(_ itemID: String, now: Date = .now) -> Double {
         guard let record = records[itemID] else { return 0 }

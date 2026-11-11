@@ -93,6 +93,9 @@ public struct Action: Identifiable, Sendable {
     /// Whether required arguments must be filled in before this action runs.
     public var usesArguments: Bool
     public var confirmation: Confirmation?
+    /// Whether the action destroys something, such as deleting it. It is
+    /// drawn in red, and listed last.
+    public var isDestructive: Bool
     public var perform: Handler
 
     public init(
@@ -102,6 +105,7 @@ public struct Action: Identifiable, Sendable {
         behavior: Behavior = .dismiss,
         usesArguments: Bool = false,
         confirmation: Confirmation? = nil,
+        isDestructive: Bool = false,
         perform: @escaping Handler
     ) {
         self.title = title
@@ -110,6 +114,7 @@ public struct Action: Identifiable, Sendable {
         self.behavior = behavior
         self.usesArguments = usesArguments
         self.confirmation = confirmation
+        self.isDestructive = isDestructive
         self.perform = perform
     }
 

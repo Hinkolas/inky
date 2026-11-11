@@ -82,6 +82,7 @@ final class AppContext {
         commands.createQuicklink = { [unowned self] in launcher.model.editQuicklink(nil) }
         commands.manageQuicklinks = { [unowned self] in launcher.model.showQuicklinks() }
         quicklinkModule.onEdit = { [unowned self] quicklink in launcher.model.editQuicklink(quicklink) }
+        quicklinkModule.onDelete = { [unowned self] quicklink in launcher.model.deleteQuicklink(quicklink) }
     }
 
     /// Fetches every website icon again, in the background.

@@ -256,7 +256,8 @@ final class LauncherModel {
             }
             do {
                 try await action.perform(context)
-                engine.recordUse(of: item, query: query)
+                // Deleting something is not a sign it should rank higher.
+                if !action.isDestructive { engine.recordUse(of: item, query: query) }
                 if action.behavior == .dismiss { dismiss() }
             } catch {
                 report(error)
@@ -278,11 +279,27 @@ final class LauncherModel {
     var menuSections: [MenuSection] {
         var sections: [MenuSection] = []
         if let item = selectedItem, !item.actions.isEmpty {
-            sections.append(MenuSection(title: item.title, actions: item.actions.enumerated().map { index, action in
-                CommandAction(title: action.title, symbol: action.symbol, shortcut: shortcut(for: action, at: index)) { [weak self] in
+            let actions = item.actions.enumerated().map { index, action in
+                CommandAction(
+                    title: action.title,
+                    symbol: action.symbol,
+                    shortcut: shortcut(for: action, at: index),
+                    isDestructive: action.isDestructive
+                ) { [weak self] in
                     self?.perform(action, on: item)
                 }
-            }))
+            }
+            var resetRanking: [CommandAction] = []
+            if engine.hasRanking(item) {
+                resetRanking.append(CommandAction(title: "Reset Ranking", symbol: "arrow.counterclockwise") { [weak self] in
+                    self?.resetRanking(of: item)
+                })
+            }
+            // Whatever destroys something comes last, out of the way.
+            sections.append(MenuSection(
+                title: item.title,
+                actions: actions.filter { !$0.isDestructive } + resetRanking + actions.filter(\.isDestructive)
+            ))
         }
 
         var general: [CommandAction] = []
@@ -304,6 +321,13 @@ final class LauncherModel {
     func toggleActionMenu() {
         isActionMenuOpen.toggle()
         actionMenuIndex = 0
+    }
+
+    /// Lets the item rank by how well it matches again, as if it had never been picked.
+    func resetRanking(of item: ResultItem) {
+        engine.resetRanking(of: item)
+        refresh()
+        showToast("Ranking reset")
     }
 
     func runMenuAction(_ action: CommandAction) {
@@ -369,6 +393,21 @@ final class LauncherModel {
         showToast("Quicklink saved")
     }
 
+    func deleteQuicklink(_ quicklink: Quicklink) {
+        // In the search, the selection moves on to the next result, as it
+        // does in the quicklink browser.
+        if route == nil, let selectedID, selectedID.hasSuffix(quicklink.itemID) {
+            let ids = itemIDs
+            if let index = ids.firstIndex(of: selectedID) {
+                let neighbor = index + 1 < ids.count ? index + 1 : index - 1
+                if ids.indices.contains(neighbor) { select(ids[neighbor]) }
+            }
+        }
+        quicklinks.delete(quicklink.id)
+        engine.usage.forget(quicklink.itemID)
+        showToast("Deleted “\(quicklink.name)”")
+    }
+
     /// What the quicklink browser offers for a quicklink. The first runs on Return.
     func actions(for quicklink: Quicklink, in browser: QuicklinkBrowser) -> [CommandAction] {
         var actions = [
@@ -400,8 +439,7 @@ final class LauncherModel {
             },
             CommandAction(title: "Delete", symbol: "trash", shortcut: KeyShortcut("x", [.control]), isDestructive: true) { [weak self] in
                 browser.selectNeighbor(of: quicklink.id)
-                self?.quicklinks.delete(quicklink.id)
-                self?.showToast("Deleted “\(quicklink.name)”")
+                self?.deleteQuicklink(quicklink)
             },
         ]
         return actions

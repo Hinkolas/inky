@@ -32,6 +32,8 @@ public final class SearchEngine {
 
     @ObservationIgnored private var index: [String: [Entry]] = [:]
     @ObservationIgnored private var lastReload: [String: Date] = [:]
+    /// The ids in `index`, of every module.
+    @ObservationIgnored private var rankedIDs: Set<String> = []
     /// The candidates of each module that can be fallback commands. Observed,
     /// so that settings list them as they are loaded.
     private var fallbackIndex: [String: [ResultItem]] = [:]
@@ -78,6 +80,7 @@ public final class SearchEngine {
             )
         }
         fallbackIndex[module.id] = items.filter(\.canBeFallback)
+        rankedIDs = Set(index.values.joined().map(\.item.id))
         lastReload[module.id] = .now
         onChange?()
     }
@@ -183,6 +186,17 @@ public final class SearchEngine {
 
     public func recordUse(of item: ResultItem, query: String) {
         usage.record(item.id, query: query)
+    }
+
+    /// Whether what the user picked has moved the item up, in the results
+    /// and the suggestions. Only items that are ranked can be.
+    public func hasRanking(_ item: ResultItem) -> Bool {
+        usage.hasHistory(item.id) && rankedIDs.contains(item.id)
+    }
+
+    /// Lets the item rank by how well it matches again.
+    public func resetRanking(of item: ResultItem) {
+        usage.forget(item.id)
     }
 
     // MARK: - Private

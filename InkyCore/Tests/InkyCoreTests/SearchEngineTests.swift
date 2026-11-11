@@ -59,6 +59,31 @@ private final class StubModule: Module {
         #expect(titles(engine.results(for: "k")).first == "Keychain Access")
     }
 
+    @Test func resetsRanking() async throws {
+        let engine = await makeEngine(StubModule(id: "apps", titles: ["Kagi Search", "Karabiner", "Keychain Access"]))
+        let before = titles(engine.results(for: "k"))
+        let keychain = try #require(engine.results(for: "k").flatMap(\.items).first { $0.title == "Keychain Access" })
+        #expect(!engine.hasRanking(keychain))
+
+        engine.recordUse(of: keychain, query: "k")
+        #expect(engine.hasRanking(keychain))
+        #expect(titles(engine.results(for: "k")).first == "Keychain Access")
+
+        engine.resetRanking(of: keychain)
+        #expect(!engine.hasRanking(keychain))
+        #expect(titles(engine.results(for: "k")) == before)
+        #expect(engine.results(for: "").first?.title != "Suggestions")
+    }
+
+    @Test func onlyRankedItemsHaveARankingToReset() async throws {
+        let module = StubModule(id: "calc", titles: [])
+        module.instant = ["1+1": "2"]
+        let engine = await makeEngine(module)
+        let result = try #require(engine.results(for: "1+1").first?.items.first)
+        engine.recordUse(of: result, query: "1+1")
+        #expect(!engine.hasRanking(result))
+    }
+
     @Test func emptyQueryListsSuggestionsThenModules() async throws {
         let engine = await makeEngine(
             StubModule(id: "links", titles: ["Zeta", "Alpha"]),
