@@ -1,5 +1,23 @@
 # Changelog
 
+## Unreleased
+
+### Fixed
+
+- The launcher puts the keyboard into the field of the screen it shows and
+  keeps it there, instead of leaving that to how soon macOS moves focus to a
+  field that has just appeared. This covers opening the launcher right after
+  closing it, opening the clipboard history, the quicklinks or another command
+  with its hotkey, and renaming a pinned entry of the clipboard history.
+- Going back to a list, as from editing a quicklink or from what uninstalling an
+  application would remove, puts the keyboard into its filter again. Before,
+  typing did nothing until the filter was clicked.
+- In the quicklink editor, Tab goes from the link back to the name. Before, it
+  left the keyboard with neither. Editing a quicklink puts the insertion point
+  at the end of its link instead of selecting all of it.
+- Typing is never lost to a launcher that is open: should the keyboard be with
+  no field at all, the first key puts it back where it belongs.
+
 ## 0.1.0-alpha.1 — 2026-11-11
 
 The first public alpha.

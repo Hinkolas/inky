@@ -8,6 +8,8 @@ import SwiftUI
 /// and back moves and resizes the surfaces instead of swapping them.
 struct LauncherView: View {
     let model: LauncherModel
+    /// Where the keyboard is. One for all screens: see LauncherFocus.swift.
+    @FocusState private var focus: LauncherModel.FocusTarget?
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
 
     var body: some View {
@@ -31,22 +33,22 @@ struct LauncherView: View {
                     ZStack(alignment: .top) {
                         switch model.route {
                         case nil:
-                            SearchScreen(model: model)
+                            SearchScreen(model: model, focus: $focus)
                                 .transition(motion.screen(isGoingBack: model.isNavigatingBack))
                         case .quicklinks(let browser):
-                            QuicklinkBrowserScreen(model: model, browser: browser)
+                            QuicklinkBrowserScreen(model: model, browser: browser, focus: $focus)
                                 .transition(motion.screen(isGoingBack: model.isNavigatingBack))
                         case .quicklinkEditor(let draft):
-                            QuicklinkEditorScreen(model: model, draft: draft)
+                            QuicklinkEditorScreen(model: model, draft: draft, focus: $focus)
                                 .transition(motion.screen(isGoingBack: model.isNavigatingBack))
                         case .uninstallBrowser(let browser):
-                            UninstallBrowserScreen(model: model, browser: browser)
+                            UninstallBrowserScreen(model: model, browser: browser, focus: $focus)
                                 .transition(motion.screen(isGoingBack: model.isNavigatingBack))
                         case .uninstall(let review):
                             UninstallReviewScreen(model: model, review: review)
                                 .transition(motion.screen(isGoingBack: model.isNavigatingBack))
                         case .clipboard(let browser):
-                            ClipboardBrowserScreen(model: model, browser: browser)
+                            ClipboardBrowserScreen(model: model, browser: browser, focus: $focus)
                                 .transition(motion.screen(isGoingBack: model.isNavigatingBack))
                         }
                     }
@@ -118,6 +120,13 @@ struct LauncherView: View {
             }
         }
         .environment(\.motion, motion)
+        // The user moved it, by clicking into a field or with Tab.
+        .onChange(of: focus) { _, target in
+            if let target { model.focusDidMove(to: target) }
+        }
+        .onChange(of: model.focusFallbackTick) {
+            focus = model.focusTarget
+        }
     }
 
     private var layout: LauncherLayout {
@@ -263,11 +272,12 @@ private struct BackButton: View {
 
 private struct SearchScreen: View {
     let model: LauncherModel
+    let focus: LauncherFocus
     @Environment(\.motion) private var motion
 
     var body: some View {
         VStack(spacing: LauncherMetrics.gap) {
-            SearchBar(model: model)
+            SearchBar(model: model, focus: focus)
             if model.showsResults {
                 ResultsList(model: model)
                     .transition(motion.fade)
@@ -279,7 +289,7 @@ private struct SearchScreen: View {
 
 private struct SearchBar: View {
     let model: LauncherModel
-    @FocusState private var focus: LauncherModel.FocusTarget?
+    let focus: LauncherFocus
     @Environment(\.motion) private var motion
 
     private static let placeholder = "Search apps, commands and files"
@@ -297,7 +307,7 @@ private struct SearchBar: View {
             TextField(Self.placeholder, text: Binding(get: { model.query }, set: { model.setQuery($0) }))
                 .textFieldStyle(.plain)
                 .font(.system(size: Self.fontSize))
-                .focused($focus, equals: .search)
+                .launcherFocus(focus, .search)
                 // With arguments the field hugs its text so they sit right after it.
                 .frame(width: arguments.isEmpty ? nil : queryWidth)
 
@@ -309,10 +319,10 @@ private struct SearchBar: View {
                         get: { index < model.argumentValues.count ? model.argumentValues[index] : "" },
                         set: { model.setArgument(index, $0) }
                     ),
-                    isFocused: focus == .argument(index),
+                    focus: focus,
+                    target: .argument(index),
                     missingTick: model.missingArgumentTick
                 )
-                .focused($focus, equals: .argument(index))
                 // It only fades in, and pops its own outline: see ArgumentField.
                 .transition(.asymmetric(
                     insertion: motion.transition(.opacity),
@@ -351,12 +361,6 @@ private struct SearchBar: View {
         .animation(motion.quick, value: BarParts(hasQuery: !model.query.isEmpty, arguments: arguments.map(\.name)))
         // Typing must not: the field would lag behind what is typed into it.
         .animation(nil, value: model.query)
-        .onChange(of: model.focusTick, initial: true) {
-            focus = model.focusTarget
-        }
-        .onChange(of: focus) { _, newValue in
-            if let newValue { model.focusDidMove(to: newValue) }
-        }
     }
 
     private var queryWidth: CGFloat {
@@ -375,7 +379,8 @@ private struct ArgumentField: View {
     let name: String
     let hint: String?
     @Binding var text: String
-    let isFocused: Bool
+    let focus: LauncherFocus
+    let target: LauncherModel.FocusTarget
     /// Goes up when an action wanted this argument and it was empty.
     let missingTick: Int
 
@@ -387,12 +392,14 @@ private struct ArgumentField: View {
 
     var body: some View {
         let placeholder = hint ?? name
+        let isFocused = focus.wrappedValue == target
         // As wide as what it says. Typing never makes it narrower than it
         // was empty, so it does not shrink under the first letter.
         let width = max(textWidth(placeholder, size: Self.fontSize), textWidth(text, size: Self.fontSize))
         TextField(placeholder, text: $text)
             .textFieldStyle(.plain)
             .font(.system(size: Self.fontSize))
+            .launcherFocus(focus, target)
             // The editor AppKit puts over a field is a point taller than the
             // field SwiftUI made and stands out over its top edge, so text
             // being edited sits a point higher. This puts it back.
@@ -423,7 +430,7 @@ private struct ArgumentField: View {
             .help(name)
             .modifier(Shake(shakes: shakes))
             .onChange(of: missingTick) {
-                guard isFocused else { return }
+                guard focus.wrappedValue == target else { return }
                 withAnimation(motion.shake) { shakes += 1 }
             }
     }

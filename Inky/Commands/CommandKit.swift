@@ -122,13 +122,13 @@ private struct Breadcrumb: View {
 struct FilterField: View {
     @Binding var text: String
     let prompt: String
-    var focus: FocusState<Bool>.Binding
+    let focus: LauncherFocus
 
     var body: some View {
         TextField(prompt, text: $text)
             .textFieldStyle(.plain)
             .font(.system(size: LauncherMetrics.barFontSize))
-            .focused(focus)
+            .launcherFocus(focus, .filter)
             .frame(maxWidth: .infinity)
     }
 }
