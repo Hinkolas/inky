@@ -34,6 +34,14 @@ public final class ClipboardHistory {
         }
     }
 
+    /// Whether what a password manager marks as confidential is kept.
+    /// Turning it off lets go of such copies, unless they are pinned.
+    @ObservationIgnored public var keepsConcealed: Bool {
+        didSet {
+            if !keepsConcealed, oldValue { removeConcealed() }
+        }
+    }
+
     @ObservationIgnored private var changeCount: Int
     @ObservationIgnored private var timer: Timer?
     @ObservationIgnored private var lastPrune = Date.distantPast
@@ -41,10 +49,14 @@ public final class ClipboardHistory {
     private static let interval: TimeInterval = 0.5
     private static let pruneInterval: TimeInterval = 3600
 
-    public init(store: ClipboardStore, pasteboard: NSPasteboard = .general, retention: ClipboardRetention = .threeMonths) {
+    public init(
+        store: ClipboardStore, pasteboard: NSPasteboard = .general, retention: ClipboardRetention = .threeMonths,
+        keepsConcealed: Bool = false
+    ) {
         self.store = store
         self.pasteboard = pasteboard
         self.retention = retention
+        self.keepsConcealed = keepsConcealed
         changeCount = pasteboard.changeCount
     }
 
@@ -69,6 +81,8 @@ public final class ClipboardHistory {
 
         Task { await store.removeStrayImages() }
         prune()
+        // Kept by an earlier version, or while they were to be kept.
+        if !keepsConcealed { removeConcealed() }
     }
 
     public func stop() {
@@ -91,7 +105,7 @@ public final class ClipboardHistory {
         let frontmost = NSWorkspace.shared.frontmostApplication
         guard let capture = PasteboardReader.read(
             pasteboard, sourceName: frontmost?.localizedName, sourceBundleID: frontmost?.bundleIdentifier
-        ) else { return }
+        ), keepsConcealed || !capture.isConcealed else { return }
         Task {
             guard await store.record(capture) != nil else { return }
             revision += 1
@@ -118,6 +132,12 @@ public final class ClipboardHistory {
         guard let cutoff = retention.cutoff(from: now) else { return }
         Task {
             if await store.prune(before: cutoff) > 0 { revision += 1 }
+        }
+    }
+
+    private func removeConcealed() {
+        Task {
+            if await store.removeConcealed() > 0 { revision += 1 }
         }
     }
 

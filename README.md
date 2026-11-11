@@ -10,9 +10,10 @@ The first public alpha is being prepared as `0.1.0-alpha.1`. Build from source
 using the instructions below. Alpha versions may change their behavior and
 data formats; back up data you want to keep.
 
-**Clipboard privacy:** history currently retains password-manager copies,
-including copies marked confidential, without application-level encryption.
-Disable Clipboard History in Settings if that does not suit your use.
+**Clipboard privacy:** copies that password managers mark as confidential are
+left out of the history. Everything else, including passwords copied from
+elsewhere, is kept without application-level encryption. Disable Clipboard
+History in Settings if that does not suit your use.
 See [Security and privacy](SECURITY.md) for storage, permissions and reporting.
 
 ## What it does today
@@ -48,9 +49,11 @@ convert is sent. Settings → Calculator turns this off, and currencies are then
 not converted.
 
 The clipboard history stays on your Mac, in a database only your account can
-read, and is never sent anywhere. Passwords copied from a password manager are
-kept like anything else for now. What an app puts on the clipboard only to
-move it along, as text expanders do, is left out.
+read, and is never sent anywhere. What a password manager marks as
+confidential is left out, unless Settings → Clipboard History says to keep it.
+A password copied from anywhere else cannot be told apart, and is kept. What an
+app puts on the clipboard only to move it along, as text expanders do, is left
+out too.
 
 Two things in it need your say. macOS asks before an app may read what other
 apps copied: the first time Inky does, allow it, and choose Allow for Inky
@@ -173,7 +176,7 @@ look at one frame by frame).
 ## Roadmap
 
 - Lua extensions, hosted behind the `Module` contract
-- Passwords in the clipboard history: left out, or kept locked
+- Passwords in the clipboard history, when kept: encrypted at rest
 - A calendar that knows your working days and holidays, to answer `workdays in march` and `55h in workdays`
 - Sizes for print and export in the calculator: `2 inches in px at 72 ppi`
 - Airports in the time module: `time in JFK`

@@ -9,6 +9,7 @@ First public alpha, in preparation.
 - Application launching, fuzzy search, usage ranking and Spotlight file search.
 - Quicklinks with arguments, clipboard and selected-text placeholders.
 - Clipboard history for text, images and files, with pins and retention settings.
+  Copies that password managers mark as confidential are left out by default.
 - Calculator, unit and currency conversions, time queries and color conversion.
 - System commands, per-command hotkeys, disabled commands and configurable fallbacks.
 - Application uninstall review with selected files moved to the Trash.
@@ -27,8 +28,9 @@ First public alpha, in preparation.
 
 ### Known limitations
 
-- Clipboard history stores password-manager copies, including confidential ones,
-  without application-level encryption. Disable the module if needed.
+- Clipboard history is stored without application-level encryption. Passwords
+  copied from apps that do not mark them as confidential are kept. Disable the
+  module if needed.
 - Signing, notarization and automatic updates are not provided by `make release`.
   Local builds use an ad-hoc signature.
 - Application-data matching for uninstalling is heuristic; review the selected files.

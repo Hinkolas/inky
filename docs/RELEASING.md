@@ -13,9 +13,9 @@ no release is published by the build commands or CI workflow.
   tags being published, not local orchestration/checkpoint refs.
 - Review the repository's issues, pull requests, Actions logs and other GitHub
   content before changing visibility; those are outside a source-code audit.
-- Choose and document the clipboard policy for this alpha. It currently keeps
-  password-manager copies, including ones marked confidential. The README,
-  SECURITY.md and release notes must describe the shipped behavior.
+- Keep the clipboard policy in the README, SECURITY.md and release notes in
+  line with the shipped behavior. Copies marked confidential by password
+  managers are left out by default.
 - Configure GitHub Actions for the repository and run CI on the release commit.
   The workflow uses Xcode 26.2 on `macos-15`; update the pin if that image retires it.
 - After changing visibility, enable private vulnerability reporting under the

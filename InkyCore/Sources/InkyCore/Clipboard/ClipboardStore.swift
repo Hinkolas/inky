@@ -517,6 +517,13 @@ public actor ClipboardStore {
         remove(where: "pinned IS NULL AND last_copied < ?", [.date(date)])
     }
 
+    /// Deletes what a password manager marked as confidential and is not
+    /// pinned. Returns how many entries went.
+    @discardableResult
+    public func removeConcealed() -> Int {
+        remove(where: "pinned IS NULL AND concealed = 1", [])
+    }
+
     @discardableResult
     private func remove(where condition: String, _ values: [SQLiteValue]) -> Int {
         do {

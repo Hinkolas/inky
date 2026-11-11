@@ -587,6 +587,14 @@ private struct ClipboardSettings: View {
         }
 
         Section {
+            Toggle("Keep passwords from password managers", isOn: $preferences.clipboardKeepsConcealed)
+        } footer: {
+            Text(preferences.clipboardKeepsConcealed
+                ? "What password managers mark as confidential is kept like any other copy, without encryption."
+                : "What password managers mark as confidential is left out. A password copied from somewhere else cannot be told apart, and is kept.")
+        }
+
+        Section {
             Picker("Return", selection: $preferences.clipboardPastes) {
                 Text("Pastes into the active app").tag(true)
                 Text("Copies to the clipboard").tag(false)

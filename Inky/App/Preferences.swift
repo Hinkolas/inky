@@ -43,6 +43,7 @@ final class Preferences {
     @ObservationIgnored var onExchangeRateSourceChange: (() -> Void)?
     @ObservationIgnored var onPixelsPerRemChange: (() -> Void)?
     @ObservationIgnored var onClipboardRetentionChange: (() -> Void)?
+    @ObservationIgnored var onClipboardConcealedChange: (() -> Void)?
     /// Called when a module was turned on or off.
     @ObservationIgnored var onModulesChange: (() -> Void)?
 
@@ -119,6 +120,15 @@ final class Preferences {
         }
     }
 
+    /// Whether the clipboard history keeps what password managers mark as
+    /// confidential. Off unless the user turns it on.
+    var clipboardKeepsConcealed: Bool {
+        didSet {
+            defaults.set(clipboardKeepsConcealed, forKey: Key.clipboardKeepsConcealed)
+            onClipboardConcealedChange?()
+        }
+    }
+
     /// Whether Return, in the clipboard history, pastes into the application
     /// the user is in. Otherwise it copies, and ⌘↵ pastes.
     var clipboardPastes: Bool {
@@ -162,6 +172,7 @@ final class Preferences {
         fileSearchLimit = defaults.integer(forKey: Key.fileSearchLimit)
         clipboardRetention = defaults.string(forKey: Key.clipboardRetention).flatMap(ClipboardRetention.init) ?? .threeMonths
         clipboardPastes = defaults.bool(forKey: Key.clipboardPastes)
+        clipboardKeepsConcealed = defaults.bool(forKey: Key.clipboardKeepsConcealed)
         // Modules were called providers before, and their switches were kept under that name.
         if defaults.object(forKey: Key.disabledModules) == nil,
            let disabled = defaults.stringArray(forKey: Key.disabledProviders) {
@@ -209,6 +220,7 @@ final class Preferences {
         static let fileSearchLimit = "fileSearchLimit"
         static let clipboardRetention = "clipboardRetention"
         static let clipboardPastes = "clipboardPastes"
+        static let clipboardKeepsConcealed = "clipboardKeepsConcealed"
         static let clipboardHotkey = "clipboardHotkey"
         static let disabledModules = "disabledModules"
         static let disabledProviders = "disabledProviders"

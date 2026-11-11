@@ -599,14 +599,39 @@ private func image(width: Int = 40, height: Int = 20, gray: CGFloat = 0.5, type:
         try? await Task.sleep(for: .milliseconds(50))
         #expect(await clips(history).isEmpty)
 
-        // A password is kept like anything else for now, and known as one.
+        // A password manager's copy is left out unless asked for.
+        pasteboard.clearContents()
+        pasteboard.setString("hunter2", forType: .string)
+        pasteboard.setString("", forType: NSPasteboard.PasteboardType("org.nspasteboard.ConcealedType"))
+        history.check()
+        try? await Task.sleep(for: .milliseconds(50))
+        #expect(await clips(history).isEmpty)
+    }
+
+    @Test func keepsPasswordsOnlyWhenAskedTo() async {
+        let history = makeHistory()
+        defer { history.stop(); pasteboard.releaseGlobally() }
+        history.keepsConcealed = true
         await copy(history) {
             $0.setString("hunter2", forType: .string)
             $0.setString("", forType: NSPasteboard.PasteboardType("org.nspasteboard.ConcealedType"))
         }
+        await copy(history) {
+            $0.setString("correct horse", forType: .string)
+            $0.setString("", forType: NSPasteboard.PasteboardType("com.agilebits.onepassword"))
+        }
         let kept = await clips(history)
-        #expect(kept.map(\.title) == ["hunter2"])
-        #expect(kept.first?.isConcealed == true)
+        #expect(Set(kept.map(\.title)) == ["hunter2", "correct horse"])
+        #expect(kept.allSatisfy { $0.isConcealed })
+
+        // Pinned ones stay when they are no longer to be kept.
+        await history.setPinned(kept.first { $0.title == "hunter2" }!, true)
+        let revision = history.revision
+        history.keepsConcealed = false
+        await settle(history, from: revision)
+        let left = await history.store.snapshot(ClipQuery(), limit: 100)
+        #expect(left.clips.isEmpty)
+        #expect(left.pins.map(\.title) == ["hunter2"])
     }
 
     @Test func knowsWhatInkyCopiedItself() async {

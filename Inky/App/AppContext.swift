@@ -43,10 +43,14 @@ final class AppContext {
         clipboard = ClipboardHistory(
             store: ClipboardStore(directory: directory.appendingPathComponent("Clipboard", isDirectory: true)),
             pasteboard: pasteboard,
-            retention: preferences.clipboardRetention
+            retention: preferences.clipboardRetention,
+            keepsConcealed: preferences.clipboardKeepsConcealed
         )
         preferences.onClipboardRetentionChange = { [preferences, clipboard] in
             clipboard.retention = preferences.clipboardRetention
+        }
+        preferences.onClipboardConcealedChange = { [preferences, clipboard] in
+            clipboard.keepsConcealed = preferences.clipboardKeepsConcealed
         }
         quicklinks = QuicklinkStore(fileURL: directory.appendingPathComponent("quicklinks.json"))
 

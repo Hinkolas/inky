@@ -61,14 +61,13 @@ after success. The generator rejects input with no valid city records.
 
 ## Decisions and follow-up work
 
-- **Clipboard confidentiality:** password-manager copies, including ones marked
-  confidential, are retained unencrypted by Inky. This is existing, intentional
-  behavior, now prominent in README.md, SECURITY.md and the draft release notes.
-  Recommend excluding confidential pasteboard types by default before broad
-  distribution; unmarked secrets still cannot be reliably detected.
-- **Public commit metadata:** existing commits on `main` expose a personal iCloud
-  email address. Decide whether to publish that history. No commits were rewritten.
-  Changing future Git identity does not change existing commits.
+- **Clipboard confidentiality:** resolved. Copies marked confidential by
+  password managers are now left out by default, and unpinned ones an earlier
+  build kept are deleted when recording starts. Settings → Clipboard History
+  can keep them again. Unmarked secrets still cannot be reliably detected, and
+  encrypting kept ones is a follow-up.
+- **Public commit metadata:** existing commits expose a personal email address.
+  The maintainer accepted publishing the history as it is.
 - **Binary distribution:** the app is currently ad-hoc signed. Developer ID
   signing, notarization and automatic updates are not configured. Decide between
   a source-only alpha and a binary release, and accurately describe its status.
