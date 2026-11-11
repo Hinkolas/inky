@@ -7,8 +7,11 @@ First public alpha, in preparation.
 ### Included
 
 - An app icon made in Icon Composer, with a matching template icon in the menu bar.
-- Updates from GitHub Releases through Sparkle, with signed appcasts and archives,
-  for signed and notarized releases.
+- Updates from GitHub Releases through Sparkle, with a signed feed and archives,
+  for signed and notarized downloads. Every version is a download; Settings →
+  General picks the Stable or the Beta update channel, and a pre-release starts
+  on Beta. About and the update window show the whole version, such as
+  0.1.0-alpha.1.
 - A welcome window on first launch for the hotkey, features, clipboard history
   and its permissions, online lookups and startup.
 - Application launching, fuzzy search, usage ranking and Spotlight file search.
@@ -38,8 +41,7 @@ First public alpha, in preparation.
   copied from apps that do not mark them as confidential are kept. Disable the
   module if needed.
 - Builds from source use an ad-hoc signature and do not update themselves.
-  Signed, notarized, self-updating downloads start with the first release made
-  by the release workflow.
+  Signed, notarized, self-updating downloads start with this version.
 - Application-data matching for uninstalling is heuristic; review the selected files.
 - Currency conversions may use stale cached reference rates.
 - Lua extensions are planned and cannot be installed yet.

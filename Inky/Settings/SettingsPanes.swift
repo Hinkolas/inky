@@ -93,6 +93,11 @@ private struct UpdateSettings: View {
                 Toggle("Check for updates automatically", isOn: $updates.checksAutomatically)
                 Toggle("Download and install updates automatically", isOn: $updates.installsAutomatically)
                     .disabled(!updates.checksAutomatically)
+                Picker("Update channel", selection: $updates.channel) {
+                    ForEach(UpdateChannel.allCases) { channel in
+                        Text(channel.title).tag(channel)
+                    }
+                }
                 LabeledContent("Last checked") {
                     HStack(spacing: 10) {
                         Text(updates.lastCheck.map { $0.formatted(.relative(presentation: .named)) } ?? "Never")
@@ -105,7 +110,12 @@ private struct UpdateSettings: View {
             }
         } footer: {
             if updates.isAvailable {
-                Text("Inky asks GitHub for its latest release, and installs only updates signed by its developer. Nothing about you or your Mac is sent.")
+                VStack(alignment: .leading, spacing: 6) {
+                    if updates.channel == .beta {
+                        Text("Beta also gets alpha, beta and release candidate versions, which can be unfinished. Going back to Stable keeps this version until a newer release comes out.")
+                    }
+                    Text("Inky asks GitHub for the list of its releases, and installs only updates signed by its developer. Nothing about you or your Mac is sent.")
+                }
             } else {
                 Text("Development builds, and builds made without the release signing key, do not update themselves.")
             }

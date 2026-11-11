@@ -68,10 +68,13 @@ after success. The generator rejects input with no valid city records.
   encrypting kept ones is a follow-up.
 - **Public commit metadata:** existing commits expose a personal email address.
   The maintainer accepted publishing the history as it is.
-- **Binary distribution:** decided. Pre-releases are source-only. Releases are
-  signed, notarized downloads that update themselves through Sparkle; the
-  release workflow is in place and waits for the update key, the Developer ID
-  certificate and the notarization key (see RELEASING.md).
+- **Binary distribution:** decided, and revised on 2026-11-11. Every version,
+  pre-releases included, is a signed, notarized download that updates itself
+  through Sparkle. One update feed has two channels: releases for everyone,
+  and alpha, beta and release candidate versions in a beta channel that
+  Settings → General opts into. The workflows are in place and wait for the
+  update key, the Developer ID certificate, the notarization key and GitHub
+  Pages (see RELEASING.md).
 - **Intel Macs:** not supported. The app is built for Apple silicon only.
 - **Security reporting:** the private repository's reporting endpoint returned
   404. Enable and verify private vulnerability reporting when making the repo

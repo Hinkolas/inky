@@ -1,8 +1,9 @@
 name: Release
 
-# Builds, signs, notarizes and drafts a release for a version tag. Inky
-# updates itself from the appcast of the latest published (non-pre-)release,
-# so nothing reaches users until the draft is reviewed and published.
+# Builds, signs, notarizes and drafts a release for a version tag, such as
+# v0.1.0 or v0.1.0-alpha.1. A tag with a suffix is drafted as a pre-release.
+# Nothing reaches users until the draft is reviewed and published; publishing
+# runs update-feed.yml, which adds the release to the update feed.
 #
 # Repository secrets (see docs/RELEASING.md):
 #   DEVELOPER_ID_P12           base64 of the Developer ID Application certificate (.p12)
@@ -11,7 +12,6 @@ name: Release
 #   NOTARY_API_KEY_P8          base64 of an App Store Connect API key (.p8)
 #   NOTARY_API_KEY_ID          its key ID
 #   NOTARY_API_ISSUER_ID       its issuer ID
-#   SPARKLE_PRIVATE_KEY        the EdDSA private key, as exported by `generate_keys -x`
 
 on:
   push:
@@ -56,7 +56,11 @@ jobs:
           fi
           prerelease=false
           case "$version" in *-*) prerelease=true ;; esac
-          # Sparkle compares build numbers. The count of commits only grows on main.
+          # Sparkle compares build numbers, across both update channels. The
+          # count of commits only grows on main.
+          if ! git merge-base --is-ancestor HEAD origin/main; then
+            echo "::error::Tag $TAG is not on main, so its build number could go backwards"; exit 1
+          fi
           echo "VERSION=$version" >> "$GITHUB_ENV"
           echo "BUILD=$(git rev-list --count HEAD)" >> "$GITHUB_ENV"
           echo "PRERELEASE=$prerelease" >> "$GITHUB_ENV"
@@ -90,9 +94,12 @@ jobs:
         env:
           TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
         run: |
+          # The app carries the whole version, such as 0.1.0-alpha.1, so that
+          # About and the update window tell pre-releases apart, and so that a
+          # pre-release starts on the beta update channel.
           xcodebuild archive -project Inky.xcodeproj -scheme Inky -configuration Release \
             -derivedDataPath build -archivePath "$RUNNER_TEMP/Inky.xcarchive" \
-            CURRENT_PROJECT_VERSION="$BUILD" \
+            MARKETING_VERSION="$VERSION" CURRENT_PROJECT_VERSION="$BUILD" \
             CODE_SIGN_STYLE=Manual CODE_SIGN_IDENTITY="Developer ID Application" \
             DEVELOPMENT_TEAM="$TEAM_ID" OTHER_CODE_SIGN_FLAGS=--timestamp
           cat > "$RUNNER_TEMP/ExportOptions.plist" <<PLIST
@@ -107,6 +114,9 @@ jobs:
           xcodebuild -exportArchive -archivePath "$RUNNER_TEMP/Inky.xcarchive" \
             -exportOptionsPlist "$RUNNER_TEMP/ExportOptions.plist" -exportPath "$RUNNER_TEMP/export"
           codesign --verify --deep --strict --verbose=2 "$RUNNER_TEMP/export/Inky.app"
+          plist="$RUNNER_TEMP/export/Inky.app/Contents/Info.plist"
+          test "$(/usr/libexec/PlistBuddy -c 'Print :CFBundleShortVersionString' "$plist")" = "$VERSION"
+          test "$(/usr/libexec/PlistBuddy -c 'Print :CFBundleVersion' "$plist")" = "$BUILD"
 
       - name: Notarize
         env:
@@ -122,31 +132,20 @@ jobs:
           xcrun stapler staple "$RUNNER_TEMP/export/Inky.app"
           spctl --assess --type execute --verbose "$RUNNER_TEMP/export/Inky.app"
 
-      - name: Archive for download and the appcast
-        env:
-          GH_TOKEN: ${{ github.token }}
-          SPARKLE_PRIVATE_KEY: ${{ secrets.SPARKLE_PRIVATE_KEY }}
+      - name: Archive for download
         run: |
           mkdir -p dist
           archive="Inky-$VERSION.zip"
           ditto -c -k --sequesterRsrc --keepParent "$RUNNER_TEMP/export/Inky.app" "dist/$archive"
+          (cd dist && shasum -a 256 "$archive" > "$archive.sha256")
           # This version's section of the changelog, as the release notes.
+          # update-feed.yml shows the published release's notes in Sparkle's
+          # update window, so edits to the draft's notes reach it too.
           awk -v v="$VERSION" '
-            /^## / { if (found) exit; if (index($0, "## " v) == 1) { found = 1; next } }
+            /^## / { if (found) exit; if (index($0, "## " v " ") == 1 || $0 == "## " v) { found = 1; next } }
             found { print }
           ' CHANGELOG.md > "$RUNNER_TEMP/notes.md"
           test -s "$RUNNER_TEMP/notes.md" || { echo "::error::CHANGELOG.md has no section for $VERSION"; exit 1; }
-          # A fragment without DOCTYPE or body is embedded in the appcast.
-          gh api markdown -f mode=gfm -f text="$(cat "$RUNNER_TEMP/notes.md")" > "dist/Inky-$VERSION.html"
-          sparkle=build/SourcePackages/artifacts/sparkle/Sparkle/bin
-          echo "$SPARKLE_PRIVATE_KEY" | "$sparkle/generate_appcast" --ed-key-file - \
-            --download-url-prefix "$REPOSITORY_URL/releases/download/$TAG/" \
-            --full-release-notes-url "$REPOSITORY_URL/releases/tag/$TAG" \
-            --link "$REPOSITORY_URL" \
-            --maximum-versions 1 \
-            dist
-          rm "dist/Inky-$VERSION.html"
-          (cd dist && shasum -a 256 "$archive" > "$archive.sha256")
           ls -la dist
 
       - name: Draft the release

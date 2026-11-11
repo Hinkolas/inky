@@ -6,9 +6,11 @@ time somewhere, look at a color, find files, run system commands. No accounts, n
 
 Inky is at an early stage. The core works and is meant to be built on.
 
-The first public alpha is being prepared as `0.1.0-alpha.1`. Build from source
-using the instructions below. Alpha versions may change their behavior and
-data formats; back up data you want to keep.
+The first public alpha is being prepared as `0.1.0-alpha.1`. Every version,
+pre-releases included, is a signed and notarized download on the
+[releases page](https://github.com/Hinkolas/inky/releases), or build it from
+source with the instructions below. Alpha versions may change their behavior
+and data formats; back up data you want to keep.
 
 **Clipboard privacy:** copies that password managers mark as confidential are
 left out of the history. Everything else, including passwords copied from
@@ -18,7 +20,7 @@ See [Security and privacy](SECURITY.md) for storage, permissions and reporting.
 
 ## What it does today
 
-- **Updates**: downloaded releases update themselves from GitHub Releases, through [Sparkle](https://sparkle-project.org/). Check for Updates is in the menu bar menu, in the launcher and in Settings → General.
+- **Updates**: downloaded versions update themselves from GitHub Releases, through [Sparkle](https://sparkle-project.org/). Settings → General picks the update channel: Stable gets releases, Beta also gets alpha, beta and release candidate versions. A pre-release you downloaded starts on Beta. Check for Updates is in the menu bar menu, in the launcher and in Settings → General.
 - **Welcome window**: the first launch walks through the settings that matter most: the hotkey, which features are on, the clipboard history and its permissions, what Inky may look up online, and how it starts. Settings → About shows it again.
 
 - **Applications**: fuzzy search over installed apps, ranked by how often and how recently you pick them. What you pick for a search rises to the top; Reset Ranking under ⌘K makes a result forget that.
@@ -51,10 +53,11 @@ calculator. The file is the same for everyone, so nothing about what you
 convert is sent. Settings → Calculator turns this off, and currencies are then
 not converted.
 
-Updates: a downloaded release asks GitHub once a day for the appcast of
-Inky's latest release, and installs an update only if it is signed with
-Inky's release key. Settings → General turns the checks off, or lets updates
-install by themselves. Builds you make yourself from source do not update
+Updates: a downloaded version asks GitHub once a day for the list of Inky's
+releases (`hinkolas.github.io/inky/appcast.xml`, on GitHub Pages), and
+installs an update only if it is signed with Inky's release key. Settings →
+General turns the checks off, lets updates install by themselves, and picks
+the update channel. Builds you make yourself from source do not update
 themselves unless they carry the release key.
 
 The clipboard history stays on your Mac, in a database only your account can
@@ -192,4 +195,3 @@ look at one frame by frame).
 - Sizes for print and export in the calculator: `2 inches in px at 72 ppi`
 - Airports in the time module: `time in JFK`
 - A persistent index (SQLite) with full-text and, optionally, vector search
-- Signed, notarized releases with automatic updates

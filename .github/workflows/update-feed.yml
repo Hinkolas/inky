@@ -1,0 +1,144 @@
+name: Update feed
+
+# Adds a published release to the update feed that Inky reads,
+# https://hinkolas.github.io/inky/appcast.xml, and deploys it to GitHub Pages.
+# Releases are open to every installed copy; pre-releases go to the feed's
+# beta channel, which only copies set to the beta update channel accept.
+#
+# The feed is kept on the appcast branch, so each run adds to the last one and
+# the history of the feed stays in Git. The whole feed is signed with the
+# EdDSA key again on every run.
+#
+# Repository secret (see docs/RELEASING.md):
+#   SPARKLE_PRIVATE_KEY  the EdDSA private key, as exported by `generate_keys -x`
+
+on:
+  release:
+    types: [published]
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: Published release to add to the feed, such as v0.1.0-alpha.1
+        required: true
+
+permissions:
+  contents: read
+
+# One feed, so one change at a time; none is dropped halfway.
+concurrency:
+  group: update-feed
+  cancel-in-progress: false
+
+jobs:
+  feed:
+    runs-on: macos-15
+    timeout-minutes: 20
+    permissions:
+      contents: write
+    env:
+      DEVELOPER_DIR: /Applications/Xcode_26.2.app/Contents/Developer
+      TAG: ${{ inputs.tag || github.event.release.tag_name }}
+      REPOSITORY_URL: https://github.com/${{ github.repository }}
+      GH_TOKEN: ${{ github.token }}
+    steps:
+      # The tagged sources pin the Sparkle version the release was built with.
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          ref: refs/tags/${{ env.TAG }}
+          persist-credentials: false
+
+      - name: Release
+        run: |
+          gh release view "$TAG" --repo "$GITHUB_REPOSITORY" --json isDraft,isPrerelease,body > "$RUNNER_TEMP/release.json"
+          if [ "$(jq -r .isDraft "$RUNNER_TEMP/release.json")" = true ]; then
+            echo "::error::$TAG is a draft; publish it first"; exit 1
+          fi
+          version="${TAG#v}"
+          # The channel follows the tag, as the app's own version does.
+          case "$version" in *-*) prerelease=true ;; *) prerelease=false ;; esac
+          if [ "$(jq -r .isPrerelease "$RUNNER_TEMP/release.json")" != "$prerelease" ]; then
+            echo "::error::$TAG is marked as a pre-release on GitHub only if its tag has a suffix"; exit 1
+          fi
+          echo "VERSION=$version" >> "$GITHUB_ENV"
+          echo "PRERELEASE=$prerelease" >> "$GITHUB_ENV"
+
+      - name: Resolve Sparkle
+        run: xcodebuild -resolvePackageDependencies -project Inky.xcodeproj -scheme Inky -derivedDataPath build
+
+      - name: Check out the feed
+        run: |
+          git init -q "$RUNNER_TEMP/feed"
+          cd "$RUNNER_TEMP/feed"
+          git remote add origin "$REPOSITORY_URL.git"
+          git config http.extraheader "AUTHORIZATION: basic $(printf 'x-access-token:%s' "$GH_TOKEN" | base64)"
+          if git ls-remote --exit-code --heads origin appcast > /dev/null; then
+            git fetch -q --depth 1 origin appcast
+            git checkout -q -b appcast FETCH_HEAD
+          else
+            echo "No appcast branch yet; starting the feed."
+            git checkout -q --orphan appcast
+          fi
+
+      - name: Add the release
+        env:
+          SPARKLE_PRIVATE_KEY: ${{ secrets.SPARKLE_PRIVATE_KEY }}
+        run: |
+          work="$RUNNER_TEMP/work"
+          mkdir -p "$work"
+          if [ -f "$RUNNER_TEMP/feed/appcast.xml" ]; then cp "$RUNNER_TEMP/feed/appcast.xml" "$work/"; fi
+          gh release download "$TAG" --repo "$GITHUB_REPOSITORY" --pattern "Inky-$VERSION.zip" --dir "$work"
+          (cd "$work" && gh release download "$TAG" --repo "$GITHUB_REPOSITORY" --pattern "Inky-$VERSION.zip.sha256" --output - | shasum -a 256 -c -)
+          # The published notes, as a fragment without DOCTYPE or body, which
+          # Sparkle embeds in the feed and shows in its update window.
+          jq -r .body "$RUNNER_TEMP/release.json" > "$RUNNER_TEMP/notes.md"
+          if [ -s "$RUNNER_TEMP/notes.md" ]; then
+            gh api markdown -f mode=gfm -F text=@"$RUNNER_TEMP/notes.md" > "$work/Inky-$VERSION.html"
+          fi
+          channel=()
+          if [ "$PRERELEASE" = true ]; then channel=(--channel beta); fi
+          sparkle=build/SourcePackages/artifacts/sparkle/Sparkle/bin
+          echo "$SPARKLE_PRIVATE_KEY" | "$sparkle/generate_appcast" --ed-key-file - \
+            --download-url-prefix "$REPOSITORY_URL/releases/download/$TAG/" \
+            --full-release-notes-url "$REPOSITORY_URL/releases/tag/$TAG" \
+            --link "$REPOSITORY_URL" \
+            --maximum-versions 3 --maximum-deltas 0 \
+            "${channel[@]}" \
+            "$work"
+          feed="$work/appcast.xml"
+          grep -q "releases/download/$TAG/Inky-$VERSION.zip\"" "$feed" || { echo "::error::The feed has no item for $VERSION"; exit 1; }
+          grep -q 'sparkle-signatures:' "$feed" || { echo "::error::The feed is not signed"; exit 1; }
+          xmllint --noout "$feed"
+          cp "$feed" "$RUNNER_TEMP/feed/appcast.xml"
+          cat "$feed"
+
+      - name: Save the feed
+        run: |
+          cd "$RUNNER_TEMP/feed"
+          git add appcast.xml
+          if git diff --cached --quiet; then
+            echo "The feed already has $VERSION."; exit 0
+          fi
+          git -c user.name="github-actions[bot]" -c user.email="41898282+github-actions[bot]@users.noreply.github.com" \
+            commit -q -m "Add Inky $VERSION to the update feed"
+          git push -q origin appcast
+
+  deploy:
+    needs: feed
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deploy.outputs.page_url }}appcast.xml
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          ref: appcast
+          persist-credentials: false
+      - uses: actions/upload-pages-artifact@fc324d3547104276b827a68afc52ff2a11cc49c9 # v5.0.0
+        with:
+          path: .
+      - id: deploy
+        uses: actions/deploy-pages@368f82528645a54fb793d4d04e342629a3f51346 # v5.0.1

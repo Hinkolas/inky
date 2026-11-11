@@ -2,12 +2,37 @@ import AppKit
 import Observation
 import Sparkle
 
+/// Which releases Inky updates to.
+enum UpdateChannel: String, CaseIterable, Identifiable {
+    /// Releases only.
+    case stable
+    /// Releases and pre-releases: alpha, beta and release candidate versions.
+    case beta
+
+    var id: Self { self }
+
+    var title: String {
+        switch self {
+        case .stable: "Stable"
+        case .beta: "Beta"
+        }
+    }
+
+    /// The channel of a new installation: a pre-release, whose version has a
+    /// suffix such as `-alpha.1`, keeps getting pre-releases.
+    static var initial: UpdateChannel {
+        let version = Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String ?? ""
+        return version.contains("-") ? .beta : .stable
+    }
+}
+
 /// Keeps Inky up to date from its GitHub releases, through Sparkle.
 ///
-/// Sparkle reads the appcast of the latest release, checks the EdDSA
-/// signatures of the feed and of the archive against the public key in
-/// Info.plist, and replaces the app. Its settings are its own, kept in
-/// UserDefaults; this mirrors them for SwiftUI.
+/// Sparkle reads the update feed, checks the EdDSA signatures of the feed and
+/// of the archive against the public key in Info.plist, and replaces the app.
+/// The feed lists every published release; pre-releases are in its `beta`
+/// channel, which only builds on the beta channel accept. Sparkle's settings
+/// are its own, kept in UserDefaults; this mirrors them for SwiftUI.
 @Observable
 final class Updates: NSObject {
     /// Nil until started, and in a build that does not update itself.
@@ -33,6 +58,14 @@ final class Updates: NSObject {
 
     var isAvailable: Bool { controller != nil }
 
+    /// Which releases to update to. Switching back to stable keeps a
+    /// pre-release installed until a newer release comes out.
+    var channel: UpdateChannel = .stable {
+        didSet { UserDefaults.standard.set(channel.rawValue, forKey: Self.channelKey) }
+    }
+
+    private static let channelKey = "updateChannel"
+
     var checksAutomatically = false {
         didSet {
             guard let updater, updater.automaticallyChecksForUpdates != checksAutomatically else { return }
@@ -52,8 +85,13 @@ final class Updates: NSObject {
     /// Starts checking on Sparkle's schedule, if this build updates itself.
     func start() {
         guard Self.isSupported, controller == nil else { return }
+        // Kept from the first launch on, so a pre-release that updates to a
+        // release stays on the channel it was downloaded for.
+        let stored = UserDefaults.standard.string(forKey: Self.channelKey).flatMap(UpdateChannel.init(rawValue:))
+        channel = stored ?? .initial
+
         let controller = SPUStandardUpdaterController(
-            startingUpdater: true, updaterDelegate: nil, userDriverDelegate: self
+            startingUpdater: true, updaterDelegate: self, userDriverDelegate: self
         )
         self.controller = controller
         let updater = controller.updater
@@ -80,6 +118,16 @@ final class Updates: NSObject {
         // window would open behind the app the user is in.
         NSApp.activate()
         controller?.checkForUpdates(nil)
+    }
+}
+
+extension Updates: SPUUpdaterDelegate {
+    /// Items without a channel are releases, which every channel gets.
+    func allowedChannels(for updater: SPUUpdater) -> Set<String> {
+        switch channel {
+        case .stable: []
+        case .beta: [UpdateChannel.beta.rawValue]
+        }
     }
 }
 
