@@ -92,7 +92,6 @@ jobs:
         run: |
           xcodebuild archive -project Inky.xcodeproj -scheme Inky -configuration Release \
             -derivedDataPath build -archivePath "$RUNNER_TEMP/Inky.xcarchive" \
-            ARCHS='arm64 x86_64' ONLY_ACTIVE_ARCH=NO \
             CURRENT_PROJECT_VERSION="$BUILD" \
             CODE_SIGN_STYLE=Manual CODE_SIGN_IDENTITY="Developer ID Application" \
             DEVELOPMENT_TEAM="$TEAM_ID" OTHER_CODE_SIGN_FLAGS=--timestamp

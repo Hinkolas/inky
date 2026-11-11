@@ -89,7 +89,7 @@ with a screen of its own: a back button and a header above a card.
 
 ## Build
 
-Requires macOS 15 or later and Xcode 26 or later.
+Requires a Mac with Apple silicon, macOS 15 or later, and Xcode 26 or later.
 
 ```sh
 make run     # build and launch

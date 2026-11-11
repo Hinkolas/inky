@@ -31,10 +31,11 @@ jobs:
         run: make test
       - name: Debug build
         run: make build
-      - name: Universal Release build
+      - name: Release build
         run: |
           xcodebuild -project Inky.xcodeproj -scheme Inky -derivedDataPath build \
-            -configuration Release ARCHS='arm64 x86_64' ONLY_ACTIVE_ARCH=NO build
+            -configuration Release build
+          test "$(lipo -archs build/Build/Products/Release/Inky.app/Contents/MacOS/Inky)" = arm64
       - name: Check bundled notices
         run: |
           test -f build/Build/Products/Release/Inky.app/Contents/Resources/LICENSE

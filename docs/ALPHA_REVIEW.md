@@ -72,6 +72,7 @@ after success. The generator rejects input with no valid city records.
   signed, notarized downloads that update themselves through Sparkle; the
   release workflow is in place and waits for the update key, the Developer ID
   certificate and the notarization key (see RELEASING.md).
+- **Intel Macs:** not supported. The app is built for Apple silicon only.
 - **Security reporting:** the private repository's reporting endpoint returned
   404. Enable and verify private vulnerability reporting when making the repo
   public; the new policy cannot turn the GitHub setting on by itself.
@@ -140,7 +141,7 @@ that have not been identified in the repository.
   This is not a comprehensive secret scanner or a review of GitHub-hosted logs,
   issues, attachments and other repository content.
 
-GitHub CI has been prepared but not run remotely. Xcode 26.2, the minimum macOS
-version, Intel execution, first-launch permissions, signing/notarization and a
+GitHub CI has since run and passes with Xcode 26.2. The minimum macOS
+version, first-launch permissions, signing/notarization and a
 full interactive smoke test still require release validation. Build success
 alone does not validate those. Follow RELEASING.md before publishing.

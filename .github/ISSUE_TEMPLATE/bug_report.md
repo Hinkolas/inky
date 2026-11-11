@@ -17,7 +17,7 @@ about: Report something that does not work as expected
 
 - Inky version or commit:
 - macOS version:
-- Mac: Apple silicon / Intel
+- Mac model (Apple silicon):
 - Built from source or downloaded release:
 
 ## Additional details

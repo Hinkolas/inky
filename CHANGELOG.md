@@ -32,6 +32,7 @@ First public alpha, in preparation.
 
 ### Known limitations
 
+- Requires a Mac with Apple silicon; Intel Macs are not supported.
 - Clipboard history is stored without application-level encryption. Passwords
   copied from apps that do not mark them as confidential are kept. Disable the
   module if needed.

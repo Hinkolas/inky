@@ -44,11 +44,11 @@ On a clean checkout:
 make test
 make build
 xcodebuild -project Inky.xcodeproj -scheme Inky \
-  -derivedDataPath build -configuration Release \
-  ARCHS='arm64 x86_64' ONLY_ACTIVE_ARCH=NO build
+  -derivedDataPath build -configuration Release build
 ```
 
-Confirm both architectures in the executable with `lipo -archs`. Check that
+Inky supports Apple silicon only: `lipo -archs` on the executable prints
+`arm64`. Check that
 `LICENSE` and `THIRD_PARTY_NOTICES.md` are present in `Inky.app/Contents/Resources`,
 and that the InkyCore resource bundle contains `GeoNames-NOTICE.txt` and
 `places.tsv`.
@@ -62,9 +62,7 @@ Run a manual smoke test in a separate macOS account, including:
 - Uninstalling only disposable test apps and files; canceling a permission prompt.
 - Offline calculator use, unavailable icon/rate services, light/dark appearance,
   reduced motion, and keyboard navigation.
-- The minimum supported macOS version (15), a current macOS version, and both
-  Apple silicon and Intel if distributing a universal binary. Cross-compiling
-  an architecture does not prove that it runs on that hardware.
+- The minimum supported macOS version (15) and a current macOS version.
 
 Update CHANGELOG.md with the release date and actual known limitations after
 these checks pass. Do not describe untested versions or architectures as tested.
@@ -76,7 +74,7 @@ people build them. `make release` creates an optimized, ad-hoc-signed local app
 that does not update itself.
 
 Releases are downloads that update themselves. Pushing a `v*` tag runs
-`.github/workflows/release.yml`, which archives a universal app, signs it with
+`.github/workflows/release.yml`, which archives the Apple silicon app, signs it with
 the Developer ID certificate, notarizes and staples it, zips it, writes a
 Sparkle appcast signed with the EdDSA key, and drafts a GitHub release with the
 zip, `appcast.xml` and a SHA-256 checksum. Nothing reaches users until the
