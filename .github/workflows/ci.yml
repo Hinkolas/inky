@@ -1,9 +1,11 @@
 name: CI
 
+# Runs for pull requests into main, and by hand. A pull request has to be up
+# to date with main and pass before it is merged, so what lands on main is
+# what was checked here, and is not checked again.
 on:
-  push:
-    branches: [main]
   pull_request:
+    branches: [main]
   workflow_dispatch:
 
 permissions:
