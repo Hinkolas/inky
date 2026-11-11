@@ -45,6 +45,9 @@ struct LauncherView: View {
                         case .uninstall(let review):
                             UninstallReviewScreen(model: model, review: review)
                                 .transition(motion.screen(isGoingBack: model.isNavigatingBack))
+                        case .clipboard(let browser):
+                            ClipboardBrowserScreen(model: model, browser: browser)
+                                .transition(motion.screen(isGoingBack: model.isNavigatingBack))
                         }
                     }
                     // A screen is laid out at its final size from the start.
@@ -133,6 +136,8 @@ struct LauncherView: View {
             LauncherLayout(command: UninstallBrowserScreen.size)
         case .uninstall:
             LauncherLayout(command: UninstallReviewScreen.size)
+        case .clipboard:
+            LauncherLayout(command: ClipboardBrowserScreen.size)
         }
     }
 }

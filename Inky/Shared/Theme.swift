@@ -24,6 +24,8 @@ nonisolated enum LauncherMetrics {
     static let panelRadius: CGFloat = cardRadius - panelInset
     static let rowHeight: CGFloat = 40
     static let rowRadius: CGFloat = 10
+    /// A row with a second line, as a command's list has them.
+    static let detailRowHeight: CGFloat = 51
     static let sectionHeaderHeight: CGFloat = 30
     static let listMaxHeight: CGFloat = 420
 

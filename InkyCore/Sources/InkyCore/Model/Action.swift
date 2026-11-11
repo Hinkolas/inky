@@ -172,10 +172,17 @@ public enum Opener {
 }
 
 public enum Pasteboard {
+    /// On the pasteboard next to what Inky copied itself, such as the result
+    /// of a calculation. Inky takes keys without being the frontmost
+    /// application, so its clipboard history would otherwise say the copy
+    /// came from whatever application that is.
+    public static let copiedByInky = NSPasteboard.PasteboardType("io.github.hinkolas.inky.copied")
+
     @MainActor
     public static func copy(_ text: String) {
         NSPasteboard.general.clearContents()
         NSPasteboard.general.setString(text, forType: .string)
+        NSPasteboard.general.setString("", forType: copiedByInky)
     }
 
     @MainActor

@@ -307,21 +307,21 @@ extension ScrollViewProxy {
 }
 
 /// A row with a title, a line below it and something at the trailing edge.
-struct DetailRow: View {
-    static let height: CGFloat = 51
-
-    let icon: Icon
+struct DetailRow<Leading: View>: View {
     let title: String
     let subtitle: String
     var trailing: String?
     let isSelected: Bool
+    /// For a title that is code, or a path.
+    var isMonospaced = false
+    @ViewBuilder let leading: Leading
 
     var body: some View {
         HStack(spacing: 11) {
-            IconView(icon: icon, size: 30, outline: isSelected ? 0.5 : 0)
+            leading
             VStack(alignment: .leading, spacing: 2) {
                 Text(title)
-                    .font(.system(size: 14, weight: .medium))
+                    .font(.system(size: isMonospaced ? 13 : 14, weight: .medium, design: isMonospaced ? .monospaced : .default))
                     .lineLimit(1)
                 Text(subtitle)
                     .font(.system(size: 12))
@@ -333,6 +333,7 @@ struct DetailRow: View {
             if let trailing {
                 Text(trailing)
                     .font(.system(size: 12))
+                    .monospacedDigit()
                     .foregroundStyle(isSelected ? AnyShapeStyle(Theme.onAccent.opacity(0.8)) : AnyShapeStyle(.secondary))
                     .lineLimit(1)
                     .layoutPriority(1)
@@ -340,13 +341,21 @@ struct DetailRow: View {
         }
         .foregroundStyle(isSelected ? AnyShapeStyle(Theme.onAccent) : AnyShapeStyle(.primary))
         .padding(.horizontal, 10)
-        .frame(height: Self.height - 1)
+        .frame(height: LauncherMetrics.detailRowHeight - 1)
         .background(
             isSelected ? AnyShapeStyle(Theme.accent) : AnyShapeStyle(.clear),
             in: RoundedRectangle(cornerRadius: LauncherMetrics.rowRadius, style: .continuous)
         )
-        .frame(height: Self.height)
+        .frame(height: LauncherMetrics.detailRowHeight)
         .contentShape(Rectangle())
+    }
+}
+
+extension DetailRow where Leading == IconView {
+    init(icon: Icon, title: String, subtitle: String, trailing: String? = nil, isSelected: Bool) {
+        self.init(title: title, subtitle: subtitle, trailing: trailing, isSelected: isSelected) {
+            IconView(icon: icon, size: 30, outline: isSelected ? 0.5 : 0)
+        }
     }
 }
 
@@ -355,12 +364,15 @@ struct DetailRow: View {
 /// Text shown as it is, in a box: a snippet, a link, a path.
 struct PreviewBox: View {
     let text: String
+    /// Off for what reads as prose.
+    var isMonospaced = true
+    var fontSize: CGFloat = 12
 
     var body: some View {
         Text(text)
-            .font(.system(size: 12, design: .monospaced))
+            .font(.system(size: fontSize, design: isMonospaced ? .monospaced : .default))
             .lineSpacing(3)
-            .frame(maxWidth: .infinity, alignment: .leading)
+            .frame(maxWidth: .infinity, alignment: .topLeading)
             .padding(11)
             .background(Theme.fieldFill, in: RoundedRectangle(cornerRadius: 10, style: .continuous))
             .overlay {

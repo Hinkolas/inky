@@ -18,7 +18,11 @@ struct GeneralPane: View {
                 HStack {
                     Text("Inky hotkey")
                     Spacer()
-                    HotkeyRecorder(combo: $preferences.hotkey) { isRecording in
+                    // Inky always has one: recording replaces it, nothing takes it away.
+                    HotkeyRecorder(combo: Binding(
+                        get: { preferences.hotkey },
+                        set: { if let combo = $0 { preferences.hotkey = combo } }
+                    )) { isRecording in
                         preferences.isRecordingHotkey = isRecording
                     }
                 }
@@ -127,7 +131,8 @@ private struct WebsiteIconSettings: View {
 
 /// A button that captures the next key combination pressed.
 struct HotkeyRecorder: View {
-    @Binding var combo: KeyCombo
+    /// Nil while there is none.
+    @Binding var combo: KeyCombo?
     var onRecordingChange: (Bool) -> Void = { _ in }
 
     @State private var isRecording = false
@@ -140,8 +145,10 @@ struct HotkeyRecorder: View {
             Group {
                 if isRecording {
                     Text("Press a shortcut…").foregroundStyle(.secondary)
-                } else {
+                } else if let combo {
                     Keycap(combo.symbols)
+                } else {
+                    Text("Record Shortcut")
                 }
             }
             .frame(minWidth: 120, minHeight: 22)
@@ -297,6 +304,10 @@ struct ModulePane: View {
                 ))
             } header: {
                 PaneHeader(icon: module.info.icon, title: module.info.title, summary: module.info.summary)
+            } footer: {
+                if module.id == "clipboard", !preferences.isEnabled(module.id) {
+                    Text("While this is off, nothing you copy is kept. What is already in the history stays as it is.")
+                }
             }
 
             switch module.id {
@@ -327,6 +338,8 @@ struct ModulePane: View {
                 FileSearchSettings(context: context)
             case "quicklinks":
                 QuicklinkSettings(store: context.quicklinks)
+            case "clipboard":
+                ClipboardSettings(preferences: preferences, history: context.clipboard)
             default:
                 EmptyView()
             }
@@ -438,6 +451,122 @@ private struct FileSearchSettings: View {
         } footer: {
             Text("Searches your home folder once you have typed three characters. Results come from the Spotlight index, so folders excluded from Spotlight do not appear.")
         }
+    }
+}
+
+/// How long the clipboard history keeps what is copied, how it is opened
+/// and what Return does in it, and how much it holds.
+private struct ClipboardSettings: View {
+    @Bindable var preferences: Preferences
+    let history: ClipboardHistory
+    @State private var statistics: ClipboardStatistics?
+    @State private var canPressKeys = KeyboardPaste.isAllowed
+
+    var body: some View {
+        let isOn = preferences.isEnabled("clipboard")
+
+        if isOn, history.access != .allowed {
+            Section {
+                LabeledContent {
+                    Button("Open Privacy Settings") { ClipDescription.openPasteSettings() }
+                } label: {
+                    Label("Inky cannot read what you copy", systemImage: "exclamationmark.triangle.fill")
+                        .symbolRenderingMode(.multicolor)
+                }
+            } footer: {
+                Text(ClipDescription.notice(for: history.access) + " The change applies once Inky is opened again.")
+            }
+        }
+
+        Section {
+            Picker("Keep history for", selection: $preferences.clipboardRetention) {
+                ForEach(ClipboardRetention.allCases) { retention in
+                    Text(retention.title).tag(retention)
+                }
+            }
+            LabeledContent("In the history") {
+                HStack(spacing: 10) {
+                    Text(summary)
+                        .monospacedDigit()
+                    Button("Clear History…") { clear() }
+                        .disabled((statistics?.entries ?? 0) - (statistics?.pinned ?? 0) <= 0)
+                }
+            }
+        } footer: {
+            Text(preferences.clipboardRetention == .forever
+                ? "Nothing is removed until you delete it. Everything stays on this Mac."
+                : "Items you have not copied again for that long are removed. Pinned items stay until you unpin or delete them. Everything stays on this Mac.")
+        }
+
+        Section {
+            Picker("Return", selection: $preferences.clipboardPastes) {
+                Text("Pastes into the active app").tag(true)
+                Text("Copies to the clipboard").tag(false)
+            }
+            HStack {
+                Text("Clipboard History hotkey")
+                Spacer()
+                if preferences.clipboardHotkey != nil {
+                    Button("Remove", systemImage: "xmark.circle.fill") { preferences.clipboardHotkey = nil }
+                        .labelStyle(.iconOnly)
+                        .buttonStyle(.plain)
+                        .foregroundStyle(.secondary)
+                        .help("Remove the hotkey")
+                }
+                HotkeyRecorder(combo: $preferences.clipboardHotkey) { isRecording in
+                    preferences.isRecordingHotkey = isRecording
+                }
+            }
+        } footer: {
+            VStack(alignment: .leading, spacing: 6) {
+                Text(preferences.clipboardPastes
+                    ? "⌘C copies an item without pasting it."
+                    : "⌘↵ pastes an item into the app you were in.")
+                if !canPressKeys {
+                    HStack(spacing: 6) {
+                        Text("To paste for you, Inky needs Accessibility access. Until then it copies, and you paste.")
+                        Button("Open Accessibility Settings") { ClipDescription.openAccessibilitySettings() }
+                            .buttonStyle(.link)
+                    }
+                }
+                if !preferences.isClipboardHotkeyAvailable {
+                    Text(preferences.clipboardHotkey == preferences.hotkey
+                        ? "This shortcut already opens Inky. Choose a different one."
+                        : "macOS did not accept this shortcut. Choose a different one.")
+                        .foregroundStyle(.red)
+                }
+            }
+        }
+        .task(id: history.revision) {
+            statistics = await history.store.statistics()
+        }
+        .onAppear {
+            history.refreshAccess()
+            canPressKeys = KeyboardPaste.isAllowed
+        }
+        .onReceive(NotificationCenter.default.publisher(for: NSApplication.didBecomeActiveNotification)) { _ in
+            // Back from System Settings, perhaps with something changed.
+            history.refreshAccess()
+            canPressKeys = KeyboardPaste.isAllowed
+        }
+    }
+
+    private var summary: String {
+        guard let statistics else { return " " }
+        let items = statistics.entries == 1 ? "1 item" : "\(statistics.entries.formatted()) items"
+        return "\(items) · \(ByteCountFormatter.string(fromByteCount: statistics.bytes, countStyle: .file))"
+    }
+
+    private func clear() {
+        let pinned = statistics?.pinned ?? 0
+        guard Alerts.confirm(
+            title: "Clear the clipboard history?",
+            message: pinned == 0
+                ? "Everything Inky kept of what you copied is deleted."
+                : "Everything Inky kept of what you copied is deleted. What you pinned stays.",
+            confirmTitle: "Clear History"
+        ) else { return }
+        Task { await history.clear() }
     }
 }
 

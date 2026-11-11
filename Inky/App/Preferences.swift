@@ -42,6 +42,9 @@ final class Preferences {
     @ObservationIgnored var onFaviconSourceChange: (() -> Void)?
     @ObservationIgnored var onExchangeRateSourceChange: (() -> Void)?
     @ObservationIgnored var onPixelsPerRemChange: (() -> Void)?
+    @ObservationIgnored var onClipboardRetentionChange: (() -> Void)?
+    /// Called when a module was turned on or off.
+    @ObservationIgnored var onModulesChange: (() -> Void)?
 
     var hotkey: KeyCombo {
         didSet {
@@ -107,6 +110,31 @@ final class Preferences {
         didSet { defaults.set(fileSearchLimit, forKey: Key.fileSearchLimit) }
     }
 
+    /// How long the clipboard history keeps a copy.
+    var clipboardRetention: ClipboardRetention {
+        didSet {
+            defaults.set(clipboardRetention.rawValue, forKey: Key.clipboardRetention)
+            onClipboardRetentionChange?()
+        }
+    }
+
+    /// Whether Return, in the clipboard history, pastes into the application
+    /// the user is in. Otherwise it copies, and ⌘↵ pastes.
+    var clipboardPastes: Bool {
+        didSet { defaults.set(clipboardPastes, forKey: Key.clipboardPastes) }
+    }
+
+    /// Opens the clipboard history from anywhere. Nil until the user sets one.
+    var clipboardHotkey: KeyCombo? {
+        didSet {
+            defaults.set(clipboardHotkey.flatMap { try? JSONEncoder().encode($0) }, forKey: Key.clipboardHotkey)
+            onHotkeyChange?()
+        }
+    }
+
+    /// Whether macOS accepted the hotkey of the clipboard history.
+    var isClipboardHotkeyAvailable = true
+
     private var disabledModules: Set<String> {
         didSet { defaults.set(disabledModules.sorted(), forKey: Key.disabledModules) }
     }
@@ -119,6 +147,7 @@ final class Preferences {
     private init() {
         defaults.register(defaults: [
             Key.showMenuBarIcon: true, Key.animations: true, Key.fileSearchLimit: 8, Key.pixelsPerRem: 16,
+            Key.clipboardPastes: true,
         ])
         hotkey = defaults.data(forKey: Key.hotkey)
             .flatMap { try? JSONDecoder().decode(KeyCombo.self, from: $0) } ?? .defaultLauncher
@@ -130,6 +159,10 @@ final class Preferences {
         let pixels = defaults.integer(forKey: Key.pixelsPerRem)
         pixelsPerRem = Self.pixelsPerRemRange.contains(pixels) ? pixels : 16
         fileSearchLimit = defaults.integer(forKey: Key.fileSearchLimit)
+        clipboardRetention = defaults.string(forKey: Key.clipboardRetention).flatMap(ClipboardRetention.init) ?? .threeMonths
+        clipboardPastes = defaults.bool(forKey: Key.clipboardPastes)
+        clipboardHotkey = defaults.data(forKey: Key.clipboardHotkey)
+            .flatMap { try? JSONDecoder().decode(KeyCombo.self, from: $0) }
         // Modules were called providers before, and their switches were kept under that name.
         if defaults.object(forKey: Key.disabledModules) == nil,
            let disabled = defaults.stringArray(forKey: Key.disabledProviders) {
@@ -149,6 +182,7 @@ final class Preferences {
         } else {
             disabledModules.insert(moduleID)
         }
+        onModulesChange?()
     }
 
     // MARK: - Launch at login
@@ -174,6 +208,9 @@ final class Preferences {
         static let exchangeRateSource = "exchangeRateSource"
         static let pixelsPerRem = "pixelsPerRem"
         static let fileSearchLimit = "fileSearchLimit"
+        static let clipboardRetention = "clipboardRetention"
+        static let clipboardPastes = "clipboardPastes"
+        static let clipboardHotkey = "clipboardHotkey"
         static let disabledModules = "disabledModules"
         static let disabledProviders = "disabledProviders"
         static let hasLaunchedBefore = "hasLaunchedBefore"

@@ -3,6 +3,7 @@ import AppKit
 final class AppDelegate: NSObject, NSApplicationDelegate {
     private var context: AppContext!
     private var hotKey: GlobalHotKey?
+    private var clipboardHotKey: GlobalHotKey?
     private let statusItem = StatusItemController()
 
     func applicationDidFinishLaunching(_ notification: Notification) {
@@ -35,6 +36,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
             self?.statusItem.setVisible(preferences.showMenuBarIcon)
         }
         registerHotKey()
+        context.startClipboard()
 
         Task {
             await context.engine.reloadAll()
@@ -65,20 +67,35 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         let preferences = context.preferences
         hotKey?.unregister()
         hotKey = nil
-        // While the user records a new hotkey the old one must not fire.
+        clipboardHotKey?.unregister()
+        clipboardHotKey = nil
+        // While the user records a new hotkey the old ones must not fire.
         guard !preferences.isRecordingHotkey else { return }
 
         hotKey = GlobalHotKey(preferences.hotkey) { [weak self] in
             self?.context.launcher.toggle()
         }
         preferences.isHotkeyAvailable = hotKey != nil
+
+        guard let combo = preferences.clipboardHotkey else {
+            preferences.isClipboardHotkeyAvailable = true
+            return
+        }
+        // The same keys cannot open both.
+        if combo != preferences.hotkey {
+            clipboardHotKey = GlobalHotKey(combo) { [weak self] in
+                self?.context.toggleClipboard()
+            }
+        }
+        preferences.isClipboardHotkeyAvailable = clipboardHotKey != nil
     }
 }
 
 #if DEBUG
 /// Launch arguments that put the app into a known state for development:
-/// `--show`, `--pin`, `--quiet`, `--query <text>`, `--keys "tab a cmd+k hide show"`,
+/// `--show`, `--pin`, `--quiet`, `--query <text>`, `--keys "tab a cmd+k hide show clipboard"`,
 /// `--settings [pane]`, `--new-quicklink`, `--quicklinks`, `--uninstall [application]`,
+/// `--clipboard [filter]`, `--clipboard-samples`,
 /// `--appearance light|dark`, `--backdrop light|dark`, `--data <folder>`,
 /// `--motion full|reduced|off`, `--slow <factor>`.
 ///
@@ -131,10 +148,14 @@ enum DebugLaunch {
                 Task { await context.engine.reloadAll() }
             }
         }
-        guard !Set(arguments).isDisjoint(with: ["--show", "--query", "--new-quicklink", "--quicklinks", "--uninstall"]) else {
+        guard !Set(arguments).isDisjoint(with: ["--show", "--query", "--new-quicklink", "--quicklinks", "--uninstall", "--clipboard"]) else {
             return
         }
         Task {
+            // Made-up copies, only ever into a history that is the run's own.
+            if arguments.contains("--clipboard-samples"), dataDirectory != nil {
+                await ClipboardSamples.fill(context.clipboard.store)
+            }
             await context.engine.reloadAll()
             context.launcher.show()
             if let query = value(after: "--query") {
@@ -158,11 +179,22 @@ enum DebugLaunch {
                     context.launcher.model.showUninstaller()
                 }
             }
+            if arguments.contains("--clipboard") {
+                context.launcher.model.showClipboard()
+                // What to filter by: nothing is typed into a run without focus.
+                if let query = value(after: "--clipboard"), case .clipboard(let browser) = context.launcher.model.route {
+                    browser.query = query
+                }
+                // Read before the first key is pressed.
+                try? await Task.sleep(for: .milliseconds(200))
+            }
             for key in (value(after: "--keys") ?? "").split(separator: " ") {
                 try? await Task.sleep(for: .milliseconds(120))
                 switch key {
                 case "hide": context.launcher.hide()
                 case "show": context.launcher.show()
+                // As the hotkey of the clipboard history does.
+                case "clipboard": context.toggleClipboard()
                 case "wait": try? await Task.sleep(for: .seconds(1))
                 case "mark": FileHandle.standardError.write(Data("MARK\n".utf8))
                 default: context.launcher.debugPress(String(key))

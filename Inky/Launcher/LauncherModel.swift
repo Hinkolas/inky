@@ -12,6 +12,7 @@ final class LauncherModel {
         case quicklinkEditor(QuicklinkDraft)
         case uninstallBrowser(UninstallBrowser)
         case uninstall(UninstallReview)
+        case clipboard(ClipboardBrowser)
     }
 
     enum FocusTarget: Hashable {
@@ -29,9 +30,18 @@ final class LauncherModel {
     @ObservationIgnored let engine: SearchEngine
     @ObservationIgnored let quicklinks: QuicklinkStore
     @ObservationIgnored let uninstaller: ApplicationUninstaller
+    @ObservationIgnored let clipboard: ClipboardHistory
     /// Called after an application was uninstalled.
     @ObservationIgnored var applicationsDidChange: () -> Void = {}
     @ObservationIgnored var dismiss: () -> Void = {}
+    /// Closes the launcher, and runs what it is given once the launcher is
+    /// gone and the keyboard is back with the application behind it.
+    @ObservationIgnored var dismissThen: (@escaping () -> Void) -> Void = { $0() }
+    /// Whether Return pastes an entry of the clipboard history. Otherwise it copies.
+    @ObservationIgnored var pastesOnReturn: () -> Bool = { true }
+    /// Whether pasting may press keys in other applications. Off for runs
+    /// that are not to be noticed.
+    @ObservationIgnored var pressesKeys = true
     @ObservationIgnored var openSettings: () -> Void = {}
     @ObservationIgnored var configureFallbacks: () -> Void = {}
     @ObservationIgnored var isVisible: () -> Bool = { false }
@@ -61,10 +71,11 @@ final class LauncherModel {
     /// which it needs, was still empty.
     private(set) var missingArgumentTick = 0
 
-    init(engine: SearchEngine, quicklinks: QuicklinkStore, uninstaller: ApplicationUninstaller) {
+    init(engine: SearchEngine, quicklinks: QuicklinkStore, uninstaller: ApplicationUninstaller, clipboard: ClipboardHistory) {
         self.engine = engine
         self.quicklinks = quicklinks
         self.uninstaller = uninstaller
+        self.clipboard = clipboard
     }
 
     var route: Route? { routes.last }
@@ -510,6 +521,159 @@ final class LauncherModel {
         }
     }
 
+    // MARK: - Clipboard history
+
+    /// Shows the clipboard history.
+    func showClipboard() {
+        if case .clipboard = route { return }
+        push(.clipboard(ClipboardBrowser(history: clipboard)))
+    }
+
+    /// Shows the clipboard history in place of whatever is showing, as when
+    /// it is asked for by its hotkey.
+    func openClipboard() {
+        if case .clipboard = route { return }
+        isActionMenuOpen = false
+        isNavigatingBack = false
+        routes = [.clipboard(ClipboardBrowser(history: clipboard))]
+    }
+
+    /// The application the user was in, which is where pasting goes.
+    private var pasteTarget: String? {
+        frontmostPID.flatMap { NSRunningApplication(processIdentifier: $0)?.localizedName }
+    }
+
+    /// What the clipboard history offers for an entry. The first runs on Return.
+    func actions(for clip: Clip, in browser: ClipboardBrowser) -> [CommandAction] {
+        // Without an application to paste into, as when Inky's own settings
+        // are in front, there is only copying.
+        let target = pasteTarget
+        let pastes = pastesOnReturn() && target != nil
+        var actions: [CommandAction] = []
+        if let target {
+            actions.append(CommandAction(
+                title: "Paste into \(target)",
+                symbol: "doc.on.clipboard",
+                shortcut: pastes ? KeyShortcut("return", []) : KeyShortcut("return")
+            ) { [weak self] in
+                self?.paste(clip)
+            })
+        }
+        let copy = CommandAction(
+            title: pastes ? "Copy" : "Copy to Clipboard",
+            symbol: "doc.on.doc",
+            shortcut: pastes ? KeyShortcut("c") : KeyShortcut("return", [])
+        ) { [weak self] in
+            self?.copy(clip)
+        }
+        actions.insert(copy, at: pastes ? actions.count : 0)
+
+        if clip.hasFormatting, target != nil {
+            actions.append(CommandAction(title: "Paste as Plain Text", symbol: "textformat", shortcut: KeyShortcut("return", [.option])) { [weak self] in
+                self?.paste(clip, asPlainText: true)
+            })
+        }
+        switch clip.kind {
+        case .link:
+            actions.append(CommandAction(title: "Open Link", symbol: "arrow.up.forward", shortcut: KeyShortcut("o")) { [weak self] in
+                self?.open(clip)
+            })
+        case .file, .path:
+            actions.append(CommandAction(title: "Show in Finder", symbol: "folder", shortcut: KeyShortcut("o")) { [weak self] in
+                self?.open(clip)
+            })
+        case .text, .code, .color, .image:
+            break
+        }
+        actions.append(CommandAction(title: clip.isPinned ? "Unpin" : "Pin", symbol: clip.isPinned ? "pin.slash" : "pin", shortcut: KeyShortcut("p")) { [weak self] in
+            guard let self else { return }
+            // It moves to the pinned entries or back, and stays selected.
+            browser.selectedID = clip.id
+            Task { await self.clipboard.setPinned(clip, !clip.isPinned) }
+        })
+        if clip.isPinned {
+            actions.append(CommandAction(title: "Rename", symbol: "pencil", shortcut: KeyShortcut("r")) {
+                browser.selectedID = clip.id
+                browser.beginRenaming()
+            })
+        }
+        actions.append(CommandAction(title: "Delete", symbol: "trash", shortcut: KeyShortcut("x", [.control]), isDestructive: true) { [weak self] in
+            guard let self else { return }
+            browser.selectNeighbor(of: clip.id)
+            Task { await self.clipboard.delete(clip) }
+        })
+        return actions
+    }
+
+    /// Runs what Return does for an entry, as a double click does.
+    func runPrimaryAction(on clip: Clip, in browser: ClipboardBrowser) {
+        actions(for: clip, in: browser).first?.run()
+    }
+
+    /// Puts an entry on the clipboard and closes.
+    private func copy(_ clip: Clip) {
+        Task {
+            do {
+                try await clipboard.copy(clip)
+                dismiss()
+            } catch {
+                report(error)
+            }
+        }
+    }
+
+    /// Puts an entry on the clipboard and pastes it into the application
+    /// the user was in.
+    private func paste(_ clip: Clip, asPlainText: Bool = false) {
+        Task {
+            do {
+                try await clipboard.copy(clip, asPlainText: asPlainText)
+            } catch {
+                report(error)
+                return
+            }
+            guard pressesKeys else {
+                dismiss()
+                return
+            }
+            guard KeyboardPaste.isAllowed else {
+                // It is on the clipboard, to be pasted by hand this once.
+                showToast("Copied. To paste for you, Inky needs Accessibility access.")
+                KeyboardPaste.requestAccess()
+                return
+            }
+            dismissThen {
+                // A moment for the application to take the keyboard back.
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.04) {
+                    KeyboardPaste.paste()
+                }
+            }
+        }
+    }
+
+    /// Opens a link, or shows files in Finder.
+    private func open(_ clip: Clip) {
+        Task {
+            guard let text = await clipboard.store.payload(of: clip.id)?.text else { return }
+            do {
+                if clip.kind == .link {
+                    let url = try QuicklinkOpener.url(from: text)
+                    guard NSWorkspace.shared.open(url) else { throw InkyError("Could not open \(url.absoluteString)") }
+                } else {
+                    let paths = text.split(separator: "\n").map { ClipClassifier.expandedPath(String($0)) }
+                    let existing = paths.filter { FileManager.default.fileExists(atPath: $0) }
+                    guard !existing.isEmpty else {
+                        throw InkyError(paths.count == 1 ? "The file is no longer there" : "The files are no longer there")
+                    }
+                    NSWorkspace.shared.activateFileViewerSelecting(existing.map { URL(fileURLWithPath: $0) })
+                }
+                dismiss()
+            } catch {
+                report(error)
+            }
+        }
+    }
+
     // MARK: - Keyboard
 
     /// Handles a key press before the focused text field sees it.
@@ -545,7 +709,49 @@ final class LauncherModel {
             return handleKey(key, modifiers, in: browser)
         case .uninstall(let review):
             return handleKey(key, modifiers, in: review)
+        case .clipboard(let browser):
+            return handleKey(key, modifiers, in: browser, event)
         }
+    }
+
+    private func handleKey(_ key: String, _ modifiers: KeyShortcut.Modifiers, in browser: ClipboardBrowser, _ event: NSEvent) -> Bool {
+        if browser.renaming != nil {
+            switch (key, modifiers) {
+            case ("return", []): browser.commitRenaming()
+            case ("escape", []): browser.renaming = nil
+            // Everything else is typed into the name.
+            default: return false
+            }
+            return true
+        }
+
+        switch (key, modifiers) {
+        case ("down", []), ("n", .control), ("j", .control): browser.moveSelection(by: 1)
+        case ("up", []), ("p", .control), ("k", .control): browser.moveSelection(by: -1)
+        case ("tab", []): browser.cycleFilter(by: 1)
+        case ("tab", .shift): browser.cycleFilter(by: -1)
+        case ("escape", []):
+            if browser.query.isEmpty {
+                popRoute()
+            } else {
+                browser.query = ""
+            }
+        default:
+            guard let clip = browser.selected else { return false }
+            if key == "c", modifiers == .command {
+                // What is selected in the filter is what ⌘C means there.
+                if let editor = event.window?.firstResponder as? NSTextView, editor.selectedRange().length > 0 {
+                    return false
+                }
+                copy(clip)
+                return true
+            }
+            guard let action = actions(for: clip, in: browser).first(where: { action in
+                action.shortcut.map { $0.key == key && $0.modifiers == modifiers } ?? false
+            }) else { return false }
+            action.run()
+        }
+        return true
     }
 
     private func handleKey(_ key: String, _ modifiers: KeyShortcut.Modifiers, in browser: UninstallBrowser) -> Bool {

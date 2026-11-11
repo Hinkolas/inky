@@ -9,10 +9,14 @@ final class AppContext {
     let exchangeRates: ExchangeRateStore
     let engine: SearchEngine
     let uninstaller: ApplicationUninstaller
+    let clipboard: ClipboardHistory
     let launcher: LauncherController
     let fileModule = FileModule()
 
     private var settingsWindow: SettingsWindowController?
+    private let clipboardModule = ClipboardModule()
+    /// False until the app says that what is copied may be kept.
+    private var recordsClipboard = false
 
     init() {
         #if DEBUG
@@ -23,11 +27,23 @@ final class AppContext {
         uninstaller = DebugLaunch.dataDirectory.map {
             ApplicationUninstaller(home: $0.path, coversSystem: false)
         } ?? ApplicationUninstaller()
+        // And it has a pasteboard to itself: what the user copies is not
+        // read, and what it copies does not replace it.
+        let pasteboard = DebugLaunch.dataDirectory == nil ? NSPasteboard.general : NSPasteboard.withUniqueName()
         #else
         let directory = AppSupport.directory
         let caches = AppSupport.cacheDirectory
         uninstaller = ApplicationUninstaller()
+        let pasteboard = NSPasteboard.general
         #endif
+        clipboard = ClipboardHistory(
+            store: ClipboardStore(directory: directory.appendingPathComponent("Clipboard", isDirectory: true)),
+            pasteboard: pasteboard,
+            retention: preferences.clipboardRetention
+        )
+        preferences.onClipboardRetentionChange = { [preferences, clipboard] in
+            clipboard.retention = preferences.clipboardRetention
+        }
         quicklinks = QuicklinkStore(fileURL: directory.appendingPathComponent("quicklinks.json"))
 
         favicons = FaviconStore(
@@ -70,6 +86,7 @@ final class AppContext {
             modules: [
                 quicklinkModule,
                 commands,
+                clipboardModule,
                 SystemModule(),
                 applications,
                 calculator,
@@ -82,7 +99,12 @@ final class AppContext {
         )
         engine.isEnabled = { [preferences] id in preferences.isEnabled(id) }
 
-        launcher = LauncherController(engine: engine, quicklinks: quicklinks, uninstaller: uninstaller)
+        launcher = LauncherController(engine: engine, quicklinks: quicklinks, uninstaller: uninstaller, clipboard: clipboard)
+        launcher.model.pastesOnReturn = { [preferences] in preferences.clipboardPastes }
+        #if DEBUG
+        // A run with data of its own must not type into the user's applications.
+        launcher.model.pressesKeys = DebugLaunch.dataDirectory == nil
+        #endif
         launcher.model.openSettings = { [unowned self] in showSettings() }
         launcher.model.configureFallbacks = { [unowned self] in showSettings(pane: "fallbacks") }
 
@@ -95,6 +117,33 @@ final class AppContext {
         applications.onChooseUninstall = { [unowned self] in launcher.model.showUninstaller() }
         // The module lists the applications again, without the one that went.
         launcher.model.applicationsDidChange = { [applications] in applications.onChange?() }
+
+        clipboardModule.onOpen = { [unowned self] in launcher.model.showClipboard() }
+        clipboardModule.onClear = { [clipboard] in
+            Task { await clipboard.clear() }
+        }
+        preferences.onModulesChange = { [unowned self] in updateClipboardRecording() }
+    }
+
+    /// Begins to keep what is copied, for as long as the clipboard history is on.
+    func startClipboard() {
+        recordsClipboard = true
+        updateClipboardRecording()
+    }
+
+    private func updateClipboardRecording() {
+        guard recordsClipboard else { return }
+        if preferences.isEnabled(clipboardModule.id) {
+            clipboard.start()
+        } else {
+            clipboard.stop()
+        }
+    }
+
+    /// Shows the clipboard history, or closes it, as its hotkey does.
+    func toggleClipboard() {
+        guard preferences.isEnabled(clipboardModule.id) else { return }
+        launcher.toggleClipboard()
     }
 
     /// Fetches every website icon again, in the background.

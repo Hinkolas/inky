@@ -85,9 +85,11 @@ final class LauncherController: NSObject, NSWindowDelegate {
     private var isClosing = false
     /// Tells a fade that ran to its end from one that was cut short.
     private var closeCount = 0
+    /// What waits for the panel to be gone.
+    private var afterHiding: [() -> Void] = []
 
-    init(engine: SearchEngine, quicklinks: QuicklinkStore, uninstaller: ApplicationUninstaller) {
-        model = LauncherModel(engine: engine, quicklinks: quicklinks, uninstaller: uninstaller)
+    init(engine: SearchEngine, quicklinks: QuicklinkStore, uninstaller: ApplicationUninstaller, clipboard: ClipboardHistory) {
+        model = LauncherModel(engine: engine, quicklinks: quicklinks, uninstaller: uninstaller, clipboard: clipboard)
         super.init()
 
         let content = NSHostingView(rootView: LauncherView(model: model))
@@ -101,6 +103,9 @@ final class LauncherController: NSObject, NSWindowDelegate {
         }
 
         model.dismiss = { [weak self] in self?.hide() }
+        model.dismissThen = { [weak self] action in
+            if let self { hide(then: action) } else { action() }
+        }
         model.isVisible = { [weak self] in self?.isVisible ?? false }
         engine.onChange = { [weak self] in self?.model.refresh() }
     }
@@ -137,8 +142,33 @@ final class LauncherController: NSObject, NSWindowDelegate {
         if isOpening { animateIn(motion) }
     }
 
-    func hide() {
-        guard isVisible else { return }
+    /// Shows the clipboard history, whatever the launcher was showing, or
+    /// closes the launcher if that is what it shows.
+    func toggleClipboard() {
+        if isVisible, case .clipboard = model.route {
+            hide()
+            return
+        }
+        let wasVisible = isVisible
+        show()
+        // Opened straight to it, the history is simply there. From the
+        // search it is a change of screen like any other.
+        var transaction = Transaction()
+        transaction.disablesAnimations = !wasVisible
+        withTransaction(transaction) { model.openClipboard() }
+    }
+
+    /// Closes the panel. `action` runs once it is off screen, when keys go
+    /// to the application behind it again.
+    func hide(then action: (() -> Void)? = nil) {
+        guard isVisible else {
+            // Already on its way out, or not there at all.
+            if let action {
+                if isClosing { afterHiding.append(action) } else { action() }
+            }
+            return
+        }
+        if let action { afterHiding.append(action) }
         let motion = Motion.current
         guard motion.level != .off else {
             finishHiding()
@@ -207,6 +237,12 @@ final class LauncherController: NSObject, NSWindowDelegate {
         var transaction = Transaction()
         transaction.disablesAnimations = true
         withTransaction(transaction) { model.reset() }
+
+        let actions = afterHiding
+        afterHiding = []
+        for action in actions {
+            action()
+        }
     }
 
     private func fade(
@@ -285,9 +321,15 @@ final class LauncherController: NSObject, NSWindowDelegate {
                 // A minus marks what is unticked.
                 "uninstall(\(review.app.name) cursor=\((review.cursor as NSString).lastPathComponent) "
                     + "items=\(review.items.map { review.isChosen($0) ? $0.name : "-" + $0.name }) summary=\(review.summary))"
+            case .clipboard(let browser):
+                "clipboard(filter=\(browser.filter) range=\(browser.range) query=\(browser.query) "
+                    + "selected=\(browser.selected?.displayTitle ?? "nil") listed=\(browser.clips.count) "
+                    + "pins=\(browser.snapshot.pins.count) total=\(browser.snapshot.total) "
+                    + "renaming=\(browser.renaming ?? "nil") "
+                    + "actions=\(browser.selected.map { model.actions(for: $0, in: browser).map(\.title) } ?? []))"
             }
         }
-        return "focus=\(model.focusTarget) responder=\(panel.firstResponder.map { String(describing: type(of: $0)) } ?? "nil") "
+        return "focus=\(model.focusTarget) responder=\(panel.firstResponder.map { String(describing: type(of: $0)) + "<" + (($0 as? NSTextView)?.string ?? "") + ">" } ?? "nil") "
             + "query=\(model.query) results=\(model.showsResults) sections=\(model.sections.map { "\($0.title):\($0.items.count)" }) "
             + "selected=\(model.selectedID ?? "nil") arguments=\(model.argumentValues) "
             + "menu=\(model.isActionMenuOpen ? "\(model.actionMenuIndex)" : "closed") route=\(route.isEmpty ? "root" : route.joined(separator: " > ")) "
