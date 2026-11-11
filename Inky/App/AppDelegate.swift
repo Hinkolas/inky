@@ -66,6 +66,12 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         return false
     }
 
+    /// What is still in the search, as in a launcher that was put away,
+    /// would be gone without a trace.
+    func applicationWillTerminate(_ notification: Notification) {
+        context?.launcher.model.rememberInput()
+    }
+
     @objc func showSettings(_ sender: Any?) {
         context.showSettings()
     }
@@ -130,7 +136,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
 /// `--run <command id>`, `--settings [pane]`, `--search <text>`, `--onboarding [step]`, `--new-quicklink`, `--quicklinks`, `--uninstall [application]`,
 /// `--clipboard [filter]`, `--clipboard-samples`,
 /// `--appearance light|dark`, `--backdrop light|dark`, `--data <folder>`,
-/// `--motion full|reduced|off`, `--slow <factor>`.
+/// `--motion full|reduced|off`, `--slow <factor>`, `--resume <seconds>`.
 ///
 /// To look at an animation, stretch it with `--slow` and put `mark` before
 /// the key that starts it: `--keys "wait mark return"`. `mark` prints a line
@@ -205,6 +211,10 @@ enum DebugLaunch {
         // Overrides the setting for this run only.
         if let appearance = value(after: "--appearance").flatMap(AppearanceMode.init) {
             NSApp.appearance = appearance.appearance
+        }
+        // For how long a launcher that was put away opens again as it was.
+        if let seconds = value(after: "--resume").flatMap(TimeInterval.init) {
+            context.launcher.resumesWithin = { seconds }
         }
         Motion.debugLevel = value(after: "--motion").flatMap(Motion.Level.init)
         if let slowdown = value(after: "--slow").flatMap(Double.init), slowdown > 0 {

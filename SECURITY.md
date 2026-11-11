@@ -36,6 +36,10 @@ version before reporting a problem that may already have been fixed.
   filesystem snapshots or backups.
 - Quicklinks, rankings and command settings are local JSON files in
   `~/Library/Application Support/Inky/`. Preferences use macOS UserDefaults.
+- The searches typed into the launcher, with what was typed into the arguments
+  of a quicklink, are kept in `history.json` in the same folder, readable by
+  the account only and not encrypted. Settings → General sets how many are
+  kept, down to none, and clears them.
 - Accessibility access allows selected-text reading and simulated ⌘V. Automation
   access supports commands sent to Finder and other system applications.
 - Uninstalling uses name and bundle-identifier heuristics. Review every proposed

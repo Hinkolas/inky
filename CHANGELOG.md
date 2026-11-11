@@ -1,5 +1,28 @@
 # Changelog
 
+## Unreleased
+
+### Added
+
+- The launcher opens again where it was left. A click elsewhere, or the hotkey
+  pressed again, puts it away as it is: the search, the selected result, what
+  was typed into arguments, a command that is open. Opened again within a
+  minute, it shows what it did. Settings → General sets how long, from never
+  to always. Escape and ⌘W still close it for good.
+- ↑ in the empty search brings back what was searched for before, newest
+  first, with what was typed into a quicklink's arguments and the result that
+  was selected. ↑ and ↓ then go through the earlier searches until something
+  is typed; ⌃N and ⌃P move the selection meanwhile. A search is remembered
+  when it is run, cleared with Escape, or closed with ⌘W, and the same search
+  is listed once. Settings → General sets how many are kept, the last 100
+  unless chosen otherwise, and clears them.
+
+### Changed
+
+- Files that were found stay listed while the same search is looked up again,
+  as when an application was installed meanwhile, instead of going and
+  coming back.
+
 ## 0.1.0-alpha.2 — 2026-11-11
 
 Where the keyboard is in the launcher, which the first testers found unreliable.
