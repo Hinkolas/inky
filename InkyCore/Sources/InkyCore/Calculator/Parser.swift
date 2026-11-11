@@ -58,17 +58,18 @@ struct Function: Sendable {
             }
         }
         add(.plain, [
-            "sqrt": { $0.squareRoot() }, "cbrt": cbrt, "exp": exp,
-            "ln": log, "log": log10, "log10": log10, "log2": log2,
-            "asin": asin, "acos": acos, "atan": atan,
-            "sinh": sinh, "cosh": cosh, "tanh": tanh, "asinh": asinh, "acosh": acosh, "atanh": atanh,
+            "sqrt": { $0.squareRoot() }, "cbrt": { cbrt($0) }, "exp": { exp($0) },
+            "ln": { log($0) }, "log": { log10($0) }, "log10": { log10($0) }, "log2": { log2($0) },
+            "asin": { asin($0) }, "acos": { acos($0) }, "atan": { atan($0) },
+            "sinh": { sinh($0) }, "cosh": { cosh($0) }, "tanh": { tanh($0) },
+            "asinh": { asinh($0) }, "acosh": { acosh($0) }, "atanh": { atanh($0) },
         ])
         add(.trigonometric, [
-            "sin": sin, "cos": cos, "tan": tan,
+            "sin": { sin($0) }, "cos": { cos($0) }, "tan": { tan($0) },
             "cot": { 1 / tan($0) }, "sec": { 1 / cos($0) }, "csc": { 1 / sin($0) },
         ])
         add(.rounding, [
-            "abs": { abs($0) }, "round": { $0.rounded() }, "floor": floor, "ceil": ceil,
+            "abs": { abs($0) }, "round": { $0.rounded() }, "floor": { floor($0) }, "ceil": { ceil($0) },
         ])
         return functions
     }()
