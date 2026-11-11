@@ -46,6 +46,8 @@ private extension NSMenu {
 final class StatusItemController: NSObject {
     var onOpen: () -> Void = {}
     var onSettings: () -> Void = {}
+    /// Nil in a build that does not update itself.
+    var onCheckForUpdates: (() -> Void)?
 
     private var item: NSStatusItem?
 
@@ -65,6 +67,10 @@ final class StatusItemController: NSObject {
         open.target = self
         let settings = menu.addItem(withTitle: "Settings…", action: #selector(settings(_:)), keyEquivalent: ",")
         settings.target = self
+        if onCheckForUpdates != nil {
+            let updates = menu.addItem(withTitle: "Check for Updates…", action: #selector(checkForUpdates(_:)), keyEquivalent: "")
+            updates.target = self
+        }
         menu.addItem(.separator())
         menu.addItem(withTitle: "Quit Inky", action: #selector(NSApplication.terminate(_:)), keyEquivalent: "q")
         item.menu = menu
@@ -76,6 +82,10 @@ final class StatusItemController: NSObject {
 
     @objc private func settings(_ sender: Any?) {
         onSettings()
+    }
+
+    @objc private func checkForUpdates(_ sender: Any?) {
+        onCheckForUpdates?()
     }
 }
 

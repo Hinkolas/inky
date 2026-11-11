@@ -68,9 +68,10 @@ after success. The generator rejects input with no valid city records.
   encrypting kept ones is a follow-up.
 - **Public commit metadata:** existing commits expose a personal email address.
   The maintainer accepted publishing the history as it is.
-- **Binary distribution:** the app is currently ad-hoc signed. Developer ID
-  signing, notarization and automatic updates are not configured. Decide between
-  a source-only alpha and a binary release, and accurately describe its status.
+- **Binary distribution:** decided. Pre-releases are source-only. Releases are
+  signed, notarized downloads that update themselves through Sparkle; the
+  release workflow is in place and waits for the update key, the Developer ID
+  certificate and the notarization key (see RELEASING.md).
 - **Security reporting:** the private repository's reporting endpoint returned
   404. Enable and verify private vulnerability reporting when making the repo
   public; the new policy cannot turn the GitHub setting on by itself.

@@ -10,6 +10,7 @@
 		1A0000000000000000000001 /* InkyCore in Frameworks */ = {isa = PBXBuildFile; productRef = 1A0000000000000000000002 /* InkyCore */; };
 		1A0000000000000000000003 /* LICENSE in Resources */ = {isa = PBXBuildFile; fileRef = 1A0000000000000000000012 /* LICENSE */; };
 		1A0000000000000000000004 /* THIRD_PARTY_NOTICES.md in Resources */ = {isa = PBXBuildFile; fileRef = 1A0000000000000000000013 /* THIRD_PARTY_NOTICES.md */; };
+		1A0000000000000000000005 /* Sparkle in Frameworks */ = {isa = PBXBuildFile; productRef = 1A0000000000000000000006 /* Sparkle */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -33,6 +34,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				1A0000000000000000000001 /* InkyCore in Frameworks */,
+				1A0000000000000000000005 /* Sparkle in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -79,6 +81,7 @@
 			name = Inky;
 			packageProductDependencies = (
 				1A0000000000000000000002 /* InkyCore */,
+				1A0000000000000000000006 /* Sparkle */,
 			);
 			productName = Inky;
 			productReference = 1A0000000000000000000010 /* Inky.app */;
@@ -110,6 +113,7 @@
 			minimizedProjectReferenceProxies = 1;
 			packageReferences = (
 				1A0000000000000000000070 /* XCLocalSwiftPackageReference "InkyCore" */,
+				1A0000000000000000000071 /* XCRemoteSwiftPackageReference "Sparkle" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 1A0000000000000000000041 /* Products */;
@@ -199,6 +203,7 @@
 				ENABLE_APP_SANDBOX = NO;
 				ENABLE_HARDENED_RUNTIME = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = Config/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = Inky;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.productivity";
 				INFOPLIST_KEY_LSUIElement = YES;
@@ -209,6 +214,8 @@
 				);
 				MARKETING_VERSION = 0.1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = io.github.hinkolas.inky;
+				INKY_UPDATE_FEED_URL = "https://github.com/Hinkolas/inky/releases/latest/download/appcast.xml";
+				INKY_UPDATE_PUBLIC_KEY = "";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_APPROACHABLE_CONCURRENCY = YES;
 				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;
@@ -227,6 +234,7 @@
 				ENABLE_APP_SANDBOX = NO;
 				ENABLE_HARDENED_RUNTIME = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = Config/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = Inky;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.productivity";
 				INFOPLIST_KEY_LSUIElement = YES;
@@ -237,6 +245,8 @@
 				);
 				MARKETING_VERSION = 0.1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = io.github.hinkolas.inky;
+				INKY_UPDATE_FEED_URL = "https://github.com/Hinkolas/inky/releases/latest/download/appcast.xml";
+				INKY_UPDATE_PUBLIC_KEY = "";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_APPROACHABLE_CONCURRENCY = YES;
 				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;
@@ -274,10 +284,26 @@
 		};
 /* End XCLocalSwiftPackageReference section */
 
+/* Begin XCRemoteSwiftPackageReference section */
+		1A0000000000000000000071 /* XCRemoteSwiftPackageReference "Sparkle" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/sparkle-project/Sparkle";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 2.10.1;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
 /* Begin XCSwiftPackageProductDependency section */
 		1A0000000000000000000002 /* InkyCore */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = InkyCore;
+		};
+		1A0000000000000000000006 /* Sparkle */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 1A0000000000000000000071 /* XCRemoteSwiftPackageReference "Sparkle" */;
+			productName = Sparkle;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

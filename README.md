@@ -18,6 +18,7 @@ See [Security and privacy](SECURITY.md) for storage, permissions and reporting.
 
 ## What it does today
 
+- **Updates**: downloaded releases update themselves from GitHub Releases, through [Sparkle](https://sparkle-project.org/). Check for Updates is in the menu bar menu, in the launcher and in Settings → General.
 - **Welcome window**: the first launch walks through the settings that matter most: the hotkey, which features are on, the clipboard history and its permissions, what Inky may look up online, and how it starts. Settings → About shows it again.
 
 - **Applications**: fuzzy search over installed apps, ranked by how often and how recently you pick them. What you pick for a search rises to the top; Reset Ranking under ⌘K makes a result forget that.
@@ -37,7 +38,7 @@ also choose a light or dark appearance, or leave that to the system, and turn
 the launcher's animations off. With Reduce Motion on in System Settings the
 launcher fades instead of moving.
 
-Inky fetches two things from the internet, and either can be turned off.
+Inky fetches three things from the internet, and each can be turned off.
 
 Website icons: it asks DuckDuckGo for the icon of each website in your
 quicklinks, sending only the domain name, and keeps the answer on your Mac for
@@ -49,6 +50,12 @@ one file with about thirty currencies, a few times a day while you use the
 calculator. The file is the same for everyone, so nothing about what you
 convert is sent. Settings → Calculator turns this off, and currencies are then
 not converted.
+
+Updates: a downloaded release asks GitHub once a day for the appcast of
+Inky's latest release, and installs an update only if it is signed with
+Inky's release key. Settings → General turns the checks off, or lets updates
+install by themselves. Builds you make yourself from source do not update
+themselves unless they carry the release key.
 
 The clipboard history stays on your Mac, in a database only your account can
 read, and is never sent anywhere. What a password manager marks as

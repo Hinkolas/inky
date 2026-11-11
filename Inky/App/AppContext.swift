@@ -12,6 +12,7 @@ final class AppContext {
     let clipboard: ClipboardHistory
     let launcher: LauncherController
     let fileModule = FileModule()
+    let updates = Updates()
 
     /// Called when the commands that can be run, or their hotkeys, may have
     /// changed.
@@ -126,6 +127,9 @@ final class AppContext {
         launcher.model.configureCommand = { [unowned self] item in showSettings(pane: "commands", search: item.title) }
 
         commands.openSettings = { [unowned self] in showSettings() }
+        if Updates.isSupported {
+            commands.checkForUpdates = { [updates] in updates.check() }
+        }
         commands.createQuicklink = { [unowned self] in launcher.model.editQuicklink(nil) }
         commands.manageQuicklinks = { [unowned self] in launcher.model.showQuicklinks() }
         quicklinkModule.onEdit = { [unowned self] quicklink in launcher.model.editQuicklink(quicklink) }
@@ -213,11 +217,13 @@ final class InkyCommandModule: Module {
     var onChange: (@MainActor () -> Void)?
 
     var openSettings: () -> Void = {}
+    /// Nil in a build that does not update itself.
+    var checkForUpdates: (() -> Void)?
     var createQuicklink: () -> Void = {}
     var manageQuicklinks: () -> Void = {}
 
     func candidates() async -> [ResultItem] {
-        [
+        var items = [
             ResultItem(
                 id: "inky:create-quicklink",
                 title: "Create Quicklink",
@@ -266,5 +272,20 @@ final class InkyCommandModule: Module {
                 ]
             ),
         ]
+        if checkForUpdates != nil {
+            items.append(ResultItem(
+                id: "inky:check-for-updates",
+                title: "Check for Updates",
+                icon: .symbol("arrow.down.circle.fill", tint: .indigo),
+                kind: "Command",
+                keywords: ["Update Inky"],
+                actions: [
+                    Action("Check for Updates", symbol: "arrow.down.circle") { [weak self] _ in
+                        self?.checkForUpdates?()
+                    },
+                ]
+            ))
+        }
+        return items
     }
 }

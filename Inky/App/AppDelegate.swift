@@ -31,6 +31,9 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
 
         statusItem.onOpen = { [weak context] in context?.launcher.show() }
         statusItem.onSettings = { [weak context] in context?.showSettings() }
+        if Updates.isSupported {
+            statusItem.onCheckForUpdates = { [weak context] in context?.updates.check() }
+        }
         statusItem.setVisible(preferences.showMenuBarIcon)
 
         preferences.onHotkeyChange = { [weak self] in self?.registerHotKey() }
@@ -40,6 +43,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         }
         registerHotKey()
         context.startClipboard()
+        context.updates.start()
 
         Task {
             await context.engine.reloadAll()

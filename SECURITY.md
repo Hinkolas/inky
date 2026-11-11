@@ -44,7 +44,7 @@ version before reporting a problem that may already have been fixed.
 
 ## Network requests
 
-There are no accounts, analytics or telemetry. The two built-in background
+There are no accounts, analytics or telemetry. The built-in background
 services can be disabled in Settings:
 
 - Website icons: DuckDuckGo receives quicklink domain names, plus ordinary
@@ -53,6 +53,12 @@ services can be disabled in Settings:
   cannot reliably be recognized. Disable website icons for sensitive domains.
 - Currency rates: the same ECB reference-rate file is fetched for all users;
   the amount and currencies you type are not sent. Cached rates may be old.
+- Updates: release builds fetch the appcast of the latest GitHub release about
+  once a day, through Sparkle, without its optional system profile. The appcast
+  and each update archive must carry EdDSA signatures matching the public key
+  built into the app (`SUPublicEDKey`, with `SURequireSignedFeed` and
+  `SUVerifyUpdateBeforeExtraction`), and releases are signed with a Developer
+  ID and notarized. Debug builds and builds without the key never update.
 
 Opening a quicklink or a clipboard URL uses the selected/default application.
 Quicklink placeholders can intentionally put clipboard or selected text into

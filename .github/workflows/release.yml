@@ -1,0 +1,163 @@
+name: Release
+
+# Builds, signs, notarizes and drafts a release for a version tag. Inky
+# updates itself from the appcast of the latest published (non-pre-)release,
+# so nothing reaches users until the draft is reviewed and published.
+#
+# Repository secrets (see docs/RELEASING.md):
+#   DEVELOPER_ID_P12           base64 of the Developer ID Application certificate (.p12)
+#   DEVELOPER_ID_P12_PASSWORD  its password
+#   APPLE_TEAM_ID              the team the certificate belongs to
+#   NOTARY_API_KEY_P8          base64 of an App Store Connect API key (.p8)
+#   NOTARY_API_KEY_ID          its key ID
+#   NOTARY_API_ISSUER_ID       its issuer ID
+#   SPARKLE_PRIVATE_KEY        the EdDSA private key, as exported by `generate_keys -x`
+
+on:
+  push:
+    tags: ['v*']
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: Existing tag to release, such as v0.1.0
+        required: true
+
+permissions:
+  contents: write
+
+concurrency:
+  group: release-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  release:
+    runs-on: macos-15
+    timeout-minutes: 45
+    env:
+      DEVELOPER_DIR: /Applications/Xcode_26.2.app/Contents/Developer
+      TAG: ${{ inputs.tag || github.ref_name }}
+      REPOSITORY_URL: https://github.com/${{ github.repository }}
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          ref: ${{ inputs.tag || github.ref }}
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Version
+        run: |
+          version="${TAG#v}"
+          marketing=$(xcodebuild -project Inky.xcodeproj -scheme Inky -showBuildSettings -configuration Release \
+            | awk -F' = ' '/ MARKETING_VERSION = /{print $2; exit}')
+          # The tag of a pre-release, such as v0.1.0-alpha.1, carries the
+          # numeric version in front.
+          if [ "${version%%-*}" != "$marketing" ]; then
+            echo "::error::Tag $TAG does not match MARKETING_VERSION $marketing"; exit 1
+          fi
+          prerelease=false
+          case "$version" in *-*) prerelease=true ;; esac
+          # Sparkle compares build numbers. The count of commits only grows on main.
+          echo "VERSION=$version" >> "$GITHUB_ENV"
+          echo "BUILD=$(git rev-list --count HEAD)" >> "$GITHUB_ENV"
+          echo "PRERELEASE=$prerelease" >> "$GITHUB_ENV"
+
+      - name: Check the update key is set
+        run: |
+          key=$(xcodebuild -project Inky.xcodeproj -scheme Inky -showBuildSettings -configuration Release \
+            | awk -F' = ' '/ INKY_UPDATE_PUBLIC_KEY = /{print $2; exit}')
+          if [ -z "$key" ]; then
+            echo "::error::INKY_UPDATE_PUBLIC_KEY is empty, so the release could not update itself"; exit 1
+          fi
+
+      - name: Import the signing certificate
+        env:
+          P12: ${{ secrets.DEVELOPER_ID_P12 }}
+          P12_PASSWORD: ${{ secrets.DEVELOPER_ID_P12_PASSWORD }}
+        run: |
+          keychain="$RUNNER_TEMP/signing.keychain-db"
+          password=$(uuidgen)
+          echo "$P12" | base64 --decode > "$RUNNER_TEMP/certificate.p12"
+          security create-keychain -p "$password" "$keychain"
+          security set-keychain-settings -lut 3600 "$keychain"
+          security unlock-keychain -p "$password" "$keychain"
+          security import "$RUNNER_TEMP/certificate.p12" -k "$keychain" -P "$P12_PASSWORD" \
+            -T /usr/bin/codesign -T /usr/bin/security
+          security set-key-partition-list -S apple-tool:,apple: -s -k "$password" "$keychain"
+          security list-keychains -d user -s "$keychain" $(security list-keychains -d user | tr -d '"')
+          rm "$RUNNER_TEMP/certificate.p12"
+
+      - name: Archive
+        env:
+          TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
+        run: |
+          xcodebuild archive -project Inky.xcodeproj -scheme Inky -configuration Release \
+            -derivedDataPath build -archivePath "$RUNNER_TEMP/Inky.xcarchive" \
+            ARCHS='arm64 x86_64' ONLY_ACTIVE_ARCH=NO \
+            CURRENT_PROJECT_VERSION="$BUILD" \
+            CODE_SIGN_STYLE=Manual CODE_SIGN_IDENTITY="Developer ID Application" \
+            DEVELOPMENT_TEAM="$TEAM_ID" OTHER_CODE_SIGN_FLAGS=--timestamp
+          cat > "$RUNNER_TEMP/ExportOptions.plist" <<PLIST
+          <?xml version="1.0" encoding="UTF-8"?>
+          <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+          <plist version="1.0"><dict>
+            <key>method</key><string>developer-id</string>
+            <key>signingStyle</key><string>manual</string>
+            <key>teamID</key><string>$TEAM_ID</string>
+          </dict></plist>
+          PLIST
+          xcodebuild -exportArchive -archivePath "$RUNNER_TEMP/Inky.xcarchive" \
+            -exportOptionsPlist "$RUNNER_TEMP/ExportOptions.plist" -exportPath "$RUNNER_TEMP/export"
+          codesign --verify --deep --strict --verbose=2 "$RUNNER_TEMP/export/Inky.app"
+
+      - name: Notarize
+        env:
+          API_KEY: ${{ secrets.NOTARY_API_KEY_P8 }}
+          API_KEY_ID: ${{ secrets.NOTARY_API_KEY_ID }}
+          API_ISSUER_ID: ${{ secrets.NOTARY_API_ISSUER_ID }}
+        run: |
+          echo "$API_KEY" | base64 --decode > "$RUNNER_TEMP/notary.p8"
+          ditto -c -k --keepParent "$RUNNER_TEMP/export/Inky.app" "$RUNNER_TEMP/notarize.zip"
+          xcrun notarytool submit "$RUNNER_TEMP/notarize.zip" \
+            --key "$RUNNER_TEMP/notary.p8" --key-id "$API_KEY_ID" --issuer "$API_ISSUER_ID" --wait
+          rm "$RUNNER_TEMP/notary.p8"
+          xcrun stapler staple "$RUNNER_TEMP/export/Inky.app"
+          spctl --assess --type execute --verbose "$RUNNER_TEMP/export/Inky.app"
+
+      - name: Archive for download and the appcast
+        env:
+          GH_TOKEN: ${{ github.token }}
+          SPARKLE_PRIVATE_KEY: ${{ secrets.SPARKLE_PRIVATE_KEY }}
+        run: |
+          mkdir -p dist
+          archive="Inky-$VERSION.zip"
+          ditto -c -k --sequesterRsrc --keepParent "$RUNNER_TEMP/export/Inky.app" "dist/$archive"
+          # This version's section of the changelog, as the release notes.
+          awk -v v="$VERSION" '
+            /^## / { if (found) exit; if (index($0, "## " v) == 1) { found = 1; next } }
+            found { print }
+          ' CHANGELOG.md > "$RUNNER_TEMP/notes.md"
+          test -s "$RUNNER_TEMP/notes.md" || { echo "::error::CHANGELOG.md has no section for $VERSION"; exit 1; }
+          # A fragment without DOCTYPE or body is embedded in the appcast.
+          gh api markdown -f mode=gfm -f text="$(cat "$RUNNER_TEMP/notes.md")" > "dist/Inky-$VERSION.html"
+          sparkle=build/SourcePackages/artifacts/sparkle/Sparkle/bin
+          echo "$SPARKLE_PRIVATE_KEY" | "$sparkle/generate_appcast" --ed-key-file - \
+            --download-url-prefix "$REPOSITORY_URL/releases/download/$TAG/" \
+            --full-release-notes-url "$REPOSITORY_URL/releases/tag/$TAG" \
+            --link "$REPOSITORY_URL" \
+            --maximum-versions 1 \
+            dist
+          rm "dist/Inky-$VERSION.html"
+          (cd dist && shasum -a 256 "$archive" > "$archive.sha256")
+          ls -la dist
+
+      - name: Draft the release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          flags=(--draft --verify-tag --title "Inky $VERSION" --notes-file "$RUNNER_TEMP/notes.md")
+          if [ "$PRERELEASE" = true ]; then flags+=(--prerelease); fi
+          gh release create "$TAG" dist/* "${flags[@]}"
+
+      - name: Remove the signing keychain
+        if: always()
+        run: security delete-keychain "$RUNNER_TEMP/signing.keychain-db" || true

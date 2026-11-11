@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<!-- Merged with the keys Xcode generates. The update keys come from the
+	     INKY_UPDATE_* build settings; see docs/RELEASING.md. -->
+	<key>SUFeedURL</key>
+	<string>$(INKY_UPDATE_FEED_URL)</string>
+	<key>SUPublicEDKey</key>
+	<string>$(INKY_UPDATE_PUBLIC_KEY)</string>
+	<key>SUEnableAutomaticChecks</key>
+	<true/>
+	<key>SUVerifyUpdateBeforeExtraction</key>
+	<true/>
+	<key>SURequireSignedFeed</key>
+	<true/>
+</dict>
+</plist>

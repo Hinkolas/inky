@@ -6,6 +6,8 @@ First public alpha, in preparation.
 
 ### Included
 
+- Updates from GitHub Releases through Sparkle, with signed appcasts and archives,
+  for signed and notarized releases.
 - A welcome window on first launch for the hotkey, features, clipboard history
   and its permissions, online lookups and startup.
 - Application launching, fuzzy search, usage ranking and Spotlight file search.
@@ -33,8 +35,9 @@ First public alpha, in preparation.
 - Clipboard history is stored without application-level encryption. Passwords
   copied from apps that do not mark them as confidential are kept. Disable the
   module if needed.
-- Signing, notarization and automatic updates are not provided by `make release`.
-  Local builds use an ad-hoc signature.
+- Builds from source use an ad-hoc signature and do not update themselves.
+  Signed, notarized, self-updating downloads start with the first release made
+  by the release workflow.
 - Application-data matching for uninstalling is heuristic; review the selected files.
 - Currency conversions may use stale cached reference rates.
 - Lua extensions are planned and cannot be installed yet.

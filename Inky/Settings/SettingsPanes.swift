@@ -75,9 +75,41 @@ struct GeneralPane: View {
                 }
             }
 
+            UpdateSettings(updates: context.updates)
+
             WebsiteIconSettings(preferences: preferences, context: context)
         }
         .onAppear { launchesAtLogin = preferences.launchesAtLogin }
+    }
+}
+
+/// Whether and how Inky keeps itself up to date.
+private struct UpdateSettings: View {
+    @Bindable var updates: Updates
+
+    var body: some View {
+        Section {
+            if updates.isAvailable {
+                Toggle("Check for updates automatically", isOn: $updates.checksAutomatically)
+                Toggle("Download and install updates automatically", isOn: $updates.installsAutomatically)
+                    .disabled(!updates.checksAutomatically)
+                LabeledContent("Last checked") {
+                    HStack(spacing: 10) {
+                        Text(updates.lastCheck.map { $0.formatted(.relative(presentation: .named)) } ?? "Never")
+                        Button("Check Now") { updates.check() }
+                            .disabled(!updates.canCheck)
+                    }
+                }
+            } else {
+                LabeledContent("Updates", value: "Not available in this build")
+            }
+        } footer: {
+            if updates.isAvailable {
+                Text("Inky asks GitHub for its latest release, and installs only updates signed by its developer. Nothing about you or your Mac is sent.")
+            } else {
+                Text("Development builds, and builds made without the release signing key, do not update themselves.")
+            }
+        }
     }
 }
 

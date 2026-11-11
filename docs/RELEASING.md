@@ -32,10 +32,11 @@ separate maintainer actions. Local preparation does not perform them.
 
 Use `0.1.0-alpha.1` in the release title and `v0.1.0-alpha.1` for its Git tag.
 Keep `MARKETING_VERSION` / `CFBundleShortVersionString` at the numeric `0.1.0`;
-increment `CURRENT_PROJECT_VERSION` for every new distributed build. Record the
-build number and exact source commit in the release notes. The app currently
-shows the numeric version in About, so identify the alpha explicitly in the
-release title and download filename.
+the release workflow refuses a tag whose numeric part differs. It sets
+`CURRENT_PROJECT_VERSION` to the number of commits on the tagged commit, which
+Sparkle compares to decide what is newer; tag releases on `main` so it only
+grows. The app shows the numeric version in About, so identify a pre-release
+explicitly in the release title and download filename.
 
 On a clean checkout:
 
@@ -70,19 +71,54 @@ these checks pass. Do not describe untested versions or architectures as tested.
 
 ## Distribution
 
-`make release` creates an optimized, ad-hoc-signed local app. It does not produce
-a Developer ID signature, notarize an app, or set up updates. A source-only alpha
-can be published without a downloadable binary. If distributing a binary,
-choose whether the alpha will be signed/notarized and state its actual status.
+Pre-releases are source-only: tag them, publish a GitHub pre-release, and let
+people build them. `make release` creates an optimized, ad-hoc-signed local app
+that does not update itself.
 
-For a notarized download, use a Developer ID Application identity and the
-appropriate team when archiving, notarize with Apple's notary service, staple
-the result, and verify Gatekeeper acceptance on a clean Mac. Keep credentials
-in the keychain or protected CI secrets; never in source files. Follow Apple's
-[current notarization instructions](https://developer.apple.com/documentation/security/notarizing-macos-software-before-distribution).
+Releases are downloads that update themselves. Pushing a `v*` tag runs
+`.github/workflows/release.yml`, which archives a universal app, signs it with
+the Developer ID certificate, notarizes and staples it, zips it, writes a
+Sparkle appcast signed with the EdDSA key, and drafts a GitHub release with the
+zip, `appcast.xml` and a SHA-256 checksum. Nothing reaches users until the
+draft is published.
 
-Package only the intended Release app, its resource bundles and license
-notices. Do not include local preferences, clipboard data, caches or Debug
-sample data. Provide a SHA-256 checksum of each final download. Attach those
-files to a GitHub release marked **pre-release**, tied to the tested commit.
-Avoid marking the alpha as a stable/latest release.
+Installed apps read `releases/latest/download/appcast.xml`. GitHub's "latest"
+is the newest published release that is neither a draft nor a pre-release, so
+pre-releases never reach downloaded apps. Never publish a release whose
+appcast or archive was edited after the workflow signed them: Sparkle rejects
+it, and every installed copy then reports that the update could not be checked.
+
+### One-time setup
+
+1. **Update key.** Build once so Sparkle is resolved, then run
+   `build/SourcePackages/artifacts/sparkle/Sparkle/bin/generate_keys`. It
+   keeps the private key in your login keychain and prints the public key. Put
+   the public key in `INKY_UPDATE_PUBLIC_KEY` for both configurations in
+   `Inky.xcodeproj` and commit it. Export the private key with
+   `generate_keys -x sparkle-private-key`, store its contents as the
+   `SPARKLE_PRIVATE_KEY` secret, and delete the file. Back the key up: an app
+   can only be updated by archives signed with the key it was built with.
+2. **Developer ID.** In the Apple Developer Program, create a Developer ID
+   Application certificate, export it with its private key as a `.p12`, and
+   store `base64 -i cert.p12` as `DEVELOPER_ID_P12`, its password as
+   `DEVELOPER_ID_P12_PASSWORD`, and the team ID as `APPLE_TEAM_ID`.
+3. **Notarization.** Create an App Store Connect API key with the Developer
+   role and store `base64 -i AuthKey.p8` as `NOTARY_API_KEY_P8`, with
+   `NOTARY_API_KEY_ID` and `NOTARY_API_ISSUER_ID`.
+4. Protect the secrets with a `release` environment that requires your
+   approval, if more people get write access to the repository.
+
+### Each release
+
+1. Finish the CHANGELOG section for the version: the workflow uses it as the
+   release notes, in the draft and in Sparkle's update window.
+2. Tag the tested commit on `main` and push the tag.
+3. Download the draft's zip on a clean Mac: it opens without a Gatekeeper
+   warning, and `spctl --assess --type execute -v Inky.app` accepts it.
+4. Publish the draft. On a Mac with the previous release, Check for Updates
+   offers it, installs it and relaunches.
+
+Keep credentials in the keychain or protected CI secrets, never in source
+files. See Apple's
+[notarization instructions](https://developer.apple.com/documentation/security/notarizing-macos-software-before-distribution)
+and Sparkle's [publishing guide](https://sparkle-project.org/documentation/publishing/).

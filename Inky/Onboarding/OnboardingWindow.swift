@@ -111,7 +111,7 @@ struct OnboardingView: View {
                     case .hotkey: HotkeyStep(context: context)
                     case .features: FeaturesStep(context: context)
                     case .clipboard: ClipboardStep(context: context)
-                    case .online: OnlineStep(preferences: context.preferences)
+                    case .online: OnlineStep(preferences: context.preferences, updates: context.updates)
                     case .ready: ReadyStep(context: context)
                     }
                 }
@@ -499,6 +499,7 @@ private struct ClipboardStep: View {
 
 private struct OnlineStep: View {
     @Bindable var preferences: Preferences
+    @Bindable var updates: Updates
     @State private var launchesAtLogin = false
     @State private var loginError: String?
 
@@ -518,6 +519,11 @@ private struct OnlineStep: View {
                     }
                 } label: {
                     RowLabel("Exchange rates", detail: "One file for everyone; nothing you convert is sent.")
+                }
+                if updates.isAvailable {
+                    Toggle(isOn: $updates.checksAutomatically) {
+                        RowLabel("Check for updates", detail: "Asks GitHub for Inky’s latest release.")
+                    }
                 }
             } header: {
                 StepHeader(
