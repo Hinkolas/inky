@@ -1,6 +1,8 @@
 # Changelog
 
-## Unreleased
+## 0.1.0-alpha.2 — 2026-11-11
+
+Where the keyboard is in the launcher, which the first testers found unreliable.
 
 ### Fixed
 
