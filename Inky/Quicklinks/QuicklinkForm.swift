@@ -11,8 +11,6 @@ final class QuicklinkDraft: Identifiable {
     var name: String
     var link: String
     var openWith: String?
-    /// Not edited here, but kept.
-    private let isFallback: Bool
 
     init(_ quicklink: Quicklink? = nil) {
         id = quicklink?.id ?? UUID()
@@ -20,7 +18,6 @@ final class QuicklinkDraft: Identifiable {
         name = quicklink?.name ?? ""
         link = quicklink?.link ?? ""
         openWith = quicklink?.openWith
-        isFallback = quicklink?.isFallback ?? false
     }
 
     var isValid: Bool {
@@ -32,8 +29,7 @@ final class QuicklinkDraft: Identifiable {
             id: id,
             name: name.trimmingCharacters(in: .whitespaces),
             link: link.trimmingCharacters(in: .whitespacesAndNewlines),
-            openWith: openWith,
-            isFallback: isFallback
+            openWith: openWith
         )
     }
 

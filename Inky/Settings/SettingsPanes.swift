@@ -180,6 +180,83 @@ struct HotkeyRecorder: View {
     }
 }
 
+// MARK: - Fallback commands
+
+/// Which commands the launcher offers to send a search to, and in what order.
+struct FallbackPane: View {
+    static let title = "Fallback Commands"
+    static let icon = Icon.symbol("arrow.turn.down.right", tint: .orange)
+
+    let engine: SearchEngine
+
+    var body: some View {
+        let store = engine.fallbackStore
+        let chosen = engine.chosenFallbacks()
+        let listed = chosen.map(\.id)
+        let candidates = engine.fallbackCandidates()
+        // What is left to choose, under the module it comes from.
+        let remaining = candidates.compactMap { section -> ResultSection? in
+            let items = section.items.filter { !listed.contains($0.id) }
+            return items.isEmpty ? nil : ResultSection(title: section.title, items: items)
+        }
+        Form {
+            Section {
+                ForEach(Array(chosen.enumerated()), id: \.element.id) { index, item in
+                    HStack(spacing: 10) {
+                        IconView(icon: item.icon, size: 20)
+                        Text(item.title)
+                        Text(item.kind)
+                            .foregroundStyle(.secondary)
+                        Spacer()
+                        Button("Move Up", systemImage: "chevron.up") {
+                            store.move(item.id, by: -1, among: listed)
+                        }
+                        .disabled(index == 0)
+                        .help("Offer \(item.title) earlier")
+                        Button("Move Down", systemImage: "chevron.down") {
+                            store.move(item.id, by: 1, among: listed)
+                        }
+                        .disabled(index == chosen.count - 1)
+                        .help("Offer \(item.title) later")
+                        Button("Remove", systemImage: "minus") {
+                            store.remove(item.id)
+                        }
+                        .help("Stop offering \(item.title)")
+                    }
+                    .labelStyle(.iconOnly)
+                }
+                if candidates.isEmpty {
+                    Text("No command asks for exactly one argument yet. A quicklink with one does.")
+                        .foregroundStyle(.secondary)
+                } else {
+                    Menu {
+                        ForEach(remaining) { section in
+                            Section(section.title) {
+                                ForEach(section.items) { item in
+                                    Button(item.title) { store.add(item.id) }
+                                }
+                            }
+                        }
+                    } label: {
+                        Label("Add Fallback Command", systemImage: "plus")
+                    }
+                    .menuStyle(.borderlessButton)
+                    .fixedSize()
+                    .disabled(remaining.isEmpty)
+                }
+            } header: {
+                PaneHeader(
+                    icon: Self.icon,
+                    title: Self.title,
+                    summary: "Send what you typed somewhere else, such as the web."
+                )
+            } footer: {
+                Text("Listed below the results of every search, with what you typed as their argument. When nothing was found, Return runs the first one. Any command that asks for exactly one argument can be a fallback, such as a quicklink with one.")
+            }
+        }
+    }
+}
+
 // MARK: - About
 
 struct AboutPane: View {
@@ -250,7 +327,6 @@ struct ModulePane: View {
                 FileSearchSettings(context: context)
             case "quicklinks":
                 QuicklinkSettings(store: context.quicklinks)
-                FallbackSettings(store: context.quicklinks)
             default:
                 EmptyView()
             }
@@ -402,57 +478,6 @@ private struct QuicklinkSettings: View {
         }
         .sheet(item: $draft) { draft in
             QuicklinkSheet(draft: draft) { store.save(draft.quicklink) }
-        }
-    }
-}
-
-/// Which quicklinks the launcher offers to send a search to, and in what order.
-private struct FallbackSettings: View {
-    let store: QuicklinkStore
-
-    /// The same quicklinks are rows of the section above. A form tells its
-    /// rows apart by id across sections, so these need ids of their own.
-    private struct Row: Identifiable {
-        let index: Int
-        let quicklink: Quicklink
-
-        var id: String { "fallback:\(quicklink.id.uuidString)" }
-    }
-
-    var body: some View {
-        let candidates = store.fallbackCandidates
-        Section {
-            if candidates.isEmpty {
-                Text("None of your quicklinks asks for exactly one argument.")
-                    .foregroundStyle(.secondary)
-            }
-            ForEach(candidates.enumerated().map(Row.init)) { row in
-                let (index, quicklink) = (row.index, row.quicklink)
-                HStack(spacing: 10) {
-                    Text(quicklink.name)
-                    Spacer()
-                    Button("Move Up", systemImage: "chevron.up") {
-                        store.moveFallbackCandidate(quicklink.id, by: -1)
-                    }
-                    .disabled(index == 0)
-                    .help("Offer \(quicklink.name) earlier")
-                    Button("Move Down", systemImage: "chevron.down") {
-                        store.moveFallbackCandidate(quicklink.id, by: 1)
-                    }
-                    .disabled(index == candidates.count - 1)
-                    .help("Offer \(quicklink.name) later")
-                    Toggle("Use \(quicklink.name) as a fallback", isOn: Binding(
-                        get: { quicklink.isFallback },
-                        set: { store.setFallback(quicklink.id, $0) }
-                    ))
-                    .labelsHidden()
-                }
-                .labelStyle(.iconOnly)
-            }
-        } header: {
-            Text("Fallback commands")
-        } footer: {
-            Text("Listed below the results of every search, with what you typed as their argument. When nothing was found, Return runs the first one. Any quicklink with exactly one argument can be a fallback.")
         }
     }
 }

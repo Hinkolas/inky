@@ -4,6 +4,7 @@ import SwiftUI
 
 enum SettingsPane: Hashable {
     case general
+    case fallbacks
     case about
     case module(String)
 }
@@ -44,11 +45,12 @@ final class SettingsWindowController: NSWindowController {
         fatalError("init(coder:) is not supported")
     }
 
-    /// `pane` is "general", "about" or a module id.
+    /// `pane` is "general", "fallbacks", "about" or a module id.
     func show(pane: String? = nil, activating: Bool = true) {
         switch pane {
         case nil: break
         case "general": navigation.pane = .general
+        case "fallbacks": navigation.pane = .fallbacks
         case "about": navigation.pane = .about
         case let id?: navigation.pane = .module(id)
         }
@@ -86,6 +88,10 @@ struct SettingsView: View {
                         SidebarLabel("General", icon: .symbol("gearshape.fill", tint: .gray))
                             .tag(SettingsPane.general)
                     }
+                    if matches(FallbackPane.title) {
+                        SidebarLabel(FallbackPane.title, icon: FallbackPane.icon)
+                            .tag(SettingsPane.fallbacks)
+                    }
                     if matches("About") {
                         SidebarLabel("About", icon: .symbol("info", tint: .indigo))
                             .tag(SettingsPane.about)
@@ -107,6 +113,8 @@ struct SettingsView: View {
                 switch navigation.pane {
                 case .general:
                     GeneralPane(preferences: context.preferences, context: context)
+                case .fallbacks:
+                    FallbackPane(engine: context.engine)
                 case .about:
                     AboutPane()
                 case .module(let id):

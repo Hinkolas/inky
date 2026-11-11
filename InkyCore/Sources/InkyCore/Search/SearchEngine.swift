@@ -1,4 +1,5 @@
 import Foundation
+import Observation
 
 /// Turns a query into ranked sections by asking every enabled module.
 ///
@@ -6,19 +7,22 @@ import Foundation
 /// keystroke are ready in the same frame. The index sits behind this type on
 /// purpose: swapping it for a persistent one later does not touch modules.
 @MainActor
+@Observable
 public final class SearchEngine {
     public let modules: [any Module]
     public let usage: UsageStore
+    /// Which commands the user chose as fallbacks.
+    public let fallbackStore: FallbackStore
 
     /// Consulted on every query, so toggling a module takes effect at once.
-    public var isEnabled: @MainActor (String) -> Bool = { _ in true }
+    @ObservationIgnored public var isEnabled: @MainActor (String) -> Bool = { _ in true }
     /// Called after the index changed and visible results may be stale.
-    public var onChange: (@MainActor () -> Void)?
+    @ObservationIgnored public var onChange: (@MainActor () -> Void)?
 
-    public var maxResults = 50
-    public var suggestionCount = 6
+    @ObservationIgnored public var maxResults = 50
+    @ObservationIgnored public var suggestionCount = 6
     /// Matches weaker than this are noise and are dropped.
-    public var minimumScore = 0.3
+    @ObservationIgnored public var minimumScore = 0.3
 
     private struct Entry {
         let item: ResultItem
@@ -26,12 +30,17 @@ public final class SearchEngine {
         let keywords: [FuzzyMatcher.Target]
     }
 
-    private var index: [String: [Entry]] = [:]
-    private var lastReload: [String: Date] = [:]
+    @ObservationIgnored private var index: [String: [Entry]] = [:]
+    @ObservationIgnored private var lastReload: [String: Date] = [:]
+    /// The candidates of each module that can be fallback commands. Observed,
+    /// so that settings list them as they are loaded.
+    private var fallbackIndex: [String: [ResultItem]] = [:]
 
-    public init(modules: [any Module], usage: UsageStore) {
+    /// Without `fallbacks`, the choice of fallback commands is kept in memory only.
+    public init(modules: [any Module], usage: UsageStore, fallbacks: FallbackStore? = nil) {
         self.modules = modules
         self.usage = usage
+        fallbackStore = fallbacks ?? FallbackStore(fileURL: nil)
         for module in modules {
             module.onChange = { [weak self, weak module] in
                 guard let self, let module else { return }
@@ -68,6 +77,7 @@ public final class SearchEngine {
                 keywords: item.keywords.map(FuzzyMatcher.Target.init)
             )
         }
+        fallbackIndex[module.id] = items.filter(\.canBeFallback)
         lastReload[module.id] = .now
         onChange?()
     }
@@ -142,8 +152,24 @@ public final class SearchEngine {
         let query = query.trimmingCharacters(in: .whitespaces)
         guard !query.isEmpty else { return nil }
 
-        let items = enabledModules.flatMap { $0.fallbackResults(for: query) }
+        let items = chosenFallbacks().map(\.asFallback)
         return items.isEmpty ? nil : ResultSection(title: Self.fallbackTitle(for: query), items: items)
+    }
+
+    /// Every command that can be a fallback, under the module it comes from.
+    public func fallbackCandidates() -> [ResultSection] {
+        enabledModules.compactMap { module in
+            let items = fallbackIndex[module.id] ?? []
+            return items.isEmpty ? nil : ResultSection(title: module.info.title, items: items)
+        }
+    }
+
+    /// The commands the user chose as fallbacks, first choice first. A choice
+    /// whose command is not there, as when its module is off, is left out.
+    public func chosenFallbacks() -> [ResultItem] {
+        let candidates = fallbackCandidates().flatMap(\.items)
+        let byID = Dictionary(candidates.map { ($0.id, $0) }, uniquingKeysWith: { first, _ in first })
+        return fallbackStore.ids.compactMap { byID[$0] }
     }
 
     /// A long query is cut short, so the title still says what the section is.

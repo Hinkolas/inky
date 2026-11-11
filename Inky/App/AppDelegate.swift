@@ -123,6 +123,11 @@ enum DebugLaunch {
         }
         if arguments.contains("--settings") {
             context.showSettings(pane: value(after: "--settings"), activating: !quiet)
+            // A quiet run loads nothing by itself, and the fallback commands
+            // are listed from what the modules offer.
+            if quiet {
+                Task { await context.engine.reloadAll() }
+            }
         }
         guard !Set(arguments).isDisjoint(with: ["--show", "--query", "--new-quicklink", "--quicklinks"]) else {
             return

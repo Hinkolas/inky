@@ -51,6 +51,11 @@ final class AppContext {
         fileModule.maxResults = preferences.fileSearchLimit
 
         let usage = UsageStore(fileURL: directory.appendingPathComponent("usage.json"))
+        // Until the user chooses, the fallbacks are what the quicklinks say.
+        let fallbacks = FallbackStore(
+            fileURL: directory.appendingPathComponent("fallbacks.json"),
+            initial: quicklinks.initialFallbacks
+        )
 
         // This order is the order of sections when nothing is typed.
         engine = SearchEngine(
@@ -64,13 +69,14 @@ final class AppContext {
                 ColorModule(usage: usage),
                 fileModule,
             ],
-            usage: usage
+            usage: usage,
+            fallbacks: fallbacks
         )
         engine.isEnabled = { [preferences] id in preferences.isEnabled(id) }
 
         launcher = LauncherController(engine: engine, quicklinks: quicklinks)
         launcher.model.openSettings = { [unowned self] in showSettings() }
-        launcher.model.configureFallbacks = { [unowned self] in showSettings(pane: quicklinkModule.id) }
+        launcher.model.configureFallbacks = { [unowned self] in showSettings(pane: "fallbacks") }
 
         commands.openSettings = { [unowned self] in showSettings() }
         commands.createQuicklink = { [unowned self] in launcher.model.editQuicklink(nil) }

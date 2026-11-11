@@ -8,41 +8,24 @@ public struct Quicklink: Codable, Identifiable, Sendable, Hashable {
     public var link: String
     /// Bundle identifier of the app to open the link with. Nil uses the default app.
     public var openWith: String?
-    /// Whether the launcher offers to send any search to this quicklink.
-    /// Only counts while `canBeFallback`.
-    public var isFallback: Bool
 
-    public init(id: UUID = UUID(), name: String, link: String, openWith: String? = nil, isFallback: Bool = false) {
+    public init(id: UUID = UUID(), name: String, link: String, openWith: String? = nil) {
         self.id = id
         self.name = name
         self.link = link
         self.openWith = openWith
-        self.isFallback = isFallback
-    }
-
-    public init(from decoder: Decoder) throws {
-        let container = try decoder.container(keyedBy: CodingKeys.self)
-        id = try container.decode(UUID.self, forKey: .id)
-        name = try container.decode(String.self, forKey: .name)
-        let link = try container.decode(String.self, forKey: .link)
-        self.link = link
-        openWith = try container.decodeIfPresent(String.self, forKey: .openWith)
-        // Files from before fallbacks existed say nothing. There, the searches
-        // Inky came with are fallbacks, as they are on a new install.
-        isFallback = try container.decodeIfPresent(Bool.self, forKey: .isFallback)
-            ?? Self.starters.contains { $0.isFallback && $0.link == link }
     }
 
     public var template: LinkTemplate { LinkTemplate(link) }
 
-    /// A fallback gets the search as its argument, so it must ask for exactly one.
-    public var canBeFallback: Bool { template.arguments.count == 1 }
+    /// The id of the result the launcher lists the quicklink as.
+    public var itemID: String { "quicklink:\(id.uuidString)" }
 
     /// What a new install starts with, so the features are discoverable.
     static let starters = [
-        Quicklink(name: "Search DuckDuckGo", link: "https://duckduckgo.com/?q={argument name=\"Query\"}", isFallback: true),
-        Quicklink(name: "Search GitHub", link: "https://github.com/search?q={argument name=\"Query\"}", isFallback: true),
-        Quicklink(name: "Search Wikipedia", link: "https://en.wikipedia.org/w/index.php?search={argument name=\"Query\"}", isFallback: true),
+        Quicklink(name: "Search DuckDuckGo", link: "https://duckduckgo.com/?q={argument name=\"Query\"}"),
+        Quicklink(name: "Search GitHub", link: "https://github.com/search?q={argument name=\"Query\"}"),
+        Quicklink(name: "Search Wikipedia", link: "https://en.wikipedia.org/w/index.php?search={argument name=\"Query\"}"),
         Quicklink(name: "Downloads", link: "~/Downloads"),
     ]
 
@@ -64,6 +47,9 @@ public struct Quicklink: Codable, Identifiable, Sendable, Hashable {
 @Observable
 public final class QuicklinkStore {
     public private(set) var quicklinks: [Quicklink] = []
+    /// The quicklinks to start the fallback commands with, as the ids of
+    /// their results, for when the user has not chosen any yet.
+    @ObservationIgnored public private(set) var initialFallbacks: [String] = []
 
     @ObservationIgnored public var onChange: (@MainActor () -> Void)?
     @ObservationIgnored private let fileURL: URL?
@@ -72,12 +58,27 @@ public final class QuicklinkStore {
     public init(fileURL: URL?) {
         self.fileURL = fileURL
         guard let fileURL else { return }
+        var saidToBeFallback: [UUID: Bool] = [:]
         if let data = try? Data(contentsOf: fileURL) {
             quicklinks = (try? JSONDecoder().decode([Quicklink].self, from: data)) ?? []
+            for quicklink in (try? JSONDecoder().decode([FormerQuicklink].self, from: data)) ?? [] {
+                saidToBeFallback[quicklink.id] = quicklink.isFallback
+            }
         } else {
             quicklinks = Quicklink.starters
             write()
         }
+        // Where the file says nothing, the searches Inky came with are fallbacks.
+        let searches = Set(Quicklink.starters.filter { $0.template.arguments.count == 1 }.map(\.link))
+        initialFallbacks = quicklinks
+            .filter { saidToBeFallback[$0.id] ?? searches.contains($0.link) }
+            .map(\.itemID)
+    }
+
+    /// Quicklinks used to say themselves whether they were fallback commands.
+    private struct FormerQuicklink: Decodable {
+        var id: UUID
+        var isFallback: Bool?
     }
 
     /// Adds the quicklink, or replaces the one with the same id.
@@ -92,42 +93,6 @@ public final class QuicklinkStore {
 
     public func delete(_ id: UUID) {
         quicklinks.removeAll { $0.id == id }
-        didChange()
-    }
-
-    // MARK: - Fallbacks
-
-    /// The quicklinks that could be fallbacks, in the order they are offered.
-    public var fallbackCandidates: [Quicklink] {
-        quicklinks.filter(\.canBeFallback)
-    }
-
-    /// The quicklinks the launcher offers to send a search to, first choice first.
-    public var fallbacks: [Quicklink] {
-        fallbackCandidates.filter(\.isFallback)
-    }
-
-    public func setFallback(_ id: UUID, _ isFallback: Bool) {
-        guard let index = quicklinks.firstIndex(where: { $0.id == id }),
-              quicklinks[index].isFallback != isFallback
-        else { return }
-        quicklinks[index].isFallback = isFallback
-        didChange()
-    }
-
-    /// Moves a quicklink up (negative) or down among `fallbackCandidates`.
-    public func moveFallbackCandidate(_ id: UUID, by offset: Int) {
-        // The candidates trade places with each other; the quicklinks between
-        // them stay where they are.
-        let slots = quicklinks.indices.filter { quicklinks[$0].canBeFallback }
-        guard let position = slots.firstIndex(where: { quicklinks[$0].id == id }),
-              slots.indices.contains(position + offset), offset != 0
-        else { return }
-        var candidates = slots.map { quicklinks[$0] }
-        candidates.insert(candidates.remove(at: position), at: position + offset)
-        for (slot, quicklink) in zip(slots, candidates) {
-            quicklinks[slot] = quicklink
-        }
         didChange()
     }
 

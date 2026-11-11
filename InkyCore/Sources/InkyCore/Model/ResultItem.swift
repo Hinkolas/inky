@@ -68,6 +68,34 @@ public struct ResultItem: Identifiable, Sendable {
     }
 }
 
+public extension ResultItem {
+    /// Whether the user can choose the item as a fallback command. It then
+    /// gets the search as its argument, so it must ask for exactly one.
+    var canBeFallback: Bool { arguments.count == 1 }
+
+    /// The item as a fallback command: its actions take the search as the
+    /// argument instead of asking for one.
+    var asFallback: ResultItem {
+        ResultItem(
+            // Not the id it has as a result: both can be listed at once.
+            id: "fallback:\(id)",
+            title: title,
+            subtitle: subtitle,
+            icon: icon,
+            kind: kind,
+            actions: actions.map { action in
+                var action = action
+                action.perform = { [perform = action.perform] context in
+                    var context = context
+                    context.arguments = [context.query.trimmingCharacters(in: .whitespaces)]
+                    try await perform(context)
+                }
+                return action
+            }
+        )
+    }
+}
+
 public struct ResultSection: Identifiable, Sendable {
     public var title: String
     public var items: [ResultItem]

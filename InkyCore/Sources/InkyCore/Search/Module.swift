@@ -16,7 +16,7 @@ public struct ModuleInfo: Sendable {
 ///
 /// This is the contract every built-in feature is written against, and the one
 /// scripted extensions will be hosted behind: an extension is a module that
-/// does not come with Inky. Today a module contributes results, in up to four
+/// does not come with Inky. Today a module contributes results, in up to three
 /// ways, and implements only the ones it needs:
 ///
 /// - `candidates` are indexed by the engine, which matches and ranks them
@@ -25,9 +25,11 @@ public struct ModuleInfo: Sendable {
 ///   must return immediately. Use it for answers, such as a calculation.
 /// - `deferredResults` may take time and arrive after the rest. Use it for
 ///   searches that leave the process, such as the file index.
-/// - `fallbackResults` take the query somewhere else. They are offered below
-///   everything that was found, and are all there is when nothing was. Like
-///   instant results they must return immediately.
+///
+/// A candidate that asks for exactly one argument is a command the user can
+/// choose as a fallback, see `FallbackStore`. The launcher then offers it
+/// below every search, and runs it with what was typed as that argument. The
+/// module does nothing for this but declare the argument.
 @MainActor
 public protocol Module: AnyObject {
     var id: String { get }
@@ -44,7 +46,6 @@ public protocol Module: AnyObject {
     func candidates() async -> [ResultItem]
     func instantResults(for query: String) -> [ResultItem]
     func deferredResults(for query: String) async -> ResultSection?
-    func fallbackResults(for query: String) -> [ResultItem]
 }
 
 public extension Module {
@@ -52,5 +53,4 @@ public extension Module {
     func candidates() async -> [ResultItem] { [] }
     func instantResults(for query: String) -> [ResultItem] { [] }
     func deferredResults(for query: String) async -> ResultSection? { nil }
-    func fallbackResults(for query: String) -> [ResultItem] { [] }
 }

@@ -10,7 +10,7 @@ Inky is at an early stage. The core works and is meant to be built on.
 
 - **Applications**: fuzzy search over installed apps, ranked by how often and how recently you pick them.
 - **Quicklinks**: named shortcuts to websites, folders and app links. Placeholders such as `{argument name="Query"}`, `{clipboard}` and `{selection}` are filled in when the link opens; arguments are typed right in the search bar. Websites show their own icon.
-- **Fallback commands**: every search can be sent on to a quicklink, such as a web search. They are listed below the results, and are all there is when nothing was found. Pick which quicklinks in Settings.
+- **Fallback commands**: every search can be sent on to a command that takes one argument, such as a quicklink for a web search. They are listed below the results, and are all there is when nothing was found. Choose them, and their order, under Settings → Fallback Commands.
 - **Calculator**: type `128 * 3 + 4`, `20% off 80` or `sqrt(2) ^ 10`, press Return to copy the result. It converts units (`5 ft 10 in in cm`, `72 F to C`, `1 GiB in MB`), currencies (`100 usd in eur`), number bases (`255 in hex`, `0xFF`) and the units of a web page (`2rem in px`, with the size of a rem set in Settings).
 - **Time**: `time in tokyo`, `5pm london in berlin`, `time diff san francisco`, `monday in 3 weeks`, `days until 24 dec`.
 - **Color**: type a color the way a stylesheet writes it, such as `#ff6363`, `rgb(255 99 99 / 50%)` or `oklch(0.7 0.19 23)`, to see it and copy it written another way. `#fa32fa in rgb` asks for one; ⌘K lists them all, from hex and HSL to OKLCH and a color in Swift. The one you copy most comes first.
