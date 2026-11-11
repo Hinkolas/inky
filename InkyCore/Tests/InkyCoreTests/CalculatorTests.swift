@@ -284,11 +284,11 @@ import Testing
     }
 
     @MainActor
-    @Test func theProviderIsToldHowLargeARemIs() {
-        let provider = CalculatorProvider(calculator: Calculator(locale: Locale(identifier: "en_US")))
-        #expect(provider.instantResults(for: "2rem in px").first?.title == "32 px")
-        provider.pixelsPerRem = 10
-        #expect(provider.instantResults(for: "2rem in px").first?.title == "20 px")
+    @Test func theModuleIsToldHowLargeARemIs() {
+        let module = CalculatorModule(calculator: Calculator(locale: Locale(identifier: "en_US")))
+        #expect(module.instantResults(for: "2rem in px").first?.title == "32 px")
+        module.pixelsPerRem = 10
+        #expect(module.instantResults(for: "2rem in px").first?.title == "20 px")
     }
 
     // MARK: - Bases

@@ -228,12 +228,12 @@ import Testing
         #expect(ColorRequest(input) == nil)
     }
 
-    // MARK: - The provider
+    // MARK: - The module
 
     @MainActor
     @Test func aColorIsOneRowWithEveryWayToWriteIt() throws {
-        let provider = ColorProvider()
-        let rows = provider.instantResults(for: "#ff6363")
+        let module = ColorModule()
+        let rows = module.instantResults(for: "#ff6363")
         let row = try #require(rows.first)
         #expect(rows.count == 1)
         #expect(row.title == "rgb(255, 99, 99)")
@@ -246,57 +246,57 @@ import Testing
         #expect(row.actions.count == ColorValue.Format.allCases.count)
         #expect(Set(row.actions.map(\.id)).count == row.actions.count)
 
-        #expect(provider.instantResults(for: "oklch(0.7 0.19 23)").first?.actions.first?.title == "Copy as Hex")
-        #expect(provider.instantResults(for: "lab(50 20 20)").first?.actions.first?.title == "Copy as Hex")
+        #expect(module.instantResults(for: "oklch(0.7 0.19 23)").first?.actions.first?.title == "Copy as Hex")
+        #expect(module.instantResults(for: "lab(50 20 20)").first?.actions.first?.title == "Copy as Hex")
     }
 
     @MainActor
     @Test func theWayAskedForIsTheAnswer() throws {
-        let provider = ColorProvider()
-        let row = try #require(provider.instantResults(for: "#fa32fa in rgb").first)
+        let module = ColorModule()
+        let row = try #require(module.instantResults(for: "#fa32fa in rgb").first)
         #expect(row.title == "rgb(250, 50, 250)")
         #expect(row.subtitle == nil)
         #expect(row.actions.first?.title == "Copy as RGB")
         #expect(row.actions.count == ColorValue.Format.allCases.count)
 
-        #expect(provider.instantResults(for: "rgb(255,0,0) in hsl").first?.title == "hsl(0, 100%, 50%)")
+        #expect(module.instantResults(for: "rgb(255,0,0) in hsl").first?.title == "hsl(0, 100%, 50%)")
         // The way it is written already can be asked for too.
-        #expect(provider.instantResults(for: "#f63 in hex").first?.title == "#FF6633")
-        #expect(provider.instantResults(for: "#fff in").isEmpty)
+        #expect(module.instantResults(for: "#f63 in hex").first?.title == "#FF6633")
+        #expect(module.instantResults(for: "#fff in").isEmpty)
     }
 
     @MainActor
     @Test func theWayCopiedMostComesFirst() throws {
         let usage = UsageStore(fileURL: nil)
-        let provider = ColorProvider(usage: usage)
-        #expect(provider.formats(for: .hex).first == .rgb)
-        #expect(provider.formats(for: .hex).last == .hex)
+        let module = ColorModule(usage: usage)
+        #expect(module.formats(for: .hex).first == .rgb)
+        #expect(module.formats(for: .hex).last == .hex)
 
-        usage.record(ColorProvider.key(from: .hex, to: .oklch), query: "")
-        #expect(provider.formats(for: .hex).prefix(2) == [.oklch, .rgb])
-        #expect(provider.instantResults(for: "#ff6363").first?.title == "oklch(0.7 0.191 23.4)")
+        usage.record(ColorModule.key(from: .hex, to: .oklch), query: "")
+        #expect(module.formats(for: .hex).prefix(2) == [.oklch, .rgb])
+        #expect(module.instantResults(for: "#ff6363").first?.title == "oklch(0.7 0.191 23.4)")
         // What is copied from one kind of color says nothing about another.
-        #expect(provider.formats(for: .rgb).first == .hex)
+        #expect(module.formats(for: .rgb).first == .hex)
 
-        usage.record(ColorProvider.key(from: .hex, to: .hsl), query: "")
-        usage.record(ColorProvider.key(from: .hex, to: .hsl), query: "")
-        #expect(provider.formats(for: .hex).prefix(3) == [.hsl, .oklch, .rgb])
-        #expect(Set(provider.formats(for: .hex)).count == ColorValue.Format.allCases.count)
+        usage.record(ColorModule.key(from: .hex, to: .hsl), query: "")
+        usage.record(ColorModule.key(from: .hex, to: .hsl), query: "")
+        #expect(module.formats(for: .hex).prefix(3) == [.hsl, .oklch, .rgb])
+        #expect(Set(module.formats(for: .hex)).count == ColorValue.Format.allCases.count)
         // Asking for one still gives that one.
-        #expect(provider.instantResults(for: "#ff6363 in rgb").first?.title == "rgb(255, 99, 99)")
+        #expect(module.instantResults(for: "#ff6363 in rgb").first?.title == "rgb(255, 99, 99)")
     }
 
     @MainActor
     @Test func whatIsNotAColorHasNoRow() {
-        let provider = ColorProvider()
+        let module = ColorModule()
         for query in ["red", "ff6363", "#", "#12", "rgb", "safari", "255, 99, 99", "#ff6363 and more", "255 in hex"] {
-            #expect(provider.instantResults(for: query).isEmpty, "\(query)")
+            #expect(module.instantResults(for: query).isEmpty, "\(query)")
         }
     }
 
     @MainActor
     @Test func theSwatchIsOfAColorThatCanBeShown() throws {
-        let rows = ColorProvider().instantResults(for: "oklch(0.8 0.4 145)")
+        let rows = ColorModule().instantResults(for: "oklch(0.8 0.4 145)")
         guard case .swatch(let red, let green, let blue, _) = try #require(rows.first).icon else {
             Issue.record("No swatch")
             return

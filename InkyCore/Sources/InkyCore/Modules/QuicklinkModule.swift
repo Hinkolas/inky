@@ -2,9 +2,9 @@ import Foundation
 
 /// The user's quicklinks. Arguments in a link become inputs in the search bar.
 @MainActor
-public final class QuicklinkProvider: Provider {
+public final class QuicklinkModule: Module {
     public let id = "quicklinks"
-    public let info = ProviderInfo(
+    public let info = ModuleInfo(
         title: "Quicklinks",
         summary: "Open websites, folders and deeplinks, filling in arguments as you go.",
         icon: .symbol("link", tint: .purple)

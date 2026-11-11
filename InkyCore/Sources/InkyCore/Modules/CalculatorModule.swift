@@ -3,9 +3,9 @@ import Observation
 
 /// Answers calculations and conversions as they are typed.
 @MainActor
-public final class CalculatorProvider: Provider {
+public final class CalculatorModule: Module {
     public let id = "calculator"
-    public let info = ProviderInfo(
+    public let info = ModuleInfo(
         title: "Calculator",
         summary: "Type a calculation or a conversion to see its result. Return copies it.",
         icon: .symbol("plus.forwardslash.minus", tint: .orange)

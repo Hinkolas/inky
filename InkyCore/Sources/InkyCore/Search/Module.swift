@@ -1,6 +1,6 @@
 import Foundation
 
-public struct ProviderInfo: Sendable {
+public struct ModuleInfo: Sendable {
     public var title: String
     public var summary: String
     public var icon: Icon
@@ -12,11 +12,12 @@ public struct ProviderInfo: Sendable {
     }
 }
 
-/// A source of launcher results.
+/// A self-contained part of Inky, such as the calculator or quicklinks.
 ///
 /// This is the contract every built-in feature is written against, and the one
-/// scripted extensions will be hosted behind. A provider contributes results in
-/// up to four ways, and implements only the ones it needs:
+/// scripted extensions will be hosted behind: an extension is a module that
+/// does not come with Inky. Today a module contributes results, in up to four
+/// ways, and implements only the ones it needs:
 ///
 /// - `candidates` are indexed by the engine, which matches and ranks them
 ///   against the query. Use it for a known set of things: apps, commands, links.
@@ -28,9 +29,9 @@ public struct ProviderInfo: Sendable {
 ///   everything that was found, and are all there is when nothing was. Like
 ///   instant results they must return immediately.
 @MainActor
-public protocol Provider: AnyObject {
+public protocol Module: AnyObject {
     var id: String { get }
-    var info: ProviderInfo { get }
+    var info: ModuleInfo { get }
 
     /// Set by the engine. Call it when `candidates` would return something
     /// new, or when results that may be on screen are no longer right.
@@ -46,7 +47,7 @@ public protocol Provider: AnyObject {
     func fallbackResults(for query: String) -> [ResultItem]
 }
 
-public extension Provider {
+public extension Module {
     var refreshInterval: TimeInterval? { nil }
     func candidates() async -> [ResultItem] { [] }
     func instantResults(for query: String) -> [ResultItem] { [] }

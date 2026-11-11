@@ -2,9 +2,9 @@ import AppKit
 
 /// Commands that act on the Mac itself.
 @MainActor
-public final class SystemProvider: Provider {
+public final class SystemModule: Module {
     public let id = "system"
-    public let info = ProviderInfo(
+    public let info = ModuleInfo(
         title: "System",
         summary: "Lock, sleep, restart and other commands for this Mac.",
         icon: .symbol("gearshape.fill", tint: .gray)

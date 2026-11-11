@@ -3,9 +3,9 @@ import Testing
 @testable import InkyCore
 
 @MainActor
-private final class StubProvider: Provider {
+private final class StubModule: Module {
     let id: String
-    let info: ProviderInfo
+    let info: ModuleInfo
     var onChange: (@MainActor () -> Void)?
     var titles: [String]
     var instant: [String: String] = [:]
@@ -13,7 +13,7 @@ private final class StubProvider: Provider {
     init(id: String, titles: [String]) {
         self.id = id
         self.titles = titles
-        info = ProviderInfo(title: id.capitalized, summary: "", icon: .symbol("star", tint: .gray))
+        info = ModuleInfo(title: id.capitalized, summary: "", icon: .symbol("star", tint: .gray))
     }
 
     private func item(_ title: String) -> ResultItem {
@@ -33,24 +33,24 @@ private final class StubProvider: Provider {
         sections.flatMap(\.items).map(\.title)
     }
 
-    private func makeEngine(_ providers: StubProvider...) async -> SearchEngine {
-        let engine = SearchEngine(providers: providers, usage: UsageStore(fileURL: nil))
+    private func makeEngine(_ modules: StubModule...) async -> SearchEngine {
+        let engine = SearchEngine(modules: modules, usage: UsageStore(fileURL: nil))
         await engine.reloadAll()
         return engine
     }
 
     @Test func ranksBestMatchFirst() async {
-        let engine = await makeEngine(StubProvider(id: "apps", titles: ["Disk Safety", "Safari", "Slack"]))
+        let engine = await makeEngine(StubModule(id: "apps", titles: ["Disk Safety", "Safari", "Slack"]))
         #expect(titles(engine.results(for: "saf")) == ["Safari", "Disk Safety"])
     }
 
     @Test func dropsNoise() async {
-        let engine = await makeEngine(StubProvider(id: "apps", titles: ["Safari"]))
+        let engine = await makeEngine(StubModule(id: "apps", titles: ["Safari"]))
         #expect(engine.results(for: "zzz").isEmpty)
     }
 
     @Test func learnsWhatTheUserPicks() async throws {
-        let engine = await makeEngine(StubProvider(id: "apps", titles: ["Kagi Search", "Karabiner", "Keychain Access"]))
+        let engine = await makeEngine(StubModule(id: "apps", titles: ["Kagi Search", "Karabiner", "Keychain Access"]))
         let before = titles(engine.results(for: "k"))
         #expect(before.first != "Keychain Access")
 
@@ -59,10 +59,10 @@ private final class StubProvider: Provider {
         #expect(titles(engine.results(for: "k")).first == "Keychain Access")
     }
 
-    @Test func emptyQueryListsSuggestionsThenProviders() async throws {
+    @Test func emptyQueryListsSuggestionsThenModules() async throws {
         let engine = await makeEngine(
-            StubProvider(id: "links", titles: ["Zeta", "Alpha"]),
-            StubProvider(id: "apps", titles: ["Safari"])
+            StubModule(id: "links", titles: ["Zeta", "Alpha"]),
+            StubModule(id: "apps", titles: ["Safari"])
         )
         var sections = engine.results(for: "")
         #expect(sections.map(\.title) == ["Links", "Apps"])
@@ -74,26 +74,26 @@ private final class StubProvider: Provider {
         #expect(titles(sections) == ["Safari", "Alpha", "Zeta"])
     }
 
-    @Test func skipsDisabledProviders() async {
+    @Test func skipsDisabledModules() async {
         let engine = await makeEngine(
-            StubProvider(id: "apps", titles: ["Safari"]),
-            StubProvider(id: "links", titles: ["Safari Docs"])
+            StubModule(id: "apps", titles: ["Safari"]),
+            StubModule(id: "links", titles: ["Safari Docs"])
         )
         engine.isEnabled = { $0 != "links" }
         #expect(titles(engine.results(for: "saf")) == ["Safari"])
     }
 
     @Test func instantResultsComeFirst() async {
-        let provider = StubProvider(id: "calc", titles: [])
-        provider.instant = ["1+1": "2"]
-        let engine = await makeEngine(provider, StubProvider(id: "apps", titles: ["1+1 Notes"]))
+        let module = StubModule(id: "calc", titles: [])
+        module.instant = ["1+1": "2"]
+        let engine = await makeEngine(module, StubModule(id: "apps", titles: ["1+1 Notes"]))
         #expect(engine.results(for: "1+1").map(\.title) == ["Calc", "Top hit"])
     }
 
-    @Test func groupsMatchesBelowTheTopHitByProvider() async {
+    @Test func groupsMatchesBelowTheTopHitByModule() async {
         let engine = await makeEngine(
-            StubProvider(id: "links", titles: ["Safari Docs", "Disk Safety Guide"]),
-            StubProvider(id: "apps", titles: ["Safari", "Safe Mode"])
+            StubModule(id: "links", titles: ["Safari Docs", "Disk Safety Guide"]),
+            StubModule(id: "apps", titles: ["Safari", "Safe Mode"])
         )
         let sections = engine.results(for: "saf")
         #expect(sections.map(\.title) == ["Top hit", "Apps", "Links"])
@@ -103,17 +103,17 @@ private final class StubProvider: Provider {
     }
 
     @Test func findsNamesTypedWithASpace() async {
-        let engine = await makeEngine(StubProvider(id: "apps", titles: ["GitHub Desktop"]))
+        let engine = await makeEngine(StubModule(id: "apps", titles: ["GitHub Desktop"]))
         #expect(titles(engine.results(for: "git hub")) == ["GitHub Desktop"])
     }
 
-    @Test func reloadsWhenAProviderChanges() async throws {
-        let provider = StubProvider(id: "links", titles: ["Alpha"])
-        let engine = await makeEngine(provider)
+    @Test func reloadsWhenAModuleChanges() async throws {
+        let module = StubModule(id: "links", titles: ["Alpha"])
+        let engine = await makeEngine(module)
         await confirmation { changed in
             engine.onChange = { changed() }
-            provider.titles = ["Alpha", "Beta"]
-            provider.onChange?()
+            module.titles = ["Alpha", "Beta"]
+            module.onChange?()
             try? await Task.sleep(for: .milliseconds(50))
         }
         #expect(titles(engine.results(for: "bet")) == ["Beta"])
@@ -192,7 +192,7 @@ private final class StubProvider: Provider {
     }
 
     @Test func summarizesLinks() {
-        #expect(QuicklinkProvider.summary(of: "https://www.example.com/search?q={argument}") == "example.com")
-        #expect(QuicklinkProvider.summary(of: "~/Downloads") == "~/Downloads")
+        #expect(QuicklinkModule.summary(of: "https://www.example.com/search?q={argument}") == "example.com")
+        #expect(QuicklinkModule.summary(of: "~/Downloads") == "~/Downloads")
     }
 }

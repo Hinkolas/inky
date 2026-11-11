@@ -15,7 +15,7 @@ import Testing
     }
 
     private func makeEngine(_ store: QuicklinkStore) -> SearchEngine {
-        SearchEngine(providers: [QuicklinkProvider(store: store)], usage: UsageStore(fileURL: nil))
+        SearchEngine(modules: [QuicklinkModule(store: store)], usage: UsageStore(fileURL: nil))
     }
 
     @Test func onlyQuicklinksWithOneArgumentCanBeFallbacks() {
@@ -50,7 +50,7 @@ import Testing
         #expect(makeEngine(makeStore(search("Off", isFallback: false))).fallbacks(for: "swift") == nil)
     }
 
-    @Test func aDisabledProviderOffersNoFallbacks() {
+    @Test func aDisabledModuleOffersNoFallbacks() {
         let engine = makeEngine(makeStore(search("First")))
         engine.isEnabled = { _ in false }
         #expect(engine.fallbacks(for: "swift") == nil)
@@ -63,9 +63,9 @@ import Testing
 
     @Test func fallbackAndCandidateOfOneQuicklinkHaveDifferentIDs() async throws {
         let store = makeStore(search("First"))
-        let provider = QuicklinkProvider(store: store)
-        let candidate = try #require(await provider.candidates().first)
-        let fallback = try #require(provider.fallbackResults(for: "swift").first)
+        let module = QuicklinkModule(store: store)
+        let candidate = try #require(await module.candidates().first)
+        let fallback = try #require(module.fallbackResults(for: "swift").first)
         #expect(candidate.id != fallback.id)
     }
 

@@ -66,14 +66,16 @@ Or open `Inky.xcodeproj` in Xcode and run the `Inky` scheme.
 
 ```
 Inky/        The app: hotkey, launcher panel, settings. AppKit and SwiftUI.
-InkyCore/    Everything without UI: search, ranking, providers, quicklinks.
+InkyCore/    Everything without UI: search, ranking, modules, quicklinks.
 ```
 
-Every feature is a `Provider` (see `InkyCore/Sources/InkyCore/Search/Provider.swift`).
-A provider hands the engine results as plain data: a title, an icon description,
-actions. The app renders them. Built-in features are written against the same
-contract that scripted extensions will use, so the extension API is one that has
-already been proven by real features.
+Every feature is a module (see `InkyCore/Sources/InkyCore/Search/Module.swift`).
+The ones that come with Inky, such as the calculator and quicklinks, are system
+modules; an extension is a module that does not come with Inky. A module hands
+the engine results as plain data: a title, an icon description, actions. The app
+renders them. System modules are written against the same contract that scripted
+extensions will use, so the extension API is one that has already been proven by
+real features.
 
 A command's screen is put together from a small set of parts in
 `Inky/Commands/CommandKit.swift`: `CommandScreen` (the header pill a command
@@ -86,13 +88,13 @@ are built from these, and extensions will describe the same parts as data.
 Your data lives in `~/Library/Application Support/Inky/` as readable JSON:
 `quicklinks.json` and `usage.json`.
 
-The calculator and the time provider share a lexer and the table of units
+The calculator and the time module share a lexer and the table of units
 (`InkyCore/Sources/InkyCore/Calculator/`). Each has a recursive descent parser
 of its own on top: a calculation becomes a number or an amount with a unit, a
 question about time becomes a moment or a day. Neither answers a word or a
 number on its own, so a search stays a search.
 
-The cities the time provider knows, in
+The cities the time module knows, in
 `InkyCore/Sources/InkyCore/Resources/places.tsv`, are from
 [GeoNames](https://www.geonames.org), licensed under
 [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/).
@@ -116,10 +118,10 @@ look at one frame by frame).
 
 ## Roadmap
 
-- Lua extensions, hosted behind the `Provider` contract
+- Lua extensions, hosted behind the `Module` contract
 - Clipboard history
 - A calendar that knows your working days and holidays, to answer `workdays in march` and `55h in workdays`
 - Sizes for print and export in the calculator: `2 inches in px at 72 ppi`
-- Airports in the time provider: `time in JFK`
+- Airports in the time module: `time in JFK`
 - A persistent index (SQLite) with full-text and, optionally, vector search
 - Signed, notarized releases with automatic updates

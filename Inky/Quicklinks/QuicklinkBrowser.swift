@@ -179,9 +179,9 @@ struct QuicklinkBrowserScreen: View {
                         ForEach(quicklinks) { quicklink in
                             let arguments = quicklink.template.arguments.count
                             DetailRow(
-                                icon: QuicklinkProvider.icon(for: quicklink.template),
+                                icon: QuicklinkModule.icon(for: quicklink.template),
                                 title: quicklink.name,
-                                subtitle: QuicklinkProvider.summary(of: quicklink.link),
+                                subtitle: QuicklinkModule.summary(of: quicklink.link),
                                 trailing: arguments == 0 ? nil : arguments == 1 ? "1 argument" : "\(arguments) arguments",
                                 isSelected: quicklink.id == selected?.id
                             )

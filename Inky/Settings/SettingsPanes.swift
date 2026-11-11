@@ -206,23 +206,23 @@ struct AboutPane: View {
 
 // MARK: - Extensions
 
-struct ProviderPane: View {
-    let provider: any Provider
+struct ModulePane: View {
+    let module: any Module
     let context: AppContext
 
     var body: some View {
         let preferences = context.preferences
         Form {
             Section {
-                Toggle("Enable \(provider.info.title)", isOn: Binding(
-                    get: { preferences.isEnabled(provider.id) },
-                    set: { preferences.setEnabled(provider.id, $0) }
+                Toggle("Enable \(module.info.title)", isOn: Binding(
+                    get: { preferences.isEnabled(module.id) },
+                    set: { preferences.setEnabled(module.id, $0) }
                 ))
             } header: {
-                PaneHeader(icon: provider.info.icon, title: provider.info.title, summary: provider.info.summary)
+                PaneHeader(icon: module.info.icon, title: module.info.title, summary: module.info.summary)
             }
 
-            switch provider.id {
+            switch module.id {
             case "applications":
                 Section("Searched folders") {
                     ForEach(ApplicationScanner.searchPaths, id: \.self) { path in
@@ -258,7 +258,7 @@ struct ProviderPane: View {
     }
 }
 
-/// A few things to type, to show what a provider understands.
+/// A few things to type, to show what a module understands.
 private struct Examples: View {
     let examples: [String]
 
@@ -354,7 +354,7 @@ private struct FileSearchSettings: View {
                     get: { preferences.fileSearchLimit },
                     set: {
                         preferences.fileSearchLimit = $0
-                        context.fileProvider.maxResults = $0
+                        context.fileModule.maxResults = $0
                     }
                 ),
                 in: 3...20

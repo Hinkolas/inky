@@ -2,9 +2,9 @@ import Foundation
 
 /// Files and folders in the user's home folder, found through the Spotlight index.
 @MainActor
-public final class FileProvider: Provider {
+public final class FileModule: Module {
     public let id = "files"
-    public let info = ProviderInfo(
+    public let info = ModuleInfo(
         title: "File Search",
         summary: "Find files and folders by name using the Spotlight index.",
         icon: .symbol("doc.text.magnifyingglass", tint: .teal)

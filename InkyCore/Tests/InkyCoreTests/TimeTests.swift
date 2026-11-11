@@ -242,13 +242,13 @@ import Testing
         }
     }
 
-    @Test func theProviderAnswers() async {
+    @Test func theModuleAnswers() async {
         await MainActor.run {
-            let provider = TimeProvider(calculator: calculator)
-            let item = provider.instantResults(for: "time diff tokyo").first
+            let module = TimeModule(calculator: calculator)
+            let item = module.instantResults(for: "time diff tokyo").first
             #expect(item?.title == "8 hours ahead" || item?.title == "7 hours ahead")
             #expect(item?.kind == "Time")
-            #expect(provider.instantResults(for: "2 + 2").isEmpty)
+            #expect(module.instantResults(for: "2 + 2").isEmpty)
         }
     }
 }

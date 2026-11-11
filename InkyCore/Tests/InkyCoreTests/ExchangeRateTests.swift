@@ -227,37 +227,37 @@ import Testing
         #expect(bank.requests == 1)
     }
 
-    // MARK: - The provider
+    // MARK: - The module
 
-    @Test func theProviderUsesTheRatesItHas() async throws {
+    @Test func theModuleUsesTheRatesItHas() async throws {
         let bank = Bank((Self.file(), 200))
         let store = makeStore(bank)
-        let provider = CalculatorProvider(calculator: Calculator(locale: Locale(identifier: "en_US")), exchangeRates: store)
+        let module = CalculatorModule(calculator: Calculator(locale: Locale(identifier: "en_US")), exchangeRates: store)
 
         var changes = 0
-        provider.onChange = { changes += 1 }
+        module.onChange = { changes += 1 }
 
         // The first thing typed asks for the rates. When they are there, the
-        // provider says that what is on screen is out of date.
-        #expect(provider.instantResults(for: "100 usd in eur").isEmpty)
+        // module says that what is on screen is out of date.
+        #expect(module.instantResults(for: "100 usd in eur").isEmpty)
         await wait { changes == 1 }
         #expect(changes == 1)
 
-        let item = try #require(provider.instantResults(for: " 100 usd in eur ").first)
+        let item = try #require(module.instantResults(for: " 100 usd in eur ").first)
         #expect(item.title == "€80.00")
         #expect(item.subtitle == "100 usd in eur · rates of Nov 10, 2026")
-        #expect(provider.instantResults(for: "10 ft in m").first?.subtitle == "10 ft in m")
+        #expect(module.instantResults(for: "10 ft in m").first?.subtitle == "10 ft in m")
 
         store.source = .off
         await wait { changes == 2 }
         #expect(changes == 2)
-        #expect(provider.instantResults(for: "100 usd in eur").isEmpty)
-        #expect(provider.instantResults(for: "10 ft in m").first?.title == "3.048 m")
+        #expect(module.instantResults(for: "100 usd in eur").isEmpty)
+        #expect(module.instantResults(for: "10 ft in m").first?.title == "3.048 m")
     }
 
-    @Test func aProviderWithoutAStoreStillCalculates() {
-        let provider = CalculatorProvider(calculator: Calculator(locale: Locale(identifier: "en_US")))
-        #expect(provider.instantResults(for: "2 + 2").first?.title == "4")
-        #expect(provider.instantResults(for: "100 usd in eur").isEmpty)
+    @Test func aModuleWithoutAStoreStillCalculates() {
+        let module = CalculatorModule(calculator: Calculator(locale: Locale(identifier: "en_US")))
+        #expect(module.instantResults(for: "2 + 2").first?.title == "4")
+        #expect(module.instantResults(for: "100 usd in eur").isEmpty)
     }
 }

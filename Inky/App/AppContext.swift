@@ -9,7 +9,7 @@ final class AppContext {
     let exchangeRates: ExchangeRateStore
     let engine: SearchEngine
     let launcher: LauncherController
-    let fileProvider = FileProvider()
+    let fileModule = FileModule()
 
     private var settingsWindow: SettingsWindowController?
 
@@ -40,29 +40,29 @@ final class AppContext {
             exchangeRates.source = preferences.exchangeRateSource
         }
 
-        let calculator = CalculatorProvider(exchangeRates: exchangeRates)
+        let calculator = CalculatorModule(exchangeRates: exchangeRates)
         calculator.pixelsPerRem = Double(preferences.pixelsPerRem)
         preferences.onPixelsPerRemChange = { [preferences, calculator] in
             calculator.pixelsPerRem = Double(preferences.pixelsPerRem)
         }
 
-        let commands = InkyCommandProvider()
-        let quicklinkProvider = QuicklinkProvider(store: quicklinks)
-        fileProvider.maxResults = preferences.fileSearchLimit
+        let commands = InkyCommandModule()
+        let quicklinkModule = QuicklinkModule(store: quicklinks)
+        fileModule.maxResults = preferences.fileSearchLimit
 
         let usage = UsageStore(fileURL: directory.appendingPathComponent("usage.json"))
 
         // This order is the order of sections when nothing is typed.
         engine = SearchEngine(
-            providers: [
-                quicklinkProvider,
+            modules: [
+                quicklinkModule,
                 commands,
-                SystemProvider(),
-                ApplicationProvider(),
+                SystemModule(),
+                ApplicationModule(),
                 calculator,
-                TimeProvider(),
-                ColorProvider(usage: usage),
-                fileProvider,
+                TimeModule(),
+                ColorModule(usage: usage),
+                fileModule,
             ],
             usage: usage
         )
@@ -70,12 +70,12 @@ final class AppContext {
 
         launcher = LauncherController(engine: engine, quicklinks: quicklinks)
         launcher.model.openSettings = { [unowned self] in showSettings() }
-        launcher.model.configureFallbacks = { [unowned self] in showSettings(pane: quicklinkProvider.id) }
+        launcher.model.configureFallbacks = { [unowned self] in showSettings(pane: quicklinkModule.id) }
 
         commands.openSettings = { [unowned self] in showSettings() }
         commands.createQuicklink = { [unowned self] in launcher.model.editQuicklink(nil) }
         commands.manageQuicklinks = { [unowned self] in launcher.model.showQuicklinks() }
-        quicklinkProvider.onEdit = { [unowned self] quicklink in launcher.model.editQuicklink(quicklink) }
+        quicklinkModule.onEdit = { [unowned self] quicklink in launcher.model.editQuicklink(quicklink) }
     }
 
     /// Fetches every website icon again, in the background.
@@ -93,9 +93,9 @@ final class AppContext {
 }
 
 /// Inky's own commands.
-final class InkyCommandProvider: Provider {
+final class InkyCommandModule: Module {
     let id = "inky"
-    let info = ProviderInfo(
+    let info = ModuleInfo(
         title: "Inky",
         summary: "Commands for Inky itself.",
         icon: .symbol("drop.fill", tint: .indigo)

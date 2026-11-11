@@ -2,9 +2,9 @@ import Foundation
 
 /// Installed applications.
 @MainActor
-public final class ApplicationProvider: Provider {
+public final class ApplicationModule: Module {
     public let id = "applications"
-    public let info = ProviderInfo(
+    public let info = ModuleInfo(
         title: "Applications",
         summary: "Find and launch the apps installed on this Mac.",
         icon: .symbol("square.grid.2x2.fill", tint: .blue)

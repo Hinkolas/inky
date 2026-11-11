@@ -5,9 +5,9 @@ import Foundation
 /// "#ff6363" answers with the way of writing that is copied most from that
 /// kind of color; the others are a ⌘K away. "#ff6363 in hsl" asks for one.
 @MainActor
-public final class ColorProvider: Provider {
+public final class ColorModule: Module {
     public let id = "color"
-    public let info = ProviderInfo(
+    public let info = ModuleInfo(
         title: "Color",
         summary: "Type a color the way a stylesheet writes it to see it and copy it written another way.",
         icon: .symbol("paintpalette.fill", tint: .pink)

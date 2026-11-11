@@ -107,8 +107,8 @@ final class Preferences {
         didSet { defaults.set(fileSearchLimit, forKey: Key.fileSearchLimit) }
     }
 
-    private var disabledProviders: Set<String> {
-        didSet { defaults.set(disabledProviders.sorted(), forKey: Key.disabledProviders) }
+    private var disabledModules: Set<String> {
+        didSet { defaults.set(disabledModules.sorted(), forKey: Key.disabledModules) }
     }
 
     var hasLaunchedBefore: Bool {
@@ -130,18 +130,24 @@ final class Preferences {
         let pixels = defaults.integer(forKey: Key.pixelsPerRem)
         pixelsPerRem = Self.pixelsPerRemRange.contains(pixels) ? pixels : 16
         fileSearchLimit = defaults.integer(forKey: Key.fileSearchLimit)
-        disabledProviders = Set(defaults.stringArray(forKey: Key.disabledProviders) ?? [])
+        // Modules were called providers before, and their switches were kept under that name.
+        if defaults.object(forKey: Key.disabledModules) == nil,
+           let disabled = defaults.stringArray(forKey: Key.disabledProviders) {
+            defaults.set(disabled, forKey: Key.disabledModules)
+        }
+        defaults.removeObject(forKey: Key.disabledProviders)
+        disabledModules = Set(defaults.stringArray(forKey: Key.disabledModules) ?? [])
     }
 
-    func isEnabled(_ providerID: String) -> Bool {
-        !disabledProviders.contains(providerID)
+    func isEnabled(_ moduleID: String) -> Bool {
+        !disabledModules.contains(moduleID)
     }
 
-    func setEnabled(_ providerID: String, _ enabled: Bool) {
+    func setEnabled(_ moduleID: String, _ enabled: Bool) {
         if enabled {
-            disabledProviders.remove(providerID)
+            disabledModules.remove(moduleID)
         } else {
-            disabledProviders.insert(providerID)
+            disabledModules.insert(moduleID)
         }
     }
 
@@ -168,6 +174,7 @@ final class Preferences {
         static let exchangeRateSource = "exchangeRateSource"
         static let pixelsPerRem = "pixelsPerRem"
         static let fileSearchLimit = "fileSearchLimit"
+        static let disabledModules = "disabledModules"
         static let disabledProviders = "disabledProviders"
         static let hasLaunchedBefore = "hasLaunchedBefore"
     }

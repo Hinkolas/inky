@@ -2,9 +2,9 @@ import Foundation
 
 /// Answers questions about times and days as they are typed.
 @MainActor
-public final class TimeProvider: Provider {
+public final class TimeModule: Module {
     public let id = "time"
-    public let info = ProviderInfo(
+    public let info = ModuleInfo(
         title: "Time",
         summary: "Type a question about a time or a day to see its answer. Return copies it.",
         icon: .symbol("clock.fill", tint: .blue)

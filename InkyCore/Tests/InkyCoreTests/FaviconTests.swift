@@ -84,9 +84,9 @@ import Testing
 
     @Test func quicklinksToWebsitesAskForTheirIcon() {
         let tile = Icon.symbol("link", tint: .purple)
-        #expect(QuicklinkProvider.icon(for: LinkTemplate("https://github.com/{argument}")) == .favicon(host: "github.com", fallback: tile))
-        #expect(QuicklinkProvider.icon(for: LinkTemplate("http://localhost:3000")) == tile)
-        #expect(QuicklinkProvider.icon(for: LinkTemplate("obsidian://open")) == tile)
+        #expect(QuicklinkModule.icon(for: LinkTemplate("https://github.com/{argument}")) == .favicon(host: "github.com", fallback: tile))
+        #expect(QuicklinkModule.icon(for: LinkTemplate("http://localhost:3000")) == tile)
+        #expect(QuicklinkModule.icon(for: LinkTemplate("obsidian://open")) == tile)
     }
 
     // MARK: - Store

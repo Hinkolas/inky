@@ -1,16 +1,16 @@
 import Foundation
 
-/// Turns a query into ranked sections by asking every enabled provider.
+/// Turns a query into ranked sections by asking every enabled module.
 ///
 /// Candidates are held in memory and matched synchronously, so results for a
 /// keystroke are ready in the same frame. The index sits behind this type on
-/// purpose: swapping it for a persistent one later does not touch providers.
+/// purpose: swapping it for a persistent one later does not touch modules.
 @MainActor
 public final class SearchEngine {
-    public let providers: [any Provider]
+    public let modules: [any Module]
     public let usage: UsageStore
 
-    /// Consulted on every query, so toggling a provider takes effect at once.
+    /// Consulted on every query, so toggling a module takes effect at once.
     public var isEnabled: @MainActor (String) -> Bool = { _ in true }
     /// Called after the index changed and visible results may be stale.
     public var onChange: (@MainActor () -> Void)?
@@ -29,13 +29,13 @@ public final class SearchEngine {
     private var index: [String: [Entry]] = [:]
     private var lastReload: [String: Date] = [:]
 
-    public init(providers: [any Provider], usage: UsageStore) {
-        self.providers = providers
+    public init(modules: [any Module], usage: UsageStore) {
+        self.modules = modules
         self.usage = usage
-        for provider in providers {
-            provider.onChange = { [weak self, weak provider] in
-                guard let self, let provider else { return }
-                Task { await self.reload(provider) }
+        for module in modules {
+            module.onChange = { [weak self, weak module] in
+                guard let self, let module else { return }
+                Task { await self.reload(module) }
             }
         }
     }
@@ -43,32 +43,32 @@ public final class SearchEngine {
     // MARK: - Index
 
     public func reloadAll() async {
-        for provider in providers {
-            await reload(provider)
+        for module in modules {
+            await reload(module)
         }
     }
 
-    /// Reloads providers whose candidates may have changed behind their back.
+    /// Reloads modules whose candidates may have changed behind their back.
     public func reloadStale(now: Date = .now) {
-        for provider in providers {
-            guard let interval = provider.refreshInterval,
-                  now.timeIntervalSince(lastReload[provider.id] ?? .distantPast) > interval
+        for module in modules {
+            guard let interval = module.refreshInterval,
+                  now.timeIntervalSince(lastReload[module.id] ?? .distantPast) > interval
             else { continue }
-            lastReload[provider.id] = now
-            Task { await reload(provider) }
+            lastReload[module.id] = now
+            Task { await reload(module) }
         }
     }
 
-    private func reload(_ provider: any Provider) async {
-        let items = await provider.candidates()
-        index[provider.id] = items.map { item in
+    private func reload(_ module: any Module) async {
+        let items = await module.candidates()
+        index[module.id] = items.map { item in
             Entry(
                 item: item,
                 title: FuzzyMatcher.Target(item.title),
                 keywords: item.keywords.map(FuzzyMatcher.Target.init)
             )
         }
-        lastReload[provider.id] = .now
+        lastReload[module.id] = .now
         onChange?()
     }
 
@@ -80,10 +80,10 @@ public final class SearchEngine {
         guard !query.isEmpty else { return suggestions() }
 
         var sections: [ResultSection] = []
-        for provider in enabledProviders {
-            let items = provider.instantResults(for: query)
+        for module in enabledModules {
+            let items = module.instantResults(for: query)
             if !items.isEmpty {
-                sections.append(ResultSection(title: provider.info.title, items: items))
+                sections.append(ResultSection(title: module.info.title, items: items))
             }
         }
 
@@ -94,10 +94,10 @@ public final class SearchEngine {
             : nil
 
         var ranked: [(item: ResultItem, group: String, score: Double)] = []
-        for provider in enabledProviders {
-            for entry in index[provider.id] ?? [] {
+        for module in enabledModules {
+            for entry in index[module.id] ?? [] {
                 guard let match = match(entry, pattern, compact), match >= minimumScore else { continue }
-                ranked.append((entry.item, provider.info.title, match + usage.boost(for: entry.item.id, query: query)))
+                ranked.append((entry.item, module.info.title, match + usage.boost(for: entry.item.id, query: query)))
             }
         }
         ranked.sort {
@@ -106,8 +106,8 @@ public final class SearchEngine {
                 : $0.item.title.localizedStandardCompare($1.item.title) == .orderedAscending
         }
 
-        // The best match stands alone. The rest follow under the provider they
-        // came from, and the provider holding the next best match goes first.
+        // The best match stands alone. The rest follow under the module they
+        // came from, and the module holding the next best match goes first.
         var groups: [ResultSection] = []
         for (offset, entry) in ranked.prefix(maxResults).enumerated() {
             if offset == 0 {
@@ -129,8 +129,8 @@ public final class SearchEngine {
         guard !query.isEmpty else { return [] }
 
         var sections: [ResultSection] = []
-        for provider in enabledProviders {
-            if let section = await provider.deferredResults(for: query), !section.items.isEmpty {
+        for module in enabledModules {
+            if let section = await module.deferredResults(for: query), !section.items.isEmpty {
                 sections.append(section)
             }
         }
@@ -142,7 +142,7 @@ public final class SearchEngine {
         let query = query.trimmingCharacters(in: .whitespaces)
         guard !query.isEmpty else { return nil }
 
-        let items = enabledProviders.flatMap { $0.fallbackResults(for: query) }
+        let items = enabledModules.flatMap { $0.fallbackResults(for: query) }
         return items.isEmpty ? nil : ResultSection(title: Self.fallbackTitle(for: query), items: items)
     }
 
@@ -161,8 +161,8 @@ public final class SearchEngine {
 
     // MARK: - Private
 
-    private var enabledProviders: [any Provider] {
-        providers.filter { isEnabled($0.id) }
+    private var enabledModules: [any Module] {
+        modules.filter { isEnabled($0.id) }
     }
 
     private func match(_ entry: Entry, _ pattern: FuzzyMatcher.Pattern, _ compact: FuzzyMatcher.Pattern?) -> Double? {
@@ -178,12 +178,12 @@ public final class SearchEngine {
         return best
     }
 
-    /// With nothing typed: what the user picks most, then everything by provider.
+    /// With nothing typed: what the user picks most, then everything by module.
     private func suggestions() -> [ResultSection] {
-        let providers = enabledProviders
+        let modules = enabledModules
         var used: [(item: ResultItem, frecency: Double)] = []
-        for provider in providers {
-            for entry in index[provider.id] ?? [] {
+        for module in modules {
+            for entry in index[module.id] ?? [] {
                 let frecency = usage.frecency(entry.item.id)
                 if frecency > 0 { used.append((entry.item, frecency)) }
             }
@@ -196,13 +196,13 @@ public final class SearchEngine {
         if !top.isEmpty {
             sections.append(ResultSection(title: "Suggestions", items: top))
         }
-        for provider in providers {
-            let items = (index[provider.id] ?? [])
+        for module in modules {
+            let items = (index[module.id] ?? [])
                 .map(\.item)
                 .filter { !topIDs.contains($0.id) }
                 .sorted { $0.title.localizedStandardCompare($1.title) == .orderedAscending }
             if !items.isEmpty {
-                sections.append(ResultSection(title: provider.info.title, items: items))
+                sections.append(ResultSection(title: module.info.title, items: items))
             }
         }
         return sections

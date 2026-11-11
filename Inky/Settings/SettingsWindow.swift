@@ -5,7 +5,7 @@ import SwiftUI
 enum SettingsPane: Hashable {
     case general
     case about
-    case provider(String)
+    case module(String)
 }
 
 /// Which pane the settings window shows. Lives outside the view so the app
@@ -44,13 +44,13 @@ final class SettingsWindowController: NSWindowController {
         fatalError("init(coder:) is not supported")
     }
 
-    /// `pane` is "general", "about" or a provider id.
+    /// `pane` is "general", "about" or a module id.
     func show(pane: String? = nil, activating: Bool = true) {
         switch pane {
         case nil: break
         case "general": navigation.pane = .general
         case "about": navigation.pane = .about
-        case let id?: navigation.pane = .provider(id)
+        case let id?: navigation.pane = .module(id)
         }
         guard activating else {
             #if DEBUG
@@ -70,8 +70,8 @@ struct SettingsView: View {
     @State private var search = ""
 
     /// Inky's own commands are always on, so they have no pane.
-    private var providers: [any Provider] {
-        context.engine.providers.filter { $0.id != "inky" }
+    private var modules: [any Module] {
+        context.engine.modules.filter { $0.id != "inky" }
     }
 
     private func matches(_ title: String) -> Bool {
@@ -92,9 +92,9 @@ struct SettingsView: View {
                     }
                 }
                 Section("Extensions") {
-                    ForEach(providers.filter { matches($0.info.title) }, id: \.id) { provider in
-                        SidebarLabel(provider.info.title, icon: provider.info.icon)
-                            .tag(SettingsPane.provider(provider.id))
+                    ForEach(modules.filter { matches($0.info.title) }, id: \.id) { module in
+                        SidebarLabel(module.info.title, icon: module.info.icon)
+                            .tag(SettingsPane.module(module.id))
                     }
                 }
             }
@@ -109,9 +109,9 @@ struct SettingsView: View {
                     GeneralPane(preferences: context.preferences, context: context)
                 case .about:
                     AboutPane()
-                case .provider(let id):
-                    if let provider = providers.first(where: { $0.id == id }) {
-                        ProviderPane(provider: provider, context: context)
+                case .module(let id):
+                    if let module = modules.first(where: { $0.id == id }) {
+                        ModulePane(module: module, context: context)
                     }
                 }
             }
