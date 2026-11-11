@@ -56,7 +56,8 @@ final class Preferences {
     /// Whether macOS accepted the hotkey. Set by the app after registering it.
     var isHotkeyAvailable = true
 
-    /// True while the settings window is capturing a new hotkey.
+    /// True while the settings window is capturing a new hotkey, of Inky or
+    /// of a command.
     var isRecordingHotkey = false {
         didSet { onHotkeyChange?() }
     }
@@ -124,16 +125,16 @@ final class Preferences {
         didSet { defaults.set(clipboardPastes, forKey: Key.clipboardPastes) }
     }
 
-    /// Opens the clipboard history from anywhere. Nil until the user sets one.
-    var clipboardHotkey: KeyCombo? {
-        didSet {
-            defaults.set(clipboardHotkey.flatMap { try? JSONEncoder().encode($0) }, forKey: Key.clipboardHotkey)
-            onHotkeyChange?()
-        }
-    }
+    /// The commands whose hotkey does nothing: macOS did not accept it, or
+    /// it is the one that opens Inky. Set by the app after registering them.
+    var unavailableHotkeys: Set<String> = []
 
-    /// Whether macOS accepted the hotkey of the clipboard history.
-    var isClipboardHotkeyAvailable = true
+    /// The hotkey the clipboard history had when it was the only command
+    /// with one. It is where the hotkeys of commands start from.
+    var formerClipboardHotkey: KeyCombo? {
+        defaults.data(forKey: Key.clipboardHotkey)
+            .flatMap { try? JSONDecoder().decode(KeyCombo.self, from: $0) }
+    }
 
     private var disabledModules: Set<String> {
         didSet { defaults.set(disabledModules.sorted(), forKey: Key.disabledModules) }
@@ -161,8 +162,6 @@ final class Preferences {
         fileSearchLimit = defaults.integer(forKey: Key.fileSearchLimit)
         clipboardRetention = defaults.string(forKey: Key.clipboardRetention).flatMap(ClipboardRetention.init) ?? .threeMonths
         clipboardPastes = defaults.bool(forKey: Key.clipboardPastes)
-        clipboardHotkey = defaults.data(forKey: Key.clipboardHotkey)
-            .flatMap { try? JSONDecoder().decode(KeyCombo.self, from: $0) }
         // Modules were called providers before, and their switches were kept under that name.
         if defaults.object(forKey: Key.disabledModules) == nil,
            let disabled = defaults.stringArray(forKey: Key.disabledProviders) {

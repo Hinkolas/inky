@@ -4,6 +4,7 @@ import SwiftUI
 
 enum SettingsPane: Hashable {
     case general
+    case commands
     case fallbacks
     case about
     case module(String)
@@ -14,6 +15,8 @@ enum SettingsPane: Hashable {
 @Observable
 final class SettingsNavigation {
     var pane: SettingsPane = .general
+    /// What the list of all commands is narrowed down to.
+    var commandSearch = ""
 }
 
 final class SettingsWindowController: NSWindowController {
@@ -45,11 +48,14 @@ final class SettingsWindowController: NSWindowController {
         fatalError("init(coder:) is not supported")
     }
 
-    /// `pane` is "general", "fallbacks", "about" or a module id.
-    func show(pane: String? = nil, activating: Bool = true) {
+    /// `pane` is "general", "commands", "fallbacks", "about" or a module id.
+    /// `search` is what the list of all commands is narrowed down to.
+    func show(pane: String? = nil, search: String? = nil, activating: Bool = true) {
+        if let search { navigation.commandSearch = search }
         switch pane {
         case nil: break
         case "general": navigation.pane = .general
+        case "commands": navigation.pane = .commands
         case "fallbacks": navigation.pane = .fallbacks
         case "about": navigation.pane = .about
         case let id?: navigation.pane = .module(id)
@@ -96,6 +102,10 @@ struct SettingsView: View {
                         SidebarLabel("General", icon: .symbol("gearshape.fill", tint: .gray))
                             .tag(SettingsPane.general)
                     }
+                    if matches(CommandsPane.title) {
+                        SidebarLabel(CommandsPane.title, icon: CommandsPane.icon)
+                            .tag(SettingsPane.commands)
+                    }
                     if matches(FallbackPane.title) {
                         SidebarLabel(FallbackPane.title, icon: FallbackPane.icon)
                             .tag(SettingsPane.fallbacks)
@@ -121,6 +131,8 @@ struct SettingsView: View {
                 switch navigation.pane {
                 case .general:
                     GeneralPane(preferences: context.preferences, context: context)
+                case .commands:
+                    CommandsPane(context: context, navigation: navigation)
                 case .fallbacks:
                     FallbackPane(engine: context.engine)
                 case .about:

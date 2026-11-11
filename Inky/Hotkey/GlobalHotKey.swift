@@ -1,22 +1,15 @@
 import AppKit
 import Carbon.HIToolbox
+import InkyCore
 
-/// A key plus modifiers, as stored in settings.
-struct KeyCombo: Codable, Equatable {
-    var keyCode: UInt32
-    /// `NSEvent.ModifierFlags` raw value, limited to ⌘⌥⌃⇧.
-    var modifiers: UInt
-
+extension KeyCombo {
     static let defaultLauncher = KeyCombo(keyCode: UInt32(kVK_Space), modifiers: NSEvent.ModifierFlags.option.rawValue)
 
-    init(keyCode: UInt32, modifiers: UInt) {
-        self.keyCode = keyCode
-        self.modifiers = modifiers
-    }
-
     init(event: NSEvent) {
-        keyCode = UInt32(event.keyCode)
-        modifiers = event.modifierFlags.intersection([.command, .option, .control, .shift]).rawValue
+        self.init(
+            keyCode: UInt32(event.keyCode),
+            modifiers: event.modifierFlags.intersection([.command, .option, .control, .shift]).rawValue
+        )
     }
 
     var flags: NSEvent.ModifierFlags { NSEvent.ModifierFlags(rawValue: modifiers) }

@@ -13,6 +13,8 @@ public final class SearchEngine {
     public let usage: UsageStore
     /// Which commands the user chose as fallbacks.
     public let fallbackStore: FallbackStore
+    /// Which commands the user switched off, and their hotkeys.
+    public let commandStore: CommandStore
 
     /// Consulted on every query, so toggling a module takes effect at once.
     @ObservationIgnored public var isEnabled: @MainActor (String) -> Bool = { _ in true }
@@ -30,7 +32,9 @@ public final class SearchEngine {
         let keywords: [FuzzyMatcher.Target]
     }
 
-    @ObservationIgnored private var index: [String: [Entry]] = [:]
+    /// The candidates of each module. Observed, so that settings list the
+    /// commands as they are loaded.
+    private var index: [String: [Entry]] = [:]
     @ObservationIgnored private var lastReload: [String: Date] = [:]
     /// The ids in `index`, of every module.
     @ObservationIgnored private var rankedIDs: Set<String> = []
@@ -38,11 +42,18 @@ public final class SearchEngine {
     /// so that settings list them as they are loaded.
     private var fallbackIndex: [String: [ResultItem]] = [:]
 
-    /// Without `fallbacks`, the choice of fallback commands is kept in memory only.
-    public init(modules: [any Module], usage: UsageStore, fallbacks: FallbackStore? = nil) {
+    /// Without `fallbacks` or `commands`, the choice of fallback commands, or
+    /// what is decided about single commands, is kept in memory only.
+    public init(
+        modules: [any Module],
+        usage: UsageStore,
+        fallbacks: FallbackStore? = nil,
+        commands: CommandStore? = nil
+    ) {
         self.modules = modules
         self.usage = usage
         fallbackStore = fallbacks ?? FallbackStore(fileURL: nil)
+        commandStore = commands ?? CommandStore(fileURL: nil)
         for module in modules {
             module.onChange = { [weak self, weak module] in
                 guard let self, let module else { return }
@@ -108,7 +119,7 @@ public final class SearchEngine {
 
         var ranked: [(item: ResultItem, group: String, score: Double)] = []
         for module in enabledModules {
-            for entry in index[module.id] ?? [] {
+            for entry in index[module.id] ?? [] where commandStore.isEnabled(entry.item.id) {
                 guard let match = match(entry, pattern, compact), match >= minimumScore else { continue }
                 ranked.append((entry.item, module.info.title, match + usage.boost(for: entry.item.id, query: query)))
             }
@@ -160,9 +171,10 @@ public final class SearchEngine {
     }
 
     /// Every command that can be a fallback, under the module it comes from.
+    /// One that is switched off cannot.
     public func fallbackCandidates() -> [ResultSection] {
         enabledModules.compactMap { module in
-            let items = fallbackIndex[module.id] ?? []
+            let items = (fallbackIndex[module.id] ?? []).filter { commandStore.isEnabled($0.id) }
             return items.isEmpty ? nil : ResultSection(title: module.info.title, items: items)
         }
     }
@@ -199,6 +211,40 @@ public final class SearchEngine {
         usage.forget(item.id)
     }
 
+    // MARK: - Commands
+
+    /// Every command of a module by name, those that are switched off too.
+    public func commands(in moduleID: String) -> [ResultItem] {
+        (index[moduleID] ?? [])
+            .map(\.item)
+            .sorted { $0.title.localizedStandardCompare($1.title) == .orderedAscending }
+    }
+
+    /// Whether the item is a command: something a module lists, which the
+    /// user can switch off or give a hotkey.
+    public func isCommand(_ item: ResultItem) -> Bool {
+        rankedIDs.contains(item.id)
+    }
+
+    /// The command with this id, if it can be run: it is there, and neither
+    /// it nor its module is switched off.
+    public func command(withID id: String) -> ResultItem? {
+        guard commandStore.isEnabled(id) else { return nil }
+        return item(withID: id, in: enabledModules)
+    }
+
+    /// The command with this id, whether it can be run or not.
+    public func item(withID id: String) -> ResultItem? {
+        item(withID: id, in: modules)
+    }
+
+    private func item(withID id: String, in modules: [any Module]) -> ResultItem? {
+        for module in modules {
+            if let entry = index[module.id]?.first(where: { $0.item.id == id }) { return entry.item }
+        }
+        return nil
+    }
+
     // MARK: - Private
 
     private var enabledModules: [any Module] {
@@ -223,7 +269,7 @@ public final class SearchEngine {
         let modules = enabledModules
         var used: [(item: ResultItem, frecency: Double)] = []
         for module in modules {
-            for entry in index[module.id] ?? [] {
+            for entry in index[module.id] ?? [] where commandStore.isEnabled(entry.item.id) {
                 let frecency = usage.frecency(entry.item.id)
                 if frecency > 0 { used.append((entry.item, frecency)) }
             }
@@ -239,7 +285,7 @@ public final class SearchEngine {
         for module in modules {
             let items = (index[module.id] ?? [])
                 .map(\.item)
-                .filter { !topIDs.contains($0.id) }
+                .filter { !topIDs.contains($0.id) && commandStore.isEnabled($0.id) }
                 .sorted { $0.title.localizedStandardCompare($1.title) == .orderedAscending }
             if !items.isEmpty {
                 sections.append(ResultSection(title: module.info.title, items: items))

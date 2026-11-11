@@ -1,9 +1,11 @@
 import AppKit
+import InkyCore
 
 final class AppDelegate: NSObject, NSApplicationDelegate {
     private var context: AppContext!
     private var hotKey: GlobalHotKey?
-    private var clipboardHotKey: GlobalHotKey?
+    /// The hotkeys of commands that macOS accepted, by the command's id.
+    private var commandHotKeys: [String: (combo: KeyCombo, hotKey: GlobalHotKey)] = [:]
     private let statusItem = StatusItemController()
 
     func applicationDidFinishLaunching(_ notification: Notification) {
@@ -32,6 +34,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         statusItem.setVisible(preferences.showMenuBarIcon)
 
         preferences.onHotkeyChange = { [weak self] in self?.registerHotKey() }
+        context.onCommandsChange = { [weak self] in self?.registerCommandHotKeys() }
         preferences.onMenuBarChange = { [weak self] in
             self?.statusItem.setVisible(preferences.showMenuBarIcon)
         }
@@ -67,8 +70,11 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         let preferences = context.preferences
         hotKey?.unregister()
         hotKey = nil
-        clipboardHotKey?.unregister()
-        clipboardHotKey = nil
+        // Inky's own hotkey comes first: the keys it takes, no command gets.
+        for registered in commandHotKeys.values {
+            registered.hotKey.unregister()
+        }
+        commandHotKeys = [:]
         // While the user records a new hotkey the old ones must not fire.
         guard !preferences.isRecordingHotkey else { return }
 
@@ -76,25 +82,48 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
             self?.context.launcher.toggle()
         }
         preferences.isHotkeyAvailable = hotKey != nil
+        registerCommandHotKeys()
+    }
 
-        guard let combo = preferences.clipboardHotkey else {
-            preferences.isClipboardHotkeyAvailable = true
-            return
+    /// Brings the registered hotkeys in line with the commands that have
+    /// one and can be run: those that are there, and not switched off.
+    private func registerCommandHotKeys() {
+        let preferences = context.preferences
+        let engine = context.engine
+        // Nothing fires while a new hotkey is recorded.
+        let wanted = preferences.isRecordingHotkey
+            ? [:]
+            : engine.commandStore.hotkeys.filter { engine.command(withID: $0.key) != nil }
+
+        for (id, registered) in commandHotKeys where wanted[id] != registered.combo {
+            registered.hotKey.unregister()
+            commandHotKeys[id] = nil
         }
-        // The same keys cannot open both.
-        if combo != preferences.hotkey {
-            clipboardHotKey = GlobalHotKey(combo) { [weak self] in
-                self?.context.toggleClipboard()
+
+        var unavailable: Set<String> = []
+        var taken: Set<KeyCombo> = [preferences.hotkey]
+        taken.formUnion(commandHotKeys.values.map(\.combo))
+        // In the same order every time, should two commands want the same keys.
+        for (id, combo) in wanted.sorted(by: { $0.key < $1.key }) where commandHotKeys[id] == nil {
+            guard taken.insert(combo).inserted,
+                  let hotKey = GlobalHotKey(combo, handler: { [weak self] in self?.context.runCommand(id) })
+            else {
+                unavailable.insert(id)
+                continue
             }
+            commandHotKeys[id] = (combo, hotKey)
         }
-        preferences.isClipboardHotkeyAvailable = clipboardHotKey != nil
+        if preferences.unavailableHotkeys != unavailable {
+            preferences.unavailableHotkeys = unavailable
+        }
     }
 }
 
 #if DEBUG
 /// Launch arguments that put the app into a known state for development:
-/// `--show`, `--pin`, `--quiet`, `--query <text>`, `--keys "tab a cmd+k hide show clipboard"`,
-/// `--settings [pane]`, `--new-quicklink`, `--quicklinks`, `--uninstall [application]`,
+/// `--show`, `--pin`, `--quiet`, `--query <text>`,
+/// `--keys "tab a cmd+k hide show clipboard run:<command id>"`,
+/// `--settings [pane]`, `--search <text>`, `--new-quicklink`, `--quicklinks`, `--uninstall [application]`,
 /// `--clipboard [filter]`, `--clipboard-samples`,
 /// `--appearance light|dark`, `--backdrop light|dark`, `--data <folder>`,
 /// `--motion full|reduced|off`, `--slow <factor>`.
@@ -141,7 +170,7 @@ enum DebugLaunch {
             context.launcher.debugShowBackdrop(dark: backdrop == "dark")
         }
         if arguments.contains("--settings") {
-            context.showSettings(pane: value(after: "--settings"), activating: !quiet)
+            context.showSettings(pane: value(after: "--settings"), search: value(after: "--search"), activating: !quiet)
             // A quiet run loads nothing by itself, and the fallback commands
             // are listed from what the modules offer.
             if quiet {
@@ -194,7 +223,9 @@ enum DebugLaunch {
                 case "hide": context.launcher.hide()
                 case "show": context.launcher.show()
                 // As the hotkey of the clipboard history does.
-                case "clipboard": context.toggleClipboard()
+                case "clipboard": context.runCommand(ClipboardModule.historyID)
+                // As the hotkey of any command does: `run:inky:manage-quicklinks`.
+                case _ where key.hasPrefix("run:"): context.runCommand(String(key.dropFirst(4)))
                 case "wait": try? await Task.sleep(for: .seconds(1))
                 case "mark": FileHandle.standardError.write(Data("MARK\n".utf8))
                 default: context.launcher.debugPress(String(key))

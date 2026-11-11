@@ -26,6 +26,10 @@ public struct ModuleInfo: Sendable {
 /// - `deferredResults` may take time and arrive after the rest. Use it for
 ///   searches that leave the process, such as the file index.
 ///
+/// Every candidate is a command: the user can switch it off, and give it a
+/// hotkey that runs its first action from anywhere, see `CommandStore`. The
+/// module does nothing for this either.
+///
 /// A candidate that asks for exactly one argument is a command the user can
 /// choose as a fallback, see `FallbackStore`. The launcher then offers it
 /// below every search, and runs it with what was typed as that argument. The

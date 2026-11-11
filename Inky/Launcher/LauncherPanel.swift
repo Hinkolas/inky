@@ -142,20 +142,25 @@ final class LauncherController: NSObject, NSWindowDelegate {
         if isOpening { animateIn(motion) }
     }
 
-    /// Shows the clipboard history, whatever the launcher was showing, or
-    /// closes the launcher if that is what it shows.
-    func toggleClipboard() {
-        if isVisible, case .clipboard = model.route {
+    /// Runs a command as its hotkey does. Most are simply run, wherever the
+    /// user is. One that opens a screen in the launcher, or asks for
+    /// arguments, shows the launcher with it, whatever the launcher was
+    /// showing, or closes the launcher if that is what it shows.
+    func run(_ item: ResultItem) {
+        guard model.opensLauncher(item) else {
+            let frontmost = NSWorkspace.shared.frontmostApplication
+            model.run(item, frontmostPID: frontmost == .current ? nil : frontmost?.processIdentifier)
+            return
+        }
+        if isVisible, model.isShowing(item) {
             hide()
             return
         }
         let wasVisible = isVisible
         show()
-        // Opened straight to it, the history is simply there. From the
-        // search it is a change of screen like any other.
-        var transaction = Transaction()
-        transaction.disablesAnimations = !wasVisible
-        withTransaction(transaction) { model.openClipboard() }
+        // Opened straight to it, a screen is simply there. From the search
+        // it is a change of screen like any other.
+        model.open(item, instantly: !wasVisible)
     }
 
     /// Closes the panel. `action` runs once it is off screen, when keys go

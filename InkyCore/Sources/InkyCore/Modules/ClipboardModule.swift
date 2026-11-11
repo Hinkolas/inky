@@ -5,6 +5,8 @@ import Foundation
 public final class ClipboardModule: Module {
     public static let title = "Clipboard History"
     public static let icon = Icon.symbol("clipboard.fill", tint: .teal)
+    /// The id of the command that shows the history.
+    public static let historyID = "clipboard:history"
 
     public let id = "clipboard"
     public let info = ModuleInfo(
@@ -24,7 +26,7 @@ public final class ClipboardModule: Module {
     public func candidates() async -> [ResultItem] {
         [
             ResultItem(
-                id: "clipboard:history",
+                id: Self.historyID,
                 title: Self.title,
                 icon: Self.icon,
                 kind: "Command",

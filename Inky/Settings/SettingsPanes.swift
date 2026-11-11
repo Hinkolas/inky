@@ -19,12 +19,13 @@ struct GeneralPane: View {
                     Text("Inky hotkey")
                     Spacer()
                     // Inky always has one: recording replaces it, nothing takes it away.
-                    HotkeyRecorder(combo: Binding(
-                        get: { preferences.hotkey },
-                        set: { if let combo = $0 { preferences.hotkey = combo } }
-                    )) { isRecording in
-                        preferences.isRecordingHotkey = isRecording
-                    }
+                    HotkeyRecorder(
+                        combo: Binding(
+                            get: { preferences.hotkey },
+                            set: { if let combo = $0 { preferences.hotkey = combo } }
+                        ),
+                        onRecordingChange: { preferences.isRecordingHotkey = $0 }
+                    )
                 }
             } header: {
                 PaneHeader(
@@ -131,14 +132,34 @@ private struct WebsiteIconSettings: View {
 
 /// A button that captures the next key combination pressed.
 struct HotkeyRecorder: View {
+    enum Style {
+        /// A button of its own, for a hotkey that is a setting.
+        case button
+        /// Part of a row in a list of commands, most of which have none.
+        case inline
+    }
+
     /// Nil while there is none.
     @Binding var combo: KeyCombo?
+    var style = Style.button
+    /// Says why a combination cannot be taken, or nil if it can.
+    var refusal: (KeyCombo) -> String? = { _ in nil }
     var onRecordingChange: (Bool) -> Void = { _ in }
 
     @State private var isRecording = false
     @State private var monitor: Any?
 
     var body: some View {
+        Group {
+            switch style {
+            case .button: button
+            case .inline: inline
+            }
+        }
+        .onDisappear(perform: stop)
+    }
+
+    private var button: some View {
         Button {
             if isRecording { stop() } else { start() }
         } label: {
@@ -154,7 +175,48 @@ struct HotkeyRecorder: View {
             .frame(minWidth: 120, minHeight: 22)
         }
         .help(isRecording ? "Press Escape to cancel" : "Click to record a new hotkey")
-        .onDisappear(perform: stop)
+    }
+
+    /// Where the hotkeys of a list line up.
+    private static let inlineWidth: CGFloat = 132
+
+    private var inline: some View {
+        HStack(spacing: 4) {
+            Button {
+                if isRecording { stop() } else { start() }
+            } label: {
+                Group {
+                    if isRecording {
+                        Text("Press keys…")
+                            .foregroundStyle(Color.accentColor)
+                            .padding(.horizontal, 7)
+                            .frame(height: 20)
+                            .background(
+                                Color.accentColor.opacity(0.14),
+                                in: RoundedRectangle(cornerRadius: 5.5, style: .continuous)
+                            )
+                    } else if let combo {
+                        Keycap(combo.symbols)
+                    } else {
+                        Text("Add Hotkey").foregroundStyle(.tertiary)
+                    }
+                }
+                .frame(minHeight: 22)
+                .contentShape(Rectangle())
+            }
+            .buttonStyle(.plain)
+            .help(isRecording ? "Press Escape to cancel, or Delete to remove the hotkey" : combo == nil ? "Click to record a hotkey" : "Click to record a different hotkey")
+            .accessibilityLabel(combo == nil ? "Add Hotkey" : "Hotkey")
+
+            if combo != nil, !isRecording {
+                Button("Remove Hotkey", systemImage: "xmark.circle.fill") { combo = nil }
+                    .labelStyle(.iconOnly)
+                    .buttonStyle(.plain)
+                    .foregroundStyle(.tertiary)
+                    .help("Remove the hotkey")
+            }
+        }
+        .frame(width: Self.inlineWidth, alignment: .leading)
     }
 
     private func start() {
@@ -166,9 +228,22 @@ struct HotkeyRecorder: View {
                 return nil
             }
             let candidate = KeyCombo(event: event)
+            // In a list, Delete on its own takes the hotkey away.
+            if style == .inline, candidate.flags.isEmpty,
+               [kVK_Delete, kVK_ForwardDelete].contains(Int(event.keyCode)) {
+                if combo != nil { combo = nil }
+                stop()
+                return nil
+            }
             // A hotkey needs a modifier other than Shift, or it would swallow typing.
             guard !candidate.flags.subtracting(.shift).isEmpty else {
                 NSSound.beep()
+                return nil
+            }
+            // Keys that something else has are refused, and it is said why.
+            guard refusal(candidate) == nil else {
+                NSSound.beep()
+                stop()
                 return nil
             }
             // Stop first: that re-registers the hotkey, and it must be the new one.
@@ -337,11 +412,16 @@ struct ModulePane: View {
             case "files":
                 FileSearchSettings(context: context)
             case "quicklinks":
-                QuicklinkSettings(store: context.quicklinks)
+                QuicklinkSettings(context: context)
             case "clipboard":
                 ClipboardSettings(preferences: preferences, history: context.clipboard)
             default:
                 EmptyView()
+            }
+
+            // The quicklinks are listed above, with what else is done to one.
+            if module.id != "quicklinks" {
+                ModuleCommands(module: module, context: context)
             }
         }
     }
@@ -454,8 +534,8 @@ private struct FileSearchSettings: View {
     }
 }
 
-/// How long the clipboard history keeps what is copied, how it is opened
-/// and what Return does in it, and how much it holds.
+/// How long the clipboard history keeps what is copied, what Return does
+/// in it, and how much it holds.
 private struct ClipboardSettings: View {
     @Bindable var preferences: Preferences
     let history: ClipboardHistory
@@ -503,20 +583,6 @@ private struct ClipboardSettings: View {
                 Text("Pastes into the active app").tag(true)
                 Text("Copies to the clipboard").tag(false)
             }
-            HStack {
-                Text("Clipboard History hotkey")
-                Spacer()
-                if preferences.clipboardHotkey != nil {
-                    Button("Remove", systemImage: "xmark.circle.fill") { preferences.clipboardHotkey = nil }
-                        .labelStyle(.iconOnly)
-                        .buttonStyle(.plain)
-                        .foregroundStyle(.secondary)
-                        .help("Remove the hotkey")
-                }
-                HotkeyRecorder(combo: $preferences.clipboardHotkey) { isRecording in
-                    preferences.isRecordingHotkey = isRecording
-                }
-            }
         } footer: {
             VStack(alignment: .leading, spacing: 6) {
                 Text(preferences.clipboardPastes
@@ -528,12 +594,6 @@ private struct ClipboardSettings: View {
                         Button("Open Accessibility Settings") { ClipDescription.openAccessibilitySettings() }
                             .buttonStyle(.link)
                     }
-                }
-                if !preferences.isClipboardHotkeyAvailable {
-                    Text(preferences.clipboardHotkey == preferences.hotkey
-                        ? "This shortcut already opens Inky. Choose a different one."
-                        : "macOS did not accept this shortcut. Choose a different one.")
-                        .foregroundStyle(.red)
                 }
             }
         }
@@ -570,31 +630,40 @@ private struct ClipboardSettings: View {
     }
 }
 
+/// The quicklinks, each a command with a hotkey and a box to switch it off,
+/// and a menu to edit or delete it.
 private struct QuicklinkSettings: View {
-    let store: QuicklinkStore
+    let context: AppContext
     @State private var draft: QuicklinkDraft?
 
     var body: some View {
+        let store = context.quicklinks
+        let isModuleEnabled = context.preferences.isEnabled("quicklinks")
         Section {
             if store.quicklinks.isEmpty {
                 Text("No quicklinks yet.")
                     .foregroundStyle(.secondary)
             }
             ForEach(store.quicklinks) { quicklink in
-                HStack(spacing: 10) {
-                    VStack(alignment: .leading, spacing: 2) {
-                        Text(quicklink.name)
-                        Text(quicklink.link)
-                            .font(.system(.caption, design: .monospaced))
-                            .foregroundStyle(.secondary)
-                            .lineLimit(1)
-                            .truncationMode(.middle)
+                CommandRow(
+                    id: quicklink.itemID,
+                    title: quicklink.name,
+                    subtitle: quicklink.link,
+                    icon: QuicklinkModule.icon(for: quicklink.template),
+                    context: context,
+                    isModuleEnabled: isModuleEnabled
+                ) {
+                    Menu {
+                        Button("Edit…") { draft = QuicklinkDraft(quicklink) }
+                        Button("Delete", role: .destructive) { delete(quicklink) }
+                    } label: {
+                        Label("More", systemImage: "ellipsis")
+                            .labelStyle(.iconOnly)
                     }
-                    Spacer()
-                    Button("Edit") { draft = QuicklinkDraft(quicklink) }
-                    Button("Delete", systemImage: "trash", role: .destructive) { store.delete(quicklink.id) }
-                        .labelStyle(.iconOnly)
-                        .help("Delete \(quicklink.name)")
+                    .menuStyle(.borderlessButton)
+                    .menuIndicator(.hidden)
+                    .fixedSize()
+                    .help("Edit or delete \(quicklink.name)")
                 }
             }
         } header: {
@@ -604,10 +673,19 @@ private struct QuicklinkSettings: View {
                 Button("New Quicklink", systemImage: "plus") { draft = QuicklinkDraft() }
                     .controlSize(.small)
             }
+        } footer: {
+            Text("A quicklink that is switched off is not found or suggested. A hotkey opens a quicklink from anywhere; one that asks for arguments shows Inky to take them.")
         }
         .sheet(item: $draft) { draft in
             QuicklinkSheet(draft: draft) { store.save(draft.quicklink) }
         }
+    }
+
+    /// With the quicklink goes what was remembered and decided about it.
+    private func delete(_ quicklink: Quicklink) {
+        context.quicklinks.delete(quicklink.id)
+        context.engine.usage.forget(quicklink.itemID)
+        context.engine.commandStore.forget(quicklink.itemID)
     }
 }
 

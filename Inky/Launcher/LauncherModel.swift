@@ -2,6 +2,7 @@ import AppKit
 import Carbon.HIToolbox
 import InkyCore
 import Observation
+import SwiftUI
 
 /// The launcher's state and behavior: query, results, selection, keyboard.
 @Observable
@@ -44,10 +45,17 @@ final class LauncherModel {
     @ObservationIgnored var pressesKeys = true
     @ObservationIgnored var openSettings: () -> Void = {}
     @ObservationIgnored var configureFallbacks: () -> Void = {}
+    /// Shows a command in the settings, where it gets a hotkey.
+    @ObservationIgnored var configureCommand: (ResultItem) -> Void = { _ in }
     @ObservationIgnored var isVisible: () -> Bool = { false }
     @ObservationIgnored private var frontmostPID: pid_t?
     @ObservationIgnored private var deferredSearch: Task<Void, Never>?
     @ObservationIgnored private var toastTimer: Task<Void, Never>?
+    /// The command whose screen lies right on the search, if one put it there.
+    @ObservationIgnored private var rootCommand: String?
+    /// Whether the next screen is simply there instead of arriving, as when
+    /// the launcher opens straight to it.
+    @ObservationIgnored private var arrivesInstantly = false
 
     private(set) var query = ""
     /// Whether the suggestions are listed although nothing is typed.
@@ -118,6 +126,7 @@ final class LauncherModel {
         selectedID = nil
         argumentValues = []
         routes = []
+        rootCommand = nil
         isNavigatingBack = false
         isActionMenuOpen = false
         toast = nil
@@ -260,8 +269,18 @@ final class LauncherModel {
             }
         }
 
-        let query = query
-        let context = ActionContext(query: query, arguments: argumentValues, frontmostPID: frontmostPID)
+        run(action, on: item, context: ActionContext(query: query, arguments: argumentValues, frontmostPID: frontmostPID))
+    }
+
+    /// `replacingScreens` lets a screen the action shows take the place of
+    /// the ones that are showing, and `instantly` has it simply be there.
+    private func run(
+        _ action: Action,
+        on item: ResultItem,
+        context: ActionContext,
+        replacingScreens: Bool = false,
+        instantly: Bool = false
+    ) {
         Task {
             if let confirmation = action.confirmation {
                 dismiss()
@@ -272,13 +291,76 @@ final class LauncherModel {
                 ) else { return }
             }
             do {
+                let depth = routes.count
+                arrivesInstantly = instantly
+                defer { arrivesInstantly = false }
                 try await action.perform(context)
+                if routes.count > depth {
+                    if replacingScreens, depth > 0 { routes.removeFirst(depth) }
+                    if routes.count == 1 { rootCommand = item.id }
+                }
                 // Deleting something is not a sign it should rank higher.
-                if !action.isDestructive { engine.recordUse(of: item, query: query) }
+                if !action.isDestructive { engine.recordUse(of: item, query: context.query) }
                 if action.behavior == .dismiss { dismiss() }
             } catch {
                 report(error)
             }
+        }
+    }
+
+    // MARK: - Hotkeys of commands
+
+    /// Whether a command's hotkey has to show the launcher: for the screen
+    /// the command opens in it, or for the arguments it asks for.
+    func opensLauncher(_ item: ResultItem) -> Bool {
+        guard let action = item.actions.first else { return false }
+        return action.behavior == .keepOpen || asksForArguments(item, action)
+    }
+
+    private func asksForArguments(_ item: ResultItem, _ action: Action) -> Bool {
+        action.usesArguments && item.arguments.contains(where: \.isRequired)
+    }
+
+    /// Whether the launcher shows what the command's hotkey shows, so that
+    /// the hotkey can put it away again.
+    func isShowing(_ item: ResultItem) -> Bool {
+        if route != nil { return rootCommand == item.id }
+        return selectedID == item.id && query == item.title
+    }
+
+    /// Runs a command that needs nothing of the launcher, as its hotkey does.
+    /// `frontmostPID` is the application the user is in.
+    func run(_ item: ResultItem, frontmostPID: pid_t?) {
+        guard let action = item.actions.first else { return }
+        let context = ActionContext(
+            arguments: Array(repeating: "", count: item.arguments.count),
+            frontmostPID: frontmostPID
+        )
+        run(action, on: item, context: context)
+    }
+
+    /// Shows what a command's hotkey shows, in a launcher that is open: the
+    /// command's screen, or the command in the search, waiting for its
+    /// arguments. `instantly` is for a launcher that opened just for this.
+    func open(_ item: ResultItem, instantly: Bool) {
+        guard let action = item.actions.first else { return }
+        isActionMenuOpen = false
+
+        guard asksForArguments(item, action) else {
+            run(action, on: item, context: ActionContext(frontmostPID: frontmostPID), replacingScreens: true, instantly: instantly)
+            return
+        }
+        if !routes.isEmpty {
+            isNavigatingBack = true
+            routes = []
+            rootCommand = nil
+        }
+        query = item.title
+        refresh(resetSelection: true)
+        guard itemIDs.contains(item.id) else { return }
+        select(item.id)
+        if let missing = item.arguments.firstIndex(where: \.isRequired) {
+            focus(.argument(missing))
         }
     }
 
@@ -306,16 +388,32 @@ final class LauncherModel {
                     self?.perform(action, on: item)
                 }
             }
-            var resetRanking: [CommandAction] = []
+            // What Inky itself offers for a result.
+            var own: [CommandAction] = []
+            var disable: [CommandAction] = []
             if engine.hasRanking(item) {
-                resetRanking.append(CommandAction(title: "Reset Ranking", symbol: "arrow.counterclockwise") { [weak self] in
+                own.append(CommandAction(title: "Reset Ranking", symbol: "arrow.counterclockwise") { [weak self] in
                     self?.resetRanking(of: item)
                 })
             }
-            // Whatever destroys something comes last, out of the way.
+            if engine.isCommand(item) {
+                own.append(CommandAction(title: "Configure Command…", symbol: "command") { [weak self] in
+                    self?.configureCommand(item)
+                })
+                disable.append(CommandAction(
+                    title: "Disable Command",
+                    symbol: "eye.slash",
+                    shortcut: Self.disableShortcut,
+                    isDestructive: true
+                ) { [weak self] in
+                    self?.disable(item)
+                })
+            }
+            // Whatever destroys something comes last, out of the way, and
+            // after it what only takes the result out of sight.
             sections.append(MenuSection(
                 title: item.title,
-                actions: actions.filter { !$0.isDestructive } + resetRanking + actions.filter(\.isDestructive)
+                actions: actions.filter { !$0.isDestructive } + own + actions.filter(\.isDestructive) + disable
             ))
         }
 
@@ -347,6 +445,30 @@ final class LauncherModel {
         showToast("Ranking reset")
     }
 
+    /// Hard to press by accident: the command is gone from the results
+    /// until it is switched on again in the settings.
+    private static let disableShortcut = KeyShortcut("d", [.control, .shift, .command])
+
+    /// Switches a command off: it is not found or suggested anymore, and its
+    /// hotkey does nothing.
+    func disable(_ item: ResultItem) {
+        guard engine.isCommand(item) else { return }
+        selectNeighbor(of: item.id)
+        engine.commandStore.setEnabled(item.id, false)
+        refresh()
+        showToast("Disabled “\(item.title)”. Settings → Commands brings it back.")
+    }
+
+    /// Moves the selection on to the next result, for when the selected one
+    /// is about to go.
+    private func selectNeighbor(of id: String) {
+        guard route == nil, selectedID == id else { return }
+        let ids = itemIDs
+        guard let index = ids.firstIndex(of: id) else { return }
+        let neighbor = index + 1 < ids.count ? index + 1 : index - 1
+        if ids.indices.contains(neighbor) { select(ids[neighbor]) }
+    }
+
     func runMenuAction(_ action: CommandAction) {
         isActionMenuOpen = false
         action.run()
@@ -375,14 +497,23 @@ final class LauncherModel {
     private func push(_ route: Route) {
         isActionMenuOpen = false
         isNavigatingBack = false
-        routes.append(route)
+        guard arrivesInstantly else {
+            routes.append(route)
+            return
+        }
+        var transaction = Transaction()
+        transaction.disablesAnimations = true
+        withTransaction(transaction) { routes.append(route) }
     }
 
     func popRoute() {
         guard !routes.isEmpty else { return }
         isNavigatingBack = true
         routes.removeLast()
-        if routes.isEmpty { focus(.search) }
+        if routes.isEmpty {
+            rootCommand = nil
+            focus(.search)
+        }
     }
 
     func showQuicklinks() {
@@ -413,15 +544,12 @@ final class LauncherModel {
     func deleteQuicklink(_ quicklink: Quicklink) {
         // In the search, the selection moves on to the next result, as it
         // does in the quicklink browser.
-        if route == nil, let selectedID, selectedID.hasSuffix(quicklink.itemID) {
-            let ids = itemIDs
-            if let index = ids.firstIndex(of: selectedID) {
-                let neighbor = index + 1 < ids.count ? index + 1 : index - 1
-                if ids.indices.contains(neighbor) { select(ids[neighbor]) }
-            }
+        if let selectedID, selectedID.hasSuffix(quicklink.itemID) {
+            selectNeighbor(of: selectedID)
         }
         quicklinks.delete(quicklink.id)
         engine.usage.forget(quicklink.itemID)
+        engine.commandStore.forget(quicklink.itemID)
         showToast("Deleted “\(quicklink.name)”")
     }
 
@@ -498,7 +626,9 @@ final class LauncherModel {
 
     private func didUninstall(_ review: UninstallReview, _ outcome: UninstallOutcome) {
         if outcome.moved.contains(where: \.isApplication) {
-            engine.usage.forget(ApplicationModule.itemID(for: review.app.path))
+            let id = ApplicationModule.itemID(for: review.app.path)
+            engine.usage.forget(id)
+            engine.commandStore.forget(id)
             applicationsDidChange()
         }
         // Back to where the user came from, unless they have left already.
@@ -527,15 +657,6 @@ final class LauncherModel {
     func showClipboard() {
         if case .clipboard = route { return }
         push(.clipboard(ClipboardBrowser(history: clipboard)))
-    }
-
-    /// Shows the clipboard history in place of whatever is showing, as when
-    /// it is asked for by its hotkey.
-    func openClipboard() {
-        if case .clipboard = route { return }
-        isActionMenuOpen = false
-        isNavigatingBack = false
-        routes = [.clipboard(ClipboardBrowser(history: clipboard))]
     }
 
     /// The application the user was in, which is where pasting goes.
@@ -833,7 +954,12 @@ final class LauncherModel {
                 dismiss()
             }
         default:
-            guard let item = selectedItem, let action = item.actions.first(where: { action in
+            guard let item = selectedItem else { return false }
+            if key == Self.disableShortcut.key, modifiers == Self.disableShortcut.modifiers, engine.isCommand(item) {
+                disable(item)
+                return true
+            }
+            guard let action = item.actions.first(where: { action in
                 action.shortcut.map { $0.key == key && $0.modifiers == modifiers } ?? false
             }) else { return false }
             perform(action, on: item)

@@ -13,6 +13,10 @@ final class AppContext {
     let launcher: LauncherController
     let fileModule = FileModule()
 
+    /// Called when the commands that can be run, or their hotkeys, may have
+    /// changed.
+    var onCommandsChange: () -> Void = {}
+
     private var settingsWindow: SettingsWindowController?
     private let clipboardModule = ClipboardModule()
     /// False until the app says that what is copied may be kept.
@@ -81,6 +85,12 @@ final class AppContext {
             initial: quicklinks.initialFallbacks
         )
 
+        // The clipboard history had a hotkey before any other command could.
+        let commandStore = CommandStore(
+            fileURL: directory.appendingPathComponent("commands.json"),
+            initialHotkeys: preferences.formerClipboardHotkey.map { [ClipboardModule.historyID: $0] } ?? [:]
+        )
+
         // This order is the order of sections when nothing is typed.
         engine = SearchEngine(
             modules: [
@@ -95,7 +105,8 @@ final class AppContext {
                 fileModule,
             ],
             usage: usage,
-            fallbacks: fallbacks
+            fallbacks: fallbacks,
+            commands: commandStore
         )
         engine.isEnabled = { [preferences] id in preferences.isEnabled(id) }
 
@@ -107,6 +118,7 @@ final class AppContext {
         #endif
         launcher.model.openSettings = { [unowned self] in showSettings() }
         launcher.model.configureFallbacks = { [unowned self] in showSettings(pane: "fallbacks") }
+        launcher.model.configureCommand = { [unowned self] item in showSettings(pane: "commands", search: item.title) }
 
         commands.openSettings = { [unowned self] in showSettings() }
         commands.createQuicklink = { [unowned self] in launcher.model.editQuicklink(nil) }
@@ -122,7 +134,17 @@ final class AppContext {
         clipboardModule.onClear = { [clipboard] in
             Task { await clipboard.clear() }
         }
-        preferences.onModulesChange = { [unowned self] in updateClipboardRecording() }
+        preferences.onModulesChange = { [unowned self] in
+            updateClipboardRecording()
+            onCommandsChange()
+        }
+        commandStore.onChange = { [unowned self] in onCommandsChange() }
+        // A command is there to be run once its module has listed it.
+        let refreshLauncher = engine.onChange
+        engine.onChange = { [unowned self] in
+            refreshLauncher?()
+            onCommandsChange()
+        }
     }
 
     /// Begins to keep what is copied, for as long as the clipboard history is on.
@@ -140,10 +162,10 @@ final class AppContext {
         }
     }
 
-    /// Shows the clipboard history, or closes it, as its hotkey does.
-    func toggleClipboard() {
-        guard preferences.isEnabled(clipboardModule.id) else { return }
-        launcher.toggleClipboard()
+    /// Runs a command as its hotkey does, unless it or its module is off.
+    func runCommand(_ id: String) {
+        guard let item = engine.command(withID: id) else { return }
+        launcher.run(item)
     }
 
     /// Fetches every website icon again, in the background.
@@ -151,12 +173,13 @@ final class AppContext {
         favicons.refreshAll(including: quicklinks.quicklinks.compactMap { Favicon.host(of: $0.link) })
     }
 
-    func showSettings(pane: String? = nil, activating: Bool = true) {
+    /// `search` is what the list of all commands is narrowed down to.
+    func showSettings(pane: String? = nil, search: String? = nil, activating: Bool = true) {
         launcher.hide()
         if settingsWindow == nil {
             settingsWindow = SettingsWindowController(context: self)
         }
-        settingsWindow?.show(pane: pane, activating: activating)
+        settingsWindow?.show(pane: pane, search: search, activating: activating)
     }
 }
 
