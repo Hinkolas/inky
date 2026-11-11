@@ -54,15 +54,23 @@ final class SettingsWindowController: NSWindowController {
         case "about": navigation.pane = .about
         case let id?: navigation.pane = .module(id)
         }
+        guard let window else { return }
         guard activating else {
             #if DEBUG
-            window?.level = .beneathDesktop
+            window.level = .beneathDesktop
             #endif
-            window?.orderFrontRegardless()
+            window.orderFrontRegardless()
             return
         }
+        if window.isMiniaturized { window.deminiaturize(nil) }
+        // Settings is usually asked for from the launcher, which takes keys
+        // without activating Inky. Activation is only a request and lands
+        // later, if at all, and until then an open window ordered front can
+        // stay behind the other app's windows. Raise it regardless; it
+        // becomes key once Inky is active.
         NSApp.activate()
-        window?.makeKeyAndOrderFront(nil)
+        window.makeKeyAndOrderFront(nil)
+        window.orderFrontRegardless()
     }
 }
 
