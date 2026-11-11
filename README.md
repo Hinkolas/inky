@@ -1,82 +1,72 @@
+<div align="center">
+
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="docs/images/icon-dark.png">
+  <img src="docs/images/icon-light.png" alt="Inky's app icon" width="128" height="128">
+</picture>
+
 # Inky
 
-A fast, open source launcher for macOS. Press a hotkey anywhere, type, and act:
-launch apps, open links with arguments, calculate and convert, ask for the
-time somewhere, look at a color, find files, run system commands. No accounts, no subscriptions, no telemetry.
+**A fast, open source launcher for macOS.**<br>
+Press a hotkey anywhere, type, and act.
 
-Inky is at an early stage. The core works and is meant to be built on.
+[Download](https://github.com/Hinkolas/inky/releases) ·
+[Changelog](CHANGELOG.md) ·
+[Security and privacy](SECURITY.md)
 
-The first public alpha is being prepared as `0.1.0-alpha.1`. Every version,
-pre-releases included, is a signed and notarized download on the
-[releases page](https://github.com/Hinkolas/inky/releases), or build it from
-source with the instructions below. Alpha versions may change their behavior
-and data formats; back up data you want to keep.
+</div>
 
-**Clipboard privacy:** copies that password managers mark as confidential are
-left out of the history. Everything else, including passwords copied from
-elsewhere, is kept without application-level encryption. Disable Clipboard
-History in Settings if that does not suit your use.
-See [Security and privacy](SECURITY.md) for storage, permissions and reporting.
+Launch apps, open links with arguments, search your clipboard history,
+calculate and convert, ask for the time somewhere, look at a color, find
+files and run system commands. Every command can have a hotkey of its own.
+No accounts, no subscriptions, no telemetry.
 
-## What it does today
+> [!WARNING]
+> Inky is at an early stage. Its behavior and the format of its data may still
+> change between versions; back up the data you want to keep.
 
-- **Updates**: downloaded versions update themselves from GitHub Releases, through [Sparkle](https://sparkle-project.org/). Settings → General picks the update channel: Stable gets releases, Beta also gets alpha, beta and release candidate versions. A pre-release you downloaded starts on Beta. Check for Updates is in the menu bar menu, in the launcher and in Settings → General.
-- **Welcome window**: the first launch walks through the settings that matter most: the hotkey, which features are on, the clipboard history and its permissions, what Inky may look up online, and how it starts. Settings → About shows it again.
+## Install
 
-- **Applications**: fuzzy search over installed apps, ranked by how often and how recently you pick them. What you pick for a search rises to the top; Reset Ranking under ⌘K makes a result forget that.
-- **Uninstall Application**: removes an app together with what it left in your Library: settings, caches, saved state. Pick the app from the command's list, or press ⌃X on it in the results. Inky lists what it found, each file with a box to keep it, and ⌘↵ moves the rest to the Trash, where everything can be put back. A file counts as the app's if it is named after the app's bundle identifier, or after the app itself; what another installed app calls its own is never listed, and neither are the apps macOS is made of.
-- **Quicklinks**: named shortcuts to websites, folders and app links. Placeholders such as `{argument name="Query"}`, `{clipboard}` and `{selection}` are filled in when the link opens; arguments are typed right in the search bar. Websites show their own icon. Edit (⌘E) or delete (⌃X) one right from the results.
-- **Clipboard History**: keeps what you copy, be it text, links, colors, images or files, to find it and paste it again. Return pastes an item into the app you were in; ⌘C only copies it, ⌥↵ pastes text without its formatting. Type to find words anywhere in what was copied, press ⇥ to go through the kinds, and narrow it down to what was copied lately. Pin (⌘P) what you need again and again: pinned items stay for good, sit in the sidebar, are reached with ↑ from the latest copy, and can be given a name (⌘R) to find them by. Settings → Clipboard History says how long a copy is kept, from a day to forever, and what Return does. Like any command, the history can have a hotkey of its own.
-- **Commands and hotkeys**: everything Inky lists is a command, be it an application, a quicklink or a system command. Each can be switched off, so that what you never open is not found or suggested, and each can have a hotkey that runs it from anywhere: launch an app, lock the screen, open a folder. A command that opens in Inky, such as the clipboard history, shows Inky with it, and puts it away when pressed again; a quicklink that asks for arguments shows Inky to take them. Settings → Commands lists them all in one place, and the pane of each module lists its own. In the results, Disable Command under ⌘K (⌃⇧⌘D) switches off the selected one, and Configure Command… shows it in the settings.
-- **Fallback commands**: every search can be sent on to a command that takes one argument, such as a quicklink for a web search. They are listed below the results, and are all there is when nothing was found. Choose them, and their order, under Settings → Fallback Commands.
-- **Calculator**: type `128 * 3 + 4`, `20% off 80` or `sqrt(2) ^ 10`, press Return to copy the result. It converts units (`5 ft 10 in in cm`, `72 F to C`, `1 GiB in MB`), currencies (`100 usd in eur`), number bases (`255 in hex`, `0xFF`) and the units of a web page (`2rem in px`, with the size of a rem set in Settings).
-- **Time**: `time in tokyo`, `5pm london in berlin`, `time diff san francisco`, `monday in 3 weeks`, `days until 24 dec`.
-- **Color**: type a color the way a stylesheet writes it, such as `#ff6363`, `rgb(255 99 99 / 50%)` or `oklch(0.7 0.19 23)`, to see it and copy it written another way. `#fa32fa in rgb` asks for one; ⌘K lists them all, from hex and HSL to OKLCH and a color in Swift. The one you copy most comes first.
-- **File search**: files and folders by name, from the Spotlight index.
-- **System commands**: lock, sleep, restart, shut down, log out, empty trash, toggle dark mode.
+Download the latest version from the
+[releases page](https://github.com/Hinkolas/inky/releases), unzip it and move
+`Inky.app` to Applications. Every version is signed and notarized, and updates
+itself.
 
-The default hotkey is ⌥Space. Change it under Settings → General, where you
-also choose a light or dark appearance, or leave that to the system, and turn
-the launcher's animations off. With Reduce Motion on in System Settings the
-launcher fades instead of moving.
+Inky needs a Mac with Apple silicon and macOS 15 or later. The first launch
+walks you through the hotkey, the features you want and the permissions they
+need. The default hotkey is ⌥Space.
 
-Inky fetches three things from the internet, and each can be turned off.
+Updates come in two channels, chosen under Settings → General: **Stable** gets
+releases, **Beta** also gets alpha, beta and release candidate versions. A
+pre-release you downloaded starts on Beta.
 
-Website icons: it asks DuckDuckGo for the icon of each website in your
-quicklinks, sending only the domain name, and keeps the answer on your Mac for
-30 days. Local addresses such as `localhost` are never sent. Settings →
-General turns this off, and fetches all icons again when you ask.
+## Features
 
-Exchange rates: it downloads the reference rates of the European Central Bank,
-one file with about thirty currencies, a few times a day while you use the
-calculator. The file is the same for everyone, so nothing about what you
-convert is sent. Settings → Calculator turns this off, and currencies are then
-not converted.
+- **Applications.** Fuzzy search over your apps, ranked by how often and how
+  recently you pick them.
+- **Quicklinks.** Named shortcuts to websites, folders and app links, with
+  placeholders such as `{argument name="Query"}`, `{clipboard}` and
+  `{selection}`. Arguments are typed right in the search bar.
+- **Clipboard history.** Text, links, colors, images and files you copied,
+  searchable and ready to paste again. Pin what you need often and give it a
+  name.
+- **Calculator.** `128 * 3 + 4`, `20% off 80`, units (`5 ft 10 in in cm`),
+  currencies (`100 usd in eur`), number bases (`255 in hex`) and CSS units
+  (`2rem in px`).
+- **Time.** `time in tokyo`, `5pm london in berlin`, `monday in 3 weeks`,
+  `days until 24 dec`.
+- **Color.** Type `#ff6363` or `oklch(0.7 0.19 23)` to see a color and copy
+  it written another way, from hex and HSL to a color in Swift.
+- **Uninstall applications.** Remove an app together with what it left in your
+  Library. You review every file, and everything goes to the Trash.
+- **Commands and hotkeys.** Switch off what you never use, and give any
+  command a hotkey: launch an app, lock the screen, open a folder.
+- **Fallback commands.** Send a search on to a web search or another command
+  when nothing was found.
+- **File search and system commands.** Files and folders from the Spotlight
+  index; lock, sleep, restart, empty the Trash, toggle dark mode.
 
-Updates: a downloaded version asks GitHub once a day for the list of Inky's
-releases (`getinky.dev/appcast.xml`, on GitHub Pages), and
-installs an update only if it is signed with Inky's release key. Settings →
-General turns the checks off, lets updates install by themselves, and picks
-the update channel. Builds you make yourself from source do not update
-themselves unless they carry the release key.
-
-The clipboard history stays on your Mac, in a database only your account can
-read, and is never sent anywhere. What a password manager marks as
-confidential is left out, unless Settings → Clipboard History says to keep it.
-A password copied from anywhere else cannot be told apart, and is kept. What an
-app puts on the clipboard only to move it along, as text expanders do, is left
-out too.
-
-Two things in it need your say. macOS asks before an app may read what other
-apps copied: the first time Inky does, allow it, and choose Allow for Inky
-under System Settings → Privacy & Security → Paste from Other Apps, or macOS
-would ask again with every copy and Inky keeps nothing. And to paste for you,
-Inky presses ⌘V, which takes Accessibility access; until it has that, it
-copies and you paste.
-
-Inky opens as a single floating bar. Results appear in a card below it as you
-type. A command that needs more room, such as Manage Quicklinks, takes over
-with a screen of its own: a back button and a header above a card.
+### Keys
 
 | Key | Action |
 | --- | --- |
@@ -90,20 +80,61 @@ with a screen of its own: a back button and a header above a card.
 | ⎋ | Clear, go back, or close |
 | ⌘, | Settings |
 
-## Build
+## Privacy
 
-Requires a Mac with Apple silicon, macOS 15 or later, and Xcode 26 or later.
+Inky goes online for three things, and each can be turned off in Settings:
+
+- **Website icons:** it asks DuckDuckGo for the icon of each website in your
+  quicklinks, sending only the domain name. Local addresses such as
+  `localhost` are never sent.
+- **Exchange rates:** it downloads the European Central Bank's reference
+  rates, the same file for everyone, so nothing about what you convert is sent.
+- **Updates:** once a day it reads the list of releases from
+  `getinky.dev/appcast.xml`, and installs only updates signed with Inky's
+  release key.
+
+Everything else stays on your Mac: your quicklinks, settings and usage as
+readable JSON in `~/Library/Application Support/Inky/`, and the clipboard
+history in a database only your account can read.
+
+> [!IMPORTANT]
+> The clipboard history leaves out what password managers mark as
+> confidential. A password copied from anywhere else cannot be told apart, and
+> is kept without encryption. Turn the clipboard history off in Settings if
+> that does not suit you.
+
+To keep what other apps copy, Inky needs to be allowed under System Settings →
+Privacy & Security → Paste from Other Apps. To paste for you it presses ⌘V,
+which takes Accessibility access; without it, Inky copies and you paste.
+See [SECURITY.md](SECURITY.md) for storage, permissions and reporting a
+vulnerability.
+
+## Roadmap
+
+- **Lua extensions.** Write your own commands in Lua. Inky's own features are
+  built on the same module contract that extensions will use, so the API is
+  already proven by real features.
+- **Encrypted passwords** in the clipboard history, when you choose to keep
+  them.
+- **Working days and holidays** in the calculator: `workdays in march`,
+  `55h in workdays`.
+- **Airports** in the time module: `time in JFK`.
+
+## Build from source
+
+Requires Xcode 26 or later.
 
 ```sh
 make run     # build and launch
 make test    # run the core tests
-make release # optimized local build (ad-hoc signed, not notarized)
+make release # optimized local build (ad-hoc signed, does not update itself)
 make places  # rebuild the list of cities from GeoNames
 ```
 
 Or open `Inky.xcodeproj` in Xcode and run the `Inky` scheme.
 
-## How it is organized
+<details>
+<summary><strong>How it is organized</strong></summary>
 
 ```
 Inky/        The app: hotkey, launcher panel, settings. AppKit and SwiftUI.
@@ -113,55 +144,30 @@ InkyCore/    Everything without UI: search, ranking, modules, quicklinks.
 Every feature is a module (see `InkyCore/Sources/InkyCore/Search/Module.swift`).
 The ones that come with Inky, such as the calculator and quicklinks, are system
 modules; an extension is a module that does not come with Inky. A module hands
-the engine results as plain data: a title, an icon description, actions. The app
-renders them. System modules are written against the same contract that scripted
-extensions will use, so the extension API is one that has already been proven by
-real features. Loading third-party extensions is not implemented yet.
+the engine results as plain data: a title, an icon description, actions. The
+app renders them.
 
 A command's screen is put together from a small set of parts in
 `Inky/Commands/CommandKit.swift`: `CommandScreen` (the header pill a command
-configures and the body card, which the launcher's own bar and card turn
-into), `Sidebar` for narrowing down
-what is shown, `SidePanel` for previews, details and actions, and the rows,
-form groups and controls that go inside them. The quicklink browser and editor
-are built from these, and extensions will describe the same parts as data.
+configures and the body card), `Sidebar` for narrowing down what is shown,
+`SidePanel` for previews, details and actions, and the rows, form groups and
+controls that go inside them. Extensions will describe the same parts as data.
 
-Your data lives in `~/Library/Application Support/Inky/` as readable JSON:
-`quicklinks.json`, `usage.json`, `fallbacks.json` and `commands.json`, which
-names the commands you switched off and the hotkeys you gave.
-
-The clipboard history is the exception: `Clipboard/history.sqlite`, with the
-images as files next to it. It can grow to many thousands of entries, so it
-is read a page at a time and searched through an index of every run of three
-characters (SQLite's FTS5), which finds words anywhere in a text without
-reading the texts. macOS does not say when something is copied; Inky looks at
-the pasteboard's change count twice a second and reads it only when that moved
-(`InkyCore/Sources/InkyCore/Clipboard/`).
+Your data is in `~/Library/Application Support/Inky/`: `quicklinks.json`,
+`usage.json`, `fallbacks.json` and `commands.json`. The clipboard history is
+in `Clipboard/history.sqlite`, with the images as files next to it, searched
+through an SQLite FTS5 trigram index. macOS does not say when something is
+copied; Inky looks at the pasteboard's change count twice a second and reads
+it only when that moved (`InkyCore/Sources/InkyCore/Clipboard/`).
 
 The calculator and the time module share a lexer and the table of units
-(`InkyCore/Sources/InkyCore/Calculator/`). Each has a recursive descent parser
-of its own on top: a calculation becomes a number or an amount with a unit, a
-question about time becomes a moment or a day. Neither answers a word or a
-number on its own, so a search stays a search.
+(`InkyCore/Sources/InkyCore/Calculator/`), each with a recursive descent parser
+of its own on top.
 
-The cities the time module knows, in
-`InkyCore/Sources/InkyCore/Resources/places.tsv`, are from
-[GeoNames](https://www.geonames.org), licensed under
-[CC BY 4.0](https://creativecommons.org/licenses/by/4.0/).
-See [third-party notices](THIRD_PARTY_NOTICES.md) for the source and modifications.
+</details>
 
-## Contributing and licensing
-
-Inky's source is available under the [MIT license](LICENSE). The GeoNames data
-retains its CC BY 4.0 license. License and attribution notices are also included
-in the built application's resources.
-
-See [CONTRIBUTING.md](CONTRIBUTING.md) for development and pull requests,
-[SECURITY.md](SECURITY.md) for private vulnerability reports, and
-[CHANGELOG.md](CHANGELOG.md) for release notes. Maintainers can follow the
-[release checklist](docs/RELEASING.md).
-
-### Development flags
+<details>
+<summary><strong>Development flags</strong></summary>
 
 Debug builds accept launch arguments that put the app into a known state:
 
@@ -175,23 +181,26 @@ take no focus and register no hotkey or menu bar icon, for automated captures),
 what the command's hotkey does), `--settings [pane]`, `--search <text>` (what
 the settings' list of all commands is narrowed down to),
 `--onboarding [hotkey|features|clipboard|online|ready]` (the welcome window,
-at a step), `--quicklinks`,
-`--new-quicklink`, `--uninstall [application]`, `--clipboard [filter]`,
-`--clipboard-samples` (fill an empty history with made-up copies, with `--data`
-only), `--appearance light|dark`, `--backdrop light|dark` (a
-stand-in wallpaper behind a quiet launcher, to see the translucency),
-`--data <folder>` (keep quicklinks, usage and the clipboard history there
-instead of in your own, with a pasteboard to itself and without pressing keys
-in other apps, and uninstall only the applications in its `Applications`, with
-what they left in its `Library`),
+at a step), `--quicklinks`, `--new-quicklink`, `--uninstall [application]`,
+`--clipboard [filter]`, `--clipboard-samples` (fill an empty history with
+made-up copies, with `--data` only), `--appearance light|dark`,
+`--backdrop light|dark` (a stand-in wallpaper behind a quiet launcher, to see
+the translucency), `--data <folder>` (keep quicklinks, usage and the clipboard
+history there instead of in your own, with a pasteboard to itself and without
+pressing keys in other apps, and uninstall only the applications in its
+`Applications`, with what they left in its `Library`),
 `--motion full|reduced|off`, and `--slow <factor>` (stretch every animation, to
 look at one frame by frame).
 
-## Roadmap
+</details>
 
-- Lua extensions, hosted behind the `Module` contract
-- Passwords in the clipboard history, when kept: encrypted at rest
-- A calendar that knows your working days and holidays, to answer `workdays in march` and `55h in workdays`
-- Sizes for print and export in the calculator: `2 inches in px at 72 ppi`
-- Airports in the time module: `time in JFK`
-- A persistent index (SQLite) with full-text and, optionally, vector search
+## Contributing and license
+
+Bug reports and focused improvements are welcome; see
+[CONTRIBUTING.md](CONTRIBUTING.md). Report vulnerabilities privately as
+described in [SECURITY.md](SECURITY.md).
+
+Inky is available under the [MIT license](LICENSE). The cities the time module
+knows are from [GeoNames](https://www.geonames.org), under
+[CC BY 4.0](https://creativecommons.org/licenses/by/4.0/); see the
+[third-party notices](THIRD_PARTY_NOTICES.md).
