@@ -1,8 +1,8 @@
 # Changelog
 
-## 0.1.0-alpha.1 — Unreleased
+## 0.1.0-alpha.1 — 2026-11-11
 
-First public alpha, in preparation.
+The first public alpha.
 
 ### Included
 

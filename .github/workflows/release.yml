@@ -141,10 +141,20 @@ jobs:
           # This version's section of the changelog, as the release notes.
           # update-feed.yml shows the published release's notes in Sparkle's
           # update window, so edits to the draft's notes reach it too.
+          # GitHub shows each line break of release notes, so the changelog's
+          # wrapped lines are joined into whole paragraphs and list items.
           awk -v v="$VERSION" '
             /^## / { if (found) exit; if (index($0, "## " v " ") == 1 || $0 == "## " v) { found = 1; next } }
             found { print }
-          ' CHANGELOG.md > "$RUNNER_TEMP/notes.md"
+          ' CHANGELOG.md | awk '
+            function flush() { if (buf != "") print buf; buf = "" }
+            /^```/ { flush(); print; fence = !fence; next }
+            fence { print; next }
+            /^[[:space:]]*$/ { flush(); print; next }
+            /^(#|>|\|)/ || /^[[:space:]]*([-*+]|[0-9]+\.)[[:space:]]/ { flush(); buf = $0; next }
+            { line = $0; sub(/^[[:space:]]+/, "", line); buf = (buf == "") ? line : buf " " line }
+            END { flush() }
+          ' > "$RUNNER_TEMP/notes.md"
           test -s "$RUNNER_TEMP/notes.md" || { echo "::error::CHANGELOG.md has no section for $VERSION"; exit 1; }
           ls -la dist
 

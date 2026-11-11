@@ -6,7 +6,9 @@ change to how the launcher works, discuss it in an issue first.
 ## Build and check
 
 Use macOS 15 or later and Xcode 26 or later, with Xcode selected as the active
-developer directory. There are no external Swift package dependencies.
+developer directory. The one external Swift package is
+[Sparkle](https://sparkle-project.org/), for updates; Xcode resolves it on the
+first build.
 
 ```sh
 make build

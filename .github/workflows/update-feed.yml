@@ -89,10 +89,12 @@ jobs:
           gh release download "$TAG" --repo "$GITHUB_REPOSITORY" --pattern "Inky-$VERSION.zip" --dir "$work"
           (cd "$work" && gh release download "$TAG" --repo "$GITHUB_REPOSITORY" --pattern "Inky-$VERSION.zip.sha256" --output - | shasum -a 256 -c -)
           # The published notes, as a fragment without DOCTYPE or body, which
-          # Sparkle embeds in the feed and shows in its update window.
+          # Sparkle embeds in the feed and shows in its update window. Plain
+          # markdown mode, as in a README: gfm mode, as in comments, would turn
+          # every line break into a hard break.
           jq -r .body "$RUNNER_TEMP/release.json" > "$RUNNER_TEMP/notes.md"
           if [ -s "$RUNNER_TEMP/notes.md" ]; then
-            gh api markdown -f mode=gfm -F text=@"$RUNNER_TEMP/notes.md" > "$work/Inky-$VERSION.html"
+            gh api markdown -f mode=markdown -F text=@"$RUNNER_TEMP/notes.md" > "$work/Inky-$VERSION.html"
           fi
           channel=()
           if [ "$PRERELEASE" = true ]; then channel=(--channel beta); fi
