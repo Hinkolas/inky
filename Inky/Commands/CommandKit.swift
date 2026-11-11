@@ -228,6 +228,84 @@ struct SidebarRow: View {
 
 // MARK: - Lists
 
+/// A row of one line, the kind the search lists its results in: something
+/// leading, a title, a quieter line after it and something at the trailing edge.
+struct ListRow<Leading: View, Trailing: View>: View {
+    let title: String
+    var subtitle: String?
+    let isSelected: Bool
+    /// Between the trailing edge of the row and what is there.
+    var trailingInset: CGFloat = 10
+    @ViewBuilder let leading: Leading
+    @ViewBuilder let trailing: Trailing
+
+    var body: some View {
+        HStack(spacing: 12) {
+            leading
+            Text(title)
+                .font(.system(size: 15, weight: isSelected ? .semibold : .medium))
+                .lineLimit(1)
+                .layoutPriority(1)
+            if let subtitle {
+                Text(subtitle)
+                    .font(.system(size: 13.5))
+                    .foregroundStyle(Theme.quiet(isSelected: isSelected))
+                    .lineLimit(1)
+                    .truncationMode(.middle)
+            }
+            Spacer(minLength: 12)
+            trailing
+                .layoutPriority(1)
+        }
+        .foregroundStyle(isSelected ? AnyShapeStyle(Theme.onAccent) : AnyShapeStyle(.primary))
+        .padding(.leading, 10)
+        .padding(.trailing, trailingInset)
+        .frame(height: LauncherMetrics.rowHeight)
+        .background(
+            isSelected ? AnyShapeStyle(Theme.accent) : AnyShapeStyle(.clear),
+            in: RoundedRectangle(cornerRadius: LauncherMetrics.rowRadius, style: .continuous)
+        )
+        .padding(.horizontal, 8)
+        .contentShape(Rectangle())
+    }
+}
+
+/// The title above the rows of a list, as tall as the search has them.
+struct ListHeader: View {
+    let title: String
+
+    init(_ title: String) {
+        self.title = title
+    }
+
+    var body: some View {
+        PanelLabel(title)
+            .padding(.horizontal, 18)
+            .padding(.top, 5)
+            .frame(height: LauncherMetrics.sectionHeaderHeight)
+    }
+}
+
+extension ScrollViewProxy {
+    /// Brings the selected row of a list into view.
+    ///
+    /// Scrolls for the row after it, in the direction of travel: the
+    /// selection then never touches the edge of the card, whose corners
+    /// would cut into it. At either end of the list, `top` and `end` are
+    /// what is above the first row and below the last.
+    func reveal<ID: Hashable>(_ id: ID, after previous: ID?, among ids: [ID], top: some Hashable, end: some Hashable) {
+        guard let index = ids.firstIndex(of: id) else { return }
+        if index == 0 {
+            scrollTo(top, anchor: .top)
+        } else if index == ids.count - 1 {
+            scrollTo(end, anchor: .bottom)
+        } else {
+            let wasBelow = previous.flatMap(ids.firstIndex(of:)).map { $0 > index } ?? false
+            scrollTo(ids[wasBelow ? index - 1 : index + 1])
+        }
+    }
+}
+
 /// A row with a title, a line below it and something at the trailing edge.
 struct DetailRow: View {
     static let height: CGFloat = 51

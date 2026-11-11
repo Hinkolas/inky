@@ -86,8 +86,8 @@ final class LauncherController: NSObject, NSWindowDelegate {
     /// Tells a fade that ran to its end from one that was cut short.
     private var closeCount = 0
 
-    init(engine: SearchEngine, quicklinks: QuicklinkStore) {
-        model = LauncherModel(engine: engine, quicklinks: quicklinks)
+    init(engine: SearchEngine, quicklinks: QuicklinkStore, uninstaller: ApplicationUninstaller) {
+        model = LauncherModel(engine: engine, quicklinks: quicklinks, uninstaller: uninstaller)
         super.init()
 
         let content = NSHostingView(rootView: LauncherView(model: model))
@@ -279,6 +279,12 @@ final class LauncherController: NSObject, NSWindowDelegate {
                 "quicklinks(filter=\(browser.filter) query=\(browser.query) selected=\(browser.selected?.name ?? "nil") visible=\(browser.visible.count))"
             case .quicklinkEditor(let draft):
                 "editor(\(draft.isNew ? "new" : draft.name))"
+            case .uninstallBrowser(let browser):
+                "uninstall(query=\(browser.query) selected=\(browser.selected?.name ?? "nil") visible=\(browser.visible.count))"
+            case .uninstall(let review):
+                // A minus marks what is unticked.
+                "uninstall(\(review.app.name) cursor=\((review.cursor as NSString).lastPathComponent) "
+                    + "items=\(review.items.map { review.isChosen($0) ? $0.name : "-" + $0.name }) summary=\(review.summary))"
             }
         }
         return "focus=\(model.focusTarget) responder=\(panel.firstResponder.map { String(describing: type(of: $0)) } ?? "nil") "

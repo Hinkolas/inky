@@ -244,6 +244,91 @@ private struct KeyGlyph: View {
     }
 }
 
+/// A box that is ticked or not. It is only drawn: what it is in takes the click.
+struct Checkbox: View {
+    let isOn: Bool
+    /// On the accent color, such as inside a selected row.
+    var isOnAccent = false
+
+    var body: some View {
+        let shape = RoundedRectangle(cornerRadius: 5, style: .continuous)
+        ZStack {
+            if isOn {
+                shape.fill(isOnAccent ? Theme.onAccent : Theme.accent)
+                Image(systemName: "checkmark")
+                    .font(.system(size: 10, weight: .heavy))
+                    .foregroundStyle(isOnAccent ? Theme.accent : Theme.onAccent)
+            } else {
+                shape.strokeBorder(isOnAccent ? AnyShapeStyle(Theme.onAccent.opacity(0.75)) : AnyShapeStyle(.tertiary), lineWidth: 1.5)
+            }
+        }
+        .frame(width: 17, height: 17)
+        .accessibilityElement(children: .ignore)
+        .accessibilityLabel(isOn ? "Selected" : "Not selected")
+    }
+}
+
+/// The keys that matter right now, below the card on a small surface of
+/// their own so they stay readable over any wallpaper.
+struct KeyHintBar<Content: View>: View {
+    @ViewBuilder let content: Content
+
+    var body: some View {
+        HStack(spacing: 16) { content }
+            // As wide as what it says, whatever room it is given while the
+            // launcher around it changes size.
+            .fixedSize()
+            .padding(.horizontal, 12)
+            .frame(height: 32)
+            .glassSurface(cornerRadius: nil)
+    }
+}
+
+/// Keys and what they do. One cap per chord: keys pressed together share a
+/// cap, keys that are alternatives each get their own.
+struct KeyHint<Title: View>: View {
+    let chords: [[String]]
+    let title: Title
+
+    init(_ chords: [String]..., @ViewBuilder title: () -> Title) {
+        self.chords = chords
+        self.title = title()
+    }
+
+    var body: some View {
+        HStack(spacing: 6) {
+            HStack(spacing: 3) {
+                ForEach(chords, id: \.self) { Keycap($0) }
+            }
+            title
+        }
+    }
+}
+
+extension KeyHint where Title == KeyHintLabel {
+    init(_ chords: [String]..., title: String) {
+        self.chords = chords
+        self.title = KeyHintLabel(title)
+    }
+}
+
+/// What a key does: a word that is never broken or cut short.
+struct KeyHintLabel: View {
+    let title: String
+
+    init(_ title: String) {
+        self.title = title
+    }
+
+    var body: some View {
+        Text(title)
+            .font(.system(size: 12.5, weight: .medium))
+            .foregroundStyle(.secondary)
+            .lineLimit(1)
+            .fixedSize()
+    }
+}
+
 /// Dims its label while pressed, and lets it give a little. For buttons that
 /// draw their own background.
 struct PressableButtonStyle: ButtonStyle {
@@ -292,14 +377,17 @@ struct CircleButton: View {
     }
 }
 
-/// A capsule button for the end of the bar. `isProminent` fills it with the accent color.
+/// A capsule button for the end of the bar. `isProminent` fills it with the
+/// accent color, or with red if what it does is `isDestructive`.
 struct CapsuleButton: View {
     let title: String
     var keys: [String] = []
     var isProminent = false
+    var isDestructive = false
     let action: () -> Void
 
     var body: some View {
+        let fill = isDestructive ? Theme.destructiveFill : Theme.accent
         Button(action: action) {
             HStack(spacing: 7) {
                 Text(title)
@@ -310,11 +398,11 @@ struct CapsuleButton: View {
             .padding(.leading, 16)
             .padding(.trailing, keys.isEmpty ? 16 : 9)
             .frame(height: LauncherMetrics.barControlSize)
-            .background(isProminent ? AnyShapeStyle(Theme.accent) : AnyShapeStyle(Theme.controlFill), in: Capsule())
+            .background(isProminent ? AnyShapeStyle(fill) : AnyShapeStyle(Theme.controlFill), in: Capsule())
             .overlay {
                 if !isProminent { Capsule().strokeBorder(Theme.controlStroke) }
             }
-            .shadow(color: isProminent ? Theme.accent.opacity(0.35) : Theme.controlShadow, radius: 3, y: 1)
+            .shadow(color: isProminent ? fill.opacity(0.35) : Theme.controlShadow, radius: 3, y: 1)
         }
         .buttonStyle(PressableButtonStyle())
     }

@@ -45,6 +45,9 @@ enum Theme {
     /// The accent as a text color, readable on a dark surface too.
     static let accentText = Color(light: .hex(0x2563EB), dark: .hex(0x8DB2FF))
     static let destructive = Color(light: .hex(0xB42318), dark: .hex(0xFF7B72))
+    /// Behind white text, where the accent would be if the button did not
+    /// take something away.
+    static let destructiveFill = Color(light: .hex(0xD92D20), dark: .hex(0xD93A3A))
 
     /// Laid over the blur of a floating surface.
     static let glassTint = Color(light: .white.alpha(0.62), dark: .hex(0x14172A, alpha: 0.46))
@@ -69,6 +72,11 @@ enum Theme {
     /// Chips, keycaps and the selected row of a sidebar.
     static let subtleFill = Color(light: .black.alpha(0.065), dark: .white.alpha(0.1))
     static let separator = Color(light: .black.alpha(0.09), dark: .white.alpha(0.1))
+
+    /// For text that steps back behind a title, also on a selected row.
+    static func quiet(isSelected: Bool) -> AnyShapeStyle {
+        isSelected ? AnyShapeStyle(onAccent.opacity(0.82)) : AnyShapeStyle(.secondary)
+    }
 }
 
 extension Color {

@@ -78,7 +78,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
 #if DEBUG
 /// Launch arguments that put the app into a known state for development:
 /// `--show`, `--pin`, `--quiet`, `--query <text>`, `--keys "tab a cmd+k hide show"`,
-/// `--settings [pane]`, `--new-quicklink`, `--quicklinks`,
+/// `--settings [pane]`, `--new-quicklink`, `--quicklinks`, `--uninstall [application]`,
 /// `--appearance light|dark`, `--backdrop light|dark`, `--data <folder>`,
 /// `--motion full|reduced|off`, `--slow <factor>`.
 ///
@@ -91,7 +91,9 @@ enum DebugLaunch {
     static var isQuiet: Bool { arguments.contains("--quiet") }
 
     /// A folder to keep quicklinks and usage in instead of the user's own,
-    /// so a run can save and delete freely.
+    /// so a run can save and delete freely. It is also the only place
+    /// applications are uninstalled from: the ones in its `Applications`,
+    /// with what they left in its `Library`.
     static var dataDirectory: URL? {
         guard let path = value(after: "--data") else { return nil }
         let directory = URL(fileURLWithPath: path, isDirectory: true)
@@ -129,7 +131,7 @@ enum DebugLaunch {
                 Task { await context.engine.reloadAll() }
             }
         }
-        guard !Set(arguments).isDisjoint(with: ["--show", "--query", "--new-quicklink", "--quicklinks"]) else {
+        guard !Set(arguments).isDisjoint(with: ["--show", "--query", "--new-quicklink", "--quicklinks", "--uninstall"]) else {
             return
         }
         Task {
@@ -143,6 +145,18 @@ enum DebugLaunch {
             }
             if arguments.contains("--new-quicklink") {
                 context.launcher.model.editQuicklink(nil)
+            }
+            if arguments.contains("--uninstall") {
+                // The list to choose from, or what would go with the named one.
+                let name = value(after: "--uninstall")
+                let app = context.uninstaller.installedApplications().first {
+                    $0.name.caseInsensitiveCompare(name ?? "") == .orderedSame && context.uninstaller.canUninstall($0)
+                }
+                if let app {
+                    context.launcher.model.reviewUninstall(of: app)
+                } else {
+                    context.launcher.model.showUninstaller()
+                }
             }
             for key in (value(after: "--keys") ?? "").split(separator: " ") {
                 try? await Task.sleep(for: .milliseconds(120))

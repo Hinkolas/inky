@@ -8,6 +8,7 @@ final class AppContext {
     let favicons: FaviconStore
     let exchangeRates: ExchangeRateStore
     let engine: SearchEngine
+    let uninstaller: ApplicationUninstaller
     let launcher: LauncherController
     let fileModule = FileModule()
 
@@ -17,9 +18,15 @@ final class AppContext {
         #if DEBUG
         let directory = DebugLaunch.dataDirectory ?? AppSupport.directory
         let caches = DebugLaunch.dataDirectory ?? AppSupport.cacheDirectory
+        // A run with data of its own uninstalls only what is in that folder,
+        // so nothing it does can reach a real application.
+        uninstaller = DebugLaunch.dataDirectory.map {
+            ApplicationUninstaller(home: $0.path, coversSystem: false)
+        } ?? ApplicationUninstaller()
         #else
         let directory = AppSupport.directory
         let caches = AppSupport.cacheDirectory
+        uninstaller = ApplicationUninstaller()
         #endif
         quicklinks = QuicklinkStore(fileURL: directory.appendingPathComponent("quicklinks.json"))
 
@@ -48,6 +55,7 @@ final class AppContext {
 
         let commands = InkyCommandModule()
         let quicklinkModule = QuicklinkModule(store: quicklinks)
+        let applications = ApplicationModule(uninstaller: uninstaller)
         fileModule.maxResults = preferences.fileSearchLimit
 
         let usage = UsageStore(fileURL: directory.appendingPathComponent("usage.json"))
@@ -63,7 +71,7 @@ final class AppContext {
                 quicklinkModule,
                 commands,
                 SystemModule(),
-                ApplicationModule(),
+                applications,
                 calculator,
                 TimeModule(),
                 ColorModule(usage: usage),
@@ -74,7 +82,7 @@ final class AppContext {
         )
         engine.isEnabled = { [preferences] id in preferences.isEnabled(id) }
 
-        launcher = LauncherController(engine: engine, quicklinks: quicklinks)
+        launcher = LauncherController(engine: engine, quicklinks: quicklinks, uninstaller: uninstaller)
         launcher.model.openSettings = { [unowned self] in showSettings() }
         launcher.model.configureFallbacks = { [unowned self] in showSettings(pane: "fallbacks") }
 
@@ -83,6 +91,10 @@ final class AppContext {
         commands.manageQuicklinks = { [unowned self] in launcher.model.showQuicklinks() }
         quicklinkModule.onEdit = { [unowned self] quicklink in launcher.model.editQuicklink(quicklink) }
         quicklinkModule.onDelete = { [unowned self] quicklink in launcher.model.deleteQuicklink(quicklink) }
+        applications.onUninstall = { [unowned self] app in launcher.model.reviewUninstall(of: app) }
+        applications.onChooseUninstall = { [unowned self] in launcher.model.showUninstaller() }
+        // The module lists the applications again, without the one that went.
+        launcher.model.applicationsDidChange = { [applications] in applications.onChange?() }
     }
 
     /// Fetches every website icon again, in the background.

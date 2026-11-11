@@ -39,6 +39,12 @@ struct LauncherView: View {
                         case .quicklinkEditor(let draft):
                             QuicklinkEditorScreen(model: model, draft: draft)
                                 .transition(motion.screen(isGoingBack: model.isNavigatingBack))
+                        case .uninstallBrowser(let browser):
+                            UninstallBrowserScreen(model: model, browser: browser)
+                                .transition(motion.screen(isGoingBack: model.isNavigatingBack))
+                        case .uninstall(let review):
+                            UninstallReviewScreen(model: model, review: review)
+                                .transition(motion.screen(isGoingBack: model.isNavigatingBack))
                         }
                     }
                     // A screen is laid out at its final size from the start.
@@ -79,6 +85,12 @@ struct LauncherView: View {
                     } else if model.route == nil, model.showsResults {
                         HintBar(model: model)
                             .transition(motion.belowCard)
+                    } else if case .uninstallBrowser = model.route {
+                        UninstallBrowserScreen.hints
+                            .transition(motion.belowCard)
+                    } else if case .uninstall = model.route {
+                        UninstallReviewScreen.hints
+                            .transition(motion.belowCard)
                     }
                 }
                 .animation(motion.quick, value: model.toast)
@@ -117,6 +129,10 @@ struct LauncherView: View {
             LauncherLayout(command: QuicklinkBrowserScreen.size)
         case .quicklinkEditor:
             LauncherLayout(command: QuicklinkEditorScreen.size)
+        case .uninstallBrowser:
+            LauncherLayout(command: UninstallBrowserScreen.size)
+        case .uninstall:
+            LauncherLayout(command: UninstallReviewScreen.size)
         }
     }
 }
@@ -478,10 +494,7 @@ private struct ResultsList: View {
                     ForEach(Self.lines(for: model.sections)) { line in
                         switch line {
                         case .header(let title):
-                            PanelLabel(title)
-                                .padding(.horizontal, 18)
-                                .padding(.top, 5)
-                                .frame(height: LauncherMetrics.sectionHeaderHeight)
+                            ListHeader(title)
                         case .item(let item):
                             let isSelected = item.id == model.selectedID
                             ResultRow(item: item, isSelected: isSelected, primaryAction: isSelected ? item.actions.first?.title : nil)
@@ -502,22 +515,9 @@ private struct ResultsList: View {
             .scrollIndicators(.never)
             .onChange(of: model.selectedID) { previous, id in
                 guard let id else { return }
-                let ids = model.itemIDs
-                guard let index = ids.firstIndex(of: id) else { return }
-
-                if index == 0 {
-                    // Bring the section title back into view too.
-                    proxy.scrollTo(Self.top, anchor: .top)
-                } else if index == ids.count - 1 {
-                    // And the footer.
-                    proxy.scrollTo(Self.end, anchor: .bottom)
-                } else {
-                    // Scroll for the row after the selected one, in the
-                    // direction of travel. The selection then never touches
-                    // the edge of the card, whose corners would cut into it.
-                    let wasBelow = previous.flatMap(ids.firstIndex(of:)).map { $0 > index } ?? false
-                    proxy.scrollTo(ids[wasBelow ? index - 1 : index + 1])
-                }
+                // At the ends, the section title and the footer come back
+                // into view too.
+                proxy.reveal(id, after: previous, among: model.itemIDs, top: Self.top, end: Self.end)
             }
         }
     }
@@ -593,22 +593,9 @@ private struct ResultRow: View {
     let primaryAction: String?
 
     var body: some View {
-        let dimmed = isSelected ? AnyShapeStyle(Theme.onAccent.opacity(0.82)) : AnyShapeStyle(.secondary)
-
-        HStack(spacing: 12) {
+        ListRow(title: item.title, subtitle: item.subtitle, isSelected: isSelected, trailingInset: isSelected ? 8 : 10) {
             IconView(icon: item.icon, size: 24, outline: isSelected ? 0.55 : 0)
-            Text(item.title)
-                .font(.system(size: 15, weight: isSelected ? .semibold : .medium))
-                .lineLimit(1)
-                .layoutPriority(1)
-            if let subtitle = item.subtitle {
-                Text(subtitle)
-                    .font(.system(size: 13.5))
-                    .foregroundStyle(dimmed)
-                    .lineLimit(1)
-                    .truncationMode(.middle)
-            }
-            Spacer(minLength: 12)
+        } trailing: {
             if let primaryAction {
                 HStack(spacing: 6) {
                     Text(primaryAction)
@@ -618,81 +605,42 @@ private struct ResultRow: View {
                     Keycap(["↵"], tone: .onAccent)
                     Keycap(["⌘", "K"], tone: .onAccent)
                 }
-                .layoutPriority(1)
             } else {
                 Text(item.kind)
                     .font(.system(size: 13.5))
-                    .foregroundStyle(dimmed)
+                    .foregroundStyle(Theme.quiet(isSelected: isSelected))
                     .lineLimit(1)
-                    .layoutPriority(1)
             }
         }
-        .foregroundStyle(isSelected ? AnyShapeStyle(Theme.onAccent) : AnyShapeStyle(.primary))
-        .padding(.leading, 10)
-        .padding(.trailing, isSelected ? 8 : 10)
-        .frame(height: LauncherMetrics.rowHeight)
-        .background(
-            isSelected ? AnyShapeStyle(Theme.accent) : AnyShapeStyle(.clear),
-            in: RoundedRectangle(cornerRadius: LauncherMetrics.rowRadius, style: .continuous)
-        )
-        .padding(.horizontal, 8)
-        .contentShape(Rectangle())
     }
 }
 
 // MARK: - Below the card
 
-/// The keys that matter right now, on their own small surface so they stay
-/// readable over any wallpaper.
+/// The keys of the search.
 private struct HintBar: View {
     let model: LauncherModel
 
     var body: some View {
         let closes = model.query.isEmpty
 
-        HStack(spacing: 16) {
-            hint(["↑"], ["↓"]) { label("Move") }
-            hint(["⌘", "K"]) { label("Actions") }
-            hint(["esc"]) {
+        KeyHintBar {
+            KeyHint(["↑"], ["↓"], title: "Move")
+            KeyHint(["⌘", "K"], title: "Actions")
+            KeyHint(["esc"]) {
                 // Both are always there and one is seen. The bar keeps its
                 // width, and neither has to find its place while the bar
                 // is on the move.
                 ZStack(alignment: .leading) {
-                    label("Close")
+                    KeyHintLabel("Close")
                         .opacity(closes ? 1 : 0)
                         .accessibilityHidden(!closes)
-                    label("Clear")
+                    KeyHintLabel("Clear")
                         .opacity(closes ? 0 : 1)
                         .accessibilityHidden(closes)
                 }
             }
         }
-        // As wide as what it says, whatever room it is given while the
-        // launcher around it changes size.
-        .fixedSize()
-        .padding(.horizontal, 12)
-        .frame(height: 32)
-        .glassSurface(cornerRadius: nil)
-    }
-
-    /// One cap per chord: keys pressed together share a cap, keys that are
-    /// alternatives each get their own.
-    private func hint(_ chords: [String]..., @ViewBuilder title: () -> some View) -> some View {
-        HStack(spacing: 6) {
-            HStack(spacing: 3) {
-                ForEach(chords, id: \.self) { Keycap($0) }
-            }
-            title()
-        }
-    }
-
-    /// A word that is never broken or cut short.
-    private func label(_ title: String) -> some View {
-        Text(title)
-            .font(.system(size: 12.5, weight: .medium))
-            .foregroundStyle(.secondary)
-            .lineLimit(1)
-            .fixedSize()
     }
 }
 

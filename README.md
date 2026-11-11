@@ -9,6 +9,7 @@ Inky is at an early stage. The core works and is meant to be built on.
 ## What it does today
 
 - **Applications**: fuzzy search over installed apps, ranked by how often and how recently you pick them. What you pick for a search rises to the top; Reset Ranking under ⌘K makes a result forget that.
+- **Uninstall Application**: removes an app together with what it left in your Library: settings, caches, saved state. Pick the app from the command's list, or press ⌃X on it in the results. Inky lists what it found, each file with a box to keep it, and ⌘↵ moves the rest to the Trash, where everything can be put back. A file counts as the app's if it is named after the app's bundle identifier, or after the app itself; what another installed app calls its own is never listed, and neither are the apps macOS is made of.
 - **Quicklinks**: named shortcuts to websites, folders and app links. Placeholders such as `{argument name="Query"}`, `{clipboard}` and `{selection}` are filled in when the link opens; arguments are typed right in the search bar. Websites show their own icon. Edit (⌘E) or delete (⌃X) one right from the results.
 - **Fallback commands**: every search can be sent on to a command that takes one argument, such as a quicklink for a web search. They are listed below the results, and are all there is when nothing was found. Choose them, and their order, under Settings → Fallback Commands.
 - **Calculator**: type `128 * 3 + 4`, `20% off 80` or `sqrt(2) ^ 10`, press Return to copy the result. It converts units (`5 ft 10 in in cm`, `72 F to C`, `1 GiB in MB`), currencies (`100 usd in eur`), number bases (`255 in hex`, `0xFF`) and the units of a web page (`2rem in px`, with the size of a rem set in Settings).
@@ -110,9 +111,11 @@ Inky.app/Contents/MacOS/Inky --pin --query "saf" --keys "cmd+k down"
 `--show`, `--pin` (stay open without focus), `--quiet` (draw beneath the desktop,
 take no focus and register no hotkey or menu bar icon, for automated captures),
 `--query <text>`, `--keys "<keys>"`, `--settings [pane]`, `--quicklinks`,
-`--new-quicklink`, `--appearance light|dark`, `--backdrop light|dark` (a
+`--new-quicklink`, `--uninstall [application]`, `--appearance light|dark`, `--backdrop light|dark` (a
 stand-in wallpaper behind a quiet launcher, to see the translucency),
-`--data <folder>` (keep quicklinks and usage there instead of in your own),
+`--data <folder>` (keep quicklinks and usage there instead of in your own, and
+uninstall only the applications in its `Applications`, with what they left in
+its `Library`),
 `--motion full|reduced|off`, and `--slow <factor>` (stretch every animation, to
 look at one frame by frame).
 

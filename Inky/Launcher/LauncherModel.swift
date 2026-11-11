@@ -10,6 +10,8 @@ final class LauncherModel {
     enum Route {
         case quicklinks(QuicklinkBrowser)
         case quicklinkEditor(QuicklinkDraft)
+        case uninstallBrowser(UninstallBrowser)
+        case uninstall(UninstallReview)
     }
 
     enum FocusTarget: Hashable {
@@ -26,6 +28,9 @@ final class LauncherModel {
 
     @ObservationIgnored let engine: SearchEngine
     @ObservationIgnored let quicklinks: QuicklinkStore
+    @ObservationIgnored let uninstaller: ApplicationUninstaller
+    /// Called after an application was uninstalled.
+    @ObservationIgnored var applicationsDidChange: () -> Void = {}
     @ObservationIgnored var dismiss: () -> Void = {}
     @ObservationIgnored var openSettings: () -> Void = {}
     @ObservationIgnored var configureFallbacks: () -> Void = {}
@@ -56,9 +61,10 @@ final class LauncherModel {
     /// which it needs, was still empty.
     private(set) var missingArgumentTick = 0
 
-    init(engine: SearchEngine, quicklinks: QuicklinkStore) {
+    init(engine: SearchEngine, quicklinks: QuicklinkStore, uninstaller: ApplicationUninstaller) {
         self.engine = engine
         self.quicklinks = quicklinks
+        self.uninstaller = uninstaller
     }
 
     var route: Route? { routes.last }
@@ -445,6 +451,65 @@ final class LauncherModel {
         return actions
     }
 
+    // MARK: - Uninstalling
+
+    /// Lists the applications that can be uninstalled.
+    func showUninstaller() {
+        push(.uninstallBrowser(UninstallBrowser(uninstaller: uninstaller)))
+    }
+
+    /// Shows what uninstalling `app` would move to the Trash.
+    func reviewUninstall(of app: ApplicationInfo) {
+        push(.uninstall(UninstallReview(app: app, uninstaller: uninstaller)))
+    }
+
+    /// Moves what is ticked in `review` to the Trash.
+    func uninstall(_ review: UninstallReview) {
+        // Not before everything that would go has been listed.
+        guard !review.isSearching, !review.isUninstalling else { return }
+        let items = review.chosen
+        guard !items.isEmpty else {
+            showToast("Nothing is selected")
+            return
+        }
+
+        review.isUninstalling = true
+        Task {
+            defer { review.isUninstalling = false }
+            do {
+                let outcome = try await uninstaller.uninstall(items, of: review.app)
+                didUninstall(review, outcome)
+            } catch {
+                report(error)
+            }
+        }
+    }
+
+    private func didUninstall(_ review: UninstallReview, _ outcome: UninstallOutcome) {
+        if outcome.moved.contains(where: \.isApplication) {
+            engine.usage.forget(ApplicationModule.itemID(for: review.app.path))
+            applicationsDidChange()
+        }
+        // Back to where the user came from, unless they have left already.
+        if case .uninstall(let current) = route, current === review {
+            popRoute()
+            if case .uninstallBrowser(let browser) = route {
+                // What was typed found the application that is gone now.
+                browser.query = ""
+                browser.reload()
+            }
+        }
+
+        let summary = outcome.summary(of: review.app.name)
+        if isVisible() {
+            showToast(summary)
+        } else if !outcome.left.isEmpty {
+            // The launcher closes when macOS asks for a password. Only what
+            // went wrong is worth an alert.
+            Alerts.show(error: summary)
+        }
+    }
+
     // MARK: - Keyboard
 
     /// Handles a key press before the focused text field sees it.
@@ -476,7 +541,47 @@ final class LauncherModel {
             default: return false
             }
             return true
+        case .uninstallBrowser(let browser):
+            return handleKey(key, modifiers, in: browser)
+        case .uninstall(let review):
+            return handleKey(key, modifiers, in: review)
         }
+    }
+
+    private func handleKey(_ key: String, _ modifiers: KeyShortcut.Modifiers, in browser: UninstallBrowser) -> Bool {
+        switch (key, modifiers) {
+        case ("down", []), ("n", .control), ("j", .control): browser.moveSelection(by: 1)
+        case ("up", []), ("p", .control), ("k", .control): browser.moveSelection(by: -1)
+        case ("return", []):
+            if let app = browser.selected { reviewUninstall(of: app) }
+        case ("escape", []):
+            if browser.query.isEmpty {
+                popRoute()
+            } else {
+                browser.query = ""
+            }
+        default: return false
+        }
+        return true
+    }
+
+    private func handleKey(_ key: String, _ modifiers: KeyShortcut.Modifiers, in review: UninstallReview) -> Bool {
+        switch (key, modifiers) {
+        case ("down", []), ("n", .control), ("j", .control): review.moveCursor(by: 1)
+        case ("up", []), ("p", .control), ("k", .control): review.moveCursor(by: -1)
+        // Return ticks and unticks. Uninstalling takes more than the key
+        // that led here, pressed once too often.
+        case ("return", []), ("space", []): review.toggleCurrent()
+        case ("a", .command): review.toggleAll()
+        case ("return", .command): uninstall(review)
+        case ("o", .command):
+            NSWorkspace.shared.activateFileViewerSelecting([URL(fileURLWithPath: review.cursor)])
+            dismiss()
+        case ("escape", []): popRoute()
+        // There is nothing to type into here. Letters would only beep.
+        default: return modifiers.subtracting(.shift).isEmpty
+        }
+        return true
     }
 
     private func handleSearchKey(_ key: String, _ modifiers: KeyShortcut.Modifiers) -> Bool {
