@@ -294,7 +294,7 @@ private struct SearchBar: View {
                 .foregroundStyle(.primary.opacity(0.75))
                 .frame(width: 24)
 
-            TextField(Self.placeholder, text: Binding(get: { model.query }, set: model.setQuery))
+            TextField(Self.placeholder, text: Binding(get: { model.query }, set: { model.setQuery($0) }))
                 .textFieldStyle(.plain)
                 .font(.system(size: Self.fontSize))
                 .focused($focus, equals: .search)
