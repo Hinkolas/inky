@@ -107,20 +107,29 @@ window are its published notes on GitHub.
 
 ### One-time setup
 
-1. **Update key.** Build once so Sparkle is resolved, then run
-   `build/SourcePackages/artifacts/sparkle/Sparkle/bin/generate_keys`. It
-   keeps the private key in your login keychain and prints the public key. Put
-   the public key in `INKY_UPDATE_PUBLIC_KEY` for both configurations in
-   `Inky.xcodeproj` and commit it. Export the private key with
-   `generate_keys -x sparkle-private-key`, store its contents as the
-   `SPARKLE_PRIVATE_KEY` secret (`gh secret set SPARKLE_PRIVATE_KEY <
-   sparkle-private-key`), and delete the file. Back the key up: an app
-   can only be updated by archives signed with the key it was built with.
-2. **Developer ID.** In the Apple Developer Program, create a Developer ID
-   Application certificate, export it with its private key as a `.p12`, and
-   store `base64 -i cert.p12` as `DEVELOPER_ID_P12`, its password as
-   `DEVELOPER_ID_P12_PASSWORD`, and the team ID as `APPLE_TEAM_ID`.
-3. **Notarization.** Create an App Store Connect API key with the Developer
+1. **Update key.** Done on 2026-11-11; the public key is in the project.
+   Build once so Sparkle is resolved, then run
+   `build/SourcePackages/artifacts/sparkle/Sparkle/bin/generate_keys --account inky`.
+   It keeps the private key in your login keychain under the account `inky`
+   and prints the public key. Put the public key in `INKY_UPDATE_PUBLIC_KEY`
+   for both configurations in `Inky.xcodeproj` and commit it. Export the
+   private key with `generate_keys --account inky -x sparkle-private-key`,
+   store it as the `SPARKLE_PRIVATE_KEY` secret (`gh secret set
+   SPARKLE_PRIVATE_KEY < sparkle-private-key`), keep a copy in a password
+   manager, and delete the file. Never lose it: installed apps only accept
+   updates signed with the key they were built with.
+2. **Developer ID.** Done on 2026-11-11. In the Apple Developer Program,
+   create a Developer ID Application certificate. Xcode's Manage
+   Certificates refused with "only the Account Holder" for the account
+   holder, so use the website: Keychain Access → Certificate Assistant →
+   Request a Certificate From a Certificate Authority (saved to disk), upload
+   it at developer.apple.com → Certificates → Developer ID Application (G2
+   Sub-CA), and add the downloaded `.cer` to the login keychain. Export the
+   certificate with its private key as a `.p12`, and store
+   `base64 -i cert.p12` as `DEVELOPER_ID_P12`, its password as
+   `DEVELOPER_ID_P12_PASSWORD`, and the team ID (in parentheses in the
+   certificate's name) as `APPLE_TEAM_ID`.
+3. **Notarization.** Done on 2026-11-11. Create an App Store Connect API key with the Developer
    role and store `base64 -i AuthKey.p8` as `NOTARY_API_KEY_P8`, with
    `NOTARY_API_KEY_ID` and `NOTARY_API_ISSUER_ID`.
 4. **GitHub Pages.** Once the repository is public, set Settings → Pages →
