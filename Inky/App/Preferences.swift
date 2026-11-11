@@ -30,6 +30,35 @@ enum AppearanceMode: String, CaseIterable, Identifiable {
     }
 }
 
+/// How long after the launcher was put away it opens again as it was left.
+enum ResumeWindow: String, CaseIterable, Identifiable {
+    case off
+    case minute
+    case fiveMinutes
+    case always
+
+    var id: Self { self }
+
+    var title: String {
+        switch self {
+        case .off: "Never"
+        case .minute: "Within 1 minute"
+        case .fiveMinutes: "Within 5 minutes"
+        case .always: "Always"
+        }
+    }
+
+    /// In seconds.
+    var duration: TimeInterval {
+        switch self {
+        case .off: 0
+        case .minute: 60
+        case .fiveMinutes: 300
+        case .always: .infinity
+        }
+    }
+}
+
 /// User settings, stored in UserDefaults.
 @Observable
 final class Preferences {
@@ -44,6 +73,7 @@ final class Preferences {
     @ObservationIgnored var onPixelsPerRemChange: (() -> Void)?
     @ObservationIgnored var onClipboardRetentionChange: (() -> Void)?
     @ObservationIgnored var onClipboardConcealedChange: (() -> Void)?
+    @ObservationIgnored var onHistoryLimitChange: (() -> Void)?
     /// Called when a module was turned on or off.
     @ObservationIgnored var onModulesChange: (() -> Void)?
 
@@ -81,6 +111,23 @@ final class Preferences {
     var animations: Bool {
         didSet { defaults.set(animations, forKey: Key.animations) }
     }
+
+    /// How long the launcher, put away by a click elsewhere or by its
+    /// hotkey, opens again with what was in it.
+    var resumeWindow: ResumeWindow {
+        didSet { defaults.set(resumeWindow.rawValue, forKey: Key.resumeWindow) }
+    }
+
+    /// How many searches the launcher remembers for ↑ to bring back. None
+    /// switches that off.
+    var historyLimit: Int {
+        didSet {
+            defaults.set(historyLimit, forKey: Key.historyLimit)
+            onHistoryLimitChange?()
+        }
+    }
+
+    static let historyLimits = [0, 25, 50, 100, 250]
 
     /// Where website icons come from, if anywhere.
     var faviconSource: FaviconSource {
@@ -158,13 +205,16 @@ final class Preferences {
     private init() {
         defaults.register(defaults: [
             Key.showMenuBarIcon: true, Key.animations: true, Key.fileSearchLimit: 8, Key.pixelsPerRem: 16,
-            Key.clipboardPastes: true,
+            Key.clipboardPastes: true, Key.historyLimit: 100,
         ])
         hotkey = defaults.data(forKey: Key.hotkey)
             .flatMap { try? JSONDecoder().decode(KeyCombo.self, from: $0) } ?? .defaultLauncher
         showMenuBarIcon = defaults.bool(forKey: Key.showMenuBarIcon)
         appearance = defaults.string(forKey: Key.appearance).flatMap(AppearanceMode.init) ?? .system
         animations = defaults.bool(forKey: Key.animations)
+        resumeWindow = defaults.string(forKey: Key.resumeWindow).flatMap(ResumeWindow.init) ?? .minute
+        let limit = defaults.integer(forKey: Key.historyLimit)
+        historyLimit = Self.historyLimits.contains(limit) ? limit : 100
         faviconSource = defaults.string(forKey: Key.faviconSource).flatMap(FaviconSource.init) ?? .duckDuckGo
         exchangeRateSource = defaults.string(forKey: Key.exchangeRateSource).flatMap(ExchangeRateSource.init) ?? .ecb
         let pixels = defaults.integer(forKey: Key.pixelsPerRem)
@@ -214,6 +264,8 @@ final class Preferences {
         static let showMenuBarIcon = "showMenuBarIcon"
         static let appearance = "appearance"
         static let animations = "animations"
+        static let resumeWindow = "resumeWindow"
+        static let historyLimit = "historyLimit"
         static let faviconSource = "faviconSource"
         static let exchangeRateSource = "exchangeRateSource"
         static let pixelsPerRem = "pixelsPerRem"

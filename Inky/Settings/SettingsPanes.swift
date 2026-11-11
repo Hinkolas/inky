@@ -75,11 +75,56 @@ struct GeneralPane: View {
                 }
             }
 
+            LauncherMemorySettings(preferences: preferences, history: context.inputHistory)
+
             UpdateSettings(updates: context.updates)
 
             WebsiteIconSettings(preferences: preferences, context: context)
         }
         .onAppear { launchesAtLogin = preferences.launchesAtLogin }
+    }
+}
+
+/// What the launcher keeps of what was in it: for opening it again where
+/// it was left, and for ↑ to bring back.
+private struct LauncherMemorySettings: View {
+    @Bindable var preferences: Preferences
+    let history: InputHistory
+
+    var body: some View {
+        Section {
+            Picker("Reopen where you left off", selection: $preferences.resumeWindow) {
+                ForEach(ResumeWindow.allCases) { window in
+                    Text(window.title).tag(window)
+                }
+            }
+        } footer: {
+            Text(preferences.resumeWindow == .off
+                ? "The launcher opens empty every time."
+                : "Clicking elsewhere or pressing the hotkey again puts the launcher away as it is: the search, what is selected, a command that is open. Escape and ⌘W close it for good.")
+        }
+
+        Section {
+            Picker("Remember searches", selection: $preferences.historyLimit) {
+                ForEach(Preferences.historyLimits, id: \.self) { limit in
+                    Text(limit == 0 ? "None" : "The last \(limit)").tag(limit)
+                }
+            }
+            if preferences.historyLimit > 0 {
+                LabeledContent("Remembered") {
+                    HStack(spacing: 10) {
+                        Text(history.entries.count == 1 ? "1 search" : "\(history.entries.count) searches")
+                            .monospacedDigit()
+                        Button("Clear History") { history.clear() }
+                            .disabled(history.entries.isEmpty)
+                    }
+                }
+            }
+        } footer: {
+            Text(preferences.historyLimit == 0
+                ? "Nothing you type into the search is kept."
+                : "↑ in the empty search brings back what you searched for before, newest first, with what you typed into a quicklink’s arguments. Everything stays on this Mac.")
+        }
     }
 }
 

@@ -117,6 +117,9 @@ final class LauncherController: NSObject, NSWindowDelegate {
     let model: LauncherModel
     /// Keeps the panel open when it loses focus. For development.
     var isPinned = false
+    /// For how many seconds a launcher that was put away opens again as it
+    /// was left. With none, it never does.
+    var resumesWithin: () -> TimeInterval = { 0 }
 
     private let panel = LauncherPanel()
     /// True while the panel fades out. It is still on screen, but gone as
@@ -126,9 +129,25 @@ final class LauncherController: NSObject, NSWindowDelegate {
     private var closeCount = 0
     /// What waits for the panel to be gone.
     private var afterHiding: [() -> Void] = []
+    /// Whether the panel, as it closes, keeps what it shows.
+    private var keepsState = false
+    /// When the panel was put away with what it showed still in it. Nil
+    /// while it is up, and once it was closed for good.
+    private var setAsideAt: Date?
+    /// True while the keyboard goes back to where it was in a launcher
+    /// that opens as it was left. What is in that field is added to.
+    private var isResumingFocus = false
 
-    init(engine: SearchEngine, quicklinks: QuicklinkStore, uninstaller: ApplicationUninstaller, clipboard: ClipboardHistory) {
-        model = LauncherModel(engine: engine, quicklinks: quicklinks, uninstaller: uninstaller, clipboard: clipboard)
+    init(
+        engine: SearchEngine,
+        quicklinks: QuicklinkStore,
+        uninstaller: ApplicationUninstaller,
+        clipboard: ClipboardHistory,
+        history: InputHistory
+    ) {
+        model = LauncherModel(
+            engine: engine, quicklinks: quicklinks, uninstaller: uninstaller, clipboard: clipboard, history: history
+        )
         super.init()
 
         let content = NSHostingView(rootView: LauncherView(model: model))
@@ -144,6 +163,7 @@ final class LauncherController: NSObject, NSWindowDelegate {
         model.focusDidChange = { [weak self] in self?.settleFocus() }
 
         model.dismiss = { [weak self] in self?.hide() }
+        model.setAside = { [weak self] in self?.hide(resumable: true) }
         model.dismissThen = { [weak self] action in
             if let self { hide(then: action) } else { action() }
         }
@@ -153,8 +173,10 @@ final class LauncherController: NSObject, NSWindowDelegate {
 
     var isVisible: Bool { panel.isVisible && !isClosing }
 
+    /// What Inky's hotkey does. Pressed again, it puts the launcher away
+    /// the way a click elsewhere does.
     func toggle() {
-        if isVisible { hide() } else { show() }
+        if isVisible { hide(resumable: true) } else { show() }
     }
 
     func show() {
@@ -163,8 +185,12 @@ final class LauncherController: NSObject, NSWindowDelegate {
         if isClosing { finishHiding() }
         let isOpening = !panel.isVisible
         let motion = Motion.current
+        let isResuming = resume()
 
-        model.prepareForShow(frontmostPID: frontmost == .current ? nil : frontmost?.processIdentifier)
+        model.prepareForShow(
+            frontmostPID: frontmost == .current ? nil : frontmost?.processIdentifier,
+            resuming: isResuming
+        )
         position()
         if isOpening, motion.level != .off { panel.alphaValue = 0 }
         #if DEBUG
@@ -183,9 +209,44 @@ final class LauncherController: NSObject, NSWindowDelegate {
         #else
         panel.makeKeyAndOrderFront(nil)
         #endif
-        // The search, or the screen that is showing if the launcher was open.
-        model.focusDefault()
+        if isResuming {
+            // Where it was: that can be an argument.
+            isResumingFocus = true
+            model.focus(model.focusTarget)
+        } else {
+            // The search, or the screen that is showing if the launcher was open.
+            model.focusDefault()
+        }
         if isOpening { animateIn(motion) }
+    }
+
+    /// Whether the launcher was put away with something in it, and not
+    /// too long ago to open with it again.
+    private var canResume: Bool {
+        setAsideAt.map { Date.now.timeIntervalSince($0) < resumesWithin() } ?? false
+    }
+
+    /// Takes up what the launcher was put away with, and says whether
+    /// there was anything. What was put away too long ago goes, the way it
+    /// does when the launcher is closed.
+    private func resume() -> Bool {
+        guard canResume else {
+            discardState()
+            return false
+        }
+        setAsideAt = nil
+        return true
+    }
+
+    /// Lets go of what a launcher that is not up was put away with.
+    private func discardState() {
+        // Still on its way out: it is not to keep anything once it is gone.
+        keepsState = false
+        guard setAsideAt != nil else { return }
+        setAsideAt = nil
+        var transaction = Transaction()
+        transaction.disablesAnimations = true
+        withTransaction(transaction) { model.reset() }
     }
 
     /// Runs a command as its hotkey does. Most are simply run, wherever the
@@ -202,7 +263,17 @@ final class LauncherController: NSObject, NSWindowDelegate {
             hide()
             return
         }
+        if isClosing { finishHiding() }
         let wasVisible = isVisible
+        if !wasVisible, setAsideAt != nil {
+            // Put away showing just this, it opens again as it was.
+            if canResume, model.isShowing(item) {
+                show()
+                return
+            }
+            // Anything else goes, as it would have gone under the command.
+            discardState()
+        }
         show()
         // Opened straight to it, a screen is simply there. From the search
         // it is a change of screen like any other.
@@ -211,8 +282,15 @@ final class LauncherController: NSObject, NSWindowDelegate {
 
     /// Closes the panel. `action` runs once it is off screen, when keys go
     /// to the application behind it again.
-    func hide(then action: (() -> Void)? = nil) {
+    ///
+    /// Closed like this, the launcher starts anew the next time. `resumable`
+    /// puts it away as it is, to open again where it was left: for a click
+    /// elsewhere or the hotkey, which say nothing about being done.
+    func hide(then action: (() -> Void)? = nil, resumable: Bool = false) {
         guard isVisible else {
+            // Closing for good counts for more than putting away. Running
+            // something that takes the keyboard does both, in either order.
+            if !resumable { discardState() }
             // Already on its way out, or not there at all.
             if let action {
                 if isClosing { afterHiding.append(action) } else { action() }
@@ -220,6 +298,7 @@ final class LauncherController: NSObject, NSWindowDelegate {
             return
         }
         if let action { afterHiding.append(action) }
+        keepsState = resumable
         let motion = Motion.current
         guard motion.level != .off else {
             finishHiding()
@@ -245,7 +324,7 @@ final class LauncherController: NSObject, NSWindowDelegate {
     }
 
     func windowDidResignKey(_ notification: Notification) {
-        if !isPinned { hide() }
+        if !isPinned { hide(resumable: true) }
     }
 
     func windowDidBecomeKey(_ notification: Notification) {
@@ -316,8 +395,9 @@ final class LauncherController: NSObject, NSWindowDelegate {
         if let editor = field.currentEditor(), panel.firstResponder === editor { return true }
         guard panel.makeFirstResponder(field) else { return false }
         // A field that takes the keyboard selects what it holds, to be typed
-        // over. A link is added to more often than it is replaced.
-        if target == .quicklinkLink, let editor = field.currentEditor() {
+        // over. A link is added to more often than it is replaced, and so
+        // is what was being typed when the launcher was put away.
+        if target == .quicklinkLink || isResumingFocus, let editor = field.currentEditor() {
             editor.selectedRange = NSRange(location: (editor.string as NSString).length, length: 0)
         }
         return true
@@ -327,6 +407,7 @@ final class LauncherController: NSObject, NSWindowDelegate {
     private func endSettlingFocus() {
         focusRequest += 1
         model.isFocusSettling = false
+        isResumingFocus = false
     }
 
     private func inputWillArrive(_ event: NSEvent) {
@@ -379,11 +460,16 @@ final class LauncherController: NSObject, NSWindowDelegate {
         #if DEBUG
         debugBackdrop?.orderOut(nil)
         #endif
+        let keeps = keepsState && model.hasSomethingToResume && resumesWithin() > 0
+        keepsState = false
+        setAsideAt = keeps ? .now : nil
         // Nobody is looking, and a change left half-animated would finish
         // in front of the user the next time the panel opens.
         var transaction = Transaction()
         transaction.disablesAnimations = true
-        withTransaction(transaction) { model.reset() }
+        withTransaction(transaction) {
+            if keeps { model.suspend() } else { model.reset() }
+        }
 
         let actions = afterHiding
         afterHiding = []
@@ -512,7 +598,9 @@ final class LauncherController: NSObject, NSWindowDelegate {
         let field = (editor?.delegate as? NSTextField).map { $0.placeholderString ?? $0.placeholderAttributedString?.string ?? "?" }
         let responder = editor.map { "\(field ?? "editor")<\($0.string)>\($0.selectedRange())" }
             ?? panel.firstResponder.map { String(describing: type(of: $0)) } ?? "nil"
-        return "focus=\(model.focusTarget.map { "\($0)" } ?? "none") key=\(panel.isKeyWindow) visible=\(isVisible) responder=\(responder) "
+        return "history=\(model.history.entries.count) recall=\(model.debugRecallIndex.map(String.init) ?? "none") "
+            + "kept=\(setAsideAt != nil) "
+            + "focus=\(model.focusTarget.map { "\($0)" } ?? "none") key=\(panel.isKeyWindow) visible=\(isVisible) responder=\(responder) "
             + "query=\(model.query) results=\(model.showsResults) sections=\(model.sections.map { "\($0.title):\($0.items.count)" }) "
             + "selected=\(model.selectedID ?? "nil") arguments=\(model.argumentValues) "
             + "menu=\(model.isActionMenuOpen ? "\(model.actionMenuIndex)" : "closed") route=\(route.isEmpty ? "root" : route.joined(separator: " > ")) "

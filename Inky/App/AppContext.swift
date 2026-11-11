@@ -10,6 +10,7 @@ final class AppContext {
     let engine: SearchEngine
     let uninstaller: ApplicationUninstaller
     let clipboard: ClipboardHistory
+    let inputHistory: InputHistory
     let launcher: LauncherController
     let fileModule = FileModule()
     let updates = Updates()
@@ -85,6 +86,13 @@ final class AppContext {
         fileModule.maxResults = preferences.fileSearchLimit
 
         let usage = UsageStore(fileURL: directory.appendingPathComponent("usage.json"))
+        inputHistory = InputHistory(
+            fileURL: directory.appendingPathComponent("history.json"),
+            limit: preferences.historyLimit
+        )
+        preferences.onHistoryLimitChange = { [preferences, inputHistory] in
+            inputHistory.limit = preferences.historyLimit
+        }
         // Until the user chooses, the fallbacks are what the quicklinks say.
         let fallbacks = FallbackStore(
             fileURL: directory.appendingPathComponent("fallbacks.json"),
@@ -116,7 +124,10 @@ final class AppContext {
         )
         engine.isEnabled = { [preferences] id in preferences.isEnabled(id) }
 
-        launcher = LauncherController(engine: engine, quicklinks: quicklinks, uninstaller: uninstaller, clipboard: clipboard)
+        launcher = LauncherController(
+            engine: engine, quicklinks: quicklinks, uninstaller: uninstaller, clipboard: clipboard, history: inputHistory
+        )
+        launcher.resumesWithin = { [preferences] in preferences.resumeWindow.duration }
         launcher.model.pastesOnReturn = { [preferences] in preferences.clipboardPastes }
         #if DEBUG
         // A run with data of its own must not type into the user's applications.

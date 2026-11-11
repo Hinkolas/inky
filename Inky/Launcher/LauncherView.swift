@@ -19,10 +19,11 @@ struct LauncherView: View {
 
         ZStack(alignment: .top) {
             // Where the canvas is see-through, clicks go to whatever is behind
-            // the panel. What does arrive here landed on a shadow.
+            // the panel. What does arrive here landed on a shadow, and is a
+            // click elsewhere like those.
             Color.clear
                 .contentShape(Rectangle())
-                .onTapGesture { model.dismiss() }
+                .onTapGesture { model.setAside() }
 
             VStack(spacing: LauncherMetrics.gap) {
                 ZStack(alignment: .top) {
@@ -337,7 +338,7 @@ private struct SearchBar: View {
 
             if !model.query.isEmpty {
                 Button {
-                    model.setQuery("")
+                    model.clearQuery()
                     model.focus(.search)
                 } label: {
                     Image(systemName: "xmark")

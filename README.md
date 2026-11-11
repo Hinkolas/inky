@@ -65,12 +65,16 @@ pre-release you downloaded starts on Beta.
   when nothing was found.
 - **File search and system commands.** Files and folders from the Spotlight
   index; lock, sleep, restart, empty the Trash, toggle dark mode.
+- **Nothing typed is lost.** Click elsewhere and the launcher opens again as
+  you left it, for a minute unless you choose otherwise. ↑ in the empty search
+  brings back what you searched for before, arguments included.
 
 ### Keys
 
 | Key | Action |
 | --- | --- |
 | ↓ | With nothing typed: show suggestions |
+| ↑ | With nothing typed: bring back earlier searches, then ↑ ↓ go through them |
 | ↑ ↓ (or ⌃P ⌃N) | Move the selection |
 | ↵ | Run the first action |
 | ⌘↵ | Run the second action |
@@ -93,9 +97,11 @@ Inky goes online for three things, and each can be turned off in Settings:
   `getinky.dev/appcast.xml`, and installs only updates signed with Inky's
   release key.
 
-Everything else stays on your Mac: your quicklinks, settings and usage as
-readable JSON in `~/Library/Application Support/Inky/`, and the clipboard
-history in a database only your account can read.
+Everything else stays on your Mac: your quicklinks, settings, usage and the
+searches Inky remembers as readable JSON in
+`~/Library/Application Support/Inky/`, and the clipboard history in a database
+only your account can read. How many searches are remembered, if any, is
+chosen under Settings → General.
 
 > [!IMPORTANT]
 > The clipboard history leaves out what password managers mark as
@@ -160,7 +166,8 @@ configures and the body card), `Sidebar` for narrowing down what is shown,
 controls that go inside them. Extensions will describe the same parts as data.
 
 Your data is in `~/Library/Application Support/Inky/`: `quicklinks.json`,
-`usage.json`, `fallbacks.json` and `commands.json`. The clipboard history is
+`usage.json`, `fallbacks.json`, `commands.json` and `history.json`, the
+searches ↑ brings back. The clipboard history is
 in `Clipboard/history.sqlite`, with the images as files next to it, searched
 through an SQLite FTS5 trigram index. macOS does not say when something is
 copied; Inky looks at the pasteboard's change count twice a second and reads
@@ -202,8 +209,9 @@ the translucency), `--data <folder>` (keep quicklinks, usage and the clipboard
 history there instead of in your own, with a pasteboard to itself and without
 pressing keys in other apps, and uninstall only the applications in its
 `Applications`, with what they left in its `Library`),
-`--motion full|reduced|off`, and `--slow <factor>` (stretch every animation, to
-look at one frame by frame).
+`--motion full|reduced|off`, `--slow <factor>` (stretch every animation, to
+look at one frame by frame), and `--resume <seconds>` (for how long a launcher
+that was put away, as `toggle` in `--keys` does, opens again as it was left).
 
 </details>
 

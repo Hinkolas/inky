@@ -39,9 +39,13 @@ final class LauncherModel {
     @ObservationIgnored let quicklinks: QuicklinkStore
     @ObservationIgnored let uninstaller: ApplicationUninstaller
     @ObservationIgnored let clipboard: ClipboardHistory
+    /// What was typed into the search before, for ↑ to bring back.
+    @ObservationIgnored let history: InputHistory
     /// Called after an application was uninstalled.
     @ObservationIgnored var applicationsDidChange: () -> Void = {}
     @ObservationIgnored var dismiss: () -> Void = {}
+    /// Puts the launcher away as it is, to be opened again where it was left.
+    @ObservationIgnored var setAside: () -> Void = {}
     /// Closes the launcher, and runs what it is given once the launcher is
     /// gone and the keyboard is back with the application behind it.
     @ObservationIgnored var dismissThen: (@escaping () -> Void) -> Void = { $0() }
@@ -70,6 +74,15 @@ final class LauncherModel {
     /// Whether the next screen is simply there instead of arriving, as when
     /// the launcher opens straight to it.
     @ObservationIgnored private var arrivesInstantly = false
+    /// Where in the history the search is, while the arrow keys go through it.
+    @ObservationIgnored private var recallIndex: Int?
+    /// A result of the slower sources that is to be selected once they
+    /// have found it, with what goes into its arguments.
+    @ObservationIgnored private var awaitedSelection: (id: String, arguments: [String])?
+    /// What the slower sources found, and for which search.
+    @ObservationIgnored private var deferred: (query: String, sections: [ResultSection])?
+    /// Whether the search was put there by a command's hotkey, not typed.
+    @ObservationIgnored private var isQueryPlaced = false
 
     private(set) var query = ""
     /// Whether the suggestions are listed although nothing is typed.
@@ -96,11 +109,18 @@ final class LauncherModel {
     /// which it needs, was still empty.
     private(set) var missingArgumentTick = 0
 
-    init(engine: SearchEngine, quicklinks: QuicklinkStore, uninstaller: ApplicationUninstaller, clipboard: ClipboardHistory) {
+    init(
+        engine: SearchEngine,
+        quicklinks: QuicklinkStore,
+        uninstaller: ApplicationUninstaller,
+        clipboard: ClipboardHistory,
+        history: InputHistory
+    ) {
         self.engine = engine
         self.quicklinks = quicklinks
         self.uninstaller = uninstaller
         self.clipboard = clipboard
+        self.history = history
     }
 
     var route: Route? { routes.last }
@@ -126,14 +146,43 @@ final class LauncherModel {
 
     // MARK: - Lifecycle
 
-    func prepareForShow(frontmostPID: pid_t?) {
+    /// `resuming` is for a launcher that was put away as it was: what it
+    /// shows is brought up to date, and what is selected stays selected.
+    func prepareForShow(frontmostPID: pid_t?, resuming: Bool = false) {
         self.frontmostPID = frontmostPID
         engine.reloadStale()
-        refresh(resetSelection: true)
+        refresh(resetSelection: !resuming)
+        guard resuming else { return }
+        // What a command lists may have changed while it was away.
+        switch route {
+        case .clipboard(let browser): browser.reload()
+        case .uninstallBrowser(let browser): browser.reload()
+        case nil, .quicklinks, .quicklinkEditor, .uninstall: break
+        }
+    }
+
+    /// Whether the launcher shows anything worth opening it with again.
+    var hasSomethingToResume: Bool {
+        route != nil || showsResults
+    }
+
+    /// Put away to be opened again as it is. Only what was passing goes.
+    func suspend() {
+        deferredSearch?.cancel()
+        isActionMenuOpen = false
+        isNavigatingBack = false
+        toastTimer?.cancel()
+        toast = nil
     }
 
     /// Back to a clean slate, so the next show starts instantly and empty.
+    /// What was in the search is remembered.
     func reset() {
+        rememberInput()
+        recallIndex = nil
+        awaitedSelection = nil
+        deferred = nil
+        isQueryPlaced = false
         deferredSearch?.cancel()
         query = ""
         isBrowsing = false
@@ -154,6 +203,10 @@ final class LauncherModel {
 
     func setQuery(_ newValue: String) {
         guard newValue != query else { return }
+        // Typed, it is a search like any other.
+        recallIndex = nil
+        awaitedSelection = nil
+        isQueryPlaced = false
         query = newValue
         if newValue.isEmpty { isBrowsing = false }
         refresh(resetSelection: true)
@@ -169,12 +222,17 @@ final class LauncherModel {
     func refresh(resetSelection: Bool = false) {
         deferredSearch?.cancel()
         guard showsResults else {
+            deferred = nil
             apply([], resetSelection: true)
             return
         }
 
         let query = query
         let immediate = engine.results(for: query)
+        // What the slower sources found for this very search stays while
+        // they are asked again, and with it the selection, if it is theirs.
+        let known = deferred?.query == query ? deferred?.sections ?? [] : []
+        if known.isEmpty { deferred = nil }
         // Last, below whatever was found or is still to come.
         let fallbacks = engine.fallbacks(for: query).map { [$0] } ?? []
         // Results can turn up for what is already typed, as when the exchange
@@ -182,19 +240,22 @@ final class LauncherModel {
         // nothing else gives way to them, as it does to slower sources below.
         let hadOnlyFallbacks = !immediate.isEmpty && sections.map(\.id) == fallbacks.map(\.id)
             && selectedID == fallbacks.first?.items.first?.id
-        apply(immediate + fallbacks, resetSelection: resetSelection || hadOnlyFallbacks)
+        apply(immediate + known + fallbacks, resetSelection: resetSelection || hadOnlyFallbacks)
 
         guard !query.trimmingCharacters(in: .whitespaces).isEmpty else { return }
         deferredSearch = Task { [weak self] in
             // Wait for a pause in typing before asking slower sources.
             try? await Task.sleep(for: .milliseconds(80))
             guard let self, !Task.isCancelled else { return }
-            let deferred = await engine.deferredResults(for: query)
-            guard !Task.isCancelled, query == self.query, !deferred.isEmpty else { return }
+            let found = await engine.deferredResults(for: query)
+            guard !Task.isCancelled, query == self.query else { return }
+            defer { selectAwaited() }
+            guard !found.isEmpty || !known.isEmpty else { return }
+            deferred = found.isEmpty ? nil : (query, found)
             // A fallback that was selected only because nothing had been
             // found yet gives way to what has been found now.
-            let wasOnlyChoice = immediate.isEmpty && selectedID == fallbacks.first?.items.first?.id
-            apply(immediate + deferred + fallbacks, resetSelection: wasOnlyChoice)
+            let wasOnlyChoice = immediate.isEmpty && known.isEmpty && selectedID == fallbacks.first?.items.first?.id
+            apply(immediate + found + fallbacks, resetSelection: wasOnlyChoice)
         }
     }
 
@@ -213,7 +274,14 @@ final class LauncherModel {
 
     // MARK: - Selection
 
+    /// Selects a result the user chose, as by clicking it.
     func select(_ id: String) {
+        recallIndex = nil
+        choose(id)
+    }
+
+    private func choose(_ id: String) {
+        awaitedSelection = nil
         guard id != selectedID else { return }
         selectedID = id
         selectionDidChange()
@@ -231,13 +299,14 @@ final class LauncherModel {
         let ids = itemIDs
         guard !ids.isEmpty else { return }
         let current = selectedID.flatMap(ids.firstIndex(of:)) ?? 0
-        select(ids[(current + offset + ids.count) % ids.count])
+        choose(ids[(current + offset + ids.count) % ids.count])
     }
 
     // MARK: - Arguments and focus
 
     func setArgument(_ index: Int, _ value: String) {
-        guard argumentValues.indices.contains(index) else { return }
+        guard argumentValues.indices.contains(index), argumentValues[index] != value else { return }
+        recallIndex = nil
         argumentValues[index] = value
     }
 
@@ -278,6 +347,8 @@ final class LauncherModel {
     private func cycleFocus(by offset: Int) {
         let count = selectedItem?.arguments.count ?? 0
         guard count > 0 else { return }
+        // Whoever goes into what was brought back means to work with it.
+        recallIndex = nil
         // Position 0 is the search field, 1...count are the arguments.
         let current = if case .argument(let index) = focusTarget { index + 1 } else { 0 }
         let next = (current + offset + count + 1) % (count + 1)
@@ -342,14 +413,97 @@ final class LauncherModel {
                     if replacingScreens, depth > 0 { routes.removeFirst(depth) }
                     if routes.count == 1 { rootCommand = item.id }
                 }
-                // Deleting something is not a sign it should rank higher.
-                if !action.isDestructive { engine.recordUse(of: item, query: context.query) }
+                // Deleting something is not a sign it should rank higher,
+                // or something to do again.
+                if !action.isDestructive {
+                    engine.recordUse(of: item, query: context.query)
+                    history.record(query: context.query, arguments: context.arguments, itemID: item.id, submitted: true)
+                    recallIndex = nil
+                }
                 if action.behavior == .dismiss { dismiss() }
             } catch {
                 report(error)
             }
         }
     }
+
+    // MARK: - History
+
+    // What was typed into the search is kept when it goes: run, cleared, or
+    // closed for good. ↑ in the empty search brings it back, newest first,
+    // and from there the arrow keys go through the history until something
+    // is typed.
+
+    /// Keeps what is in the search for ↑ to bring back, before it goes.
+    func rememberInput() {
+        // Brought back and left as it was, it is in the history already,
+        // and no more recent for having been looked at.
+        guard recallIndex == nil else { return }
+        // A command's hotkey put its name there. Only what was typed into
+        // its arguments is the user's.
+        let hasArguments = argumentValues.contains { !$0.trimmingCharacters(in: .whitespaces).isEmpty }
+        guard !isQueryPlaced || hasArguments else { return }
+        history.record(query: query, arguments: argumentValues, itemID: selectedID)
+    }
+
+    /// Empties the search, as Escape does there.
+    func clearQuery() {
+        rememberInput()
+        setQuery("")
+    }
+
+    /// Whether ↑ goes back through what was typed before. With nothing
+    /// typed there is nothing else for it to do.
+    private var recalls: Bool {
+        recallIndex != nil || (query.isEmpty && !isBrowsing && !history.entries.isEmpty)
+    }
+
+    /// Goes through the history: towards older entries, or back (negative).
+    private func recall(by offset: Int) {
+        let index = (recallIndex ?? -1) + offset
+        guard index >= 0 else {
+            // Past the newest is the empty search it all started from.
+            setQuery("")
+            return
+        }
+        // At the oldest, there it stays.
+        guard history.entries.indices.contains(index) else { return }
+        let entry = history.entries[index]
+        recallIndex = index
+        awaitedSelection = nil
+        isQueryPlaced = false
+        isBrowsing = false
+        query = entry.query
+        refresh(resetSelection: true)
+        guard let id = entry.itemID else { return }
+        if itemIDs.contains(id) {
+            choose(id)
+            fill(entry.arguments)
+        } else {
+            // The slower sources may still find it.
+            awaitedSelection = (id, entry.arguments)
+        }
+    }
+
+    /// Selects the result that was waited for, if it has turned up.
+    private func selectAwaited() {
+        guard let awaited = awaitedSelection else { return }
+        awaitedSelection = nil
+        guard itemIDs.contains(awaited.id) else { return }
+        choose(awaited.id)
+        fill(awaited.arguments)
+    }
+
+    /// Puts back what was typed into the arguments of the selected result.
+    private func fill(_ arguments: [String]) {
+        guard !arguments.isEmpty, arguments.count == argumentValues.count else { return }
+        argumentValues = arguments
+    }
+
+    #if DEBUG
+    /// Where in the history the search is, for the state a run prints.
+    var debugRecallIndex: Int? { recallIndex }
+    #endif
 
     // MARK: - Hotkeys of commands
 
@@ -398,6 +552,11 @@ final class LauncherModel {
             routes = []
             rootCommand = nil
         }
+        // What was typed makes way for the command.
+        rememberInput()
+        recallIndex = nil
+        awaitedSelection = nil
+        isQueryPlaced = true
         query = item.title
         refresh(resetSelection: true)
         guard itemIDs.contains(item.id) else {
@@ -984,9 +1143,21 @@ final class LauncherModel {
         }
 
         switch (key, modifiers) {
-        case ("down", []), ("n", .control), ("j", .control):
+        // The arrow keys go through the history while it is being gone
+        // through. The others always move the selection.
+        case ("down", []):
+            if recallIndex != nil {
+                recall(by: -1)
+            } else if showsResults {
+                moveSelection(by: 1)
+            } else {
+                browse()
+            }
+        case ("n", .control), ("j", .control):
             if showsResults { moveSelection(by: 1) } else { browse() }
-        case ("up", []), ("p", .control), ("k", .control):
+        case ("up", []):
+            if recalls { recall(by: 1) } else { moveSelection(by: -1) }
+        case ("p", .control), ("k", .control):
             moveSelection(by: -1)
         case ("return", []): runAction(at: 0)
         case ("return", .command): runAction(at: 1)
@@ -997,7 +1168,7 @@ final class LauncherModel {
             if focusTarget != .search {
                 focus(.search)
             } else if !query.isEmpty {
-                setQuery("")
+                clearQuery()
             } else if isBrowsing {
                 isBrowsing = false
                 refresh()
