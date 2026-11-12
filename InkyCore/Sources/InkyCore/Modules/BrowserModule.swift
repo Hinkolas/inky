@@ -11,6 +11,10 @@ public final class BrowserModule: Module {
     )
     public var onChange: (@MainActor () -> Void)?
 
+    /// Set by the app to show its editor for a new quicklink to an address.
+    /// Without it, making one is not offered.
+    public var onCreateQuicklink: (@MainActor (String) -> Void)?
+
     private let open: @MainActor (URL) -> Bool
 
     /// `open` hands an address to the browser and says whether that worked.
@@ -23,6 +27,17 @@ public final class BrowserModule: Module {
         guard let address = WebAddress(query) else { return [] }
         let url = address.url
         let link = url.absoluteString
+        var actions = [
+            Action("Open Link", symbol: "arrow.up.forward") { [open] _ in
+                guard open(url) else { throw InkyError("Could not open \(link)") }
+            },
+            .copy(link, title: "Copy Link"),
+        ]
+        if onCreateQuicklink != nil {
+            actions.append(Action("Create Quicklink", symbol: "link.badge.plus", behavior: .keepOpen) { [weak self] _ in
+                self?.onCreateQuicklink?(link)
+            })
+        }
         return [
             ResultItem(
                 id: "browser:open",
@@ -34,12 +49,7 @@ public final class BrowserModule: Module {
                 // icon service every address that is typed, letter by letter.
                 icon: info.icon,
                 kind: "Link",
-                actions: [
-                    Action("Open Link", symbol: "arrow.up.forward") { [open] _ in
-                        guard open(url) else { throw InkyError("Could not open \(link)") }
-                    },
-                    .copy(link, title: "Copy Link"),
-                ]
+                actions: actions
             ),
         ]
     }
