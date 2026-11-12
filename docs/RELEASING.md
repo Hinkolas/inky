@@ -90,13 +90,21 @@ suffix. The draft holds two files, each with a SHA-256 checksum:
 - `Inky-<version>.dmg`, the download: a window with Inky and the Applications
   folder, laid out by `Scripts/dmg-settings.py` with
   [dmgbuild](https://dmgbuild.readthedocs.io). The disk image is signed and
-  notarized too.
+  notarized too. dmgbuild comes from PyPI, so it is installed only as the
+  wheels whose hashes `Scripts/dmgbuild-requirements.txt` holds, and runs
+  without the signing keychain or any secret; that file says how to update it.
 - `Inky-<version>.zip`, which the update feed points to. Sparkle installs
   updates from it; people do not need it.
 
 Nothing reaches users until the draft is published.
 
-Publishing a release runs `.github/workflows/update-feed.yml`. It adds the
+Publishing a release runs `.github/workflows/update-feed.yml`. Its job waits
+for your approval in the `release` environment, which holds the EdDSA key.
+It then refuses a tag that is not on `main`, and an archive whose app is not
+the one `release.yml` builds from that tag: bundle identifier, version, build
+number, the team's Developer ID signature and notarization are all checked.
+None of the tag's files run; Sparkle's tools come from Sparkle's own release,
+held to the hash in the workflow. It adds the
 release to the update feed, signs the whole feed with the EdDSA key, saves it
 on the `appcast` branch and deploys that branch to GitHub Pages, where
 installed apps read `https://getinky.dev/appcast.xml`. Releases
@@ -127,8 +135,9 @@ window are its published notes on GitHub.
    and prints the public key. Put the public key in `INKY_UPDATE_PUBLIC_KEY`
    for both configurations in `Inky.xcodeproj` and commit it. Export the
    private key with `generate_keys --account inky -x sparkle-private-key`,
-   store it as the `SPARKLE_PRIVATE_KEY` secret (`gh secret set
-   SPARKLE_PRIVATE_KEY < sparkle-private-key`), keep a copy in a password
+   store it as the `SPARKLE_PRIVATE_KEY` secret of the `release` environment
+   (step 6; `gh secret set SPARKLE_PRIVATE_KEY --env release <
+   sparkle-private-key`), keep a copy in a password
    manager, and delete the file. Never lose it: installed apps only accept
    updates signed with the key they were built with.
 2. **Developer ID.** Done on 2026-11-11. In the Apple Developer Program,
@@ -174,8 +183,24 @@ window are its published notes on GitHub.
    protection rules". The `appcast` branch is created by the first run.
    A website added later goes on the same Pages site, so the deploy job must
    then publish it together with `appcast.xml`.
-6. Protect the secrets with a `release` environment that requires your
-   approval, if more people get write access to the repository.
+6. **Release environment.** Whoever can publish a release could otherwise
+   have any archive signed into the feed, so the key lives in an environment
+   that needs your approval. Create it with you as the required reviewer,
+   deploying only from `v*` tags (published releases) and `main` (runs by
+   hand):
+   ```sh
+   gh api -X PUT repos/Hinkolas/inky/environments/release --input - <<JSON
+   {"reviewers": [{"type": "User", "id": $(gh api user -q .id)}],
+    "deployment_branch_policy": {"protected_branches": false, "custom_branch_policies": true}}
+   JSON
+   gh api -X POST repos/Hinkolas/inky/environments/release/deployment-branch-policies -f name='v*' -f type=tag
+   gh api -X POST repos/Hinkolas/inky/environments/release/deployment-branch-policies -f name=main -f type=branch
+   ```
+   Then move the key into it, and delete the repository secret of the same
+   name, which every workflow could read:
+   `gh secret set SPARKLE_PRIVATE_KEY --env release < sparkle-private-key`,
+   `gh secret delete SPARKLE_PRIVATE_KEY`. If the exported file is gone,
+   export it again from the login keychain as in step 1.
 
 ### Each release
 
@@ -186,7 +211,9 @@ window are its published notes on GitHub.
 3. Download the draft's disk image on a clean Mac: it opens without a
    Gatekeeper warning and shows Inky next to Applications; the copied app
    starts without a warning, and About shows the whole version.
-4. Publish the draft, and wait for the feed workflow to finish. Its summary
+4. Publish the draft. The feed workflow waits for you: approve its `release`
+   deployment (the run's page → Review deployments), and wait for it to
+   finish. Its summary
    links the deployed feed; the new item is at its top.
 5. On a Mac with the previous version on the matching channel, Check for
    Updates offers it, installs it and relaunches. A Mac on Stable is not
