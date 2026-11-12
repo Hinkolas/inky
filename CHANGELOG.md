@@ -1,6 +1,9 @@
 # Changelog
 
-## Unreleased
+## 0.1.0-alpha.5 — 2026-11-12
+
+Fixes from a security review, for passwords, searches, pasting, uninstalling,
+downloads and updates: that is the fifth alpha.
 
 ### Security
 
