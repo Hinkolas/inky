@@ -727,6 +727,11 @@ final class LauncherModel {
         push(.quicklinkEditor(QuicklinkDraft(quicklink)))
     }
 
+    /// Shows the editor for a new quicklink that goes to `link`.
+    func createQuicklink(to link: String) {
+        push(.quicklinkEditor(QuicklinkDraft(link: link)))
+    }
+
     func saveQuicklink() {
         guard case .quicklinkEditor(let draft) = route else { return }
         guard draft.isValid else {

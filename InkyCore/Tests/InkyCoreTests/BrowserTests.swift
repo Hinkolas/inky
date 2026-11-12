@@ -118,6 +118,25 @@ import Testing
     }
 
     @MainActor
+    @Test func aQuicklinkToTheAddressCanBeMadeWhereTheAppOffersIt() async throws {
+        var links: [String] = []
+        let module = BrowserModule { _ in true }
+        module.onCreateQuicklink = { links.append($0) }
+        let row = try #require(module.instantResults(for: "amazon.com").first)
+        #expect(row.actions.map(\.title) == ["Open Link", "Copy Link", "Create Quicklink"])
+        #expect(Set(row.actions.map(\.id)).count == row.actions.count)
+
+        // The editor opens in the launcher, which stays.
+        let action = row.actions[2]
+        guard case .keepOpen = action.behavior else {
+            Issue.record("Making a quicklink closes the launcher")
+            return
+        }
+        try await action.perform(ActionContext(query: "amazon.com"))
+        #expect(links == ["https://amazon.com"])
+    }
+
+    @MainActor
     @Test func anAddressThatCannotBeOpenedSaysSo() async throws {
         let module = BrowserModule { _ in false }
         let row = try #require(module.instantResults(for: "localhost:3000").first)

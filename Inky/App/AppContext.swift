@@ -83,6 +83,7 @@ final class AppContext {
         let commands = InkyCommandModule()
         let quicklinkModule = QuicklinkModule(store: quicklinks)
         let applications = ApplicationModule(uninstaller: uninstaller)
+        let browser = BrowserModule()
         fileModule.maxResults = preferences.fileSearchLimit
 
         let usage = UsageStore(fileURL: directory.appendingPathComponent("usage.json"))
@@ -116,7 +117,7 @@ final class AppContext {
                 calculator,
                 TimeModule(),
                 ColorModule(usage: usage),
-                BrowserModule(),
+                browser,
                 fileModule,
             ],
             usage: usage,
@@ -145,6 +146,7 @@ final class AppContext {
         commands.createQuicklink = { [unowned self] in launcher.model.editQuicklink(nil) }
         commands.manageQuicklinks = { [unowned self] in launcher.model.showQuicklinks() }
         quicklinkModule.onEdit = { [unowned self] quicklink in launcher.model.editQuicklink(quicklink) }
+        browser.onCreateQuicklink = { [unowned self] link in launcher.model.createQuicklink(to: link) }
         quicklinkModule.onDelete = { [unowned self] quicklink in launcher.model.deleteQuicklink(quicklink) }
         applications.onUninstall = { [unowned self] app in launcher.model.reviewUninstall(of: app) }
         applications.onChooseUninstall = { [unowned self] in launcher.model.showUninstaller() }

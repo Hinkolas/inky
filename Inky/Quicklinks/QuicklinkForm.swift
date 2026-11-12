@@ -20,6 +20,12 @@ final class QuicklinkDraft: Identifiable {
         openWith = quicklink?.openWith
     }
 
+    /// A new quicklink to `link`, with only its name left to type.
+    convenience init(link: String) {
+        self.init()
+        self.link = link
+    }
+
     var isValid: Bool {
         !name.trimmingCharacters(in: .whitespaces).isEmpty && !link.trimmingCharacters(in: .whitespaces).isEmpty
     }
