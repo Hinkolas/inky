@@ -1,5 +1,15 @@
 # Changelog
 
+## Unreleased
+
+### Changed
+
+- Copying a long text no longer holds Inky up. Before, a text of a few
+  megabytes was gone through in full to tell whether it was code, which took
+  up to seconds, also while Inky was in the background. The clipboard history
+  no longer tells code apart: what was listed as code is listed as text,
+  and found under Text as before.
+
 ## 0.1.0-alpha.5 — 2026-11-12
 
 Fixes from a security review, for passwords, searches, pasting, uninstalling,

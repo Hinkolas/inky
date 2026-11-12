@@ -3,12 +3,11 @@ import Foundation
 
 /// What a copy is, as far as showing it and finding it again goes.
 public enum ClipKind: String, Sendable, CaseIterable {
-    case text, code, path, link, color, image, file
+    case text, path, link, color, image, file
 
     public var title: String {
         switch self {
         case .text: "Text"
-        case .code: "Code"
         case .path: "Path"
         case .link: "Link"
         case .color: "Color"
@@ -21,7 +20,6 @@ public enum ClipKind: String, Sendable, CaseIterable {
     public var symbol: String {
         switch self {
         case .text: "textformat"
-        case .code: "chevron.left.forwardslash.chevron.right"
         case .path: "folder"
         case .link: "link"
         case .color: "circle.lefthalf.filled"
@@ -103,7 +101,7 @@ public struct ClipCapture: Sendable {
         let kind = ClipClassifier.kind(of: text, fileExists: fileExists)
         var capture = ClipCapture(kind: kind, title: ClipClassifier.title(of: text, kind: kind), text: text)
         switch kind {
-        case .text, .code:
+        case .text:
             capture.flavors = flavors
         case .path:
             capture.location = ClipClassifier.expandedPath(text)
@@ -214,7 +212,7 @@ public enum ClipFilter: String, Sendable, CaseIterable {
     public var kinds: [ClipKind]? {
         switch self {
         case .all: nil
-        case .text: [.text, .code, .path]
+        case .text: [.text, .path]
         case .links: [.link]
         case .images: [.image]
         case .colors: [.color]
