@@ -10,7 +10,6 @@ public final class ApplicationModule: Module {
         icon: .symbol("square.grid.2x2.fill", tint: .blue)
     )
     public var onChange: (@MainActor () -> Void)?
-    public let refreshInterval: TimeInterval? = 30
 
     /// Set by the app to show what uninstalling an application would remove.
     public var onUninstall: (@MainActor (ApplicationInfo) -> Void)?
@@ -21,9 +20,38 @@ public final class ApplicationModule: Module {
     public static let uninstallIcon = Icon.symbol("xmark.app.fill", tint: .red)
 
     private let uninstaller: ApplicationUninstaller
+    /// Where applications are looked for. Nil for where a launcher looks.
+    private let folders: [String]?
+    /// What was listed last. Nil until the applications were first listed.
+    private var listed: [Listed]?
+    private var watcher: FolderWatcher?
+    private var rescan: Task<Void, Never>?
 
-    public init(uninstaller: ApplicationUninstaller = ApplicationUninstaller()) {
+    /// An application, and whether it can be uninstalled.
+    private struct Listed: Equatable, Sendable {
+        var app: ApplicationInfo
+        var canUninstall: Bool
+    }
+
+    /// `folders` and `latency` are for tests: where applications are, and
+    /// how long changes to them are gathered before they are looked at.
+    public init(
+        uninstaller: ApplicationUninstaller = ApplicationUninstaller(),
+        folders: [String]? = nil,
+        latency: TimeInterval = 2
+    ) {
         self.uninstaller = uninstaller
+        self.folders = folders
+        // Instead of looking again every so often, which took a tenth of a
+        // second each time, the folders say when something in them changed.
+        let watched = (folders ?? ApplicationScanner.searchPaths) + elsewhere
+        watcher = FolderWatcher(watched, latency: latency) { [weak self] in self?.foldersDidChange() }
+    }
+
+    /// Where an uninstaller kept to a folder of its own has applications
+    /// that nothing else lists. They are found there, to be uninstalled.
+    private var elsewhere: [String] {
+        uninstaller.applicationFolders.filter { !(folders ?? ApplicationScanner.searchPaths).contains($0) }
     }
 
     /// The id of an application's result.
@@ -31,22 +59,38 @@ public final class ApplicationModule: Module {
         "app:\(path)"
     }
 
-    public func candidates() async -> [ResultItem] {
-        let apps = await Task.detached(priority: .userInitiated) { [uninstaller] in
-            // An uninstaller kept to a folder of its own has applications
-            // nothing else lists. They are found here, to be uninstalled.
-            let elsewhere = uninstaller.applicationFolders.filter { !ApplicationScanner.searchPaths.contains($0) }
-            let found = ApplicationScanner.scan() + (elsewhere.isEmpty ? [] : ApplicationScanner.scan(elsewhere))
-            return found.map { (app: $0, canUninstall: uninstaller.canUninstall($0)) }
-        }.value
+    /// Something changed in a folder of applications, which is mostly an
+    /// application that keeps a file of its own there. The applications are
+    /// listed again only if they changed.
+    private func foldersDidChange() {
+        rescan?.cancel()
+        rescan = Task {
+            let found = await scan()
+            // Before they are first listed, they are listed as they are.
+            guard !Task.isCancelled, let listed, found != listed else { return }
+            onChange?()
+        }
+    }
 
-        let applications = apps.map { app, canUninstall in
+    private func scan() async -> [Listed] {
+        await Task.detached(priority: .userInitiated) { [uninstaller, folders, elsewhere] in
+            let found = ApplicationScanner.scan(folders) + (elsewhere.isEmpty ? [] : ApplicationScanner.scan(elsewhere))
+            return found.map { Listed(app: $0, canUninstall: uninstaller.canUninstall($0)) }
+        }.value
+    }
+
+    public func candidates() async -> [ResultItem] {
+        let found = await scan()
+        listed = found
+
+        let applications = found.map { listed in
+            let app = listed.app
             var actions: [Action] = [
                 .open(path: app.path),
                 .showInFinder(path: app.path),
                 .copy(app.path, title: "Copy Path", shortcut: KeyShortcut("c", [.command, .shift])),
             ]
-            if canUninstall {
+            if listed.canUninstall {
                 // Nothing goes yet: the user is shown what would.
                 actions.append(Action(
                     "\(Self.uninstallTitle)…",
