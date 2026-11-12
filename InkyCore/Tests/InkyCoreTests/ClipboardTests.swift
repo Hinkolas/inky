@@ -608,7 +608,7 @@ private func image(width: Int = 40, height: Int = 20, gray: CGFloat = 0.5, type:
         #expect(await clips(history).isEmpty)
     }
 
-    @Test func keepsPasswordsOnlyWhenAskedTo() async {
+    @Test func keepsPasswordsOnlyWhenAskedTo() async throws {
         let history = makeHistory()
         defer { history.stop(); pasteboard.releaseGlobally() }
         history.keepsConcealed = true
@@ -623,6 +623,15 @@ private func image(width: Int = 40, height: Int = 20, gray: CGFloat = 0.5, type:
         let kept = await clips(history)
         #expect(Set(kept.map(\.title)) == ["hunter2", "correct horse"])
         #expect(kept.allSatisfy { $0.isConcealed })
+
+        // Put back, they are marked as confidential again, so that other
+        // clipboard managers leave them out too. With formatting or without.
+        for asPlainText in [false, true] {
+            pasteboard.clearContents()
+            try await history.copy(kept[0], asPlainText: asPlainText)
+            #expect(pasteboard.string(forType: .string) == kept[0].title)
+            #expect(pasteboard.types?.contains(Pasteboard.concealed) == true)
+        }
 
         // Pinned ones stay when they are no longer to be kept.
         await history.setPinned(kept.first { $0.title == "hunter2" }!, true)
@@ -683,6 +692,8 @@ private func image(width: Int = 40, height: Int = 20, gray: CGFloat = 0.5, type:
         try await history.copy(first)
         #expect(pasteboard.string(forType: .string) == "first")
         #expect(pasteboard.data(forType: .html) == Data("<b>first</b>".utf8))
+        // Only what came marked as confidential goes back marked.
+        #expect(pasteboard.types?.contains(Pasteboard.concealed) == false)
         history.check()
         try? await Task.sleep(for: .milliseconds(50))
         var kept = await clips(history)

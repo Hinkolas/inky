@@ -178,6 +178,10 @@ public enum Pasteboard {
     /// came from whatever application that is.
     public static let copiedByInky = NSPasteboard.PasteboardType("io.github.hinkolas.inky.copied")
 
+    /// Set by password managers on what they copy, and by Inky when it puts
+    /// such a copy back. Clipboard managers leave it out. See nspasteboard.org.
+    public static let concealed = NSPasteboard.PasteboardType("org.nspasteboard.ConcealedType")
+
     @MainActor
     public static func copy(_ text: String) {
         NSPasteboard.general.clearContents()

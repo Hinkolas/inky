@@ -189,7 +189,9 @@ enum PasteboardReader {
         "de.petermaurer.TransientPasteboardType", "Pasteboard generator type",
     ]
     /// Marks set by password managers on what they copy.
-    private static let concealedTypes: Set<String> = ["org.nspasteboard.ConcealedType", "com.agilebits.onepassword"]
+    private static let concealedTypes: Set<String> = [
+        Pasteboard.concealed.rawValue, "com.agilebits.onepassword",
+    ]
 
     /// As they are preferred: the smaller ones first, TIFF last.
     private static let imageTypes = [
@@ -259,13 +261,14 @@ enum PasteboardWriter {
             guard !existing.isEmpty else {
                 throw InkyError(paths.count == 1 ? "The file is no longer there" : "The files are no longer there")
             }
+            pasteboard.clearContents()
             if asPlainText {
-                pasteboard.clearContents()
                 pasteboard.setString(existing.joined(separator: "\n"), forType: .string)
             } else {
-                pasteboard.clearContents()
                 pasteboard.writeObjects(existing.map { URL(fileURLWithPath: $0) as NSURL })
             }
+            // On the first item, which is where it is looked for.
+            if payload.isConcealed { pasteboard.setString("", forType: Pasteboard.concealed) }
         case .image:
             guard let url = payload.imageURL, let data = try? Data(contentsOf: url) else {
                 throw InkyError("The image is no longer there")
@@ -277,6 +280,7 @@ enum PasteboardWriter {
             // made when one of them asks.
             let others = [NSPasteboard.PasteboardType.png, .tiff].filter { $0.rawValue != type }
             item.setDataProvider(ImageConverter(url: url), forTypes: others)
+            if payload.isConcealed { item.setString("", forType: Pasteboard.concealed) }
             pasteboard.clearContents()
             pasteboard.writeObjects([item])
         case .text, .code, .path, .link, .color:
@@ -288,6 +292,7 @@ enum PasteboardWriter {
                     item.setData(data, forType: NSPasteboard.PasteboardType(type))
                 }
             }
+            if payload.isConcealed { item.setString("", forType: Pasteboard.concealed) }
             pasteboard.clearContents()
             pasteboard.writeObjects([item])
         }
