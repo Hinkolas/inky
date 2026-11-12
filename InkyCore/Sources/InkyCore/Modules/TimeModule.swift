@@ -16,6 +16,9 @@ public final class TimeModule: Module {
     /// By default the user's time zone is followed as it changes.
     public init(calculator: TimeCalculator = TimeCalculator(timeZone: .autoupdatingCurrent)) {
         self.calculator = calculator
+        // Reading the list of places takes a while, which Inky does not wait
+        // for as it starts, and the first time asked for does not either.
+        Task.detached(priority: .utility) { _ = PlaceIndex.shared }
     }
 
     public func instantResults(for query: String) -> [ResultItem] {
