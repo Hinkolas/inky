@@ -75,22 +75,14 @@ jobs:
             echo "::error::INKY_UPDATE_PUBLIC_KEY is empty, so the release could not update itself"; exit 1
           fi
 
+      # The signing keychain is there only while something is signed: here
+      # for the app, and later for the disk image. Whatever runs in between,
+      # such as the packages that lay out the disk image, cannot sign.
       - name: Import the signing certificate
         env:
           P12: ${{ secrets.DEVELOPER_ID_P12 }}
           P12_PASSWORD: ${{ secrets.DEVELOPER_ID_P12_PASSWORD }}
-        run: |
-          keychain="$RUNNER_TEMP/signing.keychain-db"
-          password=$(uuidgen)
-          echo "$P12" | base64 --decode > "$RUNNER_TEMP/certificate.p12"
-          security create-keychain -p "$password" "$keychain"
-          security set-keychain-settings -lut 3600 "$keychain"
-          security unlock-keychain -p "$password" "$keychain"
-          security import "$RUNNER_TEMP/certificate.p12" -k "$keychain" -P "$P12_PASSWORD" \
-            -T /usr/bin/codesign -T /usr/bin/security
-          security set-key-partition-list -S apple-tool:,apple: -s -k "$password" "$keychain"
-          security list-keychains -d user -s "$keychain" $(security list-keychains -d user | tr -d '"')
-          rm "$RUNNER_TEMP/certificate.p12"
+        run: bash Scripts/signing-keychain.sh create
 
       - name: Archive
         env:
@@ -119,6 +111,9 @@ jobs:
           plist="$RUNNER_TEMP/export/Inky.app/Contents/Info.plist"
           test "$(/usr/libexec/PlistBuddy -c 'Print :CFBundleShortVersionString' "$plist")" = "$VERSION"
           test "$(/usr/libexec/PlistBuddy -c 'Print :CFBundleVersion' "$plist")" = "$BUILD"
+
+      - name: Remove the signing keychain
+        run: bash Scripts/signing-keychain.sh delete
 
       - name: Notarize
         env:
@@ -158,20 +153,31 @@ jobs:
           test -s "$RUNNER_TEMP/notes.md" || { echo "::error::CHANGELOG.md has no section for $VERSION"; exit 1; }
 
       # The download: a window with Inky and the Applications folder to drag
-      # it onto. The disk image is signed and notarized as well, so Gatekeeper
-      # opens it without a warning; the app inside is already stapled.
+      # it onto. dmgbuild comes from PyPI, so it runs without a secret and
+      # without the signing keychain, and only as the wheels whose hashes
+      # Scripts/dmgbuild-requirements.txt holds.
       - name: Disk image for download
+        run: |
+          python3 -m venv "$RUNNER_TEMP/dmgbuild"
+          "$RUNNER_TEMP/dmgbuild/bin/pip" install --quiet --require-hashes --only-binary=:all: \
+            -r Scripts/dmgbuild-requirements.txt
+          "$RUNNER_TEMP/dmgbuild/bin/dmgbuild" -s Scripts/dmg-settings.py \
+            -D app="$RUNNER_TEMP/export/Inky.app" Inky "dist/Inky-$VERSION.dmg"
+
+      # The disk image is signed and notarized as well, so Gatekeeper opens it
+      # without a warning; the app inside is already stapled.
+      - name: Sign and notarize the disk image
         env:
+          P12: ${{ secrets.DEVELOPER_ID_P12 }}
+          P12_PASSWORD: ${{ secrets.DEVELOPER_ID_P12_PASSWORD }}
           API_KEY: ${{ secrets.NOTARY_API_KEY_P8 }}
           API_KEY_ID: ${{ secrets.NOTARY_API_KEY_ID }}
           API_ISSUER_ID: ${{ secrets.NOTARY_API_ISSUER_ID }}
         run: |
           dmg="dist/Inky-$VERSION.dmg"
-          python3 -m venv "$RUNNER_TEMP/dmgbuild"
-          "$RUNNER_TEMP/dmgbuild/bin/pip" install --quiet dmgbuild==1.6.7
-          "$RUNNER_TEMP/dmgbuild/bin/dmgbuild" -s Scripts/dmg-settings.py \
-            -D app="$RUNNER_TEMP/export/Inky.app" Inky "$dmg"
+          bash Scripts/signing-keychain.sh create
           codesign --sign "Developer ID Application" --timestamp --verbose "$dmg"
+          bash Scripts/signing-keychain.sh delete
           echo "$API_KEY" | base64 --decode > "$RUNNER_TEMP/notary.p8"
           xcrun notarytool submit "$dmg" \
             --key "$RUNNER_TEMP/notary.p8" --key-id "$API_KEY_ID" --issuer "$API_ISSUER_ID" --wait
@@ -201,6 +207,7 @@ jobs:
           if [ "$PRERELEASE" = true ]; then flags+=(--prerelease); fi
           gh release create "$TAG" dist/* "${flags[@]}"
 
-      - name: Remove the signing keychain
+      # Also when a step failed while the keychain was there.
+      - name: Remove the signing keychain at the end
         if: always()
-        run: security delete-keychain "$RUNNER_TEMP/signing.keychain-db" || true
+        run: bash Scripts/signing-keychain.sh delete
