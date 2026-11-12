@@ -500,6 +500,10 @@ struct ModulePane: View {
                     "#ff6363", "rgb(255, 99, 99)", "oklch(0.7 0.19 23)", "rgb(255 99 99 / 50%)",
                     "#fa32fa in rgb", "rgb(255, 0, 0) to hsl",
                 ])
+            case "browser":
+                Examples([
+                    "amazon.com", "github.com/hinkolas/inky", "localhost:3000", "https://example.com/page?id=1",
+                ])
             case "files":
                 FileSearchSettings(context: context)
             case "quicklinks":

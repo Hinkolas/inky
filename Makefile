@@ -5,7 +5,9 @@ XCODE   := xcodebuild -project $(PROJECT) -scheme $(SCHEME) -derivedDataPath $(B
 
 PLACES  := InkyCore/Sources/InkyCore/Resources/places.tsv
 
-.PHONY: build release run test places clean
+TLDS    := InkyCore/Sources/InkyCore/Resources/tlds.txt
+
+.PHONY: build release run test places tlds clean
 
 build: ## Debug build
 	$(XCODE) -configuration Debug build
@@ -29,6 +31,12 @@ places: ## Rebuild the list of cities and their time zones from GeoNames
 	swift Scripts/places.swift $(BUILD)/geonames/cities15000.txt > $(BUILD)/geonames/places.tsv
 	test -s $(BUILD)/geonames/places.tsv
 	mv $(BUILD)/geonames/places.tsv $(PLACES)
+
+tlds: ## Fetch the current list of top-level domains from IANA
+	mkdir -p $(BUILD)
+	curl -fsS -o $(BUILD)/tlds.txt https://data.iana.org/TLD/tlds-alpha-by-domain.txt
+	test -s $(BUILD)/tlds.txt
+	mv $(BUILD)/tlds.txt $(TLDS)
 
 clean:
 	rm -rf $(BUILD) InkyCore/.build
