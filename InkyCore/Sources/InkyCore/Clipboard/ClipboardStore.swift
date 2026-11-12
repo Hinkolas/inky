@@ -173,18 +173,46 @@ public actor ClipboardStore {
 
     /// Adds what was copied, or moves the entry it already is to the top.
     /// Returns the entry's id, or nil if it could not be kept.
+    ///
+    /// A new image is written, and a small copy of it made, before the
+    /// history is turned to: for a large one that takes a while, which the
+    /// history would otherwise be held up by.
     @discardableResult
-    public func record(_ capture: ClipCapture) -> Int64? {
+    public nonisolated func record(_ capture: ClipCapture) async -> Int64? {
+        guard let image = capture.image else { return await record(capture, hash: nil, image: nil) }
+        let hash = await Task.detached(priority: .utility) { capture.hash }.value
+        guard await !contains(hash) else { return await record(capture, hash: hash, image: nil) }
+
+        let written = await Task.detached(priority: .utility) { [imageDirectory] in
+            Result { try Self.write(image, type: capture.imageType ?? "public.png", hash: hash, besides: imageDirectory) }
+        }.value
+        switch written {
+        case let .success(written):
+            return await record(capture, hash: hash, image: written)
+        case let .failure(error):
+            Self.log.error("A copy could not be kept: \(String(describing: error), privacy: .public)")
+            return nil
+        }
+    }
+
+    /// `hash` is the capture's, if it is known already.
+    private func record(_ capture: ClipCapture, hash: Data?, image: WrittenImage?) -> Int64? {
+        // Where it was written, which is not needed once it is in place.
+        defer { image.map { try? FileManager.default.removeItem(at: $0.folder) } }
         do {
-            return try database.transaction { try insert(capture) }
+            return try database.transaction { try insert(capture, hash: hash ?? capture.hash, image: image) }
         } catch {
             Self.log.error("A copy could not be kept: \(String(describing: error), privacy: .public)")
             return nil
         }
     }
 
-    private func insert(_ capture: ClipCapture) throws -> Int64 {
-        let hash = capture.hash
+    private func contains(_ hash: Data) -> Bool {
+        let found = try? database.query("SELECT 1 FROM clips WHERE hash = ?", [.blob(hash)]) { $0.int(0) }
+        return found?.isEmpty == false
+    }
+
+    private func insert(_ capture: ClipCapture, hash: Data, image written: WrittenImage?) throws -> Int64 {
         let existing = try database.query("SELECT id FROM clips WHERE hash = ?", [.blob(hash)]) { Int64($0.int(0)) }.first
         let id: Int64
         if let existing {
@@ -208,7 +236,12 @@ public actor ClipboardStore {
         } else {
             var stored: StoredImage?
             if let image = capture.image {
-                stored = try store(image, type: capture.imageType ?? "public.png", hash: hash)
+                // Only if the entry went since it was looked for is it not
+                // written yet.
+                let written = try written ?? Self.write(
+                    image, type: capture.imageType ?? "public.png", hash: hash, besides: imageDirectory
+                )
+                stored = try place(written)
             }
             try database.run("""
                 INSERT INTO clips (
@@ -236,7 +269,7 @@ public actor ClipboardStore {
         return id
     }
 
-    private struct StoredImage {
+    private struct StoredImage: Sendable {
         var name: String
         var type: String
         var width: Int
@@ -244,8 +277,36 @@ public actor ClipboardStore {
         var bytes: Int
     }
 
-    /// Writes an image into the folder, and a small copy of it to show.
-    private func store(_ data: Data, type: String, hash: Data) throws -> StoredImage {
+    /// An image written where it is to be moved from into the folder of
+    /// images, with the small copy of it to show.
+    private struct WrittenImage: Sendable {
+        /// Of its own, on the same volume as the images, and gone once the
+        /// image is in place.
+        var folder: URL
+        var file: URL
+        var preview: URL?
+        var image: StoredImage
+    }
+
+    /// Moves a written image into the folder of images.
+    private func place(_ written: WrittenImage) throws -> StoredImage {
+        defer { try? FileManager.default.removeItem(at: written.folder) }
+        let destination = imageDirectory.appendingPathComponent(written.image.name)
+        try? FileManager.default.removeItem(at: destination)
+        try FileManager.default.moveItem(at: written.file, to: destination)
+        if let preview = written.preview {
+            let previewDestination = Self.previewURL(for: written.image.name, in: imageDirectory)
+            try? FileManager.default.removeItem(at: previewDestination)
+            try? FileManager.default.moveItem(at: preview, to: previewDestination)
+        }
+        return written.image
+    }
+
+    /// Writes an image, and a small copy of it to show, into a folder of its
+    /// own on the volume of `imageDirectory`, to be moved from there.
+    private nonisolated static func write(
+        _ data: Data, type: String, hash: Data, besides imageDirectory: URL
+    ) throws -> WrittenImage {
         guard let source = CGImageSourceCreateWithData(data as CFData, nil), CGImageSourceGetCount(source) > 0 else {
             throw InkyError("What was copied is not an image")
         }
@@ -257,7 +318,13 @@ public actor ClipboardStore {
         let keeps = Self.keptImageTypes.contains(type)
         let storedType = keeps ? type : "public.png"
         let name = stem + "." + (UTType(storedType)?.preferredFilenameExtension ?? "png")
-        let url = imageDirectory.appendingPathComponent(name)
+        let folder = try FileManager.default.url(
+            for: .itemReplacementDirectory, in: .userDomainMask, appropriateFor: imageDirectory, create: true
+        )
+        var isWritten = false
+        defer { if !isWritten { try? FileManager.default.removeItem(at: folder) } }
+        let url = folder.appendingPathComponent(name)
+        let previewURL = Self.previewURL(for: name, in: folder)
 
         if keeps {
             try data.write(to: url, options: .atomic)
@@ -276,16 +343,19 @@ public actor ClipboardStore {
             kCGImageSourceCreateThumbnailWithTransform: true,
             kCGImageSourceThumbnailMaxPixelSize: Self.previewSize,
         ]
+        var hasPreview = false
         if let preview = CGImageSourceCreateThumbnailAtIndex(source, 0, options as CFDictionary),
-           let destination = CGImageDestinationCreateWithURL(
-               Self.previewURL(for: name, in: imageDirectory) as CFURL, "public.png" as CFString, 1, nil
-           ) {
+           let destination = CGImageDestinationCreateWithURL(previewURL as CFURL, "public.png" as CFString, 1, nil) {
             CGImageDestinationAddImage(destination, preview, nil)
-            CGImageDestinationFinalize(destination)
+            hasPreview = CGImageDestinationFinalize(destination)
         }
 
         let bytes = (try? url.resourceValues(forKeys: [.fileSizeKey]).fileSize) ?? data.count
-        return StoredImage(name: name, type: storedType, width: width, height: height, bytes: bytes)
+        isWritten = true
+        return WrittenImage(
+            folder: folder, file: url, preview: hasPreview ? previewURL : nil,
+            image: StoredImage(name: name, type: storedType, width: width, height: height, bytes: bytes)
+        )
     }
 
     private static func previewURL(for name: String, in directory: URL) -> URL {

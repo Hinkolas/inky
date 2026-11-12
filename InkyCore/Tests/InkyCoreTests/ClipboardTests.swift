@@ -418,6 +418,35 @@ private func image(width: Int = 40, height: Int = 20, gray: CGFloat = 0.5, type:
         #expect(try FileManager.default.contentsOfDirectory(atPath: store.imageDirectory.path).count == 2)
     }
 
+    @Test func anImageCopiedTwiceAtOnceIsOneEntry() async throws {
+        let store = makeStore()
+        let png = image(width: 600, height: 400)
+        async let first = store.record(.image(png, type: "public.png"))
+        async let second = store.record(.image(png, type: "public.png"))
+        let ids = await [first, second]
+        #expect(ids[0] != nil && ids[0] == ids[1])
+        #expect(await store.snapshot(ClipQuery(), limit: 10).clips.map(\.copies) == [2])
+        #expect(try FileManager.default.contentsOfDirectory(atPath: store.imageDirectory.path).count == 2)
+    }
+
+    @Test func aLargeImageDoesNotHoldUpTheHistory() async throws {
+        let store = makeStore()
+        await fill(store, ["already there"])
+        let tiff = image(width: 6000, height: 4000, type: "public.tiff")
+        let recording = Task {
+            let id = await store.record(.image(tiff, type: "public.tiff"))
+            return (id: id, at: ContinuousClock.now)
+        }
+        try await Task.sleep(for: .milliseconds(5))
+        // Answered while the image is still being written.
+        #expect(await titles(store) == ["already there"])
+        let answered = ContinuousClock.now
+        let recorded = await recording.value
+        #expect(recorded.id != nil)
+        #expect(answered < recorded.at)
+        #expect(await titles(store).count == 2)
+    }
+
     @Test func keepsTheFormattingOfTheLatestCopy() async throws {
         let store = makeStore()
         var capture = text("Some words")
