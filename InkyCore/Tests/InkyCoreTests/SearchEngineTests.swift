@@ -9,6 +9,16 @@ private final class StubModule: Module {
     var onChange: (@MainActor () -> Void)?
     var titles: [String]
     var instant: [String: String] = [:]
+    /// Holds the next load of the candidates up until it is let go.
+    var holdsNextLoad = false
+    private var held: CheckedContinuation<Void, Never>?
+
+    var isHolding: Bool { held != nil }
+
+    func letGo() {
+        held?.resume()
+        held = nil
+    }
 
     init(id: String, titles: [String]) {
         self.id = id
@@ -20,7 +30,14 @@ private final class StubModule: Module {
         ResultItem(id: "\(id):\(title)", title: title, icon: info.icon, kind: "Stub", actions: [])
     }
 
-    func candidates() async -> [ResultItem] { titles.map(item) }
+    func candidates() async -> [ResultItem] {
+        let titles = titles
+        if holdsNextLoad {
+            holdsNextLoad = false
+            await withCheckedContinuation { held = $0 }
+        }
+        return titles.map(item)
+    }
 
     func instantResults(for query: String) -> [ResultItem] {
         instant[query].map { [item($0)] } ?? []
@@ -42,6 +59,27 @@ private final class StubModule: Module {
     @Test func ranksBestMatchFirst() async {
         let engine = await makeEngine(StubModule(id: "apps", titles: ["Disk Safety", "Safari", "Slack"]))
         #expect(titles(engine.results(for: "saf")) == ["Safari", "Disk Safety"])
+    }
+
+    @Test func whatIsLoadedLaterIsNotOverwrittenByWhatTookLonger() async throws {
+        let module = StubModule(id: "apps", titles: ["Safari"])
+        let engine = await makeEngine(module)
+        var changes = 0
+        engine.onChange = { changes += 1 }
+
+        module.titles = ["Slow"]
+        module.holdsNextLoad = true
+        module.onChange?()
+        while !module.isHolding { await Task.yield() }
+        module.titles = ["Fast"]
+        module.onChange?()
+        while changes == 0 { await Task.yield() }
+        module.letGo()
+        for _ in 0..<20 { await Task.yield() }
+
+        #expect(titles(engine.results(for: "fast")) == ["Fast"])
+        #expect(engine.results(for: "slow").isEmpty)
+        #expect(changes == 1)
     }
 
     @Test func dropsNoise() async {

@@ -36,6 +36,8 @@ public final class SearchEngine {
     /// commands as they are loaded.
     private var index: [String: [Entry]] = [:]
     @ObservationIgnored private var lastReload: [String: Date] = [:]
+    /// How many times each module was asked for its candidates.
+    @ObservationIgnored private var reloads: [String: Int] = [:]
     /// The ids in `index`, of every module.
     @ObservationIgnored private var rankedIDs: Set<String> = []
     /// The candidates of each module that can be fallback commands. Observed,
@@ -82,7 +84,12 @@ public final class SearchEngine {
     }
 
     private func reload(_ module: any Module) async {
+        let reload = reloads[module.id, default: 0] + 1
+        reloads[module.id] = reload
         let items = await module.candidates()
+        // What was asked for later knows better, and is not overwritten
+        // should this have taken longer.
+        guard reloads[module.id] == reload else { return }
         index[module.id] = items.map { item in
             Entry(
                 item: item,

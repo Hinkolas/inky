@@ -12,6 +12,10 @@
 - Copying a large image no longer holds up the clipboard history while the
   image is kept: it is written first, and searching and scrolling go on
   meanwhile.
+- An application that is installed or removed is found or gone within a few
+  seconds, without the launcher having to be opened. Before, opening the
+  launcher looked for applications again whenever it had not for half a
+  minute.
 
 ## 0.1.0-alpha.5 — 2026-11-12
 
