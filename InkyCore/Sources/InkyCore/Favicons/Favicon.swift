@@ -82,8 +82,23 @@ public enum Favicon {
     /// Asks the network, without cookies and without a cache of its own.
     public static let download: Fetch = Download.fetch
 
+    /// Whether `data` is an icon worth keeping: an image, and one of a size
+    /// an icon has. What it says about itself is read without drawing it, so
+    /// that a picture of enormous size is turned away before it costs anything.
     static func isImage(_ data: Data) -> Bool {
         guard let source = CGImageSourceCreateWithData(data as CFData, nil) else { return false }
-        return CGImageSourceGetCount(source) > 0
+        let count = CGImageSourceGetCount(source)
+        // An .ico holds a few sizes of the same icon.
+        guard count > 0, count <= maxImages else { return false }
+        return (0..<count).allSatisfy { index in
+            guard let properties = CGImageSourceCopyPropertiesAtIndex(source, index, nil) as? [CFString: Any],
+                  let width = properties[kCGImagePropertyPixelWidth] as? Int,
+                  let height = properties[kCGImagePropertyPixelHeight] as? Int
+            else { return false }
+            return (1...maxSide).contains(width) && (1...maxSide).contains(height)
+        }
     }
+
+    static let maxSide = 1024
+    static let maxImages = 32
 }
