@@ -6,6 +6,30 @@ IMPORTANT: This file was signed by Sparkle. Any modifications to this file requi
     <channel>
         <title>Inky</title>
         <item>
+            <title>0.1.0-alpha.5</title>
+            <pubDate>Thu, 12 Nov 2026 19:25:29 +0000</pubDate>
+            <link>https://github.com/Hinkolas/inky</link>
+            <sparkle:fullReleaseNotesLink>https://github.com/Hinkolas/inky/releases/tag/v0.1.0-alpha.5</sparkle:fullReleaseNotesLink>
+            <sparkle:channel>beta</sparkle:channel>
+            <sparkle:version>70</sparkle:version>
+            <sparkle:shortVersionString>0.1.0-alpha.5</sparkle:shortVersionString>
+            <sparkle:minimumSystemVersion>15.0</sparkle:minimumSystemVersion>
+            <sparkle:hardwareRequirements>arm64</sparkle:hardwareRequirements>
+            <description><![CDATA[<p>Fixes from a security review, for passwords, searches, pasting, uninstalling, downloads and updates: that is the fifth alpha.</p>
+<div class="markdown-heading"><h3 class="heading-element">Security</h3><a id="user-content-security" class="anchor" aria-label="Permalink: Security" href="#security"><span aria-hidden="true" class="octicon octicon-link"></span></a></div>
+<ul>
+<li>A password copied from a password manager, kept because Settings → Clipboard asks to keep passwords, is marked as confidential again when it is copied or pasted from the history, so other clipboard managers leave it out as they did the first time.</li>
+<li>With Settings → General keeping no searches, the searches that ranked the results are no longer kept either, and those already kept are removed. Clearing the searches clears them too.</li>
+<li>Pasting from the clipboard history presses ⌘V only when the application it was meant for is still in front. Should another one have come forward meanwhile, Inky beeps and leaves the entry on the clipboard.</li>
+<li>Uninstalling an application offers to remove only files that are its own. An identifier that is too short to be its own, such as <code>com.example</code>, matches nothing, and for an identifier of Apple's only files named exactly after it count.</li>
+<li>What Inky downloads, a website's icon or the day's exchange rates, stops at a megabyte and half a minute, and an icon is not decoded when it is larger than 1024 pixels on a side.</li>
+<li>On the first launch, the clipboard is recorded only once the welcome window has been closed.</li>
+<li>An update is added to the update feed only once approved, and only when it is the app that the release's tag builds: the same version and build, signed with Inky's Developer ID and notarized. Building the disk image no longer has access to the signing certificate.</li>
+</ul>
+]]></description>
+            <enclosure url="https://github.com/Hinkolas/inky/releases/download/v0.1.0-alpha.5/Inky-0.1.0-alpha.5.zip" length="3781728" type="application/octet-stream" sparkle:edSignature="rNYSbkTS4LfkUFwRDr69VUVisrYNi42B8Cj2tdjNrlpD0jtBmZ2YzLbzZDBYMoUIrk9F/fz5NXdtQzDdXCMcBA=="/>
+        </item>
+        <item>
             <title>0.1.0-alpha.4</title>
             <pubDate>Thu, 12 Nov 2026 11:45:52 +0000</pubDate>
             <link>https://github.com/Hinkolas/inky</link>
@@ -46,30 +70,9 @@ IMPORTANT: This file was signed by Sparkle. Any modifications to this file requi
 ]]></description>
             <enclosure url="https://github.com/Hinkolas/inky/releases/download/v0.1.0-alpha.3/Inky-0.1.0-alpha.3.zip" length="3761961" type="application/octet-stream" sparkle:edSignature="0iWYkw3p7wTYNYAhw+mMMSNnINwn3E5BgjQkLT5PKJjb4kokKFDV25ZCai0tYojgDp7yhDBYwSw+COmQTavRCw=="/>
         </item>
-        <item>
-            <title>0.1.0-alpha.2</title>
-            <pubDate>Wed, 11 Nov 2026 22:49:54 +0000</pubDate>
-            <link>https://github.com/Hinkolas/inky</link>
-            <sparkle:fullReleaseNotesLink>https://github.com/Hinkolas/inky/releases/tag/v0.1.0-alpha.2</sparkle:fullReleaseNotesLink>
-            <sparkle:channel>beta</sparkle:channel>
-            <sparkle:version>51</sparkle:version>
-            <sparkle:shortVersionString>0.1.0-alpha.2</sparkle:shortVersionString>
-            <sparkle:minimumSystemVersion>15.0</sparkle:minimumSystemVersion>
-            <sparkle:hardwareRequirements>arm64</sparkle:hardwareRequirements>
-            <description><![CDATA[<p>Where the keyboard is in the launcher, which the first testers found unreliable.</p>
-<div class="markdown-heading"><h3 class="heading-element">Fixed</h3><a id="user-content-fixed" class="anchor" aria-label="Permalink: Fixed" href="#fixed"><span aria-hidden="true" class="octicon octicon-link"></span></a></div>
-<ul>
-<li>The launcher puts the keyboard into the field of the screen it shows and keeps it there, instead of leaving that to how soon macOS moves focus to a field that has just appeared. This covers opening the launcher right after closing it, opening the clipboard history, the quicklinks or another command with its hotkey, and renaming a pinned entry of the clipboard history.</li>
-<li>Going back to a list, as from editing a quicklink or from what uninstalling an application would remove, puts the keyboard into its filter again. Before, typing did nothing until the filter was clicked.</li>
-<li>In the quicklink editor, Tab goes from the link back to the name. Before, it left the keyboard with neither. Editing a quicklink puts the insertion point at the end of its link instead of selecting all of it.</li>
-<li>Typing is never lost to a launcher that is open: should the keyboard be with no field at all, the first key puts it back where it belongs.</li>
-</ul>
-]]></description>
-            <enclosure url="https://github.com/Hinkolas/inky/releases/download/v0.1.0-alpha.2/Inky-0.1.0-alpha.2.zip" length="3742897" type="application/octet-stream" sparkle:edSignature="xrbcYVMwzcbBL09wm5NjlH73XB1Wbv57iQAXprEjIQw8d/8yAmL3oSdHAAgTKqgpsJWagXGT1FuvgKkn98h3BA=="/>
-        </item>
     </channel>
 </rss>
 <!-- sparkle-signatures:
-edSignature: KgcqDW7lYwZrSa2HCwOz7lWmNHG267BGr30sxi0faC1Wuq5+UwBzk275ZG/68aSVjMV6yDpXqjHgi4Nb60kzCA==
-length: 7162
+edSignature: cIF6Oo+QmVwgHa/UG2bUdU+b33x+pfMcLDzHVsHwwle28dG7TC423kaDzyDjwIkemES7kvDE88ooE7SErBD2AQ==
+length: 7751
 -->
