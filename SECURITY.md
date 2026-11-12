@@ -22,7 +22,9 @@ version before reporting a problem that may already have been fixed.
 
 - Inky is a local, unsandboxed macOS application. It runs with your account's
   permissions; it is not a security boundary against other apps on that account.
-- Clipboard history is enabled by default. Copies that password managers mark
+- Clipboard history is enabled by default. On first launch it begins keeping
+  copies only once the welcome window, which says so and can turn it off, has
+  been closed. Copies that password managers mark
   as confidential (`org.nspasteboard.ConcealedType`, 1Password's own marker)
   are left out unless the user turns on keeping them. Other copies, including
   passwords copied from apps that do not mark them, are stored like any copy.

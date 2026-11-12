@@ -18,6 +18,8 @@ final class AppContext {
     /// Called when the commands that can be run, or their hotkeys, may have
     /// changed.
     var onCommandsChange: () -> Void = {}
+    /// Called when the welcome window closes.
+    var onOnboardingClose: () -> Void = {}
 
     private var settingsWindow: SettingsWindowController?
     private var onboardingWindow: OnboardingWindowController?
@@ -217,6 +219,7 @@ final class AppContext {
             window.onClose = { [unowned self] in
                 preferences.hasLaunchedBefore = true
                 onboardingWindow = nil
+                onOnboardingClose()
             }
             onboardingWindow = window
         }
