@@ -31,6 +31,9 @@ public actor ClipboardStore {
     private static let shownCharacters = 4000
     /// The longest side of the copy an image is shown by, in pixels.
     private static let previewSize = 640
+    /// The shortest side of the copy an entry's row shows, in pixels: it
+    /// fills a square tile of 30 points.
+    private static let thumbnailSize = 96
     /// Image types that are kept as they are. Anything else is kept as PNG:
     /// TIFF, which most images are copied as, is many times the size.
     private static let keptImageTypes: Set<String> = [
@@ -284,8 +287,22 @@ public actor ClipboardStore {
         /// image is in place.
         var folder: URL
         var file: URL
-        var preview: URL?
+        /// The small copies that could be made, in `folder` too.
+        var copies: [SmallCopy]
         var image: StoredImage
+    }
+
+    /// A small copy of an image, made to show it by, next to it.
+    private enum SmallCopy: String, CaseIterable, Sendable {
+        /// What the selected entry is shown by.
+        case preview
+        /// What an entry's row is shown by. Images kept up to 0.1.0-alpha.5
+        /// have none.
+        case thumbnail
+
+        func url(for name: String, in directory: URL) -> URL {
+            directory.appendingPathComponent((name as NSString).deletingPathExtension + ".\(rawValue).png")
+        }
     }
 
     /// Moves a written image into the folder of images.
@@ -294,16 +311,16 @@ public actor ClipboardStore {
         let destination = imageDirectory.appendingPathComponent(written.image.name)
         try? FileManager.default.removeItem(at: destination)
         try FileManager.default.moveItem(at: written.file, to: destination)
-        if let preview = written.preview {
-            let previewDestination = Self.previewURL(for: written.image.name, in: imageDirectory)
-            try? FileManager.default.removeItem(at: previewDestination)
-            try? FileManager.default.moveItem(at: preview, to: previewDestination)
+        for copy in written.copies {
+            let copyDestination = copy.url(for: written.image.name, in: imageDirectory)
+            try? FileManager.default.removeItem(at: copyDestination)
+            try? FileManager.default.moveItem(at: copy.url(for: written.image.name, in: written.folder), to: copyDestination)
         }
         return written.image
     }
 
-    /// Writes an image, and a small copy of it to show, into a folder of its
-    /// own on the volume of `imageDirectory`, to be moved from there.
+    /// Writes an image, and the small copies of it to show, into a folder of
+    /// its own on the volume of `imageDirectory`, to be moved from there.
     private nonisolated static func write(
         _ data: Data, type: String, hash: Data, besides imageDirectory: URL
     ) throws -> WrittenImage {
@@ -324,7 +341,6 @@ public actor ClipboardStore {
         var isWritten = false
         defer { if !isWritten { try? FileManager.default.removeItem(at: folder) } }
         let url = folder.appendingPathComponent(name)
-        let previewURL = Self.previewURL(for: name, in: folder)
 
         if keeps {
             try data.write(to: url, options: .atomic)
@@ -343,29 +359,56 @@ public actor ClipboardStore {
             kCGImageSourceCreateThumbnailWithTransform: true,
             kCGImageSourceThumbnailMaxPixelSize: Self.previewSize,
         ]
-        var hasPreview = false
-        if let preview = CGImageSourceCreateThumbnailAtIndex(source, 0, options as CFDictionary),
-           let destination = CGImageDestinationCreateWithURL(previewURL as CFURL, "public.png" as CFString, 1, nil) {
-            CGImageDestinationAddImage(destination, preview, nil)
-            hasPreview = CGImageDestinationFinalize(destination)
+        var copies: [SmallCopy] = []
+        func write(_ image: CGImage, as copy: SmallCopy) {
+            guard let destination = CGImageDestinationCreateWithURL(
+                copy.url(for: name, in: folder) as CFURL, "public.png" as CFString, 1, nil
+            ) else { return }
+            CGImageDestinationAddImage(destination, image, nil)
+            if CGImageDestinationFinalize(destination) { copies.append(copy) }
+        }
+        if let preview = CGImageSourceCreateThumbnailAtIndex(source, 0, options as CFDictionary) {
+            write(preview, as: .preview)
+            // Made from the preview, which is quicker than from the image,
+            // and a row decodes it as it shows it, which a preview takes
+            // too long to.
+            if let thumbnail = Self.thumbnail(of: preview) { write(thumbnail, as: .thumbnail) }
         }
 
         let bytes = (try? url.resourceValues(forKeys: [.fileSizeKey]).fileSize) ?? data.count
         isWritten = true
         return WrittenImage(
-            folder: folder, file: url, preview: hasPreview ? previewURL : nil,
+            folder: folder, file: url, copies: copies,
             image: StoredImage(name: name, type: storedType, width: width, height: height, bytes: bytes)
         )
     }
 
-    private static func previewURL(for name: String, in directory: URL) -> URL {
-        directory.appendingPathComponent((name as NSString).deletingPathExtension + ".preview.png")
+    /// `image` made as small as its shortest side may be to fill a row's tile.
+    private nonisolated static func thumbnail(of image: CGImage) -> CGImage? {
+        let scale = min(1, Double(thumbnailSize) / Double(max(1, min(image.width, image.height))))
+        let width = max(1, Int((Double(image.width) * scale).rounded()))
+        let height = max(1, Int((Double(image.height) * scale).rounded()))
+        let space = image.colorSpace.flatMap { $0.model == .rgb ? $0 : nil } ?? CGColorSpace(name: CGColorSpace.sRGB)
+        guard let space, let context = CGContext(
+            data: nil, width: width, height: height, bitsPerComponent: 8, bytesPerRow: 0,
+            space: space, bitmapInfo: CGImageAlphaInfo.premultipliedLast.rawValue
+        ) else { return nil }
+        context.interpolationQuality = .high
+        context.draw(image, in: CGRect(x: 0, y: 0, width: width, height: height))
+        return context.makeImage()
     }
 
-    /// Where the small copy of an image is, to show it.
+    /// Where the copy of an image is that the selected entry is shown by.
     public nonisolated func previewURL(of clip: Clip) -> URL? {
         guard clip.kind == .image, let name = clip.location else { return nil }
-        return Self.previewURL(for: name, in: imageDirectory)
+        return SmallCopy.preview.url(for: name, in: imageDirectory)
+    }
+
+    /// Where the copy of an image is that its row is shown by. It may not be
+    /// there, for an image kept up to 0.1.0-alpha.5: the preview is then.
+    public nonisolated func thumbnailURL(of clip: Clip) -> URL? {
+        guard clip.kind == .image, let name = clip.location else { return nil }
+        return SmallCopy.thumbnail.url(for: name, in: imageDirectory)
     }
 
     // MARK: - Reading
@@ -615,7 +658,9 @@ public actor ClipboardStore {
             }
             for name in images {
                 try? FileManager.default.removeItem(at: imageDirectory.appendingPathComponent(name))
-                try? FileManager.default.removeItem(at: Self.previewURL(for: name, in: imageDirectory))
+                for copy in SmallCopy.allCases {
+                    try? FileManager.default.removeItem(at: copy.url(for: name, in: imageDirectory))
+                }
             }
             // Gives the room back to the disk.
             if removed > 0 { try? database.execute("PRAGMA incremental_vacuum") }
@@ -634,7 +679,9 @@ public actor ClipboardStore {
         else { return }
         var known = Set(kept)
         for name in kept {
-            known.insert(Self.previewURL(for: name, in: imageDirectory).lastPathComponent)
+            for copy in SmallCopy.allCases {
+                known.insert(copy.url(for: name, in: imageDirectory).lastPathComponent)
+            }
         }
         for name in names where !known.contains(name) {
             try? FileManager.default.removeItem(at: imageDirectory.appendingPathComponent(name))
