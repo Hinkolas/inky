@@ -6,6 +6,27 @@ IMPORTANT: This file was signed by Sparkle. Any modifications to this file requi
     <channel>
         <title>Inky</title>
         <item>
+            <title>0.1.0-alpha.6</title>
+            <pubDate>Thu, 12 Nov 2026 20:41:09 +0000</pubDate>
+            <link>https://github.com/Hinkolas/inky</link>
+            <sparkle:fullReleaseNotesLink>https://github.com/Hinkolas/inky/releases/tag/v0.1.0-alpha.6</sparkle:fullReleaseNotesLink>
+            <sparkle:channel>beta</sparkle:channel>
+            <sparkle:version>76</sparkle:version>
+            <sparkle:shortVersionString>0.1.0-alpha.6</sparkle:shortVersionString>
+            <sparkle:minimumSystemVersion>15.0</sparkle:minimumSystemVersion>
+            <sparkle:hardwareRequirements>arm64</sparkle:hardwareRequirements>
+            <description><![CDATA[<p>Copying a long text or a large image, and installing an application, no longer hold Inky up: that is the sixth alpha.</p>
+<div class="markdown-heading"><h3 class="heading-element">Changed</h3><a id="user-content-changed" class="anchor" aria-label="Permalink: Changed" href="#changed"><span aria-hidden="true" class="octicon octicon-link"></span></a></div>
+<ul>
+<li>Copying a long text no longer holds Inky up. Before, a text of a few megabytes was gone through in full to tell whether it was code, which took up to seconds, also while Inky was in the background. The clipboard history no longer tells code apart: what was listed as code is listed as text, and found under Text as before.</li>
+<li>Copying a large image no longer holds up the clipboard history while the image is kept: it is written first, and searching and scrolling go on meanwhile.</li>
+<li>An application that is installed or removed is found or gone within a few seconds, without the launcher having to be opened. Before, opening the launcher looked for applications again whenever it had not for half a minute.</li>
+<li>The clipboard history shows the images in its list from a small copy made for them, which it draws many times as quickly as the copy the selected image is shown by. Images copied before keep being shown by that.</li>
+</ul>
+]]></description>
+            <enclosure url="https://github.com/Hinkolas/inky/releases/download/v0.1.0-alpha.6/Inky-0.1.0-alpha.6.zip" length="3796369" type="application/octet-stream" sparkle:edSignature="Pd9vygXRBQgUk9AgRB4ZJj8xuG76OO2uNsHQigybtMfuCx8SVVXYhfoFI2TVXG/ku9m0n4HvkO6aJwZg3ATtBg=="/>
+        </item>
+        <item>
             <title>0.1.0-alpha.5</title>
             <pubDate>Thu, 12 Nov 2026 19:25:29 +0000</pubDate>
             <link>https://github.com/Hinkolas/inky</link>
@@ -47,32 +68,9 @@ IMPORTANT: This file was signed by Sparkle. Any modifications to this file requi
 ]]></description>
             <enclosure url="https://github.com/Hinkolas/inky/releases/download/v0.1.0-alpha.4/Inky-0.1.0-alpha.4.zip" length="3775543" type="application/octet-stream" sparkle:edSignature="IKbmgh05WfdNh60Vqd386VZnBvMbR7hqSrgetJB8y2n07IlhdobtajNGEWVcoxGUrDfe2FVxicHjRRrD+oTQBg=="/>
         </item>
-        <item>
-            <title>0.1.0-alpha.3</title>
-            <pubDate>Thu, 12 Nov 2026 06:18:47 +0000</pubDate>
-            <link>https://github.com/Hinkolas/inky</link>
-            <sparkle:fullReleaseNotesLink>https://github.com/Hinkolas/inky/releases/tag/v0.1.0-alpha.3</sparkle:fullReleaseNotesLink>
-            <sparkle:channel>beta</sparkle:channel>
-            <sparkle:version>55</sparkle:version>
-            <sparkle:shortVersionString>0.1.0-alpha.3</sparkle:shortVersionString>
-            <sparkle:minimumSystemVersion>15.0</sparkle:minimumSystemVersion>
-            <sparkle:hardwareRequirements>arm64</sparkle:hardwareRequirements>
-            <description><![CDATA[<p>What is typed into the launcher is no longer lost when it closes.</p>
-<div class="markdown-heading"><h3 class="heading-element">Added</h3><a id="user-content-added" class="anchor" aria-label="Permalink: Added" href="#added"><span aria-hidden="true" class="octicon octicon-link"></span></a></div>
-<ul>
-<li>The launcher opens again where it was left. A click elsewhere, or the hotkey pressed again, puts it away as it is: the search, the selected result, what was typed into arguments, a command that is open. Opened again within a minute, it shows what it did. Settings → General sets how long, from never to always. Escape and ⌘W still close it for good.</li>
-<li>↑ in the empty search brings back what was searched for before, newest first, with what was typed into a quicklink's arguments and the result that was selected. ↑ and ↓ then go through the earlier searches until something is typed; ⌃N and ⌃P move the selection meanwhile. A search is remembered when it is run, cleared with Escape, or closed with ⌘W, and the same search is listed once. Settings → General sets how many are kept, the last 100 unless chosen otherwise, and clears them.</li>
-</ul>
-<div class="markdown-heading"><h3 class="heading-element">Changed</h3><a id="user-content-changed" class="anchor" aria-label="Permalink: Changed" href="#changed"><span aria-hidden="true" class="octicon octicon-link"></span></a></div>
-<ul>
-<li>Files that were found stay listed while the same search is looked up again, as when an application was installed meanwhile, instead of going and coming back.</li>
-</ul>
-]]></description>
-            <enclosure url="https://github.com/Hinkolas/inky/releases/download/v0.1.0-alpha.3/Inky-0.1.0-alpha.3.zip" length="3761961" type="application/octet-stream" sparkle:edSignature="0iWYkw3p7wTYNYAhw+mMMSNnINwn3E5BgjQkLT5PKJjb4kokKFDV25ZCai0tYojgDp7yhDBYwSw+COmQTavRCw=="/>
-        </item>
     </channel>
 </rss>
 <!-- sparkle-signatures:
-edSignature: cIF6Oo+QmVwgHa/UG2bUdU+b33x+pfMcLDzHVsHwwle28dG7TC423kaDzyDjwIkemES7kvDE88ooE7SErBD2AQ==
-length: 7751
+edSignature: t7G7QKPhhBVmAk92uTdXaJEvKW3AKV+0rudbGgApUqZ/5PGYtzWmm3+OWT5vkjf3yNwkkliN1v2/XdyZFxHPBA==
+length: 7476
 -->
