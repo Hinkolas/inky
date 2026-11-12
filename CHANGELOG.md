@@ -1,6 +1,9 @@
 # Changelog
 
-## Unreleased
+## 0.1.0-alpha.6 — 2026-11-12
+
+Copying a long text or a large image, and installing an application, no
+longer hold Inky up: that is the sixth alpha.
 
 ### Changed
 
