@@ -42,7 +42,6 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
             self?.statusItem.setVisible(preferences.showMenuBarIcon)
         }
         registerHotKey()
-        context.startClipboard()
         context.updates.start()
 
         Task {
@@ -51,7 +50,12 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
 
         // An app without a Dock icon that shows nothing on first launch looks
         // broken. Until the welcome window has been closed once, it greets.
-        if !preferences.hasLaunchedBefore {
+        if preferences.hasLaunchedBefore {
+            context.startClipboard()
+        } else {
+            // Nothing copied is kept before the user has seen the window
+            // that says it would be, and lets them turn that off.
+            context.onOnboardingClose = { [weak context] in context?.startClipboard() }
             context.showOnboarding()
         }
 
