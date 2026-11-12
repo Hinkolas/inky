@@ -34,7 +34,10 @@ public final class BrowserModule: Module {
             .copy(link, title: "Copy Link"),
         ]
         if onCreateQuicklink != nil {
-            actions.append(Action("Create Quicklink", symbol: "link.badge.plus", behavior: .keepOpen) { [weak self] _ in
+            // The key that makes a new quicklink in the list of them.
+            actions.append(Action(
+                "Create Quicklink", symbol: "link.badge.plus", shortcut: KeyShortcut("n"), behavior: .keepOpen
+            ) { [weak self] _ in
                 self?.onCreateQuicklink?(link)
             })
         }

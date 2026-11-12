@@ -6,8 +6,8 @@
 
 - A web address typed into the launcher is offered to be opened in the
   browser: `amazon.com`, `github.com/hinkolas/inky`, `localhost:3000`, or one
-  spelled out with `https://`. Return opens it, ⌘↵ copies it as a link, and
-  Create Quicklink under ⌘K opens the editor for a new quicklink with the
+  spelled out with `https://`. Return opens it, ⌘↵ copies it as a link, and ⌘N,
+  or Create Quicklink under ⌘K, opens the editor for a new quicklink with the
   address filled in. Whatever ends in a top-level domain counts, so the name
   of a file such as `main.rs` is offered too, above the file itself.
   Settings → Browser switches it off.

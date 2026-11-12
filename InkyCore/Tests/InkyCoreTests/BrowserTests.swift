@@ -128,6 +128,7 @@ import Testing
 
         // The editor opens in the launcher, which stays.
         let action = row.actions[2]
+        #expect(action.shortcut == KeyShortcut("n", [.command]))
         guard case .keepOpen = action.behavior else {
             Issue.record("Making a quicklink closes the launcher")
             return
