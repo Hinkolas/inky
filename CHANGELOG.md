@@ -1,6 +1,8 @@
 # Changelog
 
-## Unreleased
+## 0.1.0-alpha.4 — 2026-11-12
+
+A web address typed into the launcher opens in the browser.
 
 ### Added
 
