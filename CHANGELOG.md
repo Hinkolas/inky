@@ -9,6 +9,9 @@
   up to seconds, also while Inky was in the background. The clipboard history
   no longer tells code apart: what was listed as code is listed as text,
   and found under Text as before.
+- Copying a large image no longer holds up the clipboard history while the
+  image is kept: it is written first, and searching and scrolling go on
+  meanwhile.
 
 ## 0.1.0-alpha.5 — 2026-11-12
 
