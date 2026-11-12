@@ -14,6 +14,16 @@ public final class UsageStore {
     private var records: [String: Record] = [:]
     private let fileURL: URL?
 
+    /// Whether what was typed to find an item is remembered with it. Off,
+    /// only how often and how recently an item was used is: the user asked
+    /// for nothing they type to be kept. Turning it off forgets the
+    /// searches that were remembered.
+    public var keepsQueries = true {
+        didSet {
+            if !keepsQueries, oldValue { forgetQueries() }
+        }
+    }
+
     /// Pass nil to keep the history in memory only.
     public init(fileURL: URL?) {
         self.fileURL = fileURL
@@ -27,7 +37,7 @@ public final class UsageStore {
         record.lastUsed = date
 
         let key = Self.normalize(query)
-        if !key.isEmpty {
+        if keepsQueries, !key.isEmpty {
             record.queries[key, default: 0] += 1
             if record.queries.count > Self.maxQueriesPerItem,
                let rarest = record.queries.filter({ $0.key != key }).min(by: { $0.value < $1.value }) {
@@ -47,6 +57,16 @@ public final class UsageStore {
     /// Forgets that the item was ever picked, so it ranks by its match alone.
     public func forget(_ itemID: String) {
         guard records.removeValue(forKey: itemID) != nil else { return }
+        save()
+    }
+
+    /// Forgets every search an item was picked for, as when the history of
+    /// searches is cleared. How often and when items were used stays.
+    public func forgetQueries() {
+        guard records.values.contains(where: { !$0.queries.isEmpty }) else { return }
+        for id in records.keys {
+            records[id]?.queries = [:]
+        }
         save()
     }
 
