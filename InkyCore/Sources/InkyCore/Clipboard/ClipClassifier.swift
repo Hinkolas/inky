@@ -3,19 +3,26 @@ import Foundation
 /// Sorts a copied text into what it looks like, and words what is shown of it.
 public enum ClipClassifier {
     /// What `text` looks like: a color, a link, a path to something that is
-    /// there, code, or text.
+    /// there, or text.
     public static func kind(of text: String, fileExists: (String) -> Bool) -> ClipKind {
-        let trimmed = text.trimmingCharacters(in: .whitespacesAndNewlines)
-        if trimmed.count <= 200, !trimmed.contains(where: \.isNewline) {
-            if isColor(trimmed) { return .color }
-            if isLink(trimmed) { return .link }
-            // Much begins with a slash without being a path: "/help", the
-            // path of a web address. What counts is that something is there.
-            if trimmed.hasPrefix("/") || trimmed.hasPrefix("~/"), trimmed.count > 1, fileExists(expandedPath(trimmed)) {
-                return .path
-            }
+        // Only a short text on one line can be anything but text. Of a long
+        // one, no more is looked at than it takes to tell.
+        let scalars = text.unicodeScalars
+        let isSpace = { CharacterSet.whitespacesAndNewlines.contains($0) }
+        guard let first = scalars.firstIndex(where: { !isSpace($0) }),
+              let last = scalars.lastIndex(where: { !isSpace($0) }) else { return .text }
+        let line = Substring(scalars[first...last])
+        guard line.prefix(201).count <= 200, !line.contains(where: \.isNewline) else { return .text }
+
+        let trimmed = String(line)
+        if isColor(trimmed) { return .color }
+        if isLink(trimmed) { return .link }
+        // Much begins with a slash without being a path: "/help", the path
+        // of a web address. What counts is that something is there.
+        if trimmed.hasPrefix("/") || trimmed.hasPrefix("~/"), trimmed.count > 1, fileExists(expandedPath(trimmed)) {
+            return .path
         }
-        return looksLikeCode(trimmed) ? .code : .text
+        return .text
     }
 
     /// The path with the home folder written out.
@@ -26,11 +33,28 @@ public enum ClipClassifier {
     /// One line to list the text by: its first line that says something,
     /// and a link without what every link begins with.
     public static func title(of text: String, kind: ClipKind) -> String {
-        let line = text.split(whereSeparator: \.isNewline)
-            .lazy
-            .map { $0.trimmingCharacters(in: .whitespaces) }
-            .first { !$0.isEmpty } ?? ""
-        var title = line.split(whereSeparator: \.isWhitespace).joined(separator: " ")
+        var title = ""
+        if let line = firstLine(of: text) {
+            // Its words, one space apart. More than the title holds is not
+            // needed: at most a link's beginning and end come off below.
+            var characters = 0
+            var space = false
+            for character in line {
+                if character.isNewline { break }
+                if character.isWhitespace {
+                    space = !title.isEmpty
+                    continue
+                }
+                if space {
+                    title.append(" ")
+                    characters += 1
+                    space = false
+                }
+                title.append(character)
+                characters += 1
+                if characters > maxTitleLength + 16 { break }
+            }
+        }
         if kind == .link {
             for prefix in ["https://", "http://"] where title.lowercased().hasPrefix(prefix) {
                 title.removeFirst(prefix.count)
@@ -42,6 +66,15 @@ public enum ClipClassifier {
     }
 
     static let maxTitleLength = 240
+
+    /// The text from where its first line with more than spaces in it
+    /// begins to say something. It is found by scalar: a mark that combines
+    /// with a space stands alone without it.
+    private static func firstLine(of text: String) -> Substring? {
+        let scalars = text.unicodeScalars
+        let start = scalars.firstIndex { !CharacterSet.whitespaces.contains($0) && !Character($0).isNewline }
+        return start.map { Substring(scalars[$0...]) }
+    }
 
     // MARK: - Kinds
 
@@ -61,41 +94,6 @@ public enum ClipClassifier {
         if text.wholeMatch(of: /mailto:[^@]+@[^@]+/.ignoresCase()) != nil { return true }
         return text.wholeMatch(of: /www\.[^.\/]+\.[^.\/].*/.ignoresCase()) != nil
     }
-
-    /// Whether `text` reads as code. It errs on the side of text: a sentence
-    /// with brackets in it is still a sentence.
-    static func looksLikeCode(_ text: String) -> Bool {
-        var marks = 0
-        var visible = 0
-        var lines = 1
-        for character in text {
-            if character.isNewline {
-                lines += 1
-            } else if !character.isWhitespace {
-                visible += 1
-                if structural.contains(character) { marks += 1 }
-            }
-        }
-        guard visible > 0, marks >= 2 else { return false }
-        let density = Double(marks) / Double(visible)
-
-        // Several lines that are full of brackets need no further sign.
-        if lines > 1, marks >= 4, density >= 0.08 { return true }
-        guard density >= 0.03 else { return false }
-        return operators.contains { text.contains($0) }
-            || text.firstMatch(of: statement) != nil
-    }
-
-    private static let structural: Set<Character> = ["{", "}", "(", ")", "[", "]", ";", "=", "<", ">"]
-
-    /// What prose does not write.
-    private static let operators = [
-        "=>", "->", "::", "==", "!=", "&&", "||", "+=", "();", "){", ") {", "</", "/>", "$(", "#!/", "\": ",
-    ]
-
-    /// A line that begins the way a statement does.
-    nonisolated(unsafe) private static let statement =
-        /(?m)^\s*(import|from|def|class|func|function|fn|const|let|var|struct|enum|interface|type|return|if|for|while|public|private|static|package|using|namespace|export|async|SELECT|INSERT|UPDATE|DELETE|CREATE|#include|@\w+)\b/
 }
 
 // MARK: - Wording

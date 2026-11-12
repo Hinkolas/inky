@@ -414,7 +414,7 @@ struct ClipboardBrowserScreen: View {
             subtitle: ClipDescription.subtitle(of: clip),
             trailing: clip.isPinned ? nil : ClipboardFormat.age(of: clip.lastCopied),
             isSelected: isSelected,
-            isMonospaced: clip.name == nil && (clip.kind == .code || clip.kind == .path || clip.kind == .color)
+            isMonospaced: clip.name == nil && (clip.kind == .path || clip.kind == .color)
         ) {
             ClipIcon(clip: clip, store: browser.history.store, isSelected: isSelected)
         }
@@ -561,7 +561,7 @@ struct ClipIcon: View {
             } else {
                 symbol(tile)
             }
-        case .text, .code, .link:
+        case .text, .link:
             symbol(tile)
         }
     }
@@ -641,8 +641,8 @@ private struct ClipPreview: View {
                 text: paths.prefix(12).map { ($0 as NSString).abbreviatingWithTildeInPath }.joined(separator: "\n"),
                 fontSize: 10.5
             )
-        case .text, .code, .path, .link:
-            // Code is small enough for a line of it to fit.
+        case .text, .path, .link:
+            // A path or a link is small enough for a line of it to fit.
             PreviewBox(
                 text: String((content?.text ?? clip.title).prefix(Self.shownCharacters)),
                 isMonospaced: clip.kind != .text,
@@ -709,7 +709,7 @@ enum ClipDescription {
         case .image: dimensions(of: clip)
         case .color: ColorValue(clip.title).flatMap { ColorValue.Format(rawValue: $0.notation.rawValue)?.title }
         case .file: clip.location.map { (($0 as NSString).deletingLastPathComponent as NSString).abbreviatingWithTildeInPath }
-        case .text, .code, .path, .link: clip.sourceName
+        case .text, .path, .link: clip.sourceName
         }
         return detail.map { "\(kind) · \($0)" } ?? kind
     }
@@ -747,7 +747,7 @@ enum ClipDescription {
             if let path = clip.location, !FileManager.default.fileExists(atPath: path) {
                 facts.append(("Status", clip.items == 1 ? "No longer there" : "Not all there anymore"))
             }
-        case .text, .code, .path, .link:
+        case .text, .path, .link:
             // A space until it is read, so that nothing moves when it is.
             facts.append(("Size", content.map(size(of:)) ?? " "))
         }

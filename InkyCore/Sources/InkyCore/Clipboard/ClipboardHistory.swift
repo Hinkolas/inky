@@ -228,7 +228,7 @@ enum PasteboardReader {
                 capture = .image(data, type: imageType, from: sourceName)
             } else if let text, text.utf8.count <= maxTextBytes {
                 capture = .text(text)
-                if let kind = capture?.kind, kind == .text || kind == .code {
+                if capture?.kind == .text {
                     for type in flavorTypes where types.contains(type.rawValue) {
                         if let data = pasteboard.data(forType: type), !data.isEmpty, data.count <= maxFlavorBytes {
                             capture?.flavors[type.rawValue] = data
@@ -283,7 +283,7 @@ enum PasteboardWriter {
             if payload.isConcealed { item.setString("", forType: Pasteboard.concealed) }
             pasteboard.clearContents()
             pasteboard.writeObjects([item])
-        case .text, .code, .path, .link, .color:
+        case .text, .path, .link, .color:
             guard let text = payload.text else { throw InkyError("That copy is no longer in the history") }
             let item = NSPasteboardItem()
             item.setString(text, forType: .string)

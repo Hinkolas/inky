@@ -76,39 +76,34 @@ private func image(width: Int = 40, height: Int = 20, gray: CGFloat = 0.5, type:
         #expect(kind("/", existing: ["/"]) == .text)
     }
 
-    @Test func tellsCodeFromProse() {
-        for code in [
-            "let panel = NSPanel(\n  contentRect: frame,\n  styleMask: [.nonactivatingPanel],\n  defer: false\n)\npanel.level = .floating",
-            "{\"name\": \"inky\", \"version\": 2}",
+    @Test func whatIsNotAColorALinkOrAPathIsText() {
+        for text in [
             "const add = (a, b) => a + b;",
-            "if (x == 1) { return; }",
             "SELECT id, title FROM clips WHERE kind = 'text';",
-            "<div class=\"row\"><span>Hi</span></div>",
-            "def greet(name):\n    return f\"Hello {name}\"",
-            "for (int i = 0; i < n; i++) {\n    total += i;\n}",
-        ] {
-            #expect(kind(code) == .code, "\(code)")
-        }
-        for prose in [
-            "Design sync moved to Thursday, 10:00",
             "Thanks, that works for me. I'll send the draft tonight.",
-            "Total = 5 (approx)",
-            "Call me (later) :)",
-            "if you want, let me know",
             "Musterstraße 12\n18055 Rostock",
-            "The meeting (the one on Monday) was moved; see the notes [1] for why.\nIt is now on Tuesday.",
-            "git commit -m update",
         ] {
-            #expect(kind(prose) == .text, "\(prose)")
+            #expect(kind(text) == .text, "\(text)")
         }
+        // Only a short text on one line is looked at more closely, however
+        // much space is around it.
+        let spaces = String(repeating: " \n", count: 100_000)
+        #expect(kind(spaces + "#2563EB" + spaces) == .color)
+        #expect(kind(String(repeating: "#2563EB ", count: 100_000)) == .text)
+        #expect(kind(String(repeating: "a", count: 200)) == .text)
+        #expect(kind("https://example.com/" + String(repeating: "a", count: 180)) == .link)
+        #expect(kind("https://example.com/" + String(repeating: "a", count: 181)) == .text)
     }
 
     @Test func titlesAreTheFirstLineThatSaysSomething() {
-        #expect(ClipClassifier.title(of: "\n\n   let   x = 1  \nlet y = 2", kind: .code) == "let x = 1")
+        #expect(ClipClassifier.title(of: "\n\n   let   x = 1  \nlet y = 2", kind: .text) == "let x = 1")
         #expect(ClipClassifier.title(of: "https://www.kagi.com/search?q=glass", kind: .link) == "kagi.com/search?q=glass")
         #expect(ClipClassifier.title(of: "https://example.com/", kind: .link) == "example.com")
         #expect(ClipClassifier.title(of: "raycast://extensions", kind: .link) == "raycast://extensions")
         #expect(ClipClassifier.title(of: String(repeating: "a", count: 1000), kind: .text).count == ClipClassifier.maxTitleLength)
+        #expect(ClipClassifier.title(of: "\u{A0}\u{A0}\n\t\r\n  first   words\u{2028}second", kind: .text) == "first words")
+        let words = String(repeating: "word  ", count: 200_000)
+        #expect(ClipClassifier.title(of: words, kind: .text) == String(repeating: "word ", count: 48))
     }
 
     @Test func nothingIsNotACopy() {
@@ -495,6 +490,19 @@ private func image(width: Int = 40, height: Int = 20, gray: CGFloat = 0.5, type:
         #expect(!second.isPersistent)
         try lock.execute("ROLLBACK")
         #expect(await titles(makeStore()) == ["keep me"])
+    }
+
+    @Test func whatWasKeptAsCodeIsText() async throws {
+        var store: ClipboardStore? = makeStore()
+        await fill(store!, ["let x = 1", "some words"])
+        store = nil
+        let database = try SQLiteDatabase(path: scratch.url.appendingPathComponent("history.sqlite").path)
+        try database.execute("UPDATE clips SET kind = 'code' WHERE title = 'let x = 1'")
+
+        let reopened = makeStore()
+        let snapshot = await reopened.snapshot(ClipQuery(filter: .text), limit: 10)
+        #expect(snapshot.clips.map(\.title) == ["some words", "let x = 1"])
+        #expect(snapshot.counts == [.text: 2])
     }
 
     @Test func aNewerHistoryIsLeftForTheVersionThatWroteIt() async throws {

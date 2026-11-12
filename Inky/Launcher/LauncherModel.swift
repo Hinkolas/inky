@@ -911,7 +911,7 @@ final class LauncherModel {
             actions.append(CommandAction(title: "Show in Finder", symbol: "folder", shortcut: KeyShortcut("o")) { [weak self] in
                 self?.open(clip)
             })
-        case .text, .code, .color, .image:
+        case .text, .color, .image:
             break
         }
         actions.append(CommandAction(title: clip.isPinned ? "Unpin" : "Pin", symbol: clip.isPinned ? "pin.slash" : "pin", shortcut: KeyShortcut("p")) { [weak self] in

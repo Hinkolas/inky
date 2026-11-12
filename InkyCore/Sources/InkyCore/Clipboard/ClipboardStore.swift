@@ -92,7 +92,13 @@ public actor ClipboardStore {
             PRAGMA foreign_keys = ON;
             PRAGMA secure_delete = ON;
             """)
-        guard version == 0 else { return database }
+        guard version == 0 else {
+            // Up to 0.1.0-alpha.5, a text that looked like code was kept as
+            // code, and is text now. Earlier versions read text as well, so
+            // that the schema keeps its version.
+            try database.run("UPDATE clips SET kind = 'text' WHERE kind = 'code'")
+            return database
+        }
 
         try database.transaction {
             try database.execute(schema)
