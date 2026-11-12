@@ -954,6 +954,8 @@ final class LauncherModel {
     /// Puts an entry on the clipboard and pastes it into the application
     /// the user was in.
     private func paste(_ clip: Clip, asPlainText: Bool = false) {
+        // The application it says it pastes into, as it is now.
+        let target = frontmostPID
         Task {
             do {
                 try await clipboard.copy(clip, asPlainText: asPlainText)
@@ -961,7 +963,7 @@ final class LauncherModel {
                 report(error)
                 return
             }
-            guard pressesKeys else {
+            guard pressesKeys, let target else {
                 dismiss()
                 return
             }
@@ -974,7 +976,9 @@ final class LauncherModel {
             dismissThen {
                 // A moment for the application to take the keyboard back.
                 DispatchQueue.main.asyncAfter(deadline: .now() + 0.04) {
-                    KeyboardPaste.paste()
+                    // Another application came forward: it stays on the
+                    // clipboard, to be pasted by hand where it belongs.
+                    if !KeyboardPaste.paste(into: target) { NSSound.beep() }
                 }
             }
         }
