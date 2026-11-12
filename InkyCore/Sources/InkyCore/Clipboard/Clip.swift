@@ -175,6 +175,10 @@ public struct ClipPayload: Sendable {
     /// Where an image is, and the type it is kept as.
     public var imageURL: URL?
     public var imageType: String?
+    /// Whether a password manager marked it as confidential. Put back on the
+    /// pasteboard, it says so again, so that other clipboard managers leave
+    /// it out as they did the first time.
+    public var isConcealed = false
 }
 
 // MARK: - Narrowing down

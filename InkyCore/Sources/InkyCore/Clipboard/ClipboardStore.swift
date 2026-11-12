@@ -438,9 +438,12 @@ public actor ClipboardStore {
     public func payload(of id: Int64) -> ClipPayload? {
         do {
             let rows = try database.query(
-                "SELECT kind, location, image_type, text FROM clips WHERE id = ?", [.integer(id)]
+                "SELECT kind, location, image_type, concealed, text FROM clips WHERE id = ?", [.integer(id)]
             ) { row in
-                (kind: row.text(0).flatMap(ClipKind.init) ?? .text, location: row.text(1), imageType: row.text(2), text: row.text(3))
+                (
+                    kind: row.text(0).flatMap(ClipKind.init) ?? .text, location: row.text(1), imageType: row.text(2),
+                    isConcealed: row.bool(3), text: row.text(4)
+                )
             }
             guard let row = rows.first else { return nil }
             let flavors = try database.query("SELECT type, data FROM flavors WHERE clip = ?", [.integer(id)]) {
@@ -451,7 +454,8 @@ public actor ClipboardStore {
                 text: row.text,
                 flavors: Dictionary(flavors.map { ($0.type, $0.data) }, uniquingKeysWith: { first, _ in first }),
                 imageURL: row.kind == .image ? row.location.map(imageDirectory.appendingPathComponent) : nil,
-                imageType: row.imageType
+                imageType: row.imageType,
+                isConcealed: row.isConcealed
             )
         } catch {
             return nil
