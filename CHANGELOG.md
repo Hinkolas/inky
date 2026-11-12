@@ -1,5 +1,33 @@
 # Changelog
 
+## Unreleased
+
+### Security
+
+- A password copied from a password manager, kept because Settings →
+  Clipboard asks to keep passwords, is marked as confidential again when it is
+  copied or pasted from the history, so other clipboard managers leave it out
+  as they did the first time.
+- With Settings → General keeping no searches, the searches that ranked the
+  results are no longer kept either, and those already kept are removed.
+  Clearing the searches clears them too.
+- Pasting from the clipboard history presses ⌘V only when the application it
+  was meant for is still in front. Should another one have come forward
+  meanwhile, Inky beeps and leaves the entry on the clipboard.
+- Uninstalling an application offers to remove only files that are its own.
+  An identifier that is too short to be its own, such as `com.example`,
+  matches nothing, and for an identifier of Apple's only files named exactly
+  after it count.
+- What Inky downloads, a website's icon or the day's exchange rates, stops at
+  a megabyte and half a minute, and an icon is not decoded when it is larger
+  than 1024 pixels on a side.
+- On the first launch, the clipboard is recorded only once the welcome window
+  has been closed.
+- An update is added to the update feed only once approved, and only when it
+  is the app that the release's tag builds: the same version and build,
+  signed with Inky's Developer ID and notarized. Building the disk image no
+  longer has access to the signing certificate.
+
 ## 0.1.0-alpha.4 — 2026-11-12
 
 A web address typed into the launcher opens in the browser.
