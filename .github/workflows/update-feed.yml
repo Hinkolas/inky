@@ -9,8 +9,18 @@ name: Update feed
 # the history of the feed stays in Git. The whole feed is signed with the
 # EdDSA key again on every run.
 #
-# Repository secret (see docs/RELEASING.md):
-#   SPARKLE_PRIVATE_KEY  the EdDSA private key, as exported by `generate_keys -x`
+# Signing the feed is what makes every installed copy take an update, so the
+# job does not trust the release it is given. It runs only once approved in
+# the `release` environment. It adds only a tag that is on main, and only an
+# app that release.yml could have built from it: the right bundle, version and
+# build, signed with the team's Developer ID and notarized. Nothing of the
+# tag runs here: the job checks out main, and Sparkle's tools come from their
+# release, held to its hash.
+#
+# Secrets (see docs/RELEASING.md):
+#   SPARKLE_PRIVATE_KEY  in the `release` environment: the EdDSA private key,
+#                        as exported by `generate_keys -x`
+#   APPLE_TEAM_ID        the team whose Developer ID the app must be signed with
 
 on:
   release:
@@ -33,21 +43,28 @@ jobs:
   feed:
     runs-on: macos-26
     timeout-minutes: 20
+    environment: release
     permissions:
       contents: write
     env:
       DEVELOPER_DIR: /Applications/Xcode_26.6.app/Contents/Developer
       TAG: ${{ inputs.tag || github.event.release.tag_name }}
       REPOSITORY_URL: https://github.com/${{ github.repository }}
-      GH_TOKEN: ${{ github.token }}
+      BUNDLE_ID: io.github.hinkolas.inky
+      # The Sparkle that Inky.xcodeproj resolves; update both together.
+      SPARKLE_VERSION: 2.10.1
+      SPARKLE_SHA256: 1a856d2a9edb8e628de88121d7be04cf0e2167f8641650b78fca00b14244cf27
     steps:
-      # The tagged sources pin the Sparkle version the release was built with.
+      # Main, not the tag: the tag is only looked at, never run.
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
         with:
-          ref: refs/tags/${{ env.TAG }}
+          ref: main
+          fetch-depth: 0
           persist-credentials: false
 
       - name: Release
+        env:
+          GH_TOKEN: ${{ github.token }}
         run: |
           gh release view "$TAG" --repo "$GITHUB_REPOSITORY" --json isDraft,isPrerelease,body > "$RUNNER_TEMP/release.json"
           if [ "$(jq -r .isDraft "$RUNNER_TEMP/release.json")" = true ]; then
@@ -59,18 +76,80 @@ jobs:
           if [ "$(jq -r .isPrerelease "$RUNNER_TEMP/release.json")" != "$prerelease" ]; then
             echo "::error::$TAG is marked as a pre-release on GitHub only if its tag has a suffix"; exit 1
           fi
+          # release.yml builds only tags on main, and numbers the build by the
+          # commits up to the tag. The app must say the same.
+          if ! git rev-parse --quiet --verify "refs/tags/$TAG^{commit}" > /dev/null; then
+            echo "::error::There is no tag $TAG"; exit 1
+          fi
+          if ! git merge-base --is-ancestor "refs/tags/$TAG" HEAD; then
+            echo "::error::Tag $TAG is not on main"; exit 1
+          fi
           echo "VERSION=$version" >> "$GITHUB_ENV"
+          echo "BUILD=$(git rev-list --count "refs/tags/$TAG")" >> "$GITHUB_ENV"
           echo "PRERELEASE=$prerelease" >> "$GITHUB_ENV"
 
-      - name: Resolve Sparkle
-        run: xcodebuild -resolvePackageDependencies -project Inky.xcodeproj -scheme Inky -derivedDataPath build
+      - name: Download the release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          work="$RUNNER_TEMP/work"
+          mkdir -p "$work"
+          gh release download "$TAG" --repo "$GITHUB_REPOSITORY" --pattern "Inky-$VERSION.zip" --dir "$work"
+          # Only against a broken download: the checksum comes from the same
+          # release. What the archive holds is checked next.
+          (cd "$work" && gh release download "$TAG" --repo "$GITHUB_REPOSITORY" --pattern "Inky-$VERSION.zip.sha256" --output - | shasum -a 256 -c -)
+          # The published notes, as a fragment without DOCTYPE or body, which
+          # Sparkle embeds in the feed and shows in its update window. Plain
+          # markdown mode, as in a README: gfm mode, as in comments, would turn
+          # every line break into a hard break.
+          jq -r .body "$RUNNER_TEMP/release.json" > "$RUNNER_TEMP/notes.md"
+          if [ -s "$RUNNER_TEMP/notes.md" ]; then
+            gh api markdown -f mode=markdown -F text=@"$RUNNER_TEMP/notes.md" > "$work/Inky-$VERSION.html"
+          fi
 
+      - name: Check the app
+        env:
+          TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
+        run: |
+          if [ -z "$TEAM_ID" ]; then echo "::error::APPLE_TEAM_ID is not set"; exit 1; fi
+          check="$RUNNER_TEMP/check"
+          ditto -x -k "$RUNNER_TEMP/work/Inky-$VERSION.zip" "$check"
+          if [ "$(ls "$check")" != Inky.app ]; then
+            echo "::error::The archive holds something other than Inky.app"; exit 1
+          fi
+          app="$check/Inky.app"
+          plist="$app/Contents/Info.plist"
+          for expected in "CFBundleIdentifier=$BUNDLE_ID" "CFBundleShortVersionString=$VERSION" "CFBundleVersion=$BUILD"; do
+            key="${expected%%=*}"
+            actual=$(/usr/libexec/PlistBuddy -c "Print :$key" "$plist")
+            if [ "$actual" != "${expected#*=}" ]; then
+              echo "::error::$key is $actual, not ${expected#*=}"; exit 1
+            fi
+          done
+          # Signed with a Developer ID Application certificate of the team,
+          # as the app with this identifier.
+          codesign --verify --deep --strict --verbose=2 -R "=anchor apple generic and identifier \"$BUNDLE_ID\" \
+            and certificate 1[field.1.2.840.113635.100.6.2.6] exists \
+            and certificate leaf[field.1.2.840.113635.100.6.1.13] exists \
+            and certificate leaf[subject.OU] = \"$TEAM_ID\"" "$app"
+          xcrun stapler validate "$app"
+          spctl --assess --type execute --verbose "$app"
+
+      - name: Sparkle
+        run: |
+          archive="$RUNNER_TEMP/Sparkle-$SPARKLE_VERSION.tar.xz"
+          curl --fail --silent --show-error --location --output "$archive" \
+            "https://github.com/sparkle-project/Sparkle/releases/download/$SPARKLE_VERSION/Sparkle-$SPARKLE_VERSION.tar.xz"
+          echo "$SPARKLE_SHA256  $archive" | shasum -a 256 -c -
+          mkdir -p "$RUNNER_TEMP/sparkle"
+          tar -xJf "$archive" -C "$RUNNER_TEMP/sparkle" ./bin/generate_appcast
+
+      # The repository is public, so the feed is read without the token.
       - name: Check out the feed
         run: |
           git init -q "$RUNNER_TEMP/feed"
           cd "$RUNNER_TEMP/feed"
           git remote add origin "$REPOSITORY_URL.git"
-          git config http.extraheader "AUTHORIZATION: basic $(printf 'x-access-token:%s' "$GH_TOKEN" | base64)"
           if git ls-remote --exit-code --heads origin appcast > /dev/null; then
             git fetch -q --depth 1 origin appcast
             git checkout -q -b appcast FETCH_HEAD
@@ -84,22 +163,10 @@ jobs:
           SPARKLE_PRIVATE_KEY: ${{ secrets.SPARKLE_PRIVATE_KEY }}
         run: |
           work="$RUNNER_TEMP/work"
-          mkdir -p "$work"
           if [ -f "$RUNNER_TEMP/feed/appcast.xml" ]; then cp "$RUNNER_TEMP/feed/appcast.xml" "$work/"; fi
-          gh release download "$TAG" --repo "$GITHUB_REPOSITORY" --pattern "Inky-$VERSION.zip" --dir "$work"
-          (cd "$work" && gh release download "$TAG" --repo "$GITHUB_REPOSITORY" --pattern "Inky-$VERSION.zip.sha256" --output - | shasum -a 256 -c -)
-          # The published notes, as a fragment without DOCTYPE or body, which
-          # Sparkle embeds in the feed and shows in its update window. Plain
-          # markdown mode, as in a README: gfm mode, as in comments, would turn
-          # every line break into a hard break.
-          jq -r .body "$RUNNER_TEMP/release.json" > "$RUNNER_TEMP/notes.md"
-          if [ -s "$RUNNER_TEMP/notes.md" ]; then
-            gh api markdown -f mode=markdown -F text=@"$RUNNER_TEMP/notes.md" > "$work/Inky-$VERSION.html"
-          fi
           channel=()
           if [ "$PRERELEASE" = true ]; then channel=(--channel beta); fi
-          sparkle=build/SourcePackages/artifacts/sparkle/Sparkle/bin
-          echo "$SPARKLE_PRIVATE_KEY" | "$sparkle/generate_appcast" --ed-key-file - \
+          echo "$SPARKLE_PRIVATE_KEY" | "$RUNNER_TEMP/sparkle/bin/generate_appcast" --ed-key-file - \
             --download-url-prefix "$REPOSITORY_URL/releases/download/$TAG/" \
             --full-release-notes-url "$REPOSITORY_URL/releases/tag/$TAG" \
             --link "$REPOSITORY_URL" \
@@ -114,6 +181,8 @@ jobs:
           cat "$feed"
 
       - name: Save the feed
+        env:
+          GH_TOKEN: ${{ github.token }}
         run: |
           cd "$RUNNER_TEMP/feed"
           git add appcast.xml
@@ -122,7 +191,8 @@ jobs:
           fi
           git -c user.name="github-actions[bot]" -c user.email="41898282+github-actions[bot]@users.noreply.github.com" \
             commit -q -m "Add Inky $VERSION to the update feed"
-          git push -q origin appcast
+          git -c http.extraheader="AUTHORIZATION: basic $(printf 'x-access-token:%s' "$GH_TOKEN" | base64)" \
+            push -q origin appcast
 
   deploy:
     needs: feed
