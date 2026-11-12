@@ -1,4 +1,4 @@
-import ApplicationServices
+import AppKit
 import Carbon.HIToolbox
 
 /// Presses ⌘V for the user, to paste into the application they are in.
@@ -14,12 +14,15 @@ public enum KeyboardPaste {
         _ = AXIsProcessTrustedWithOptions([prompt: true] as CFDictionary)
     }
 
-    /// Pastes into whichever application has the keyboard. Returns false if
-    /// Inky may not press keys.
+    /// Pastes into `target`, the application the user asked to paste into.
+    /// ⌘V goes to whichever application is in front, so nothing is pressed
+    /// unless that is still `target`: what is pasted may be a password, and
+    /// another application that came forward meanwhile is not to have it.
+    /// Returns false if nothing was pressed, also when Inky may not press keys.
     @MainActor
     @discardableResult
-    public static func paste() -> Bool {
-        guard isAllowed else { return false }
+    public static func paste(into target: pid_t) -> Bool {
+        guard NSWorkspace.shared.frontmostApplication?.processIdentifier == target, isAllowed else { return false }
         let source = CGEventSource(stateID: .combinedSessionState)
         // Keys pressed for someone hold their own back for a moment unless
         // told otherwise, and what they type right after pasting would be lost.
