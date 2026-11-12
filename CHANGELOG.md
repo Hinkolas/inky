@@ -16,6 +16,9 @@
   seconds, without the launcher having to be opened. Before, opening the
   launcher looked for applications again whenever it had not for half a
   minute.
+- The clipboard history shows the images in its list from a small copy made
+  for them, which it draws many times as quickly as the copy the selected
+  image is shown by. Images copied before keep being shown by that.
 
 ## 0.1.0-alpha.5 — 2026-11-12
 

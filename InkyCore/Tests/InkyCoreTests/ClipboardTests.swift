@@ -390,9 +390,16 @@ private func image(width: Int = 40, height: Int = 20, gray: CGFloat = 0.5, type:
         #expect(properties?[kCGImagePropertyPixelWidth] as? Int == 640)
         #expect(properties?[kCGImagePropertyPixelHeight] as? Int == 320)
 
+        // The one a row shows is smaller still, and fills a square tile.
+        let thumbnail = try #require(store.thumbnailURL(of: clip))
+        let small = try #require(CGImageSourceCreateWithURL(thumbnail as CFURL, nil))
+        let size = CGImageSourceCopyPropertiesAtIndex(small, 0, nil) as? [CFString: Any]
+        #expect(size?[kCGImagePropertyPixelWidth] as? Int == 192)
+        #expect(size?[kCGImagePropertyPixelHeight] as? Int == 96)
+
         // The same image again is the same entry and the same file.
         #expect(await store.record(.image(png, type: "public.png")) == id)
-        #expect(try FileManager.default.contentsOfDirectory(atPath: store.imageDirectory.path).count == 2)
+        #expect(try FileManager.default.contentsOfDirectory(atPath: store.imageDirectory.path).count == 3)
 
         await store.delete(id)
         #expect(try FileManager.default.contentsOfDirectory(atPath: store.imageDirectory.path).isEmpty)
@@ -415,7 +422,7 @@ private func image(width: Int = 40, height: Int = 20, gray: CGFloat = 0.5, type:
         try Data("x".utf8).write(to: stray)
         await store.removeStrayImages()
         #expect(!FileManager.default.fileExists(atPath: stray.path))
-        #expect(try FileManager.default.contentsOfDirectory(atPath: store.imageDirectory.path).count == 2)
+        #expect(try FileManager.default.contentsOfDirectory(atPath: store.imageDirectory.path).count == 3)
     }
 
     @Test func anImageCopiedTwiceAtOnceIsOneEntry() async throws {
@@ -426,7 +433,7 @@ private func image(width: Int = 40, height: Int = 20, gray: CGFloat = 0.5, type:
         let ids = await [first, second]
         #expect(ids[0] != nil && ids[0] == ids[1])
         #expect(await store.snapshot(ClipQuery(), limit: 10).clips.map(\.copies) == [2])
-        #expect(try FileManager.default.contentsOfDirectory(atPath: store.imageDirectory.path).count == 2)
+        #expect(try FileManager.default.contentsOfDirectory(atPath: store.imageDirectory.path).count == 3)
     }
 
     @Test func aLargeImageDoesNotHoldUpTheHistory() async throws {

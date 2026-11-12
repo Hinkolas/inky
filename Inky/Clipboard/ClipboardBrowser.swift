@@ -545,7 +545,10 @@ struct ClipIcon: View {
                 symbol(tile)
             }
         case .image:
-            if let image = store.previewURL(of: clip).flatMap(ClipImages.shared.image(at:)) {
+            // The preview, which takes many times as long to show, only
+            // where there is no thumbnail.
+            if let image = store.thumbnailURL(of: clip).flatMap(ClipImages.shared.image(at:))
+                ?? store.previewURL(of: clip).flatMap(ClipImages.shared.image(at:)) {
                 Image(nsImage: image)
                     .resizable()
                     .aspectRatio(contentMode: .fill)
