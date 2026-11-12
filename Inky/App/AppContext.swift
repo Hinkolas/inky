@@ -91,8 +91,12 @@ final class AppContext {
             fileURL: directory.appendingPathComponent("history.json"),
             limit: preferences.historyLimit
         )
-        preferences.onHistoryLimitChange = { [preferences, inputHistory] in
+        // The rankings remember what was typed to find an item. Searches
+        // that are not to be kept are not kept there either.
+        usage.keepsQueries = preferences.historyLimit > 0
+        preferences.onHistoryLimitChange = { [preferences, inputHistory, usage] in
             inputHistory.limit = preferences.historyLimit
+            usage.keepsQueries = preferences.historyLimit > 0
         }
         // Until the user chooses, the fallbacks are what the quicklinks say.
         let fallbacks = FallbackStore(

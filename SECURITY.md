@@ -38,8 +38,10 @@ version before reporting a problem that may already have been fixed.
   `~/Library/Application Support/Inky/`. Preferences use macOS UserDefaults.
 - The searches typed into the launcher, with what was typed into the arguments
   of a quicklink, are kept in `history.json` in the same folder, readable by
-  the account only and not encrypted. Settings → General sets how many are
-  kept, down to none, and clears them.
+  the account only and not encrypted. The rankings in `usage.json` also keep
+  the last few searches each result was picked for. Settings → General sets
+  how many searches are kept, down to none, and clears them: with none, or
+  once cleared, neither file keeps what was typed.
 - Accessibility access allows selected-text reading and simulated ⌘V. Automation
   access supports commands sent to Finder and other system applications.
 - Uninstalling uses name and bundle-identifier heuristics. Review every proposed

@@ -170,6 +170,31 @@ private final class StubModule: Module {
         #expect(unrelated > 0)
     }
 
+    @Test func keepsNoQueriesWhenTheUserKeepsNoSearches() throws {
+        let url = FileManager.default.temporaryDirectory.appendingPathComponent("inky-usage-\(UUID()).json")
+        defer { try? FileManager.default.removeItem(at: url) }
+
+        let store = UsageStore(fileURL: url)
+        store.record("a", query: "my secret search")
+        #expect(try String(contentsOf: url, encoding: .utf8).contains("my secret search"))
+
+        // Turned off, what was searched for is gone from the file at once,
+        // and what is picked later is written without its search.
+        store.keepsQueries = false
+        store.record("b", query: "another secret")
+        let file = try String(contentsOf: url, encoding: .utf8)
+        #expect(!file.contains("secret"))
+        #expect(store.boost(for: "a", query: "my secret search") == store.boost(for: "a", query: "xyz"))
+        // How often and when items were used still counts.
+        #expect(UsageStore(fileURL: url).frecency("b") > 0)
+
+        // Clearing the searches forgets them in the same way.
+        let kept = UsageStore(fileURL: url)
+        kept.record("c", query: "third secret")
+        kept.forgetQueries()
+        #expect(try !String(contentsOf: url, encoding: .utf8).contains("secret"))
+    }
+
     @Test func persistsAcrossInstances() throws {
         let url = FileManager.default.temporaryDirectory.appendingPathComponent("inky-usage-\(UUID()).json")
         defer { try? FileManager.default.removeItem(at: url) }

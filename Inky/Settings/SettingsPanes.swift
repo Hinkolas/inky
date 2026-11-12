@@ -75,7 +75,7 @@ struct GeneralPane: View {
                 }
             }
 
-            LauncherMemorySettings(preferences: preferences, history: context.inputHistory)
+            LauncherMemorySettings(preferences: preferences, history: context.inputHistory, usage: context.engine.usage)
 
             UpdateSettings(updates: context.updates)
 
@@ -90,6 +90,7 @@ struct GeneralPane: View {
 private struct LauncherMemorySettings: View {
     @Bindable var preferences: Preferences
     let history: InputHistory
+    let usage: UsageStore
 
     var body: some View {
         Section {
@@ -115,8 +116,12 @@ private struct LauncherMemorySettings: View {
                     HStack(spacing: 10) {
                         Text(history.entries.count == 1 ? "1 search" : "\(history.entries.count) searches")
                             .monospacedDigit()
-                        Button("Clear History") { history.clear() }
-                            .disabled(history.entries.isEmpty)
+                        Button("Clear History") {
+                            history.clear()
+                            // The rankings remember searches too.
+                            usage.forgetQueries()
+                        }
+                        .disabled(history.entries.isEmpty)
                     }
                 }
             }
