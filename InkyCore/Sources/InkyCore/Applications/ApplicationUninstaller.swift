@@ -300,8 +300,16 @@ public enum Trash {
 /// is certain. The second is taken only for a name that says something, and
 /// never for a file that goes by the identifier of another installed
 /// application.
+///
+/// An identifier is the application's own say, so it counts only where it
+/// cannot reach further than the application: it has at least three parts,
+/// as `com.example.app` does, and within Apple's `com.apple.` only files named
+/// exactly after it are taken. One that said `com` or `com.apple` would
+/// otherwise claim the files of every application under it.
 struct LeftoverMatcher: Sendable {
     private let identifier: String?
+    /// Whether only files named exactly after the identifier are taken.
+    private let takesOnlyExactNames: Bool
     private let names: Set<String>
     /// The names as the last part of an identifier would spell them.
     private let tails: Set<String>
@@ -324,7 +332,8 @@ struct LeftoverMatcher: Sendable {
 
         // A second copy of the application shares these files, and keeps them.
         let own = app.bundleID?.lowercased()
-        identifier = own.flatMap { $0.isEmpty || identifiers.contains($0) ? nil : $0 }
+        identifier = own.flatMap { Self.isSpecific($0) && !identifiers.contains($0) ? $0 : nil }
+        takesOnlyExactNames = identifier?.hasPrefix("com.apple.") == true
 
         let taken = Set(others.flatMap { [$0.name] + $0.alternateNames }.map { $0.lowercased() })
         let usable = ([app.name] + app.alternateNames)
@@ -338,7 +347,11 @@ struct LeftoverMatcher: Sendable {
         let name = fileName.lowercased()
         let candidates = Self.identifiers(in: name)
 
-        if let identifier, candidates.contains(where: { Self.belongs($0, to: identifier) }) {
+        if let identifier, candidates.contains(where: { candidate in
+            takesOnlyExactNames
+                ? candidate == identifier || Self.stem(of: candidate) == identifier
+                : Self.belongs(candidate, to: identifier)
+        }) {
             // A longer identifier that fits as well is another application's:
             // what Chrome Canary keeps is not Chrome's.
             return !candidates.contains { candidate in
@@ -362,6 +375,13 @@ struct LeftoverMatcher: Sendable {
         }
         // What Apple named stays, unless the application is Apple's.
         return !stem.hasPrefix("com.apple.") || identifier?.hasPrefix("com.apple.") == true
+    }
+
+    /// Whether an identifier names one application rather than everyone's
+    /// under it: three parts at least, none of them empty.
+    private static func isSpecific(_ identifier: String) -> Bool {
+        let parts = identifier.split(separator: ".", omittingEmptySubsequences: false)
+        return parts.count >= 3 && !parts.contains { $0.isEmpty || $0.contains(where: \.isWhitespace) }
     }
 
     /// Whether `name` is the identifier, or the identifier with more after it.

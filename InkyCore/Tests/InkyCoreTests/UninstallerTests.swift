@@ -108,6 +108,35 @@ import Testing
         #expect(matcher.matches("dev.example.notes.plist", byName: true))
     }
 
+    @Test func claimsNothingWithAnIdentifierThatReachesTooFar() {
+        // Each says too little to tell one application from all the others
+        // under it. Its name, which says nothing either, finds nothing.
+        for identifier in ["com", "com.example", "com.apple", "com..app", "com.example.", ".com.example", "com.my app.x"] {
+            let app = ApplicationInfo(path: "/Applications/Thing.app", name: "Thing", bundleID: identifier)
+            let matcher = matcher(app)
+            for name in [
+                "com.example.service.plist", "com.example.other.app", "com.apple.accountsd.plist",
+                "com.apple.finder.plist", "\(identifier).plist", identifier,
+            ] {
+                #expect(!matcher.matches(name, byName: false), "\(identifier) took \(name)")
+            }
+        }
+    }
+
+    @Test func takesOnlyExactNamesInApplesNamespace() {
+        let pages = ApplicationInfo(path: "/Applications/Pages.app", name: "Pages", bundleID: "com.apple.iWork.Pages")
+        let matcher = matcher(pages)
+        for name in ["com.apple.iWork.Pages", "com.apple.iWork.Pages.plist", "com.apple.iWork.Pages.savedState",
+                     "group.com.apple.iWork.Pages", "AB12CD34EF.com.apple.iWork.Pages"] {
+            #expect(matcher.matches(name, byName: false), "\(name)")
+        }
+        // An application that called itself com.apple.security would
+        // otherwise take what macOS keeps under that name.
+        for name in ["com.apple.iWork.Pages.Something.plist", "com.apple.iWork.Pages.helper"] {
+            #expect(!matcher.matches(name, byName: false), "\(name)")
+        }
+    }
+
     @Test func keepsTheFilesASecondCopyShares() {
         let copy = ApplicationInfo(path: "/Users/someone/Applications/Pako.app", name: "Pako", bundleID: "io.github.hinkolas.pako")
         let matcher = matcher(pako, installed: [copy])
