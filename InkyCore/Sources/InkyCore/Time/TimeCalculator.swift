@@ -42,17 +42,24 @@ public struct TimeCalculator: Sendable {
     /// Where the user is.
     public var timeZone: TimeZone
 
-    var places: PlaceIndex
+    var places: PlaceIndex { loadPlaces() }
+    /// The list that ships with Inky is read when a time is first asked
+    /// for, and not when a calculator is made.
+    private let loadPlaces: @Sendable () -> PlaceIndex
     private let names: Names
 
     public init(locale: Locale = .current, timeZone: TimeZone = .current) {
-        self.init(locale: locale, timeZone: timeZone, places: .shared)
+        self.init(locale: locale, timeZone: timeZone) { .shared }
     }
 
     init(locale: Locale, timeZone: TimeZone, places: PlaceIndex) {
+        self.init(locale: locale, timeZone: timeZone) { places }
+    }
+
+    private init(locale: Locale, timeZone: TimeZone, loadPlaces: @escaping @Sendable () -> PlaceIndex) {
         self.locale = locale
         self.timeZone = timeZone
-        self.places = places
+        self.loadPlaces = loadPlaces
         names = Names(locale: locale)
     }
 
