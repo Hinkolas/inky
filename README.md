@@ -57,6 +57,8 @@ pre-release you downloaded starts on Beta.
   `days until 24 dec`.
 - **Color.** Type `#ff6363` or `oklch(0.7 0.19 23)` to see a color and copy
   it written another way, from hex and HSL to a color in Swift.
+- **Browser.** Type a web address, such as `amazon.com` or `localhost:3000`,
+  and Return opens it in your browser.
 - **Uninstall applications.** Remove an app together with what it left in your
   Library. You review every file, and everything goes to the Trash.
 - **Commands and hotkeys.** Switch off what you never use, and give any

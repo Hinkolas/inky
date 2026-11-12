@@ -116,6 +116,7 @@ final class AppContext {
                 calculator,
                 TimeModule(),
                 ColorModule(usage: usage),
+                BrowserModule(),
                 fileModule,
             ],
             usage: usage,

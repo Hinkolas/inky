@@ -1,5 +1,16 @@
 # Changelog
 
+## Unreleased
+
+### Added
+
+- A web address typed into the launcher is offered to be opened in the
+  browser: `amazon.com`, `github.com/hinkolas/inky`, `localhost:3000`, or one
+  spelled out with `https://`. Return opens it, ⌘↵ copies it as a link.
+  Whatever ends in a top-level domain counts, so the name of a file such as
+  `main.rs` is offered too, above the file itself. Settings → Browser switches
+  it off.
+
 ## 0.1.0-alpha.3 — 2026-11-12
 
 What is typed into the launcher is no longer lost when it closes.

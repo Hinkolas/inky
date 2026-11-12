@@ -19,6 +19,15 @@ shortcuts from the populations in the input. GeoNames does not endorse Inky.
 The data is supplied without a warranty of accuracy, completeness or timeliness.
 A notice is also included alongside the data in the InkyCore resource bundle.
 
+## IANA list of top-level domains
+
+`InkyCore/Sources/InkyCore/Resources/tlds.txt` is the
+[list of top-level domains](https://data.iana.org/TLD/tlds-alpha-by-domain.txt)
+that IANA publishes from the DNS root zone, unmodified; its first line says
+which version it is. `make tlds` fetches the current one. IANA states no
+license for this file. It is a list of facts: the names that are delegated in
+the root zone.
+
 ## Sparkle
 
 The app embeds [Sparkle](https://sparkle-project.org/) 2.10.1, resolved with
