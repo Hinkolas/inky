@@ -132,7 +132,8 @@ final class AppContext {
             ],
             usage: usage,
             fallbacks: fallbacks,
-            commands: commandStore
+            commands: commandStore,
+            index: SearchIndex(fileURL: directory.appendingPathComponent("index.sqlite"))
         )
         engine.isEnabled = { [preferences] id in preferences.isEnabled(id) }
 
@@ -171,6 +172,7 @@ final class AppContext {
         }
         preferences.onModulesChange = { [unowned self] in
             updateClipboardRecording()
+            engine.modulesDidChange()
             onCommandsChange()
         }
         commandStore.onChange = { [unowned self] in onCommandsChange() }
