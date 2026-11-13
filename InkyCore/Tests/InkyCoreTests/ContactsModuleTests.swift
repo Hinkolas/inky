@@ -23,6 +23,12 @@ private final class StubContacts: ContactsReading, @unchecked Sendable {
         reads += 1
         return records
     }
+
+    func details(of id: String) async -> ContactDetails? {
+        records.first { $0.id == id }.map { record in
+            ContactDetails(id: id, jobTitle: "Harbor Master", emails: record.emails.map { .init("work", $0) })
+        }
+    }
 }
 
 @MainActor
@@ -47,7 +53,56 @@ private final class StubContacts: ContactsReading, @unchecked Sendable {
         #expect(item.subtitle == "Harbor Office")
         #expect(item.keywords == ["Tom", "Harbor Office", "tom@becker.example", "thomas@harbor.example"])
         #expect(item.kind == "Contact")
-        #expect(item.info == ["name": "Thomas Becker", "email": "tom@becker.example", "phone": "+49 171 555 0118"])
+        #expect(item.info == [
+            "name": "Thomas Becker", "organization": "Harbor Office",
+            "email": "tom@becker.example", "phone": "+49 171 555 0118",
+        ])
+        #expect(ContactsModule.groups(of: item).isEmpty)
+    }
+
+    @Test func remembersTheGroupsAContactIsIn() throws {
+        var record = thomas
+        record.groups = ["Harbor", "Sailing Club"]
+        let item = try #require(ContactsModule.item(for: record))
+        #expect(ContactsModule.groups(of: item) == ["Harbor", "Sailing Club"])
+    }
+
+    @Test func hasACommandThatShowsThemAll() async throws {
+        let (engine, module) = await makeEngine(StubContacts([thomas]))
+        var opened: [String] = []
+        module.onOpen = { opened.append($0) }
+
+        let command = try #require(engine.results(for: "search contacts").first?.items.first)
+        #expect(command.id == ContactsModule.searchID)
+        #expect(engine.isCommand(command))
+        // Who to look for can be typed along, or left out.
+        #expect(command.arguments.map(\.isRequired) == [false])
+        #expect(command.canBeFallback)
+        try await command.actions[0].perform(ActionContext(arguments: ["thomas"]))
+        try await command.actions[0].perform(ActionContext())
+        #expect(opened == ["thomas", ""])
+    }
+
+    @Test func readsMoreAboutAContactOnlyWhileItMay() async {
+        let reader = StubContacts([thomas])
+        let (_, module) = await makeEngine(reader)
+        #expect(await module.details(of: "1:ABPerson")?.jobTitle == "Harbor Master")
+        #expect(await module.details(of: "nobody") == nil)
+
+        reader.access = .denied
+        #expect(await module.details(of: "1:ABPerson") == nil)
+    }
+
+    @Test func aContactListedElsewhereIsTheResultItIsInTheSearch() async throws {
+        let (engine, _) = await makeEngine(StubContacts([thomas]))
+        let item = try #require(engine.index.items(of: "contacts").first)
+        let listed = try #require(engine.result(for: item, from: "contacts"))
+        let found = try #require(engine.results(for: "thomas").first?.items.first)
+        #expect(listed.id == found.id)
+        #expect(listed.actions.map(\.title) == found.actions.map(\.title))
+
+        engine.isEnabled = { _ in false }
+        #expect(engine.result(for: item, from: "contacts") == nil)
     }
 
     @Test func callsAContactByWhatThereIs() throws {
@@ -71,6 +126,8 @@ private final class StubContacts: ContactsReading, @unchecked Sendable {
         for query in ["thomas", "becker", "tom", "harbor", "tom@becker"] {
             #expect(engine.results(for: query).flatMap(\.items).map(\.id) == ["contacts:1:ABPerson"], "\(query)")
         }
+        // Its command is found by its own name, not among the people.
+        #expect(engine.results(for: "contacts").flatMap(\.items).map(\.id) == [ContactsModule.searchID])
         // Not by the digits of a phone number, which are typed for sums.
         #expect(engine.results(for: "171").isEmpty)
     }
@@ -80,10 +137,10 @@ private final class StubContacts: ContactsReading, @unchecked Sendable {
         let found = try #require(engine.results(for: "thomas").first?.items.first)
         #expect(found.actions.map(\.title) == [
             "Open in Contacts", "Send Email", "Send Message", "Call",
-            "Copy Email Address", "Copy Phone Number", "Copy Name",
+            "Copy Email Address", "Copy Phone Number",
         ])
         let mara = try #require(engine.results(for: "mara").first?.items.first)
-        #expect(mara.actions.map(\.title) == ["Open in Contacts", "Copy Name"])
+        #expect(mara.actions.map(\.title) == ["Open in Contacts"])
     }
 
     @Test func readsNothingBeforeItMay() async {

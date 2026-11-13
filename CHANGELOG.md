@@ -17,6 +17,10 @@
   ⌘↵ writes an email, and ⌘K lists the rest: message, call, copy. Inky reads
   your contacts only after you allowed it under Settings → Contacts, keeps
   them in memory, and writes nothing of them to disk.
+- Search Contacts, a command with a screen of its own: every contact by
+  name, narrowed down to people, companies or one of your groups in a
+  sidebar, with the numbers, addresses and birthday of the selected one and
+  what can be done with it. Tab goes through the sidebar.
 - A search index for what is found without being a command, which modules,
   and later extensions, write their items to. Such items are ranked with
   everything else, but do not appear among the commands, and of each source

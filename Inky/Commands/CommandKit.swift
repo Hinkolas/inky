@@ -409,7 +409,8 @@ struct MetadataList: View {
 
     var body: some View {
         Grid(alignment: .leadingFirstTextBaseline, horizontalSpacing: 14, verticalSpacing: 7) {
-            ForEach(rows, id: \.name) { row in
+            // Not by their names: two values may be called the same.
+            ForEach(Array(rows.enumerated()), id: \.offset) { _, row in
                 GridRow {
                     Text(row.name)
                         .foregroundStyle(.secondary)

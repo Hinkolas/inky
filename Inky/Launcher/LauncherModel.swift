@@ -15,6 +15,7 @@ final class LauncherModel {
         case uninstall(UninstallReview)
         case clipboard(ClipboardBrowser)
         case files(FileBrowser)
+        case contacts(ContactBrowser)
     }
 
     /// A field that can be typed into.
@@ -57,6 +58,10 @@ final class LauncherModel {
     @ObservationIgnored var pressesKeys = true
     /// The folders the file search looks in. Nil is the user's home folder.
     @ObservationIgnored var fileScopes: [String]?
+    /// Where the contacts come from, for their screen.
+    @ObservationIgnored var contactsModule: ContactsModule?
+    /// Shows the settings of the contacts, where Inky asks to read them.
+    @ObservationIgnored var configureContacts: () -> Void = {}
     @ObservationIgnored var openSettings: () -> Void = {}
     @ObservationIgnored var configureFallbacks: () -> Void = {}
     /// Shows a command in the settings, where it gets a hotkey.
@@ -161,6 +166,7 @@ final class LauncherModel {
         case .clipboard(let browser): browser.reload()
         case .uninstallBrowser(let browser): browser.reload()
         case .files(let browser): browser.reload()
+        case .contacts(let browser): browser.reload()
         case nil, .quicklinks, .quicklinkEditor, .uninstall: break
         }
     }
@@ -323,7 +329,7 @@ final class LauncherModel {
     private var defaultFocus: FocusTarget? {
         switch route {
         case nil: .search
-        case .quicklinks, .uninstallBrowser, .files: .filter
+        case .quicklinks, .uninstallBrowser, .files, .contacts: .filter
         case .quicklinkEditor(let draft): draft.isNew ? .quicklinkName : .quicklinkLink
         // It lists what goes with an application. There is nothing to type.
         case .uninstall: nil
@@ -1055,6 +1061,44 @@ final class LauncherModel {
         actions(for: file).first?.run()
     }
 
+    // MARK: - Contacts
+
+    /// Shows the contacts, looking for `query` if there is one.
+    func showContacts(query: String = "") {
+        guard let contactsModule else { return }
+        let query = query.trimmingCharacters(in: .whitespaces)
+        if case .contacts(let browser) = route {
+            if !query.isEmpty { browser.query = query }
+            return
+        }
+        // Allowed or refused in System Settings since they were read.
+        contactsModule.refreshAccess()
+        push(.contacts(ContactBrowser(index: engine.index, module: contactsModule, query: query)))
+    }
+
+    /// What can be done with a contact: what its module offers for it in
+    /// the search, with the same keys. The first runs on Return.
+    func actions(for contact: SearchableItem) -> [CommandAction] {
+        guard let item = engine.result(for: contact, from: ContactsModule.moduleID) else { return [] }
+        return item.actions.enumerated().map { index, action in
+            CommandAction(
+                title: action.title,
+                symbol: action.symbol,
+                shortcut: shortcut(for: action, at: index),
+                isDestructive: action.isDestructive
+            ) { [weak self] in
+                guard let self else { return }
+                // Picked here, it ranks higher in the search as well.
+                run(action, on: item, context: ActionContext(frontmostPID: frontmostPID))
+            }
+        }
+    }
+
+    /// Runs what Return does for a contact, as a double click does.
+    func runPrimaryAction(on contact: SearchableItem) {
+        actions(for: contact).first?.run()
+    }
+
     // MARK: - Keyboard
 
     /// Handles a key press before the focused text field sees it.
@@ -1101,7 +1145,38 @@ final class LauncherModel {
             return handleKey(key, modifiers, in: browser, event)
         case .files(let browser):
             return handleKey(key, modifiers, in: browser, event)
+        case .contacts(let browser):
+            return handleKey(key, modifiers, in: browser)
         }
+    }
+
+    private func handleKey(_ key: String, _ modifiers: KeyShortcut.Modifiers, in browser: ContactBrowser) -> Bool {
+        // Nothing is listed until Inky may read the contacts. Return goes
+        // where that is allowed.
+        if browser.access != .allowed, key == "return", modifiers.isEmpty {
+            configureContacts()
+            return true
+        }
+        switch (key, modifiers) {
+        case ("down", []), ("n", .control), ("j", .control): browser.moveSelection(by: 1)
+        case ("up", []), ("p", .control), ("k", .control): browser.moveSelection(by: -1)
+        case ("tab", []): browser.cycleFilter(by: 1)
+        case ("tab", .shift): browser.cycleFilter(by: -1)
+        case ("escape", []):
+            if browser.query.isEmpty {
+                popRoute()
+            } else {
+                browser.query = ""
+            }
+        default:
+            guard let contact = browser.selected,
+                  let action = actions(for: contact).first(where: { action in
+                      action.shortcut.map { $0.key == key && $0.modifiers == modifiers } ?? false
+                  })
+            else { return false }
+            action.run()
+        }
+        return true
     }
 
     private func handleKey(_ key: String, _ modifiers: KeyShortcut.Modifiers, in browser: FileBrowser, _ event: NSEvent) -> Bool {

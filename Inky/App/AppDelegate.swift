@@ -138,7 +138,8 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
 /// `--show`, `--pin`, `--quiet`, `--key`, `--query <text>`,
 /// `--keys "tab a cmd+k hide show toggle clipboard run:<command id>"`, `--key-delay <milliseconds>`,
 /// `--run <command id>`, `--settings [pane]`, `--search <text>`, `--onboarding [step]`, `--new-quicklink`, `--quicklinks`, `--uninstall [application]`,
-/// `--clipboard [filter]`, `--clipboard-samples`, `--files [name]`, `--contacts notAsked|denied`,
+/// `--clipboard [filter]`, `--clipboard-samples`, `--files [name]`,
+/// `--search-contacts [name]`, `--contacts notAsked|denied`,
 /// `--appearance light|dark`, `--backdrop light|dark`, `--data <folder>`,
 /// `--motion full|reduced|off`, `--slow <factor>`, `--resume <seconds>`.
 ///
@@ -255,7 +256,7 @@ enum DebugLaunch {
                 Task { await context.engine.reloadAll() }
             }
         }
-        guard !Set(arguments).isDisjoint(with: ["--show", "--query", "--new-quicklink", "--quicklinks", "--uninstall", "--clipboard", "--files", "--run"]) else {
+        guard !Set(arguments).isDisjoint(with: ["--show", "--query", "--new-quicklink", "--quicklinks", "--uninstall", "--clipboard", "--files", "--search-contacts", "--run"]) else {
             return
         }
         Task {
@@ -304,6 +305,11 @@ enum DebugLaunch {
                 context.launcher.model.showFiles(query: value(after: "--files") ?? "")
                 // Found, and the first of them read, before a key is pressed.
                 try? await Task.sleep(for: .milliseconds(900))
+            }
+            if arguments.contains("--search-contacts") {
+                context.launcher.model.showContacts(query: value(after: "--search-contacts") ?? "")
+                // The first of them read before a key is pressed.
+                try? await Task.sleep(for: .milliseconds(200))
             }
             for key in (value(after: "--keys") ?? "").split(separator: " ") {
                 try? await Task.sleep(for: .milliseconds(keyDelay))

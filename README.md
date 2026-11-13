@@ -67,7 +67,9 @@ pre-release you downloaded starts on Beta.
   when nothing was found.
 - **Contacts.** People and companies from your contacts, by name, nickname,
   company or email address: open them in Contacts, write to them or call.
-  Inky asks before it reads them, under Settings → Contacts.
+  Search Contacts lists them all, by type or by group, with the numbers and
+  addresses of the selected one. Inky asks before it reads them, under
+  Settings → Contacts.
 - **File search.** Files and folders from the Spotlight index, below the
   other results. Search Files shows more of them on a screen of its own, with
   a preview and details, and what you opened lately while nothing is typed.
