@@ -1,6 +1,10 @@
 # Changelog
 
-## Unreleased
+## 0.1.0-rc.1 — 2026-11-13
+
+Files and contacts are found from the launcher, each with a command of its
+own, and modules have an index of their own to put what they know into the
+search: that is the first release candidate.
 
 ### Added
 
@@ -11,7 +15,6 @@
   Return opens a file, ⌘↵ shows it in Finder, ⌘C copies it and ⇧⌘C its path.
   What to search for can be typed along in the search, and the command can be
   chosen as a fallback.
-
 - Contacts: people and companies from your contacts are found in the search
   by name, nickname, company or email address. Return opens one in Contacts,
   ⌘↵ writes an email, and ⌘K lists the rest: message, call, copy. Inky reads
