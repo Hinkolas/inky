@@ -30,6 +30,10 @@ public struct ModuleInfo: Sendable {
 /// hotkey that runs its first action from anywhere, see `CommandStore`. The
 /// module does nothing for this either.
 ///
+/// What a module has that is found but is not a command, such as contacts or
+/// repositories, there may be thousands of. Those it writes to the search
+/// index, by being a `SearchableSource` as well.
+///
 /// A candidate that asks for exactly one argument is a command the user can
 /// choose as a fallback, see `FallbackStore`. The launcher then offers it
 /// below every search, and runs it with what was typed as that argument. The

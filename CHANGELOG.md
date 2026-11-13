@@ -12,6 +12,11 @@
   What to search for can be typed along in the search, and the command can be
   chosen as a fallback.
 
+- A search index for what is found without being a command, which modules,
+  and later extensions, write their items to. Such items are ranked with
+  everything else, but do not appear among the commands, and of each source
+  only its best matches are listed.
+
 ### Changed
 
 - Files are found by the words of their name in any order: “watcher folder”

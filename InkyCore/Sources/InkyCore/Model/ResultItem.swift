@@ -2,11 +2,11 @@ import Foundation
 
 /// A named color. Results describe their look as data so that the UI layer,
 /// and later scripted extensions, never have to pass real colors around.
-public enum Tint: String, Sendable, Hashable, CaseIterable {
+public enum Tint: String, Sendable, Hashable, CaseIterable, Codable {
     case gray, red, orange, yellow, green, teal, blue, indigo, purple, pink
 }
 
-public indirect enum Icon: Sendable, Hashable {
+public indirect enum Icon: Sendable, Hashable, Codable {
     /// The Finder icon of the file, folder or application at `path`.
     case file(path: String)
     /// An SF Symbol drawn on a tinted tile.
