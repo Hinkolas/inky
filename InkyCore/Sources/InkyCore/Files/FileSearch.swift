@@ -152,7 +152,6 @@ public struct FileQuery: Sendable, Equatable {
 }
 
 /// Looks files up in the Spotlight index.
-@MainActor
 public enum FileSearch {
     /// Folders full of files nobody opens by hand.
     static let noise = ["/node_modules/", "/go/pkg/mod/", "/DerivedData/", "/Pods/", "/__pycache__/"]
@@ -164,7 +163,8 @@ public enum FileSearch {
     ///   - gatherLimit: How many files are taken from Spotlight to rank. It
     ///     stops broad queries from gathering half the disk.
     ///
-    /// Cancelling the task stops the search, which then finds nothing.
+    /// The search runs away from the thread it is asked on. Cancelling the
+    /// task stops it, and it then finds nothing.
     public static func run(
         _ query: FileQuery,
         in scopes: [String]? = nil,
@@ -208,14 +208,38 @@ public enum FileSearch {
 }
 
 /// One Spotlight query, bridged to async/await.
-@MainActor
-private final class SpotlightSearch {
+///
+/// Nothing of it happens on the main thread. Asking Spotlight for what it
+/// knows of a file takes a third of a millisecond a file, and a search
+/// lists a hundred of them: on the main thread that is a launcher that
+/// stands still. The query runs on a queue of its own, and everything this
+/// type keeps is only touched there.
+private final class SpotlightSearch: @unchecked Sendable {
+    private static let queue: OperationQueue = {
+        let queue = OperationQueue()
+        queue.name = "io.github.hinkolas.inky.file-search"
+        queue.maxConcurrentOperationCount = 1
+        queue.qualityOfService = .userInitiated
+        return queue
+    }()
+
+    /// What is asked about a file that is listed, in one go. Its path is
+    /// asked for by itself: asked for along with the rest, a file that has
+    /// none brings Foundation down.
+    private static let details: [String] = [
+        kMDItemKind as String, NSMetadataItemContentTypeKey, NSMetadataItemFSSizeKey,
+        NSMetadataItemFSCreationDateKey, NSMetadataItemFSContentChangeDateKey, kMDItemLastUsedDate as String,
+        kMDItemPixelWidth as String, kMDItemPixelHeight as String, kMDItemDurationSeconds as String,
+        kMDItemNumberOfPages as String,
+    ]
+
     private let asked: FileQuery
     private let limit: Int
     private let gatherLimit: Int
     private let query = NSMetadataQuery()
     private var observers: [NSObjectProtocol] = []
     private var continuation: CheckedContinuation<[FileHit], Never>?
+    private var isCancelled = false
 
     init(query asked: FileQuery, scopes: [String]?, limit: Int, gatherLimit: Int) {
         self.asked = asked
@@ -226,37 +250,46 @@ private final class SpotlightSearch {
         query.predicate = NSPredicate(fromMetadataQueryString: asked.expression)
         query.searchScopes = scopes ?? [NSMetadataQueryUserHomeScope]
         query.sortDescriptors = [NSSortDescriptor(key: kMDItemLastUsedDate as String, ascending: false)]
+        // The names come with the results, all at once. They are what the
+        // results are ranked by, and asked for file by file they would take
+        // a thousand times as long.
+        query.valueListAttributes = [NSMetadataItemDisplayNameKey]
+        query.operationQueue = Self.queue
     }
 
     func run() async -> [FileHit] {
         guard !Task.isCancelled, query.predicate != nil else { return [] }
         return await withTaskCancellationHandler {
             await withCheckedContinuation { continuation in
-                self.continuation = continuation
-                observe(.NSMetadataQueryDidFinishGathering) { search in
-                    search.finish(collecting: true)
-                }
-                observe(.NSMetadataQueryGatheringProgress) { search in
-                    if search.query.resultCount >= search.gatherLimit {
+                Self.queue.addOperation { [self] in
+                    self.continuation = continuation
+                    // Cancelled before it began.
+                    guard !isCancelled else { return finish(collecting: false) }
+                    observe(.NSMetadataQueryDidFinishGathering) { search in
                         search.finish(collecting: true)
                     }
-                }
-                if !query.start() {
-                    finish(collecting: false)
+                    observe(.NSMetadataQueryGatheringProgress) { search in
+                        if search.query.resultCount >= search.gatherLimit {
+                            search.finish(collecting: true)
+                        }
+                    }
+                    if !query.start() {
+                        finish(collecting: false)
+                    }
                 }
             }
         } onCancel: {
-            Task { @MainActor in self.finish(collecting: false) }
+            Self.queue.addOperation { [self] in
+                isCancelled = true
+                finish(collecting: false)
+            }
         }
     }
 
-    private func observe(_ name: Notification.Name, _ handler: @escaping @MainActor (SpotlightSearch) -> Void) {
-        let observer = NotificationCenter.default.addObserver(forName: name, object: query, queue: .main) { [weak self] _ in
-            MainActor.assumeIsolated {
-                if let self { handler(self) }
-            }
-        }
-        observers.append(observer)
+    private func observe(_ name: Notification.Name, _ handler: @escaping @Sendable (SpotlightSearch) -> Void) {
+        observers.append(NotificationCenter.default.addObserver(forName: name, object: query, queue: Self.queue) { [self] _ in
+            handler(self)
+        })
     }
 
     private func finish(collecting: Bool) {
@@ -272,45 +305,45 @@ private final class SpotlightSearch {
         continuation.resume(returning: hits)
     }
 
-    /// Reads the results while the query still holds them. Only the files
-    /// that are listed are asked for more than their path and name.
+    /// Reads the results while the query still holds them: ranks them by
+    /// their names, then asks about the best of them until enough are worth
+    /// listing.
     private func collect() -> [FileHit] {
-        var found: [(item: NSMetadataItem, path: String, name: String)] = []
-        for index in 0..<min(query.resultCount, gatherLimit) {
+        let count = min(query.resultCount, gatherLimit)
+        // The files opened lately come in the order they are listed in.
+        let order = asked.isRecents
+            ? Array(0..<count)
+            : FileSearch.ranking(
+                of: (0..<count).map { query.value(ofAttribute: NSMetadataItemDisplayNameKey, forResultAt: $0) as? String ?? "" },
+                for: asked.text
+            )
+
+        var hits: [FileHit] = []
+        for index in order {
             guard let item = query.result(at: index) as? NSMetadataItem,
                   let path = item.value(forAttribute: NSMetadataItemPathKey) as? String,
                   FileSearch.lists(path)
             else { continue }
-            found.append((
-                item, path,
-                item.value(forAttribute: NSMetadataItemDisplayNameKey) as? String ?? (path as NSString).lastPathComponent
-            ))
-            // The files opened lately come in the order they are listed in.
-            if asked.isRecents, found.count == limit { break }
-        }
-
-        let order = asked.isRecents
-            ? Array(found.indices)
-            : FileSearch.ranking(of: found.map(\.name), for: asked.text)
-        return order.prefix(limit).map { index in
-            let (item, path, name) = found[index]
-            func value<T>(_ key: String) -> T? { item.value(forAttribute: key) as? T }
-            func number(_ key: String) -> NSNumber? { value(key) }
-            return FileHit(
+            let values = item.values(forAttributes: Self.details) ?? [:]
+            func number(_ key: CFString) -> NSNumber? { values[key as String] as? NSNumber }
+            hits.append(FileHit(
                 path: path,
-                name: name,
-                kind: value(kMDItemKind as String),
-                contentType: value(NSMetadataItemContentTypeKey),
-                size: number(NSMetadataItemFSSizeKey)?.int64Value,
-                created: value(NSMetadataItemFSCreationDateKey),
-                modified: value(NSMetadataItemFSContentChangeDateKey),
-                lastOpened: value(kMDItemLastUsedDate as String),
-                pixelWidth: number(kMDItemPixelWidth as String)?.intValue,
-                pixelHeight: number(kMDItemPixelHeight as String)?.intValue,
-                duration: number(kMDItemDurationSeconds as String)?.doubleValue,
-                pages: number(kMDItemNumberOfPages as String)?.intValue
-            )
+                name: query.value(ofAttribute: NSMetadataItemDisplayNameKey, forResultAt: index) as? String
+                    ?? (path as NSString).lastPathComponent,
+                kind: values[kMDItemKind as String] as? String,
+                contentType: values[NSMetadataItemContentTypeKey] as? String,
+                size: (values[NSMetadataItemFSSizeKey] as? NSNumber)?.int64Value,
+                created: values[NSMetadataItemFSCreationDateKey] as? Date,
+                modified: values[NSMetadataItemFSContentChangeDateKey] as? Date,
+                lastOpened: values[kMDItemLastUsedDate as String] as? Date,
+                pixelWidth: number(kMDItemPixelWidth)?.intValue,
+                pixelHeight: number(kMDItemPixelHeight)?.intValue,
+                duration: number(kMDItemDurationSeconds)?.doubleValue,
+                pages: number(kMDItemNumberOfPages)?.intValue
+            ))
+            if hits.count == limit { break }
         }
+        return hits
     }
 }
 
