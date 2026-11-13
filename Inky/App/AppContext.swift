@@ -155,6 +155,8 @@ final class AppContext {
         launcher.model.pressesKeys = DebugLaunch.dataDirectory == nil
         #endif
         launcher.model.fileScopes = fileModule.scopes
+        launcher.model.contactsModule = contacts
+        launcher.model.configureContacts = { [unowned self] in showSettings(pane: contacts.id) }
         launcher.model.openSettings = { [unowned self] in showSettings() }
         launcher.model.configureFallbacks = { [unowned self] in showSettings(pane: "fallbacks") }
         launcher.model.configureCommand = { [unowned self] item in showSettings(pane: "commands", search: item.title) }
@@ -175,6 +177,7 @@ final class AppContext {
 
         clipboardModule.onOpen = { [unowned self] in launcher.model.showClipboard() }
         fileModule.onOpen = { [unowned self] query in launcher.model.showFiles(query: query) }
+        contacts.onOpen = { [unowned self] query in launcher.model.showContacts(query: query) }
         clipboardModule.onClear = { [clipboard] in
             Task { await clipboard.clear() }
         }

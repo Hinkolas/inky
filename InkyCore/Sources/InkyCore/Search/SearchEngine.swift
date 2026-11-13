@@ -360,6 +360,13 @@ public final class SearchEngine {
         "\(sourceID):\(itemID)"
     }
 
+    /// An item of the index as the result it is in a search, with what its
+    /// source offers to do with it: for whatever lists a source's items
+    /// itself. Nil if the module is not a source, or is switched off.
+    public func result(for item: SearchableItem, from sourceID: String) -> ResultItem? {
+        sources.first { $0.id == sourceID && isEnabled($0.id) }.map { resultItem(for: item, of: $0) }
+    }
+
     /// An item of the index as a row of the launcher, with what its source
     /// offers to do with it.
     private func resultItem(for item: SearchableItem, of source: any SearchableSource) -> ResultItem {

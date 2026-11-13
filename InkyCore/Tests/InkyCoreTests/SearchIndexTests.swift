@@ -139,9 +139,11 @@ private final class StubSource: SearchableSource {
         let source = await opened(index)
         var changes = 0
         index.onChange = { changes += 1 }
+        let revision = index.revision
         source.index([item("a")])
         source.delete(ids: ["a"])
         #expect(changes == 2)
+        #expect(index.revision == revision + 2)
     }
 
     // MARK: - On disk

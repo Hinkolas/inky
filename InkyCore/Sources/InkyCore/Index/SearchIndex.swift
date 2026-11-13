@@ -98,6 +98,9 @@ public final class SearchIndex {
     /// Observed, so that settings count the items as they come.
     private var sources: [String: Source] = [:]
 
+    /// Goes up whenever items changed, for what lists them to read them again.
+    public private(set) var revision = 0
+
     /// Called after items changed and visible results may be stale.
     @ObservationIgnored public var onChange: (@MainActor () -> Void)?
 
@@ -178,7 +181,10 @@ public final class SearchIndex {
         source.isOpen = false
         sources[id] = source
         if let store { write { await store.remove(id) } }
-        if hadItems { onChange?() }
+        if hadItems {
+            revision += 1
+            onChange?()
+        }
     }
 
     /// Takes changes from the source again.
@@ -270,6 +276,7 @@ public final class SearchIndex {
             )
             write { await store.apply(change) }
         }
+        revision += 1
         onChange?()
         return true
     }

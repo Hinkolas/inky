@@ -54,6 +54,9 @@ struct LauncherView: View {
                         case .files(let browser):
                             FileBrowserScreen(model: model, browser: browser, focus: $focus)
                                 .transition(motion.screen(isGoingBack: model.isNavigatingBack))
+                        case .contacts(let browser):
+                            ContactBrowserScreen(model: model, browser: browser, focus: $focus)
+                                .transition(motion.screen(isGoingBack: model.isNavigatingBack))
                         }
                     }
                     // A screen is laid out at its final size from the start.
@@ -156,6 +159,8 @@ struct LauncherView: View {
             LauncherLayout(command: ClipboardBrowserScreen.size)
         case .files:
             LauncherLayout(command: FileBrowserScreen.size)
+        case .contacts:
+            LauncherLayout(command: ContactBrowserScreen.size)
         }
     }
 }
