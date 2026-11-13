@@ -6,6 +6,32 @@ IMPORTANT: This file was signed by Sparkle. Any modifications to this file requi
     <channel>
         <title>Inky</title>
         <item>
+            <title>0.1.0-rc.1</title>
+            <pubDate>Fri, 13 Nov 2026 12:53:17 +0000</pubDate>
+            <link>https://github.com/Hinkolas/inky</link>
+            <sparkle:fullReleaseNotesLink>https://github.com/Hinkolas/inky/releases/tag/v0.1.0-rc.1</sparkle:fullReleaseNotesLink>
+            <sparkle:channel>beta</sparkle:channel>
+            <sparkle:version>84</sparkle:version>
+            <sparkle:shortVersionString>0.1.0-rc.1</sparkle:shortVersionString>
+            <sparkle:minimumSystemVersion>15.0</sparkle:minimumSystemVersion>
+            <sparkle:hardwareRequirements>arm64</sparkle:hardwareRequirements>
+            <description><![CDATA[<p>Files and contacts are found from the launcher, each with a command of its own, and modules have an index of their own to put what they know into the search: that is the first release candidate.</p>
+<div class="markdown-heading"><h3 class="heading-element">Added</h3><a id="user-content-added" class="anchor" aria-label="Permalink: Added" href="#added"><span aria-hidden="true" class="octicon octicon-link"></span></a></div>
+<ul>
+<li>Search Files, a command with a screen of its own: files and folders by name, with a preview of the selected one and what the Spotlight index knows about it. With nothing typed it lists what you opened lately. A menu, or Tab, narrows it down to folders, documents, images, videos, audio or code. Return opens a file, ⌘↵ shows it in Finder, ⌘C copies it and ⇧⌘C its path. What to search for can be typed along in the search, and the command can be chosen as a fallback.</li>
+<li>Contacts: people and companies from your contacts are found in the search by name, nickname, company or email address. Return opens one in Contacts, ⌘↵ writes an email, and ⌘K lists the rest: message, call, copy. Inky reads your contacts only after you allowed it under Settings → Contacts, keeps them in memory, and writes nothing of them to disk. A contact that has a picture is shown by it.</li>
+<li>Search Contacts, a command with a screen of its own: every contact by name, narrowed down to people, companies or one of your groups in a sidebar, with the numbers, addresses and birthday of the selected one and what can be done with it. Tab goes through the sidebar.</li>
+<li>A search index for what is found without being a command, which modules, and later extensions, write their items to. Such items are ranked with everything else, but do not appear among the commands, and of each source only its best matches are listed.</li>
+</ul>
+<div class="markdown-heading"><h3 class="heading-element">Changed</h3><a id="user-content-changed" class="anchor" aria-label="Permalink: Changed" href="#changed"><span aria-hidden="true" class="octicon octicon-link"></span></a></div>
+<ul>
+<li>Files are found by the words of their name in any order: “watcher folder” finds <code>FolderWatcher.swift</code>.</li>
+<li>Looking files up no longer holds the launcher up. Asking Spotlight about the files it found took up to 50 ms a search, during which nothing typed was shown.</li>
+</ul>
+]]></description>
+            <enclosure url="https://github.com/Hinkolas/inky/releases/download/v0.1.0-rc.1/Inky-0.1.0-rc.1.zip" length="4025685" type="application/octet-stream" sparkle:edSignature="oqHHyTBy8DOhVkHmyzs703GBw5mgcI14Fo3+3domgB1LEgRATwWS+5TF4X2peOjPeDXBJcvMpkkaC+e/4PPUCQ=="/>
+        </item>
+        <item>
             <title>0.1.0-alpha.6</title>
             <pubDate>Thu, 12 Nov 2026 20:41:09 +0000</pubDate>
             <link>https://github.com/Hinkolas/inky</link>
@@ -50,27 +76,9 @@ IMPORTANT: This file was signed by Sparkle. Any modifications to this file requi
 ]]></description>
             <enclosure url="https://github.com/Hinkolas/inky/releases/download/v0.1.0-alpha.5/Inky-0.1.0-alpha.5.zip" length="3781728" type="application/octet-stream" sparkle:edSignature="rNYSbkTS4LfkUFwRDr69VUVisrYNi42B8Cj2tdjNrlpD0jtBmZ2YzLbzZDBYMoUIrk9F/fz5NXdtQzDdXCMcBA=="/>
         </item>
-        <item>
-            <title>0.1.0-alpha.4</title>
-            <pubDate>Thu, 12 Nov 2026 11:45:52 +0000</pubDate>
-            <link>https://github.com/Hinkolas/inky</link>
-            <sparkle:fullReleaseNotesLink>https://github.com/Hinkolas/inky/releases/tag/v0.1.0-alpha.4</sparkle:fullReleaseNotesLink>
-            <sparkle:channel>beta</sparkle:channel>
-            <sparkle:version>60</sparkle:version>
-            <sparkle:shortVersionString>0.1.0-alpha.4</sparkle:shortVersionString>
-            <sparkle:minimumSystemVersion>15.0</sparkle:minimumSystemVersion>
-            <sparkle:hardwareRequirements>arm64</sparkle:hardwareRequirements>
-            <description><![CDATA[<p>A web address typed into the launcher opens in the browser.</p>
-<div class="markdown-heading"><h3 class="heading-element">Added</h3><a id="user-content-added" class="anchor" aria-label="Permalink: Added" href="#added"><span aria-hidden="true" class="octicon octicon-link"></span></a></div>
-<ul>
-<li>A web address typed into the launcher is offered to be opened in the browser: <code>amazon.com</code>, <code>github.com/hinkolas/inky</code>, <code>localhost:3000</code>, or one spelled out with <code>https://</code>. Return opens it, ⌘↵ copies it as a link, and ⌘N, or Create Quicklink under ⌘K, opens the editor for a new quicklink with the address filled in. Whatever ends in a top-level domain counts, so the name of a file such as <code>main.rs</code> is offered too, above the file itself. Settings → Browser switches it off.</li>
-</ul>
-]]></description>
-            <enclosure url="https://github.com/Hinkolas/inky/releases/download/v0.1.0-alpha.4/Inky-0.1.0-alpha.4.zip" length="3775543" type="application/octet-stream" sparkle:edSignature="IKbmgh05WfdNh60Vqd386VZnBvMbR7hqSrgetJB8y2n07IlhdobtajNGEWVcoxGUrDfe2FVxicHjRRrD+oTQBg=="/>
-        </item>
     </channel>
 </rss>
 <!-- sparkle-signatures:
-edSignature: t7G7QKPhhBVmAk92uTdXaJEvKW3AKV+0rudbGgApUqZ/5PGYtzWmm3+OWT5vkjf3yNwkkliN1v2/XdyZFxHPBA==
-length: 7476
+edSignature: m82MkcWnHKABToWKETed1IAxM0lRp+eVx58rlF6+qh8zeVGQapVmeyWkDeYEbsA273tnJvQJqUb/2NjPWYbZAg==
+length: 9019
 -->
