@@ -590,6 +590,10 @@ final class LauncherController: NSObject, NSWindowDelegate {
                     + "pins=\(browser.snapshot.pins.count) total=\(browser.snapshot.total) "
                     + "renaming=\(browser.renaming ?? "nil") "
                     + "actions=\(browser.selected.map { model.actions(for: $0, in: browser).map(\.title) } ?? []))"
+            case .files(let browser):
+                "files(filter=\(browser.filter) query=\(browser.query) recents=\(browser.listed.isRecents) "
+                    + "selected=\(browser.selected?.name ?? "nil") listed=\(browser.files.count) "
+                    + "preview=\(browser.selected.flatMap(browser.preview(of:))?.debugName ?? "nil"))"
             }
         }
         // The field that has the keyboard, told by its placeholder, with what

@@ -87,6 +87,10 @@ final class AppContext {
         let applications = ApplicationModule(uninstaller: uninstaller)
         let browser = BrowserModule()
         fileModule.maxResults = preferences.fileSearchLimit
+        #if DEBUG
+        // A run with data of its own finds only the files in that folder.
+        fileModule.scopes = DebugLaunch.dataDirectory.map { [$0.appendingPathComponent("Files", isDirectory: true).path] }
+        #endif
 
         let usage = UsageStore(fileURL: directory.appendingPathComponent("usage.json"))
         inputHistory = InputHistory(
@@ -141,6 +145,7 @@ final class AppContext {
         // A run with data of its own must not type into the user's applications.
         launcher.model.pressesKeys = DebugLaunch.dataDirectory == nil
         #endif
+        launcher.model.fileScopes = fileModule.scopes
         launcher.model.openSettings = { [unowned self] in showSettings() }
         launcher.model.configureFallbacks = { [unowned self] in showSettings(pane: "fallbacks") }
         launcher.model.configureCommand = { [unowned self] item in showSettings(pane: "commands", search: item.title) }
@@ -160,6 +165,7 @@ final class AppContext {
         launcher.model.applicationsDidChange = { [applications] in applications.onChange?() }
 
         clipboardModule.onOpen = { [unowned self] in launcher.model.showClipboard() }
+        fileModule.onOpen = { [unowned self] query in launcher.model.showFiles(query: query) }
         clipboardModule.onClear = { [clipboard] in
             Task { await clipboard.clear() }
         }

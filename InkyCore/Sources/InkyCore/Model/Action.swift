@@ -189,6 +189,14 @@ public enum Pasteboard {
         NSPasteboard.general.setString("", forType: copiedByInky)
     }
 
+    /// Puts a file or folder on the pasteboard, to be pasted where files go.
+    @MainActor
+    public static func copy(fileAt path: String) {
+        NSPasteboard.general.clearContents()
+        NSPasteboard.general.writeObjects([URL(fileURLWithPath: path) as NSURL])
+        NSPasteboard.general.setString("", forType: copiedByInky)
+    }
+
     @MainActor
     public static var text: String? {
         NSPasteboard.general.string(forType: .string)

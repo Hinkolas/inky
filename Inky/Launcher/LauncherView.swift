@@ -51,6 +51,9 @@ struct LauncherView: View {
                         case .clipboard(let browser):
                             ClipboardBrowserScreen(model: model, browser: browser, focus: $focus)
                                 .transition(motion.screen(isGoingBack: model.isNavigatingBack))
+                        case .files(let browser):
+                            FileBrowserScreen(model: model, browser: browser, focus: $focus)
+                                .transition(motion.screen(isGoingBack: model.isNavigatingBack))
                         }
                     }
                     // A screen is laid out at its final size from the start.
@@ -96,6 +99,9 @@ struct LauncherView: View {
                             .transition(motion.belowCard)
                     } else if case .uninstall = model.route {
                         UninstallReviewScreen.hints
+                            .transition(motion.belowCard)
+                    } else if case .files = model.route {
+                        FileBrowserScreen.hints
                             .transition(motion.belowCard)
                     }
                 }
@@ -148,6 +154,8 @@ struct LauncherView: View {
             LauncherLayout(command: UninstallReviewScreen.size)
         case .clipboard:
             LauncherLayout(command: ClipboardBrowserScreen.size)
+        case .files:
+            LauncherLayout(command: FileBrowserScreen.size)
         }
     }
 }
@@ -392,7 +400,8 @@ private struct ArgumentField: View {
     private static let fontSize: CGFloat = 15
 
     var body: some View {
-        let placeholder = hint ?? name
+        // A default of nothing says nothing: the name tells what goes there.
+        let placeholder = hint.flatMap { $0.isEmpty ? nil : $0 } ?? name
         let isFocused = focus.wrappedValue == target
         // As wide as what it says. Typing never makes it narrower than it
         // was empty, so it does not shrink under the first letter.

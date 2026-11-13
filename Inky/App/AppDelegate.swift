@@ -138,13 +138,16 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
 /// `--show`, `--pin`, `--quiet`, `--key`, `--query <text>`,
 /// `--keys "tab a cmd+k hide show toggle clipboard run:<command id>"`, `--key-delay <milliseconds>`,
 /// `--run <command id>`, `--settings [pane]`, `--search <text>`, `--onboarding [step]`, `--new-quicklink`, `--quicklinks`, `--uninstall [application]`,
-/// `--clipboard [filter]`, `--clipboard-samples`,
+/// `--clipboard [filter]`, `--clipboard-samples`, `--files [name]`,
 /// `--appearance light|dark`, `--backdrop light|dark`, `--data <folder>`,
 /// `--motion full|reduced|off`, `--slow <factor>`, `--resume <seconds>`.
 ///
 /// To look at an animation, stretch it with `--slow` and put `mark` before
 /// the key that starts it: `--keys "wait mark return"`. `mark` prints a line
 /// to wait for, `wait` pauses for a second.
+///
+/// With `--data` the file search only looks in the folder `Files` in there,
+/// so a run neither lists nor reads the user's own files.
 ///
 /// Where the keyboard ends up depends on the launcher being the key window,
 /// which a quiet run is not. `--quiet --key` takes the keyboard while still
@@ -242,7 +245,7 @@ enum DebugLaunch {
                 Task { await context.engine.reloadAll() }
             }
         }
-        guard !Set(arguments).isDisjoint(with: ["--show", "--query", "--new-quicklink", "--quicklinks", "--uninstall", "--clipboard", "--run"]) else {
+        guard !Set(arguments).isDisjoint(with: ["--show", "--query", "--new-quicklink", "--quicklinks", "--uninstall", "--clipboard", "--files", "--run"]) else {
             return
         }
         Task {
@@ -286,6 +289,11 @@ enum DebugLaunch {
                 }
                 // Read before the first key is pressed.
                 try? await Task.sleep(for: .milliseconds(200))
+            }
+            if arguments.contains("--files") {
+                context.launcher.model.showFiles(query: value(after: "--files") ?? "")
+                // Found, and the first of them read, before a key is pressed.
+                try? await Task.sleep(for: .milliseconds(900))
             }
             for key in (value(after: "--keys") ?? "").split(separator: " ") {
                 try? await Task.sleep(for: .milliseconds(keyDelay))
