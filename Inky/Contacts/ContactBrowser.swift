@@ -135,6 +135,9 @@ final class ContactBrowser {
         } else {
             list()
         }
+        // The selected contact may be among what changed. What is shown of
+        // it stays until it is read again.
+        loadDetails(again: true)
     }
 
     var total: Int { entries.count }
@@ -214,14 +217,16 @@ final class ContactBrowser {
         details?.id == contact.id ? details : nil
     }
 
-    private func loadDetails() {
+    /// Reads more about the selected contact, unless it is what was read
+    /// last. `again` reads it anyway.
+    private func loadDetails(again: Bool = false) {
         guard let contact = selected else {
             generation += 1
             details = nil
             picture = nil
             return
         }
-        guard details?.id != contact.id else { return }
+        guard again || details?.id != contact.id else { return }
         generation += 1
         let generation = generation
         Task {
