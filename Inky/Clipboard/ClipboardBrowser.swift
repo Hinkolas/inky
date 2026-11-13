@@ -284,19 +284,7 @@ struct ClipboardBrowserScreen: View {
             .pickerStyle(.inline)
             .labelsHidden()
         } label: {
-            HStack(spacing: 7) {
-                Text(browser.range.title)
-                    .font(.system(size: 13.5, weight: .medium))
-                Image(systemName: "chevron.down")
-                    .font(.system(size: 9, weight: .bold))
-                    .foregroundStyle(.secondary)
-            }
-            .padding(.horizontal, 14)
-            .frame(height: LauncherMetrics.barControlSize)
-            .background(Theme.controlFill, in: Capsule())
-            .overlay { Capsule().strokeBorder(Theme.controlStroke) }
-            .shadow(color: Theme.controlShadow, radius: 3, y: 1)
-            .contentShape(Capsule())
+            BarMenuLabel(title: browser.range.title)
         }
         .menuStyle(.button)
         .buttonStyle(.plain)

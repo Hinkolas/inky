@@ -629,7 +629,7 @@ private struct FileSearchSettings: View {
                 in: 3...20
             )
         } footer: {
-            Text("Searches your home folder once you have typed three characters. Results come from the Spotlight index, so folders excluded from Spotlight do not appear.")
+            Text("Searches your home folder once you have typed three characters. Results come from the Spotlight index, so folders excluded from Spotlight do not appear. Search Files lists more, and shows the selected file: for that it reads the file, and macOS asks once before Inky may in Desktop, Documents and Downloads.")
         }
     }
 }

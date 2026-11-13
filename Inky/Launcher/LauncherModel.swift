@@ -14,6 +14,7 @@ final class LauncherModel {
         case uninstallBrowser(UninstallBrowser)
         case uninstall(UninstallReview)
         case clipboard(ClipboardBrowser)
+        case files(FileBrowser)
     }
 
     /// A field that can be typed into.
@@ -54,6 +55,8 @@ final class LauncherModel {
     /// Whether pasting may press keys in other applications. Off for runs
     /// that are not to be noticed.
     @ObservationIgnored var pressesKeys = true
+    /// The folders the file search looks in. Nil is the user's home folder.
+    @ObservationIgnored var fileScopes: [String]?
     @ObservationIgnored var openSettings: () -> Void = {}
     @ObservationIgnored var configureFallbacks: () -> Void = {}
     /// Shows a command in the settings, where it gets a hotkey.
@@ -157,6 +160,7 @@ final class LauncherModel {
         switch route {
         case .clipboard(let browser): browser.reload()
         case .uninstallBrowser(let browser): browser.reload()
+        case .files(let browser): browser.reload()
         case nil, .quicklinks, .quicklinkEditor, .uninstall: break
         }
     }
@@ -319,7 +323,7 @@ final class LauncherModel {
     private var defaultFocus: FocusTarget? {
         switch route {
         case nil: .search
-        case .quicklinks, .uninstallBrowser: .filter
+        case .quicklinks, .uninstallBrowser, .files: .filter
         case .quicklinkEditor(let draft): draft.isNew ? .quicklinkName : .quicklinkLink
         // It lists what goes with an application. There is nothing to type.
         case .uninstall: nil
@@ -1007,6 +1011,50 @@ final class LauncherModel {
         }
     }
 
+    // MARK: - Files
+
+    /// Shows the file search, looking for `query` if there is one.
+    func showFiles(query: String = "") {
+        let query = query.trimmingCharacters(in: .whitespaces)
+        if case .files(let browser) = route {
+            if !query.isEmpty { browser.query = query }
+            return
+        }
+        push(.files(FileBrowser(query: query, scopes: fileScopes)))
+    }
+
+    /// What the file search offers for a file. The first runs on Return.
+    func actions(for file: FileHit) -> [CommandAction] {
+        [
+            CommandAction(title: "Open", symbol: "arrow.up.forward.app", shortcut: KeyShortcut("return", [])) { [weak self] in
+                guard let self else { return }
+                do {
+                    try Opener.open(path: file.path)
+                    dismiss()
+                } catch {
+                    report(error)
+                }
+            },
+            CommandAction(title: "Show in Finder", symbol: "folder", shortcut: KeyShortcut("return")) { [weak self] in
+                NSWorkspace.shared.activateFileViewerSelecting([URL(fileURLWithPath: file.path)])
+                self?.dismiss()
+            },
+            CommandAction(title: "Copy File", symbol: "doc.on.doc", shortcut: KeyShortcut("c")) { [weak self] in
+                Pasteboard.copy(fileAt: file.path)
+                self?.dismiss()
+            },
+            CommandAction(title: "Copy Path", symbol: "doc.on.doc", shortcut: KeyShortcut("c", [.command, .shift])) { [weak self] in
+                Pasteboard.copy(file.path)
+                self?.dismiss()
+            },
+        ]
+    }
+
+    /// Runs what Return does for a file, as a double click does.
+    func runPrimaryAction(on file: FileHit) {
+        actions(for: file).first?.run()
+    }
+
     // MARK: - Keyboard
 
     /// Handles a key press before the focused text field sees it.
@@ -1051,7 +1099,36 @@ final class LauncherModel {
             return handleKey(key, modifiers, in: review)
         case .clipboard(let browser):
             return handleKey(key, modifiers, in: browser, event)
+        case .files(let browser):
+            return handleKey(key, modifiers, in: browser, event)
         }
+    }
+
+    private func handleKey(_ key: String, _ modifiers: KeyShortcut.Modifiers, in browser: FileBrowser, _ event: NSEvent) -> Bool {
+        switch (key, modifiers) {
+        case ("down", []), ("n", .control), ("j", .control): browser.moveSelection(by: 1)
+        case ("up", []), ("p", .control), ("k", .control): browser.moveSelection(by: -1)
+        case ("tab", []): browser.cycleFilter(by: 1)
+        case ("tab", .shift): browser.cycleFilter(by: -1)
+        case ("escape", []):
+            if browser.query.isEmpty {
+                popRoute()
+            } else {
+                browser.query = ""
+            }
+        default:
+            guard let file = browser.selected else { return false }
+            // What is selected in the field is what ⌘C means there.
+            if key == "c", modifiers == .command,
+               let editor = event.window?.firstResponder as? NSTextView, editor.selectedRange().length > 0 {
+                return false
+            }
+            guard let action = actions(for: file).first(where: { action in
+                action.shortcut.map { $0.key == key && $0.modifiers == modifiers } ?? false
+            }) else { return false }
+            action.run()
+        }
+        return true
     }
 
     private func handleKey(_ key: String, _ modifiers: KeyShortcut.Modifiers, in browser: ClipboardBrowser, _ event: NSEvent) -> Bool {

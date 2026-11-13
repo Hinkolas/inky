@@ -133,6 +133,28 @@ struct FilterField: View {
     }
 }
 
+/// What a menu at the end of a header pill is opened by: what is chosen,
+/// and an arrow.
+struct BarMenuLabel: View {
+    let title: String
+
+    var body: some View {
+        HStack(spacing: 7) {
+            Text(title)
+                .font(.system(size: 13.5, weight: .medium))
+            Image(systemName: "chevron.down")
+                .font(.system(size: 9, weight: .bold))
+                .foregroundStyle(.secondary)
+        }
+        .padding(.horizontal, 14)
+        .frame(height: LauncherMetrics.barControlSize)
+        .background(Theme.controlFill, in: Capsule())
+        .overlay { Capsule().strokeBorder(Theme.controlStroke) }
+        .shadow(color: Theme.controlShadow, radius: 3, y: 1)
+        .contentShape(Capsule())
+    }
+}
+
 // MARK: - Panels
 
 /// A panel at the leading edge of the body card, for choosing what the

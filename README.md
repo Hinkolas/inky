@@ -65,8 +65,11 @@ pre-release you downloaded starts on Beta.
   command a hotkey: launch an app, lock the screen, open a folder.
 - **Fallback commands.** Send a search on to a web search or another command
   when nothing was found.
-- **File search and system commands.** Files and folders from the Spotlight
-  index; lock, sleep, restart, empty the Trash, toggle dark mode.
+- **File search.** Files and folders from the Spotlight index, below the
+  other results. Search Files shows more of them on a screen of its own, with
+  a preview and details, and what you opened lately while nothing is typed.
+- **System commands.** Lock, sleep, restart, empty the Trash, toggle dark
+  mode.
 - **Nothing typed is lost.** Click elsewhere and the launcher opens again as
   you left it, for a minute unless you choose otherwise. ↑ in the empty search
   brings back what you searched for before, arguments included.

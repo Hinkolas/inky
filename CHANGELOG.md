@@ -1,5 +1,22 @@
 # Changelog
 
+## Unreleased
+
+### Added
+
+- Search Files, a command with a screen of its own: files and folders by
+  name, with a preview of the selected one and what the Spotlight index knows
+  about it. With nothing typed it lists what you opened lately. A menu, or
+  Tab, narrows it down to folders, documents, images, videos, audio or code.
+  Return opens a file, ⌘↵ shows it in Finder, ⌘C copies it and ⇧⌘C its path.
+  What to search for can be typed along in the search, and the command can be
+  chosen as a fallback.
+
+### Changed
+
+- Files are found by the words of their name in any order: “watcher folder”
+  finds `FolderWatcher.swift`.
+
 ## 0.1.0-alpha.6 — 2026-11-12
 
 Copying a long text or a large image, and installing an application, no
