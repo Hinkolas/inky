@@ -186,6 +186,10 @@ public final class SearchIndex {
         sources[id]?.isOpen = true
     }
 
+    func isOpen(_ id: String) -> Bool {
+        sources[id]?.isOpen ?? false
+    }
+
     // MARK: - Reading
 
     public func count(of source: String) -> Int {
@@ -294,6 +298,9 @@ public struct SourceIndex {
     }
 
     public var count: Int { index.count(of: source) }
+
+    /// Whether changes are taken. They are not while the module is off.
+    public var isOpen: Bool { index.isOpen(source) }
 
     /// What the source last kept with its items, see `SearchIndex.Batch.state`.
     public var state: Data? { index.state(of: source) }

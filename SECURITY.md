@@ -46,6 +46,16 @@ version before reporting a problem that may already have been fixed.
   once cleared, neither file keeps what was typed.
 - Accessibility access allows selected-text reading and simulated ⌘V. Automation
   access supports commands sent to Finder and other system applications.
+- Contacts are read only after the user allowed it in Settings → Contacts:
+  names, nicknames, companies, email addresses and phone numbers. They are
+  held in memory while Inky runs and are not written to disk. Switching
+  Contacts off, or refusing access, forgets them.
+- Search Files reads the selected file to show it. In Desktop, Documents and
+  Downloads, macOS asks first. The list and the details come from the
+  Spotlight index.
+- The search index, `index.sqlite` in the same folder, keeps the items of
+  sources that ask for it to be kept, readable by the account only and not
+  encrypted. No part of Inky keeps anything there yet.
 - Uninstalling uses name and bundle-identifier heuristics. Review every proposed
   file, especially shared application data. Chosen files go to the Trash;
   Empty Trash is a separate, confirmed, permanent action.

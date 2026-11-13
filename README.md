@@ -65,6 +65,9 @@ pre-release you downloaded starts on Beta.
   command a hotkey: launch an app, lock the screen, open a folder.
 - **Fallback commands.** Send a search on to a web search or another command
   when nothing was found.
+- **Contacts.** People and companies from your contacts, by name, nickname,
+  company or email address: open them in Contacts, write to them or call.
+  Inky asks before it reads them, under Settings → Contacts.
 - **File search.** Files and folders from the Spotlight index, below the
   other results. Search Files shows more of them on a screen of its own, with
   a preview and details, and what you opened lately while nothing is typed.
@@ -113,6 +116,9 @@ chosen under Settings → General.
 > confidential. A password copied from anywhere else cannot be told apart, and
 > is kept without encryption. Turn the clipboard history off in Settings if
 > that does not suit you.
+
+Your contacts are read only once you allowed it, and are held in memory while
+Inky runs: nothing of them is written to disk.
 
 To keep what other apps copy, Inky needs to be allowed under System Settings →
 Privacy & Security → Paste from Other Apps. To paste for you it presses ⌘V,

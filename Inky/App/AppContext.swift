@@ -13,6 +13,7 @@ final class AppContext {
     let inputHistory: InputHistory
     let launcher: LauncherController
     let fileModule = FileModule()
+    let contacts: ContactsModule
     let updates = Updates()
 
     /// Called when the commands that can be run, or their hotkeys, may have
@@ -39,11 +40,17 @@ final class AppContext {
         // And it has a pasteboard to itself: what the user copies is not
         // read, and what it copies does not replace it.
         let pasteboard = DebugLaunch.dataDirectory == nil ? NSPasteboard.general : NSPasteboard.withUniqueName()
+        // And contacts that are made up, so that macOS never asks to read
+        // the user's on its account.
+        contacts = DebugLaunch.dataDirectory == nil
+            ? ContactsModule()
+            : ContactsModule(reader: ContactSamples(access: DebugLaunch.contactsAccess))
         #else
         let directory = AppSupport.directory
         let caches = AppSupport.cacheDirectory
         uninstaller = ApplicationUninstaller()
         let pasteboard = NSPasteboard.general
+        contacts = ContactsModule()
         #endif
         clipboard = ClipboardHistory(
             store: ClipboardStore(directory: directory.appendingPathComponent("Clipboard", isDirectory: true)),
@@ -124,6 +131,7 @@ final class AppContext {
                 clipboardModule,
                 SystemModule(),
                 applications,
+                contacts,
                 calculator,
                 TimeModule(),
                 ColorModule(usage: usage),
