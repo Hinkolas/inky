@@ -1,5 +1,5 @@
 #if DEBUG
-import Foundation
+import AppKit
 import InkyCore
 
 /// Made-up contacts, for looking at how they are found without anyone's
@@ -55,7 +55,8 @@ struct ContactSamples: ContactsReading {
                 organization: person.company,
                 emails: person.email.isEmpty ? [] : [person.email],
                 phones: person.phone.isEmpty ? [] : [person.phone],
-                groups: person.groups
+                groups: person.groups,
+                hasPicture: Self.pictured.contains(offset)
             )
         }
         records.append(ContactRecord(
@@ -63,6 +64,36 @@ struct ContactSamples: ContactsReading {
             emails: ["office@thompson-charter.example"], phones: ["+49 381 555 0100"], groups: ["Harbor"]
         ))
         return records
+    }
+
+    /// The ones that have a picture: a photo, and one that is see-through
+    /// around a face, as a Memoji is.
+    private static let pictured: Set<Int> = [0, 1, 3, 5]
+
+    func picture(of id: String) async -> Data? {
+        guard let offset = Self.people.indices.first(where: { Self.id($0) == id }), Self.pictured.contains(offset) else { return nil }
+        let side = 160
+        guard let bitmap = NSBitmapImageRep(
+            bitmapDataPlanes: nil, pixelsWide: side, pixelsHigh: side, bitsPerSample: 8, samplesPerPixel: 4,
+            hasAlpha: true, isPlanar: false, colorSpaceName: .deviceRGB, bytesPerRow: 0, bitsPerPixel: 0
+        ) else { return nil }
+        NSGraphicsContext.saveGraphicsState()
+        NSGraphicsContext.current = NSGraphicsContext(bitmapImageRep: bitmap)
+        let frame = NSRect(x: 0, y: 0, width: side, height: side)
+        let isCutOut = offset == 1
+        if !isCutOut {
+            let skies: [[NSColor]] = [[.systemTeal, .systemIndigo], [.systemOrange, .systemPink], [.systemGreen, .systemTeal]]
+            NSGradient(colors: skies[offset % skies.count])?.draw(in: frame, angle: 70)
+        }
+        // A head and shoulders.
+        NSColor(calibratedRed: 0.93, green: 0.78, blue: 0.64, alpha: 1).setFill()
+        NSBezierPath(ovalIn: NSRect(x: 50, y: 62, width: 60, height: 68)).fill()
+        NSColor(calibratedWhite: isCutOut ? 0.25 : 0.95, alpha: 1).setFill()
+        NSBezierPath(ovalIn: NSRect(x: 22, y: -62, width: 116, height: 116)).fill()
+        NSColor(calibratedRed: 0.3, green: 0.2, blue: 0.14, alpha: 1).setFill()
+        NSBezierPath(ovalIn: NSRect(x: 46, y: 104, width: 68, height: 34)).fill()
+        NSGraphicsContext.restoreGraphicsState()
+        return bitmap.representation(using: .png, properties: [:])
     }
 
     func details(of id: String) async -> ContactDetails? {

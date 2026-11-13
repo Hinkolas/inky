@@ -24,6 +24,10 @@ private final class StubContacts: ContactsReading, @unchecked Sendable {
         return records
     }
 
+    func picture(of id: String) async -> Data? {
+        records.contains { $0.id == id && $0.hasPicture } ? Data("picture of \(id)".utf8) : nil
+    }
+
     func details(of id: String) async -> ContactDetails? {
         records.first { $0.id == id }.map { record in
             ContactDetails(id: id, jobTitle: "Harbor Master", emails: record.emails.map { .init("work", $0) })
@@ -65,6 +69,32 @@ private final class StubContacts: ContactsReading, @unchecked Sendable {
         record.groups = ["Harbor", "Sailing Club"]
         let item = try #require(ContactsModule.item(for: record))
         #expect(ContactsModule.groups(of: item) == ["Harbor", "Sailing Club"])
+    }
+
+    @Test func aContactWithAPictureSaysWhereItIs() async throws {
+        let plain = try #require(ContactsModule.item(for: thomas))
+        #expect(plain.icon == .symbol("person.fill", tint: .orange))
+
+        var record = thomas
+        record.hasPicture = true
+        let pictured = try #require(ContactsModule.item(for: record))
+        // Not the picture itself: who has it, and what stands in for it.
+        #expect(pictured.icon == .picture(source: "contacts", id: "1:ABPerson", fallback: .symbol("person.fill", tint: .orange)))
+
+        let reader = StubContacts([record, ContactRecord(id: "2", name: "Mara Okafor")])
+        let (engine, _) = await makeEngine(reader)
+        let found = try #require(engine.results(for: "thomas").first?.items.first)
+        #expect(found.icon == pictured.icon)
+        #expect(await engine.picture(of: "1:ABPerson", from: "contacts") == Data("picture of 1:ABPerson".utf8))
+        #expect(await engine.picture(of: "2", from: "contacts") == nil)
+        #expect(await engine.picture(of: "1:ABPerson", from: "nobody") == nil)
+
+        // Not once Inky may not read the contacts, or the module is off.
+        reader.access = .denied
+        #expect(await engine.picture(of: "1:ABPerson", from: "contacts") == nil)
+        reader.access = .allowed
+        engine.isEnabled = { _ in false }
+        #expect(await engine.picture(of: "1:ABPerson", from: "contacts") == nil)
     }
 
     @Test func hasACommandThatShowsThemAll() async throws {

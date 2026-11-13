@@ -145,6 +145,17 @@ final class AppContext {
         )
         engine.isEnabled = { [preferences] id in preferences.isEnabled(id) }
 
+        // The pictures of what the index holds, such as a contact's photo,
+        // are asked of their source when they are shown, and asked again
+        // when its items changed.
+        let pictures = PictureStore { [engine] source, id in await engine.picture(of: id, from: source) }
+        IconCache.shared.pictures = pictures
+        let indexDidChange = engine.index.onChange
+        engine.index.onChange = {
+            indexDidChange?()
+            pictures.invalidate()
+        }
+
         launcher = LauncherController(
             engine: engine, quicklinks: quicklinks, uninstaller: uninstaller, clipboard: clipboard, history: inputHistory
         )
