@@ -138,7 +138,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
 /// `--show`, `--pin`, `--quiet`, `--key`, `--query <text>`,
 /// `--keys "tab a cmd+k hide show toggle clipboard run:<command id>"`, `--key-delay <milliseconds>`,
 /// `--run <command id>`, `--settings [pane]`, `--search <text>`, `--onboarding [step]`, `--new-quicklink`, `--quicklinks`, `--uninstall [application]`,
-/// `--clipboard [filter]`, `--clipboard-samples`, `--files [name]`,
+/// `--clipboard [filter]`, `--clipboard-samples`, `--files [name]`, `--contacts notAsked|denied`,
 /// `--appearance light|dark`, `--backdrop light|dark`, `--data <folder>`,
 /// `--motion full|reduced|off`, `--slow <factor>`, `--resume <seconds>`.
 ///
@@ -147,7 +147,8 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
 /// to wait for, `wait` pauses for a second.
 ///
 /// With `--data` the file search only looks in the folder `Files` in there,
-/// so a run neither lists nor reads the user's own files.
+/// so a run neither lists nor reads the user's own files, and the contacts
+/// are made-up ones, so macOS is not asked for the user's.
 ///
 /// Where the keyboard ends up depends on the launcher being the key window,
 /// which a quiet run is not. `--quiet --key` takes the keyboard while still
@@ -171,6 +172,15 @@ enum DebugLaunch {
         let directory = URL(fileURLWithPath: path, isDirectory: true)
         try? FileManager.default.createDirectory(at: directory, withIntermediateDirectories: true)
         return directory
+    }
+
+    /// What a run with data of its own may do with its made-up contacts.
+    static var contactsAccess: ContactsAccess {
+        switch value(after: "--contacts") {
+        case "notAsked": .notAsked
+        case "denied": .denied
+        default: .allowed
+        }
     }
 
     private static func value(after flag: String) -> String? {

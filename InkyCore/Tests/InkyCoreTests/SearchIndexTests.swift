@@ -290,6 +290,18 @@ private final class StubSource: SearchableSource {
         #expect(titles(engine.results(for: "key sam")) == ["Sam Finder"])
     }
 
+    @Test func findsItemsOnlyByAMatchThatIsNotScattered() async {
+        let people = StubSource(id: "people", titles: ["Richard Hart", "Chiara Romano"])
+        people.commands = ["Chiara Romano"]
+        let engine = SearchEngine(modules: [people], usage: UsageStore(fileURL: nil))
+        await engine.reloadAll()
+
+        // The letters are in both names. A command is found by them
+        // wherever they are, an item where they begin a word.
+        let found = engine.results(for: "har").flatMap(\.items)
+        #expect(found.map(\.id) == ["people:Richard Hart", "people:command:Chiara Romano"])
+    }
+
     @Test func itemsAreNotCommands() async throws {
         let people = StubSource(id: "people", titles: ["Thomas Becker"])
         people.commands = ["Thesaurus"]

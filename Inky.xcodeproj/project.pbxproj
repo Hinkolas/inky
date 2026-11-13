@@ -211,6 +211,7 @@
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.productivity";
 				INFOPLIST_KEY_LSUIElement = YES;
 				INFOPLIST_KEY_NSAppleEventsUsageDescription = "Inky sends commands to other apps for actions such as Restart, Empty Trash and Toggle Dark Mode.";
+				INFOPLIST_KEY_NSContactsUsageDescription = "Inky finds people in your contacts by name when you search. They stay on your Mac.";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/../Frameworks",
@@ -246,6 +247,7 @@
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.productivity";
 				INFOPLIST_KEY_LSUIElement = YES;
 				INFOPLIST_KEY_NSAppleEventsUsageDescription = "Inky sends commands to other apps for actions such as Restart, Empty Trash and Toggle Dark Mode.";
+				INFOPLIST_KEY_NSContactsUsageDescription = "Inky finds people in your contacts by name when you search. They stay on your Mac.";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/../Frameworks",

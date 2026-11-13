@@ -515,6 +515,8 @@ struct ModulePane: View {
                 QuicklinkSettings(context: context)
             case "clipboard":
                 ClipboardSettings(preferences: preferences, history: context.clipboard)
+            case "contacts":
+                ContactsSettings(context: context)
             default:
                 EmptyView()
             }
@@ -607,6 +609,57 @@ private struct WebUnitSettings: View {
             )
         } footer: {
             Text("For the units of a web page, as in “2rem in px”. An em is taken to be as large as a rem.")
+        }
+    }
+}
+
+/// Whether Inky may read the contacts, and how many it finds.
+private struct ContactsSettings: View {
+    let context: AppContext
+    @State private var access = ContactsAccess.notAsked
+
+    var body: some View {
+        let isOn = context.preferences.isEnabled(context.contacts.id)
+        let count = context.engine.index.count(of: context.contacts.id)
+
+        Section {
+            switch access {
+            case .allowed:
+                LabeledContent("Found in the search") {
+                    Text(isOn ? (count == 1 ? "1 contact" : "\(count.formatted()) contacts") : "None")
+                        .foregroundStyle(.secondary)
+                }
+            case .notAsked:
+                LabeledContent {
+                    Button("Allow Access…") {
+                        Task {
+                            await context.contacts.requestAccess()
+                            access = context.contacts.access
+                        }
+                    }
+                    .disabled(!isOn)
+                } label: {
+                    Text("Inky has not asked for your contacts yet")
+                }
+            case .denied:
+                LabeledContent {
+                    Button("Open Privacy Settings") {
+                        if let url = URL(string: "x-apple.systempreferences:com.apple.preference.security?Privacy_Contacts") {
+                            NSWorkspace.shared.open(url)
+                        }
+                    }
+                } label: {
+                    Label("Inky may not read your contacts", systemImage: "exclamationmark.triangle.fill")
+                        .symbolRenderingMode(.multicolor)
+                }
+            }
+        } footer: {
+            Text("People and companies are found by name, nickname, company and email address. Inky reads them into memory while it runs: nothing of them is written to disk or sent anywhere, and switching this off forgets them.")
+        }
+        .onAppear {
+            access = context.contacts.access
+            // Allowed or refused in System Settings since they were read.
+            context.contacts.refreshAccess()
         }
     }
 }

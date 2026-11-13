@@ -12,6 +12,11 @@
   What to search for can be typed along in the search, and the command can be
   chosen as a fallback.
 
+- Contacts: people and companies from your contacts are found in the search
+  by name, nickname, company or email address. Return opens one in Contacts,
+  ⌘↵ writes an email, and ⌘K lists the rest: message, call, copy. Inky reads
+  your contacts only after you allowed it under Settings → Contacts, keeps
+  them in memory, and writes nothing of them to disk.
 - A search index for what is found without being a command, which modules,
   and later extensions, write their items to. Such items are ranked with
   everything else, but do not appear among the commands, and of each source

@@ -28,6 +28,11 @@ public final class SearchEngine {
     @ObservationIgnored public var suggestionCount = 6
     /// Matches weaker than this are noise and are dropped.
     @ObservationIgnored public var minimumScore = 0.3
+    /// What an item of the index has to match by. Commands are few, and
+    /// worth finding by a loose abbreviation. Items are many, and a few
+    /// letters are somewhere in most names: those are only found where what
+    /// is typed begins a word, or is nearly in one piece.
+    @ObservationIgnored public var itemMinimumScore = 0.55
 
     private struct Entry {
         let item: ResultItem
@@ -208,7 +213,7 @@ public final class SearchEngine {
         for source in sources where isEnabled(source.id) {
             var found: [(item: SearchableItem, score: Double)] = []
             for entry in index.entries(of: source.id) ?? [:].values where !entry.item.isExpired(at: now) {
-                guard let match = match(entry.title, entry.keywords, pattern, compact), match >= minimumScore else { continue }
+                guard let match = match(entry.title, entry.keywords, pattern, compact), match >= itemMinimumScore else { continue }
                 let id = Self.resultID(of: entry.item.id, from: source.id)
                 found.append((entry.item, match + usage.boost(for: id, query: query)))
             }
