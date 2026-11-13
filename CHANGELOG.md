@@ -16,6 +16,9 @@
 
 - Files are found by the words of their name in any order: “watcher folder”
   finds `FolderWatcher.swift`.
+- Looking files up no longer holds the launcher up. Asking Spotlight about
+  the files it found took up to 50 ms a search, during which nothing typed
+  was shown.
 
 ## 0.1.0-alpha.6 — 2026-11-12
 
