@@ -107,9 +107,16 @@ public protocol SearchableSource: Module {
     /// What can be done with an item. The first action runs on Return, the
     /// second on Command-Return. Asked only for the items a search lists.
     func actions(for item: SearchableItem) -> [Action]
+
+    /// The picture of an item whose icon is `Icon.picture`, as the data of
+    /// an image file, or nil if it has none. Asked only for the items that
+    /// are on screen, so that an item need not carry its picture: a
+    /// thousand of them are a lot to hold, and to keep.
+    func picture(for itemID: String) async -> Data?
 }
 
 public extension SearchableSource {
     var indexVersion: Int { 1 }
     var resultLimit: Int { 5 }
+    func picture(for itemID: String) async -> Data? { nil }
 }

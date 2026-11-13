@@ -14,6 +14,9 @@ public struct ContactRecord: Sendable, Hashable {
     public var phones: [String]
     /// The names of the groups the contact is in.
     public var groups: [String]
+    /// Whether the contact has a picture. The picture itself is read when
+    /// it is shown.
+    public var hasPicture: Bool
 
     public init(
         id: String,
@@ -23,7 +26,8 @@ public struct ContactRecord: Sendable, Hashable {
         isOrganization: Bool = false,
         emails: [String] = [],
         phones: [String] = [],
-        groups: [String] = []
+        groups: [String] = [],
+        hasPicture: Bool = false
     ) {
         self.id = id
         self.name = name
@@ -33,6 +37,7 @@ public struct ContactRecord: Sendable, Hashable {
         self.emails = emails
         self.phones = phones
         self.groups = groups
+        self.hasPicture = hasPicture
     }
 }
 
@@ -60,8 +65,6 @@ public struct ContactDetails: Sendable, Hashable {
     public var links: [Entry]
     /// With or without the year.
     public var birthday: DateComponents?
-    /// The contact's picture, small, as an image file's data.
-    public var picture: Data?
 
     public init(
         id: String,
@@ -71,8 +74,7 @@ public struct ContactDetails: Sendable, Hashable {
         emails: [Entry] = [],
         addresses: [Entry] = [],
         links: [Entry] = [],
-        birthday: DateComponents? = nil,
-        picture: Data? = nil
+        birthday: DateComponents? = nil
     ) {
         self.id = id
         self.jobTitle = jobTitle
@@ -82,7 +84,6 @@ public struct ContactDetails: Sendable, Hashable {
         self.addresses = addresses
         self.links = links
         self.birthday = birthday
-        self.picture = picture
     }
 }
 
@@ -105,6 +106,9 @@ public protocol ContactsReading: Sendable {
     /// More about one contact, or nil if it is not there any longer. Not
     /// called on the main thread.
     func details(of id: String) async -> ContactDetails?
+    /// A contact's picture, small, as the data of an image file. Not called
+    /// on the main thread.
+    func picture(of id: String) async -> Data?
 }
 
 /// The contacts of the Mac.
@@ -134,6 +138,7 @@ public final class SystemContacts: ContactsReading, @unchecked Sendable {
             CNContactOrganizationNameKey as NSString,
             CNContactEmailAddressesKey as NSString,
             CNContactPhoneNumbersKey as NSString,
+            CNContactImageDataAvailableKey as NSString,
         ]
         // Which groups a contact is in, a contact does not say. Each group
         // is asked for who is in it.
@@ -158,7 +163,8 @@ public final class SystemContacts: ContactsReading, @unchecked Sendable {
                 isOrganization: contact.contactType == .organization,
                 emails: contact.emailAddresses.map { $0.value as String },
                 phones: contact.phoneNumbers.map(\.value.stringValue),
-                groups: groups[contact.identifier] ?? []
+                groups: groups[contact.identifier] ?? [],
+                hasPicture: contact.imageDataAvailable
             ))
         }
         return records
@@ -167,7 +173,7 @@ public final class SystemContacts: ContactsReading, @unchecked Sendable {
     public func details(of id: String) async -> ContactDetails? {
         let keys = [
             CNContactJobTitleKey, CNContactDepartmentNameKey, CNContactPhoneNumbersKey, CNContactEmailAddressesKey,
-            CNContactPostalAddressesKey, CNContactUrlAddressesKey, CNContactBirthdayKey, CNContactThumbnailImageDataKey,
+            CNContactPostalAddressesKey, CNContactUrlAddressesKey, CNContactBirthdayKey,
         ] as [NSString]
         guard let contact = try? store.unifiedContact(withIdentifier: id, keysToFetch: keys) else { return nil }
 
@@ -186,9 +192,13 @@ public final class SystemContacts: ContactsReading, @unchecked Sendable {
                 return .init(label(address.label), lines.joined(separator: ", "))
             },
             links: contact.urlAddresses.map { .init(label($0.label), $0.value as String) },
-            birthday: contact.birthday,
-            picture: contact.thumbnailImageData
+            birthday: contact.birthday
         )
+    }
+
+    public func picture(of id: String) async -> Data? {
+        let contact = try? store.unifiedContact(withIdentifier: id, keysToFetch: [CNContactThumbnailImageDataKey as NSString])
+        return contact?.thumbnailImageData
     }
 }
 
@@ -272,6 +282,11 @@ public final class ContactsModule: SearchableSource {
         return await reader.details(of: id)
     }
 
+    public func picture(for itemID: String) async -> Data? {
+        guard reader.access == .allowed else { return nil }
+        return await reader.picture(of: itemID)
+    }
+
     /// Has macOS ask whether Inky may read the contacts, and reads them if
     /// it may. Call it from a window of Inky's own: that is where macOS
     /// shows the question.
@@ -320,6 +335,7 @@ public final class ContactsModule: SearchableSource {
         // What tells the contact from another of the same name.
         let subtitle = ([organization] + contact.emails + contact.phones).first { !$0.isEmpty && $0 != title }
 
+        let symbol = Icon.symbol(contact.isOrganization ? "building.2.fill" : "person.fill", tint: .orange)
         var info = ["name": title]
         if !organization.isEmpty, organization != title { info["organization"] = organization }
         if let email = contact.emails.first { info["email"] = email }
@@ -333,7 +349,9 @@ public final class ContactsModule: SearchableSource {
             // Not the phone numbers: digits that are typed are mostly sums,
             // and would find numbers that only hold them in that order.
             keywords: ([contact.nickname, organization] + contact.emails).filter { !$0.isEmpty && $0 != title },
-            icon: contact.isOrganization ? .symbol("building.2.fill", tint: .orange) : .symbol("person.fill", tint: .orange),
+            // The picture is not kept with the item. Its source is asked
+            // for it when the item is shown.
+            icon: contact.hasPicture ? .picture(source: moduleID, id: contact.id, fallback: symbol) : symbol,
             kind: "Contact",
             info: info
         )

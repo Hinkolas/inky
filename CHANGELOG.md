@@ -16,7 +16,8 @@
   by name, nickname, company or email address. Return opens one in Contacts,
   ⌘↵ writes an email, and ⌘K lists the rest: message, call, copy. Inky reads
   your contacts only after you allowed it under Settings → Contacts, keeps
-  them in memory, and writes nothing of them to disk.
+  them in memory, and writes nothing of them to disk. A contact that has a
+  picture is shown by it.
 - Search Contacts, a command with a screen of its own: every contact by
   name, narrowed down to people, companies or one of your groups in a
   sidebar, with the numbers, addresses and birthday of the selected one and

@@ -84,6 +84,19 @@ struct IconView: View {
             .task(id: host) {
                 if loadsFavicon { IconCache.shared.favicons?.load(host) }
             }
+        case .picture(let source, let id, let fallback):
+            let pictures = IconCache.shared.pictures
+            Group {
+                if let image = pictures?.image(of: id, from: source) {
+                    PictureCircle(image: image, size: size, isSelected: outline > 0)
+                } else {
+                    IconView(icon: fallback, size: size, shape: shape, outline: outline)
+                }
+            }
+            // Asked for again when the pictures may have changed.
+            .task(id: PictureStore.Request(source: source, id: id, generation: pictures?.generation ?? 0)) {
+                pictures?.request(id, from: source)
+            }
         case .swatch(let red, let green, let blue, let alpha):
             tile
                 .fill(Color(.sRGB, red: red, green: green, blue: blue, opacity: alpha))
@@ -131,11 +144,103 @@ private struct Checkerboard: View {
     }
 }
 
+/// A picture of someone, round. What is see-through in it, as around a
+/// Memoji, shows a quiet gray, as it does in Contacts.
+struct PictureCircle: View {
+    let image: NSImage
+    var size: CGFloat = 24
+    var isSelected = false
+
+    var body: some View {
+        Circle()
+            .fill(LinearGradient(colors: [Color(white: 0.8), Color(white: 0.62)], startPoint: .top, endPoint: .bottom))
+            .overlay {
+                Image(nsImage: image)
+                    .resizable()
+                    .interpolation(.high)
+                    .aspectRatio(contentMode: .fill)
+            }
+            .frame(width: size, height: size)
+            .clipShape(Circle())
+            .overlay {
+                Circle().strokeBorder(isSelected ? Color.white.opacity(0.5) : Color.primary.opacity(0.12))
+            }
+    }
+}
+
+/// The pictures the sources of the search index have of their items, as
+/// far as they were shown: a contact's photo, say.
+///
+/// A picture is asked of its source when a row with it is drawn, and held
+/// in memory while there is room. Nothing of it is written to disk. Read
+/// while a view draws, this makes the view draw again when the picture
+/// arrives.
+@Observable
+final class PictureStore {
+    /// What a view asks for a picture by. It changes, and the view asks
+    /// again, when the pictures may have.
+    struct Request: Hashable {
+        var source: String
+        var id: String
+        var generation: Int
+    }
+
+    private struct Key: Hashable {
+        var source: String
+        var id: String
+    }
+
+    /// Goes up when the items changed, and their pictures may have.
+    private(set) var generation = 0
+    private var images: [Key: NSImage] = [:]
+    /// What was asked for since the items last changed, there or not.
+    @ObservationIgnored private var asked: Set<Key> = []
+    @ObservationIgnored private let load: (_ source: String, _ id: String) async -> Data?
+
+    /// More than are ever on screen at once.
+    private static let limit = 300
+
+    init(load: @escaping (_ source: String, _ id: String) async -> Data?) {
+        self.load = load
+    }
+
+    func image(of id: String, from source: String) -> NSImage? {
+        images[Key(source: source, id: id)]
+    }
+
+    /// Asks the source for the picture, once until the items change.
+    func request(_ id: String, from source: String) {
+        let key = Key(source: source, id: id)
+        guard !asked.contains(key) else { return }
+        asked.insert(key)
+        let generation = generation
+        Task {
+            let image = await load(source, id).flatMap(NSImage.init(data:))
+            // Asked again meanwhile: that answer is the one that counts.
+            guard generation == self.generation else { return }
+            if image != nil, images.count >= Self.limit {
+                images = [:]
+                asked = [key]
+            }
+            images[key] = image
+        }
+    }
+
+    /// Call when the items of the index changed. The pictures that are
+    /// shown stay until they are asked for again, so that nothing blinks.
+    func invalidate() {
+        asked = []
+        generation += 1
+    }
+}
+
 final class IconCache {
     static let shared = IconCache()
 
     /// Set by the app. Without it, websites show their fallback.
     var favicons: FaviconStore?
+    /// Set by the app. Without it, items show the fallback of their picture.
+    var pictures: PictureStore?
 
     private let cache = NSCache<NSString, NSImage>()
 

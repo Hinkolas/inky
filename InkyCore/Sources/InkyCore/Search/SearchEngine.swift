@@ -367,6 +367,13 @@ public final class SearchEngine {
         sources.first { $0.id == sourceID && isEnabled($0.id) }.map { resultItem(for: item, of: $0) }
     }
 
+    /// The picture a source has of one of its items, for an `Icon.picture`.
+    /// Nil if there is none, or the module is not a source or switched off.
+    public func picture(of itemID: String, from sourceID: String) async -> Data? {
+        guard let source = sources.first(where: { $0.id == sourceID && isEnabled($0.id) }) else { return nil }
+        return await source.picture(for: itemID)
+    }
+
     /// An item of the index as a row of the launcher, with what its source
     /// offers to do with it.
     private func resultItem(for item: SearchableItem, of source: any SearchableSource) -> ResultItem {

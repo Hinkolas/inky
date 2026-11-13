@@ -5,7 +5,8 @@ import Testing
 private func item(_ id: String, _ title: String? = nil, domain: String? = nil, expires: Date? = nil) -> SearchableItem {
     SearchableItem(
         id: id, domain: domain, title: title ?? id, subtitle: "sub", keywords: ["key \(id)"],
-        icon: .favicon(host: "example.com", fallback: .symbol("star", tint: .blue)), kind: "Thing",
+        icon: .picture(source: "source", id: id, fallback: .favicon(host: "example.com", fallback: .symbol("star", tint: .blue))),
+        kind: "Thing",
         expires: expires, info: ["a": "b"]
     )
 }

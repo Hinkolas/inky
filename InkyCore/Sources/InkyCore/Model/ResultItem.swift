@@ -17,6 +17,11 @@ public indirect enum Icon: Sendable, Hashable, Codable {
     /// A tile filled with one color: its red, green and blue in sRGB, and
     /// how see-through it is, each from 0 to 1.
     case swatch(red: Double, green: Double, blue: Double, alpha: Double)
+    /// The picture the source `source` has of its item `id`, such as a
+    /// contact's photo, see `SearchableSource.picture(for:)`. It is drawn
+    /// round, as pictures of people are. `fallback` is drawn until the
+    /// picture is there, and when there is none after all.
+    case picture(source: String, id: String, fallback: Icon)
 }
 
 /// An input a result asks for before it can run, shown inline in the search bar.

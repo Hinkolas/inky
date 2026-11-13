@@ -98,8 +98,6 @@ final class ContactBrowser {
     private(set) var lines: [Line] = []
     /// More about the selected contact, once it is read.
     private(set) var details: ContactDetails?
-    /// The selected contact's picture, if it has one.
-    private(set) var picture: NSImage?
 
     @ObservationIgnored private var entries: [Entry] = []
     @ObservationIgnored private var generation = 0
@@ -223,7 +221,6 @@ final class ContactBrowser {
         guard let contact = selected else {
             generation += 1
             details = nil
-            picture = nil
             return
         }
         guard again || details?.id != contact.id else { return }
@@ -233,7 +230,6 @@ final class ContactBrowser {
             let details = await module.details(of: contact.id)
             guard generation == self.generation else { return }
             self.details = details
-            picture = details?.picture.flatMap(NSImage.init(data:))
         }
     }
 }
@@ -430,7 +426,7 @@ struct ContactBrowserScreen: View {
         let details = browser.details(of: contact)
 
         HStack(spacing: 12) {
-            ContactAvatar(item: contact, picture: details == nil ? nil : browser.picture, size: 52)
+            ContactAvatar(item: contact, size: 52)
             VStack(alignment: .leading, spacing: 3) {
                 Text(contact.title)
                     .font(.system(size: 16, weight: .semibold))
@@ -472,7 +468,6 @@ struct ContactBrowserScreen: View {
 /// with on a color of its own. A company has a building.
 struct ContactAvatar: View {
     let item: SearchableItem
-    var picture: NSImage?
     var size: CGFloat = 30
     var isSelected = false
 
@@ -480,11 +475,12 @@ struct ContactAvatar: View {
     private static let colors: [Color] = [.orange, .purple, .green, .blue, .pink, .teal, .indigo, .red]
 
     var body: some View {
+        let pictures = IconCache.shared.pictures
+        // The picture its item says its source has, as the search shows it.
+        let asked: (source: String, id: String)? = if case .picture(let source, let id, _) = item.icon { (source, id) } else { nil }
         Group {
-            if let picture {
-                Image(nsImage: picture)
-                    .resizable()
-                    .aspectRatio(contentMode: .fill)
+            if let asked, let picture = pictures?.image(of: asked.id, from: asked.source) {
+                PictureCircle(image: picture, size: size, isSelected: isSelected)
             } else {
                 Circle()
                     .fill(color.gradient)
@@ -498,12 +494,14 @@ struct ContactAvatar: View {
                         }
                     }
                     .foregroundStyle(.white)
+                    .frame(width: size, height: size)
+                    .overlay {
+                        if isSelected { Circle().strokeBorder(.white.opacity(0.5)) }
+                    }
             }
         }
-        .frame(width: size, height: size)
-        .clipShape(Circle())
-        .overlay {
-            if isSelected { Circle().strokeBorder(.white.opacity(0.5)) }
+        .task(id: PictureStore.Request(source: asked?.source ?? "", id: asked?.id ?? "", generation: pictures?.generation ?? 0)) {
+            if let asked { pictures?.request(asked.id, from: asked.source) }
         }
         .accessibilityHidden(true)
     }
