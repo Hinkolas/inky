@@ -1,4 +1,4 @@
-import Foundation
+import AppKit
 
 /// A color, as a screen shows it.
 ///
@@ -25,6 +25,17 @@ public struct ColorValue: Sendable, Equatable {
         self.blue = blue
         self.alpha = alpha
         self.notation = notation
+    }
+
+    /// A color as AppKit has it, such as one picked from the screen. A
+    /// color of a wider space than sRGB, as on a Display P3 screen, keeps
+    /// what sRGB cannot show. Nil for what has no such color, a pattern.
+    public init?(nsColor: NSColor) {
+        guard let color = nsColor.usingColorSpace(.extendedSRGB) else { return nil }
+        self.init(
+            red: Double(color.redComponent), green: Double(color.greenComponent), blue: Double(color.blueComponent),
+            alpha: Double(color.alphaComponent), notation: .hex
+        )
     }
 
     /// Whether a screen that shows sRGB shows it as it is.

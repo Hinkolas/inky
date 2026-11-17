@@ -1,9 +1,12 @@
-import Foundation
+import AppKit
 
 /// Shows a color that is typed, and writes it the other ways there are.
 ///
 /// "#ff6363" answers with the way of writing that is copied most from that
 /// kind of color; the others are a ⌘K away. "#ff6363 in hsl" asks for one.
+///
+/// Pick Color copies a color from anywhere on the screen, written the way
+/// the settings say.
 @MainActor
 public final class ColorModule: Module {
     public let id = "color"
@@ -14,12 +17,45 @@ public final class ColorModule: Module {
     )
     public var onChange: (@MainActor () -> Void)?
 
+    /// Set by the app to put the launcher away and show the loupe.
+    public var onPick: (@MainActor () -> Void)?
+    /// How a picked color is written when it is copied.
+    public var pickFormat: ColorValue.Format = .hex
+
+    public static let pickID = "color:pick"
+
     private let usage: UsageStore?
 
     /// With `usage`, what is copied is remembered, and the way of writing
     /// that is copied most comes first.
     public init(usage: UsageStore? = nil) {
         self.usage = usage
+    }
+
+    public func candidates() async -> [ResultItem] {
+        [
+            ResultItem(
+                id: Self.pickID,
+                title: "Pick Color",
+                icon: .symbol("eyedropper", tint: .pink),
+                kind: "Command",
+                keywords: ["Color Picker", "Eyedropper", "Sample Color", "Screen Color"],
+                actions: [
+                    Action("Pick Color", symbol: "eyedropper") { [weak self] _ in
+                        self?.onPick?()
+                    },
+                ]
+            ),
+        ]
+    }
+
+    /// Copies a color picked from the screen, written the way the settings
+    /// say. Nil if it is not a color a screen shows.
+    public func copy(picked color: NSColor) -> (color: ColorValue, text: String)? {
+        guard let picked = ColorValue(nsColor: color) else { return nil }
+        let text = picked.text(as: pickFormat)
+        Pasteboard.copy(text)
+        return (picked, text)
     }
 
     public func instantResults(for query: String) -> [ResultItem] {

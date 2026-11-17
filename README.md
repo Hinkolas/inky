@@ -56,7 +56,8 @@ pre-release you downloaded starts on Beta.
 - **Time.** `time in tokyo`, `5pm london in berlin`, `monday in 3 weeks`,
   `days until 24 dec`.
 - **Color.** Type `#ff6363` or `oklch(0.7 0.19 23)` to see a color and copy
-  it written another way, from hex and HSL to a color in Swift.
+  it written another way, from hex and HSL to a color in Swift. Pick Color
+  copies a color from anywhere on your screen.
 - **Browser.** Type a web address, such as `amazon.com` or `localhost:3000`,
   and Return opens it in your browser.
 - **Uninstall applications.** Remove an app together with what it left in your

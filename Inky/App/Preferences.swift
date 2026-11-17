@@ -71,6 +71,7 @@ final class Preferences {
     @ObservationIgnored var onFaviconSourceChange: (() -> Void)?
     @ObservationIgnored var onExchangeRateSourceChange: (() -> Void)?
     @ObservationIgnored var onPixelsPerRemChange: (() -> Void)?
+    @ObservationIgnored var onColorPickFormatChange: (() -> Void)?
     @ObservationIgnored var onClipboardRetentionChange: (() -> Void)?
     @ObservationIgnored var onClipboardConcealedChange: (() -> Void)?
     @ObservationIgnored var onHistoryLimitChange: (() -> Void)?
@@ -155,6 +156,14 @@ final class Preferences {
 
     static let pixelsPerRemRange = 1...100
 
+    /// How Pick Color writes the color it copies.
+    var colorPickFormat: ColorValue.Format {
+        didSet {
+            defaults.set(colorPickFormat.rawValue, forKey: Key.colorPickFormat)
+            onColorPickFormatChange?()
+        }
+    }
+
     var fileSearchLimit: Int {
         didSet { defaults.set(fileSearchLimit, forKey: Key.fileSearchLimit) }
     }
@@ -219,6 +228,7 @@ final class Preferences {
         exchangeRateSource = defaults.string(forKey: Key.exchangeRateSource).flatMap(ExchangeRateSource.init) ?? .ecb
         let pixels = defaults.integer(forKey: Key.pixelsPerRem)
         pixelsPerRem = Self.pixelsPerRemRange.contains(pixels) ? pixels : 16
+        colorPickFormat = defaults.string(forKey: Key.colorPickFormat).flatMap(ColorValue.Format.init(rawValue:)) ?? .hex
         fileSearchLimit = defaults.integer(forKey: Key.fileSearchLimit)
         clipboardRetention = defaults.string(forKey: Key.clipboardRetention).flatMap(ClipboardRetention.init) ?? .threeMonths
         clipboardPastes = defaults.bool(forKey: Key.clipboardPastes)
@@ -269,6 +279,7 @@ final class Preferences {
         static let faviconSource = "faviconSource"
         static let exchangeRateSource = "exchangeRateSource"
         static let pixelsPerRem = "pixelsPerRem"
+        static let colorPickFormat = "colorPickFormat"
         static let fileSearchLimit = "fileSearchLimit"
         static let clipboardRetention = "clipboardRetention"
         static let clipboardPastes = "clipboardPastes"
