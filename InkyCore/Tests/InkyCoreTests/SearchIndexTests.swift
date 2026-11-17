@@ -392,7 +392,8 @@ private final class StubSource: SearchableSource {
         #expect(engine.index.count(of: "people") == 0)
         // Nor is anything taken from it while it is off.
         people.index?.index([item("Thomas")])
-        #expect(engine.index.count(of: "people") == 0)
+        let closed = engine.index.count(of: "people")
+        #expect(closed == 0)
 
         enabled = true
         engine.modulesDidChange()
