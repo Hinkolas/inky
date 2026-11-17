@@ -74,6 +74,17 @@ nonisolated struct Motion: Equatable, Sendable {
         animation(.easeOut(duration: 0.16).delay(0.2), reduced: .easeOut(duration: 0.16))
     }
 
+    /// A swatch landing in a toast that grew out of the pointer, with a
+    /// little bounce. Where nothing travels, it is there with the toast.
+    var pop: Animation? {
+        animation(.spring(duration: 0.42, bounce: 0.42).delay(0.06), reduced: nil)
+    }
+
+    /// The words of such a toast, once it is nearly there.
+    var reveal: Animation? {
+        animation(.easeOut(duration: 0.22).delay(0.1), reduced: nil)
+    }
+
     var press: Animation? {
         animation(.easeOut(duration: 0.12), reduced: .easeOut(duration: 0.12))
     }

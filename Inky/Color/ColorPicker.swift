@@ -3,8 +3,8 @@ import InkyCore
 import SwiftUI
 
 /// Picks a color from anywhere on the screen with the loupe of macOS, and
-/// copies it the way the Color module says. A toast at the bottom of the
-/// screen says what was copied.
+/// copies it the way the Color module says. A card beside the pointer says
+/// what was copied.
 ///
 /// The loupe is the system's own: it needs no permission to see the screen,
 /// and Esc puts it away without a color.
@@ -22,13 +22,60 @@ enum ColorPicker {
             Task { @MainActor in
                 Self.sampler = nil
                 guard let color, let copied = module.copy(picked: color) else { return }
-                let shown = copied.color.displayed
-                ScreenToast.show(
-                    "Copied",
-                    detail: copied.text,
-                    swatch: Color(.sRGB, red: shown.red, green: shown.green, blue: shown.blue)
-                )
+                showCopied(copied.color, text: copied.text, format: module.pickFormat)
             }
         }
+    }
+
+    /// Says beside the pointer that `text` was copied, with a swatch of `color`.
+    static func showCopied(_ color: ColorValue, text: String, format: ColorValue.Format) {
+        let shown = color.displayed
+        let swatch = Color(.sRGB, red: shown.red, green: shown.green, blue: shown.blue)
+        ScreenToast.show(CopiedColorCard(swatch: swatch, text: text, format: format))
+    }
+}
+
+/// A swatch of the color, what was copied, and the way it was written.
+///
+/// Where things may travel, the swatch lands in the card with a bounce as
+/// the card grows out of the pointer, and the words follow.
+private struct CopiedColorCard: View {
+    let swatch: Color
+    let text: String
+    let format: ColorValue.Format
+
+    @Environment(\.motion) private var motion
+    @State private var hasLanded = false
+
+    var body: some View {
+        let landed = hasLanded || motion.level != .full
+        HStack(spacing: 11) {
+            RoundedRectangle(cornerRadius: 10, style: .continuous)
+                .fill(swatch)
+                .overlay(
+                    RoundedRectangle(cornerRadius: 10, style: .continuous)
+                        .strokeBorder(.primary.opacity(0.15), lineWidth: 1)
+                )
+                .frame(width: 36, height: 36)
+                .scaleEffect(landed ? 1 : 0.3)
+                .animation(motion.pop, value: landed)
+            VStack(alignment: .leading, spacing: 2) {
+                Text(text)
+                    .font(.system(size: 15, weight: .semibold, design: .monospaced))
+                Text("Copied as \(format.title)")
+                    .font(.system(size: 12, weight: .medium))
+                    .foregroundStyle(.secondary)
+            }
+            .lineLimit(1)
+            .opacity(landed ? 1 : 0)
+            .offset(x: landed ? 0 : -8)
+            .animation(motion.reveal, value: landed)
+        }
+        .padding(.leading, 10)
+        .padding(.trailing, 16)
+        .frame(height: 56)
+        .fixedSize()
+        .glassSurface(cornerRadius: 16)
+        .onAppear { hasLanded = true }
     }
 }
