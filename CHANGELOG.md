@@ -1,6 +1,9 @@
 # Changelog
 
-## Unreleased
+## 0.1.0-rc.2 — 2026-11-17
+
+A color is copied from anywhere on the screen with Pick Color: that is the
+second release candidate.
 
 ### Added
 
