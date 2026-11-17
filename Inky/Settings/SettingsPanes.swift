@@ -505,6 +505,7 @@ struct ModulePane: View {
                     "#ff6363", "rgb(255, 99, 99)", "oklch(0.7 0.19 23)", "rgb(255 99 99 / 50%)",
                     "#fa32fa in rgb", "rgb(255, 0, 0) to hsl",
                 ])
+                ColorPickSettings(preferences: preferences)
             case "browser":
                 Examples([
                     "amazon.com", "github.com/hinkolas/inky", "localhost:3000", "https://example.com/page?id=1",
@@ -525,6 +526,25 @@ struct ModulePane: View {
             if module.id != "quicklinks" {
                 ModuleCommands(module: module, context: context)
             }
+        }
+    }
+}
+
+/// How Pick Color writes the color it copies.
+private struct ColorPickSettings: View {
+    @Bindable var preferences: Preferences
+
+    var body: some View {
+        Section {
+            Picker("Copy picked colors as", selection: $preferences.colorPickFormat) {
+                ForEach(ColorValue.Format.allCases) { format in
+                    Text(format.title).tag(format)
+                }
+            }
+        } header: {
+            Text("Pick Color")
+        } footer: {
+            Text("Pick Color shows a loupe: click to copy the color under it, or press Esc to stop.")
         }
     }
 }

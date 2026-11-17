@@ -100,6 +100,12 @@ final class AppContext {
         #endif
 
         let usage = UsageStore(fileURL: directory.appendingPathComponent("usage.json"))
+        let color = ColorModule(usage: usage)
+        color.pickFormat = preferences.colorPickFormat
+        preferences.onColorPickFormatChange = { [preferences, color] in
+            color.pickFormat = preferences.colorPickFormat
+        }
+
         inputHistory = InputHistory(
             fileURL: directory.appendingPathComponent("history.json"),
             limit: preferences.historyLimit
@@ -134,7 +140,7 @@ final class AppContext {
                 contacts,
                 calculator,
                 TimeModule(),
-                ColorModule(usage: usage),
+                color,
                 browser,
                 fileModule,
             ],
@@ -186,6 +192,11 @@ final class AppContext {
         // The module lists the applications again, without the one that went.
         launcher.model.applicationsDidChange = { [applications] in applications.onChange?() }
 
+        // The loupe comes once the launcher is out of the way of what is
+        // to be picked.
+        color.onPick = { [unowned self] in
+            launcher.hide { ColorPicker.pick(with: color) }
+        }
         clipboardModule.onOpen = { [unowned self] in launcher.model.showClipboard() }
         fileModule.onOpen = { [unowned self] query in launcher.model.showFiles(query: query) }
         contacts.onOpen = { [unowned self] query in launcher.model.showContacts(query: query) }
