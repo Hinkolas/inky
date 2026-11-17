@@ -6,9 +6,10 @@
 
 - Pick Color, a command that shows the loupe of macOS to copy a color from
   anywhere on the screen: hex unless Settings → Color says another way. It
-  needs no permission to see the screen. A color a Display P3 screen shows
-  beyond sRGB keeps what it is in OKLCH and the other wide ways, and hex and
-  RGB say the nearest color they can.
+  needs no permission to see the screen. A toast at the bottom of the screen
+  says what was copied. A color a Display P3 screen shows beyond sRGB keeps
+  what it is in OKLCH and the other wide ways, and hex and RGB say the
+  nearest color they can.
 
 ## 0.1.0-rc.1 — 2026-11-13
 
