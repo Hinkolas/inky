@@ -153,6 +153,14 @@ public struct ApplicationInfo: Identifiable, Sendable, Hashable {
     }
 
     public var id: String { path }
+
+    /// The application this one ships inside, as Xcode has Instruments. Nil
+    /// for one that stands on its own.
+    public var enclosingApplication: String? {
+        let folders = (path as NSString).deletingLastPathComponent.split(separator: "/", omittingEmptySubsequences: false)
+        guard let last = folders.lastIndex(where: { $0.hasSuffix(".app") }) else { return nil }
+        return folders[...last].joined(separator: "/")
+    }
 }
 
 public enum ApplicationScanner {
@@ -190,12 +198,23 @@ public enum ApplicationScanner {
                 let pathExtension = (name as NSString).pathExtension
                 if pathExtension == "app" {
                     add(path)
+                    visitBundled(path)
                 } else if pathExtension.isEmpty, depth < 2 {
                     var isDirectory: ObjCBool = false
                     if fileManager.fileExists(atPath: path, isDirectory: &isDirectory), isDirectory.boolValue {
                         visit(path, depth: depth + 1)
                     }
                 }
+            }
+        }
+
+        // Some applications ship others inside them, as Xcode has Instruments
+        // and Device Hub. Only that one folder of theirs is looked in.
+        func visitBundled(_ application: String) {
+            let directory = application + "/Contents/Applications"
+            guard let names = try? fileManager.contentsOfDirectory(atPath: directory) else { return }
+            for name in names where !name.hasPrefix(".") && (name as NSString).pathExtension == "app" {
+                add(directory + "/" + name)
             }
         }
 

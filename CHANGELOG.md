@@ -1,5 +1,14 @@
 # Changelog
 
+## Unreleased
+
+### Fixed
+
+- Applications that ship inside another are found, as Xcode has Device Hub,
+  Instruments, Accessibility Inspector, Create ML, FileMerge and Icon
+  Composer. They go with the application they ship in and are not offered
+  to be uninstalled on their own.
+
 ## 0.1.0-rc.2 — 2026-11-17
 
 A color is copied from anywhere on the screen with Pick Color: that is the

@@ -120,9 +120,11 @@ public struct ApplicationUninstaller: Sendable {
     }
 
     /// Whether the application is the user's to remove. What macOS is made
-    /// of is not, and neither is Inky while it runs.
+    /// of is not, and neither is Inky while it runs. Nor is one that ships
+    /// inside another: it goes with that one.
     public func canUninstall(_ app: ApplicationInfo) -> Bool {
         guard URL(fileURLWithPath: app.path).standardizedFileURL.path == app.path else { return false }
+        guard app.enclosingApplication == nil else { return false }
         guard applicationFolders.contains(where: { app.path.hasPrefix($0 + "/") }) else { return false }
         let resolved = URL(fileURLWithPath: app.path).resolvingSymlinksInPath().path
         guard !app.path.hasPrefix("/System/"), !resolved.hasPrefix("/System/") else { return false }
@@ -326,7 +328,8 @@ struct LeftoverMatcher: Sendable {
     private static let extensions: Set<String> = ["plist", "savedstate", "binarycookies", "log"]
 
     init(app: ApplicationInfo, installed: [ApplicationInfo]) {
-        let others = installed.filter { $0.path != app.path }
+        // What ships inside the application goes with it, and so do its files.
+        let others = installed.filter { $0.path != app.path && !$0.path.hasPrefix(app.path + "/") }
         let identifiers = others.compactMap { $0.bundleID?.lowercased() }.filter { !$0.isEmpty }
         otherIdentifiers = identifiers
 
