@@ -97,8 +97,10 @@ final class UpdateNotice: NSWindowController, NSWindowDelegate {
     }
 }
 
-/// Takes the first click, which would otherwise only make Inky active.
-private final class FirstClickHostingView<Content: View>: NSHostingView<Content> {
+/// Takes the first click, which would otherwise only make Inky active. Not
+/// generic: the optimizer of Swift 6.3 crashes on the deinit of a generic
+/// subclass of NSHostingView.
+private final class FirstClickHostingView: NSHostingView<UpdatedView> {
     override func acceptsFirstMouse(for event: NSEvent?) -> Bool { true }
 }
 
