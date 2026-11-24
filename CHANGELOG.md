@@ -10,6 +10,9 @@
   ID on one without it, and panes that other applications installed are
   found too. The module can be switched off, as every module can, and every
   pane is a command that can get a hotkey.
+- Inky says when it was updated: the first time a new version runs, a
+  small window names the version it was updated to and the one before,
+  with a link to what is new.
 
 ### Fixed
 

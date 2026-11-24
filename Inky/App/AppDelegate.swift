@@ -59,6 +59,10 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
             context.showOnboarding()
         }
 
+        if let previous = UpdateNotice.previousVersion(preferences) {
+            context.showUpdateNotice(from: previous)
+        }
+
         #if DEBUG
         DebugLaunch.apply(to: context)
         #endif
@@ -138,7 +142,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
 /// `--show`, `--pin`, `--quiet`, `--key`, `--query <text>`,
 /// `--keys "tab a cmd+k hide show toggle clipboard run:<command id>"`, `--key-delay <milliseconds>`,
 /// `--run <command id>`, `--settings [pane]`, `--search <text>`, `--onboarding [step]`, `--new-quicklink`, `--quicklinks`, `--uninstall [application]`,
-/// `--clipboard [filter]`, `--clipboard-samples`, `--files [name]`,
+/// `--clipboard [filter]`, `--clipboard-samples`, `--files [name]`, `--update-notice [previous version]`,
 /// `--search-contacts [name]`, `--contacts notAsked|denied`,
 /// `--appearance light|dark`, `--backdrop light|dark`, `--data <folder>`,
 /// `--motion full|reduced|off`, `--slow <factor>`, `--resume <seconds>`.
@@ -220,6 +224,22 @@ enum DebugLaunch {
         }
     }
 
+    private static var noticeBackdrop: NSWindow?
+
+    /// The notice of an update on a backdrop, both under the windows of the
+    /// user.
+    private static func showUpdateNotice(from previous: String, in context: AppContext, dark: Bool) {
+        context.showUpdateNotice(from: previous, activating: false)
+        guard let notice = NSApp.windows.first(where: { $0.title == "Inky was updated" }) else { return }
+        let window = NSWindow(contentRect: notice.frame.insetBy(dx: -40, dy: -40), styleMask: .borderless, backing: .buffered, defer: false)
+        window.level = NSWindow.Level(rawValue: NSWindow.Level.beneathDesktop.rawValue - 1)
+        window.isReleasedWhenClosed = false
+        window.ignoresMouseEvents = true
+        window.contentView = DebugBackdropView(dark: dark)
+        window.orderFrontRegardless()
+        noticeBackdrop = window
+    }
+
     static func apply(to context: AppContext) {
         let quiet = isQuiet
         context.launcher.isPinned = arguments.contains("--pin")
@@ -248,6 +268,9 @@ enum DebugLaunch {
             if quiet {
                 Task { await context.engine.reloadAll() }
             }
+        }
+        if quiet, arguments.contains("--update-notice") {
+            showUpdateNotice(from: value(after: "--update-notice") ?? "0.1.0", in: context, dark: value(after: "--backdrop") != "light")
         }
         if arguments.contains("--onboarding") {
             context.showOnboarding(step: value(after: "--onboarding").flatMap(OnboardingStep.init(name:)), activating: !quiet)

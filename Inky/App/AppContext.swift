@@ -24,6 +24,7 @@ final class AppContext {
 
     private var settingsWindow: SettingsWindowController?
     private var onboardingWindow: OnboardingWindowController?
+    private var updateNotice: UpdateNotice?
     private let clipboardModule = ClipboardModule()
     /// False until the app says that what is copied may be kept.
     private var recordsClipboard = false
@@ -266,6 +267,15 @@ final class AppContext {
             onboardingWindow = window
         }
         onboardingWindow?.show(step: step, activating: activating)
+    }
+
+    /// Says that Inky was updated from `previous` to the version that runs.
+    func showUpdateNotice(from previous: String, activating: Bool = true) {
+        updateNotice?.close()
+        let notice = UpdateNotice(from: previous, to: UpdateNotice.currentVersion)
+        notice.onClose = { [unowned self] in updateNotice = nil }
+        updateNotice = notice
+        notice.show(activating: activating)
     }
 }
 

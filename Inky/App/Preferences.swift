@@ -211,6 +211,12 @@ final class Preferences {
         set { defaults.set(newValue, forKey: Key.hasLaunchedBefore) }
     }
 
+    /// The version of Inky that ran last, to tell when it was updated.
+    var lastVersion: String? {
+        get { defaults.string(forKey: Key.lastVersion) }
+        set { defaults.set(newValue, forKey: Key.lastVersion) }
+    }
+
     private init() {
         defaults.register(defaults: [
             Key.showMenuBarIcon: true, Key.animations: true, Key.fileSearchLimit: 8, Key.pixelsPerRem: 16,
@@ -288,5 +294,6 @@ final class Preferences {
         static let disabledModules = "disabledModules"
         static let disabledProviders = "disabledProviders"
         static let hasLaunchedBefore = "hasLaunchedBefore"
+        static let lastVersion = "lastVersion"
     }
 }
