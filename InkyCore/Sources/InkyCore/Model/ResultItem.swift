@@ -9,6 +9,9 @@ public enum Tint: String, Sendable, Hashable, CaseIterable, Codable {
 public indirect enum Icon: Sendable, Hashable, Codable {
     /// The Finder icon of the file, folder or application at `path`.
     case file(path: String)
+    /// The icon macOS has for a type of file, by its identifier, as System
+    /// Settings has `com.apple.graphic-icon.battery` for Battery.
+    case type(identifier: String)
     /// An SF Symbol drawn on a tinted tile.
     case symbol(String, tint: Tint)
     /// The icon of the website at `host`, see `Favicon.host(of:)`. `fallback`

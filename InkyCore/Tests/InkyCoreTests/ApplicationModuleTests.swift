@@ -32,6 +32,17 @@ import Testing
         }
     }
 
+    @Test func saysWhichApplicationAnotherShipsIn() async throws {
+        defer { try? FileManager.default.removeItem(at: home) }
+        try FileManager.default.createDirectory(
+            at: applications.appendingPathComponent("One.app/Contents/Applications/Inner.app", isDirectory: true),
+            withIntermediateDirectories: true
+        )
+        let items = await makeModule().candidates()
+        #expect(items.first { $0.title == "Inner" }?.subtitle == "One")
+        #expect(items.first { $0.title == "One" }?.subtitle == nil)
+    }
+
     @Test func listsAgainOnlyWhenTheApplicationsChanged() async throws {
         defer { try? FileManager.default.removeItem(at: home) }
         let module = makeModule()

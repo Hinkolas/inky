@@ -43,7 +43,11 @@ pre-release you downloaded starts on Beta.
 ## Features
 
 - **Applications.** Fuzzy search over your apps, ranked by how often and how
-  recently you pick them.
+  recently you pick them. Apps that ship inside another, such as Xcode's
+  Instruments and Device Hub, say which app they come with.
+- **System Settings.** Open a pane of System Settings, such as Wi‑Fi,
+  Displays or Battery, straight from the search. Panes your Mac does not
+  have, such as Touch ID on one without it, are left out.
 - **Quicklinks.** Named shortcuts to websites, folders and app links, with
   placeholders such as `{argument name="Query"}`, `{clipboard}` and
   `{selection}`. Arguments are typed right in the search bar.

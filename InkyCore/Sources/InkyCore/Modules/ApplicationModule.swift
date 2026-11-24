@@ -82,6 +82,8 @@ public final class ApplicationModule: Module {
     public func candidates() async -> [ResultItem] {
         let found = await scan()
         listed = found
+        // An application that ships inside another says which.
+        let names = Dictionary(found.map { ($0.app.path, $0.app.name) }, uniquingKeysWith: { first, _ in first })
 
         let applications = found.map { listed in
             let app = listed.app
@@ -105,6 +107,7 @@ public final class ApplicationModule: Module {
             return ResultItem(
                 id: Self.itemID(for: app.path),
                 title: app.name,
+                subtitle: app.enclosingApplication.map { names[$0] ?? Self.displayName(of: $0) },
                 icon: .file(path: app.path),
                 kind: "Application",
                 keywords: app.alternateNames,
@@ -125,6 +128,11 @@ public final class ApplicationModule: Module {
             ]
         )
         return applications + [uninstall]
+    }
+
+    private static func displayName(of path: String) -> String {
+        let name = FileManager.default.displayName(atPath: path)
+        return name.hasSuffix(".app") ? (name as NSString).deletingPathExtension : name
     }
 }
 

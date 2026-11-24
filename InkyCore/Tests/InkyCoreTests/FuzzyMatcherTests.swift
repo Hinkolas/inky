@@ -21,6 +21,14 @@ import Testing
         #expect(score("CAFE", "café") == 1)
     }
 
+    @Test func typesEveryDashAsAHyphen() {
+        // System Settings writes Wi‑Fi with a hyphen that does not break.
+        #expect(score("wi-fi", "Wi\u{2011}Fi") == 1)
+        #expect(score("wifi", "Wi\u{2011}Fi") > 0)
+        #expect(score("a-b", "A\u{2013}B") == 1)
+        #expect(score("fi", "Wi\u{2011}Fi") > score("fi", "Wifi"))
+    }
+
     @Test func prefixBeatsMatchInsideAWord() {
         #expect(score("saf", "Safari") > score("saf", "Disk Safety"))
         #expect(score("term", "Terminal") > score("term", "iTerm"))

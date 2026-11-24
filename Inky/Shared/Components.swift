@@ -1,6 +1,7 @@
 import AppKit
 import InkyCore
 import SwiftUI
+import UniformTypeIdentifiers
 
 /// Draws an `Icon`: a Finder icon, a symbol on a shaded tile, a website's
 /// icon on a white one, or a tile of one color.
@@ -23,6 +24,11 @@ struct IconView: View {
         switch icon {
         case .file(let path):
             Image(nsImage: IconCache.shared.icon(forFile: path))
+                .resizable()
+                .interpolation(.high)
+                .frame(width: size, height: size)
+        case .type(let identifier):
+            Image(nsImage: IconCache.shared.icon(forType: identifier))
                 .resizable()
                 .interpolation(.high)
                 .frame(width: size, height: size)
@@ -251,6 +257,14 @@ final class IconCache {
         if let cached = cache.object(forKey: path as NSString) { return cached }
         let image = NSWorkspace.shared.icon(forFile: path)
         cache.setObject(image, forKey: path as NSString)
+        return image
+    }
+
+    func icon(forType identifier: String) -> NSImage {
+        let key = "type:\(identifier)" as NSString
+        if let cached = cache.object(forKey: key) { return cached }
+        let image = NSWorkspace.shared.icon(for: UTType(identifier) ?? .data)
+        cache.setObject(image, forKey: key)
         return image
     }
 

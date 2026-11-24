@@ -2,12 +2,24 @@
 
 ## Unreleased
 
+### Added
+
+- System Settings, a module that finds the panes of System Settings, such
+  as Wi‑Fi, Displays, Battery or iCloud, with the name and icon System
+  Settings gives them. Panes this Mac does not have are left out, as Touch
+  ID on one without it, and panes that other applications installed are
+  found too. The module can be switched off, as every module can, and every
+  pane is a command that can get a hotkey.
+
 ### Fixed
 
+- A hyphen that is typed finds a name written with another dash, such as
+  System Settings writes Wi‑Fi.
 - Applications that ship inside another are found, as Xcode has Device Hub,
   Instruments, Accessibility Inspector, Create ML, FileMerge and Icon
-  Composer. They go with the application they ship in and are not offered
-  to be uninstalled on their own.
+  Composer. The name of the application they ship in is shown after theirs.
+  They go with that application and are not offered to be uninstalled on
+  their own.
 
 ## 0.1.0-rc.2 — 2026-11-17
 
