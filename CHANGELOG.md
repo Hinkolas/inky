@@ -1,6 +1,9 @@
 # Changelog
 
-## Unreleased
+## 0.1.0-rc.3 — 2026-11-24
+
+The panes of System Settings are found from the search, and Inky says when
+it was updated: that is the third release candidate.
 
 ### Added
 
