@@ -20,6 +20,10 @@
   Composer. The name of the application they ship in is shown after theirs.
   They go with that application and are not offered to be uninstalled on
   their own.
+- The update window comes to the front when Check for Updates is run, also
+  when macOS does not make Inky the active app. Run again while the window
+  is still open, the command brings it back in front of the app in use,
+  where before it could stay hidden behind it.
 
 ## 0.1.0-rc.2 — 2026-11-17
 
