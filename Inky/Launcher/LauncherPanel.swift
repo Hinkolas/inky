@@ -654,7 +654,7 @@ final class LauncherController: NSObject, NSWindowDelegate {
 
 #if DEBUG
 /// Shapes and gradients with enough going on to judge a blur by.
-private final class DebugBackdropView: NSView {
+final class DebugBackdropView: NSView {
     private let dark: Bool
 
     init(dark: Bool) {
