@@ -285,6 +285,45 @@ import Testing
         #expect(confined.canUninstall(ApplicationInfo(path: "/tmp/inky-nobody/Applications/Thing.app", name: "Thing")))
     }
 
+    @Test func findsApplicationsShippedInsideAnother() throws {
+        let home = try Home()
+        let studio = try home.addApplication("Studio", identifier: "dev.example.studio")
+        let nested = "\(home.path)/Applications/Studio.app/Contents/Applications/ProfilerHub.app"
+        try home.addFolder("Applications/Studio.app/Contents/Applications/ProfilerHub.app/Contents")
+        let info: NSDictionary = ["CFBundleIdentifier": "dev.example.studio.profiler", "CFBundleDisplayName": "Profiler Hub"]
+        #expect(info.write(toFile: nested + "/Contents/Info.plist", atomically: true))
+        // Only that folder of the application is looked in, and only once.
+        try home.addFolder("Applications/Studio.app/Contents/Resources/Helper.app")
+        try home.addFolder("Applications/Studio.app/Contents/Applications/ProfilerHub.app/Contents/Applications/Deeper.app")
+
+        let installed = home.uninstaller.installedApplications()
+        #expect(installed.map(\.path).sorted() == [studio.path, nested])
+        let profiler = try #require(installed.first { $0.path == nested })
+        #expect(profiler.alternateNames.contains("Profiler Hub"))
+        #expect(profiler.enclosingApplication == studio.path)
+        #expect(studio.enclosingApplication == nil)
+
+        // It goes with the application it ships in, and not on its own.
+        #expect(!home.uninstaller.canUninstall(profiler))
+        #expect(home.uninstaller.items(for: profiler, installed: installed).isEmpty)
+        try home.addFile("Library/Preferences/dev.example.studio.plist")
+        try home.addFile("Library/Preferences/dev.example.studio.profiler.plist")
+        #expect(home.uninstaller.items(for: studio, installed: installed).map { home.uninstaller.abbreviated($0.path) } == [
+            "~/Applications/Studio.app",
+            "~/Library/Preferences/dev.example.studio.plist",
+            "~/Library/Preferences/dev.example.studio.profiler.plist",
+        ])
+    }
+
+    @Test func tellsWhichApplicationAnotherShipsIn() {
+        #expect(ApplicationInfo(path: "/Applications/Thing.app", name: "Thing").enclosingApplication == nil)
+        #expect(ApplicationInfo(path: "/Applications/Utilities/Thing.app", name: "Thing").enclosingApplication == nil)
+        #expect(
+            ApplicationInfo(path: "/Applications/Xcode.app/Contents/Applications/DeviceHub.app", name: "Device Hub")
+                .enclosingApplication == "/Applications/Xcode.app"
+        )
+    }
+
     @Test func measuresFilesAndFolders() throws {
         let home = try Home()
         try home.addFile("Library/Caches/Pako/a", bytes: 5000)
