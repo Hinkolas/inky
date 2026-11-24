@@ -214,7 +214,8 @@ import Testing
     }
 
     @Test func findsThePanesOfThisMac() {
-        // Whatever the Mac, System Settings has a General pane.
-        #expect(SettingsPaneScanner.scan().contains { $0.id == "com.apple.systempreferences.GeneralSettings" })
+        // Whatever the Mac, System Settings has a Sound pane. General is
+        // no extension of its own before macOS 27.
+        #expect(SettingsPaneScanner.scan().contains { $0.id == "com.apple.Sound-Settings.extension" })
     }
 }
