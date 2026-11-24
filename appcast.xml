@@ -6,6 +6,31 @@ IMPORTANT: This file was signed by Sparkle. Any modifications to this file requi
     <channel>
         <title>Inky</title>
         <item>
+            <title>0.1.0-rc.3</title>
+            <pubDate>Tue, 24 Nov 2026 20:46:29 +0000</pubDate>
+            <link>https://github.com/Hinkolas/inky</link>
+            <sparkle:fullReleaseNotesLink>https://github.com/Hinkolas/inky/releases/tag/v0.1.0-rc.3</sparkle:fullReleaseNotesLink>
+            <sparkle:channel>beta</sparkle:channel>
+            <sparkle:version>96</sparkle:version>
+            <sparkle:shortVersionString>0.1.0-rc.3</sparkle:shortVersionString>
+            <sparkle:minimumSystemVersion>15.0</sparkle:minimumSystemVersion>
+            <sparkle:hardwareRequirements>arm64</sparkle:hardwareRequirements>
+            <description><![CDATA[<p>The panes of System Settings are found from the search, and Inky says when it was updated: that is the third release candidate.</p>
+<div class="markdown-heading"><h3 class="heading-element">Added</h3><a id="user-content-added" class="anchor" aria-label="Permalink: Added" href="#added"><span aria-hidden="true" class="octicon octicon-link"></span></a></div>
+<ul>
+<li>System Settings, a module that finds the panes of System Settings, such as Wi‑Fi, Displays, Battery or iCloud, with the name and icon System Settings gives them. Panes this Mac does not have are left out, as Touch ID on one without it, and panes that other applications installed are found too. The module can be switched off, as every module can, and every pane is a command that can get a hotkey.</li>
+<li>Inky says when it was updated: the first time a new version runs, a small window names the version it was updated to and the one before, with a link to what is new.</li>
+</ul>
+<div class="markdown-heading"><h3 class="heading-element">Fixed</h3><a id="user-content-fixed" class="anchor" aria-label="Permalink: Fixed" href="#fixed"><span aria-hidden="true" class="octicon octicon-link"></span></a></div>
+<ul>
+<li>A hyphen that is typed finds a name written with another dash, such as System Settings writes Wi‑Fi.</li>
+<li>Applications that ship inside another are found, as Xcode has Device Hub, Instruments, Accessibility Inspector, Create ML, FileMerge and Icon Composer. The name of the application they ship in is shown after theirs. They go with that application and are not offered to be uninstalled on their own.</li>
+<li>The update window comes to the front when Check for Updates is run, also when macOS does not make Inky the active app. Run again while the window is still open, the command brings it back in front of the app in use, where before it could stay hidden behind it.</li>
+</ul>
+]]></description>
+            <enclosure url="https://github.com/Hinkolas/inky/releases/download/v0.1.0-rc.3/Inky-0.1.0-rc.3.zip" length="4070257" type="application/octet-stream" sparkle:edSignature="MnXmMPxhIDct4mq99oC8yKKbEmiMwI0QadA59OS5H9J+e6bQ2Clf1qNSl9C0p/xz0XaUtSuVLvReVq6sT/RCAA=="/>
+        </item>
+        <item>
             <title>0.1.0-rc.2</title>
             <pubDate>Wed, 18 Nov 2026 15:46:16 +0000</pubDate>
             <link>https://github.com/Hinkolas/inky</link>
@@ -49,30 +74,9 @@ IMPORTANT: This file was signed by Sparkle. Any modifications to this file requi
 ]]></description>
             <enclosure url="https://github.com/Hinkolas/inky/releases/download/v0.1.0-rc.1/Inky-0.1.0-rc.1.zip" length="4025685" type="application/octet-stream" sparkle:edSignature="oqHHyTBy8DOhVkHmyzs703GBw5mgcI14Fo3+3domgB1LEgRATwWS+5TF4X2peOjPeDXBJcvMpkkaC+e/4PPUCQ=="/>
         </item>
-        <item>
-            <title>0.1.0-alpha.6</title>
-            <pubDate>Thu, 12 Nov 2026 20:41:09 +0000</pubDate>
-            <link>https://github.com/Hinkolas/inky</link>
-            <sparkle:fullReleaseNotesLink>https://github.com/Hinkolas/inky/releases/tag/v0.1.0-alpha.6</sparkle:fullReleaseNotesLink>
-            <sparkle:channel>beta</sparkle:channel>
-            <sparkle:version>76</sparkle:version>
-            <sparkle:shortVersionString>0.1.0-alpha.6</sparkle:shortVersionString>
-            <sparkle:minimumSystemVersion>15.0</sparkle:minimumSystemVersion>
-            <sparkle:hardwareRequirements>arm64</sparkle:hardwareRequirements>
-            <description><![CDATA[<p>Copying a long text or a large image, and installing an application, no longer hold Inky up: that is the sixth alpha.</p>
-<div class="markdown-heading"><h3 class="heading-element">Changed</h3><a id="user-content-changed" class="anchor" aria-label="Permalink: Changed" href="#changed"><span aria-hidden="true" class="octicon octicon-link"></span></a></div>
-<ul>
-<li>Copying a long text no longer holds Inky up. Before, a text of a few megabytes was gone through in full to tell whether it was code, which took up to seconds, also while Inky was in the background. The clipboard history no longer tells code apart: what was listed as code is listed as text, and found under Text as before.</li>
-<li>Copying a large image no longer holds up the clipboard history while the image is kept: it is written first, and searching and scrolling go on meanwhile.</li>
-<li>An application that is installed or removed is found or gone within a few seconds, without the launcher having to be opened. Before, opening the launcher looked for applications again whenever it had not for half a minute.</li>
-<li>The clipboard history shows the images in its list from a small copy made for them, which it draws many times as quickly as the copy the selected image is shown by. Images copied before keep being shown by that.</li>
-</ul>
-]]></description>
-            <enclosure url="https://github.com/Hinkolas/inky/releases/download/v0.1.0-alpha.6/Inky-0.1.0-alpha.6.zip" length="3796369" type="application/octet-stream" sparkle:edSignature="Pd9vygXRBQgUk9AgRB4ZJj8xuG76OO2uNsHQigybtMfuCx8SVVXYhfoFI2TVXG/ku9m0n4HvkO6aJwZg3ATtBg=="/>
-        </item>
     </channel>
 </rss>
 <!-- sparkle-signatures:
-edSignature: +/Nk0nTieDC9djW81sI6tkheF3Gcr8dNxDStV7KdDKQflqvPj4/VkJiXTAPVTRF/mAIcidGKeYfC4Dw2R3XrAQ==
-length: 7886
+edSignature: 4bPv9jOsrV7jzuqyYmeKM8ZiKjtL9Yz3SmQT2TP6M4+yQ6kgkyQe4HS2s7mrD3jRmImhPl8BWsjYywqPvTB9Cg==
+length: 8435
 -->
