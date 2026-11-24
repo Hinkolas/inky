@@ -488,6 +488,8 @@ struct ModulePane: View {
                         Text(path).font(.system(.body, design: .monospaced))
                     }
                 }
+            case "system-settings":
+                Examples(["wi-fi", "displays", "battery", "privacy", "icloud"])
             case "calculator":
                 Examples([
                     "128 * 3 + 4", "20% off 80", "sqrt(2) ^ 10", "5 ft 10 in in cm", "72 F to C",

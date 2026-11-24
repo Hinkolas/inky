@@ -115,7 +115,7 @@ public enum FuzzyMatcher {
         guard let previous else { return bonusStart }
         if previous == "/" { return bonusStart }
         if previous == "." { return bonusDot }
-        if previous == "-" || previous == "_" || previous.isWhitespace { return bonusWord }
+        if previous == "-" || previous == "_" || dashes.contains(previous) || previous.isWhitespace { return bonusWord }
         if previous.isLowercase, current.isUppercase { return bonusCapital }
         return 0
     }
@@ -125,7 +125,12 @@ public enum FuzzyMatcher {
         return fold(String(character))
     }
 
+    /// Hyphens and dashes that are typed as one: macOS writes Wi‑Fi with a
+    /// hyphen that does not break the line.
+    private static let dashes: Set<Character> = ["\u{2010}", "\u{2011}", "\u{2012}", "\u{2013}", "\u{2014}", "\u{2212}"]
+
     private static func fold(_ string: String) -> String {
-        string.folding(options: [.caseInsensitive, .diacriticInsensitive, .widthInsensitive], locale: nil)
+        String(string.map { dashes.contains($0) ? "-" : $0 })
+            .folding(options: [.caseInsensitive, .diacriticInsensitive, .widthInsensitive], locale: nil)
     }
 }

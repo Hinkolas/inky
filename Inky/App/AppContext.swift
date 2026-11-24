@@ -137,6 +137,7 @@ final class AppContext {
                 clipboardModule,
                 SystemModule(),
                 applications,
+                SystemSettingsModule(),
                 contacts,
                 calculator,
                 TimeModule(),
